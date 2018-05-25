@@ -9,7 +9,7 @@ namespace BoardGamesCore
   {
     friend class Location;
   public:
-    constexpr Offset(int xx, int yy) : dx{ xx }, dy{ yy } {}
+    constexpr Offset(int xx, int yy) noexcept : dx{ xx }, dy{ yy } {}
 
     const Offset operator*(int i) const { return Offset(dx*i, dy*i); }
 
@@ -34,15 +34,15 @@ namespace BoardGamesCore
   class Location final
   {
   public:
-    Location(unsigned int xx, unsigned int yy) : x{ xx }, y{ yy } {}
+    Location(unsigned int xx, unsigned int yy) noexcept : x{ xx }, y{ yy } {}
 
-    inline bool operator==(const Location& l) const { return l.x == x && l.y == y; }
-    inline bool operator!=(const Location& l) const { return !(l == *this); }
-    inline Location operator+(const Offset& o) const { Location l(*this); return l += o; }
-    inline Location& operator+=(const Offset& o) { x += o.dx, y += o.dy; return *this; }
+    inline bool operator==(const Location& l) const noexcept { return l.x == x && l.y == y; }
+    inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
+    inline Location operator+(const Offset& o) const noexcept { Location l(*this); return l += o; }
+    inline Location& operator+=(const Offset& o) noexcept { x += o.dx, y += o.dy; return *this; }
 
-    inline bool Valid(unsigned int sizeX, unsigned int sizeY) const { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
-    inline unsigned int Index(unsigned int /*sizeX*/, unsigned int sizeY) const { return x * sizeY + y; }
+    inline bool Valid(unsigned int sizeX, unsigned int sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
+    inline unsigned int Index(unsigned int /*sizeX*/, unsigned int sizeY) const noexcept { return x * sizeY + y; }
 
     // can't be protected, as the values need to be used in many places
     // can't be const, or assignments between Locations wouldn't work.
