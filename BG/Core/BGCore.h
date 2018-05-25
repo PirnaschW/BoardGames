@@ -9,7 +9,7 @@ namespace BoardGamesCore
   {
     friend class Location;
   public:
-    Offset(int xx, int yy) : dx{ xx }, dy{ yy } {}
+    constexpr Offset(int xx, int yy) : dx{ xx }, dy{ yy } {}
 
     const Offset operator*(int i) const { return Offset(dx*i, dy*i); }
 
