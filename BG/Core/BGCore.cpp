@@ -163,8 +163,8 @@ namespace BoardGamesCore
   }
 
 
-  Game::Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl) :
-    pos{ p }, tpos(t), spos(s), lay{ l }, tlay(tl), slay(sl)
+  Game::Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl) noexcept
+    : pos{ p }, tpos(t), spos(s), lay{ l }, tlay(tl), slay(sl)
   {
     AddPlayer(new Player(&PlayerType::Human, &Color::White));
     AddPlayer(new Player(&PlayerType::Computer, &Color::Black));

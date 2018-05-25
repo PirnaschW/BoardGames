@@ -59,7 +59,7 @@ namespace BoardGamesCore
     inline bool operator==(const Field& f) const noexcept { return l == f.l && p == f.p; }
     inline bool operator!=(const Field& f) const noexcept { return !(f == *this); }
 
-    inline const Location GetLocation(void) const noexcept { return l; }
+    inline const Location GetLocation(void) const { return l; }
     inline const Piece* GetPiece(void) const noexcept { return p; }
 
   private:
@@ -344,11 +344,11 @@ namespace BoardGamesCore
   private:
     Game(void) = delete;
   public:
-    Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl);
+    Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl) noexcept;
     virtual ~Game(void);
     virtual void Serialize(CArchive& ar) { pos->Serialize(ar); }
-    virtual void AddToStock(const Location& l, const Piece* p) { spos->SetPiece(l, p); }
-    virtual void ShowStock(bool show) { showStock = show; }
+    virtual void AddToStock(const Location& l, const Piece* p) noexcept { spos->SetPiece(l, p); }
+    virtual void ShowStock(bool show) noexcept { showStock = show; }
     virtual void Draw(CDC* pDC) const;
     virtual bool React(UINT /*nChar*/, UINT /*nRepCnt*/, UINT /*nFlags*/) { return false; };   // react to keyboard input (not menu shortcuts, but typing)
     virtual bool React(UINT command);                                                          // react to button/menu command
@@ -360,13 +360,13 @@ namespace BoardGamesCore
     virtual void Select(const CPoint & point);
     virtual void Unselect(void) { moves.clear(); }
     virtual void AIAction(void) { while (IsAlive() && CurrentPlayer()->Is(&PlayerType::Computer)) SetAlive(AIMove()); }  // execute computer moves while it is its turn
-    virtual bool IsAlive(void) const { return !gameover; }
-    virtual void SetAlive(bool a) { gameover = !a; }
-    virtual void AddPlayer(Player* p) { players.push_back(p); }
-    virtual void SetCurrentPlayer(unsigned int p) { current = p; }
-    virtual Player* CurrentPlayer(void) const { return players[current]; }
-    virtual Player* NextPlayer(void) { current = ++current % players.size(); return players[current]; }
-    virtual unsigned int Plies(unsigned int /*z*/) const { return plies; }
+    virtual bool IsAlive(void) const noexcept { return !gameover; }
+    virtual void SetAlive(bool a) noexcept { gameover = !a; }
+    virtual void AddPlayer(Player* p) noexcept { players.push_back(p); }
+    virtual void SetCurrentPlayer(unsigned int p) noexcept { current = p; }
+    virtual Player* CurrentPlayer(void) const noexcept { return players[current]; }
+    virtual Player* NextPlayer(void) noexcept { current = ++current % players.size(); return players[current]; }
+    virtual unsigned int Plies(unsigned int /*z*/) const noexcept { return plies; }
     virtual bool AIMove(void);
     virtual void Execute(const Move& m);
     //    virtual std::vector<Move> GetAllMoves(void) const { return pos->GetAllMoves(); }

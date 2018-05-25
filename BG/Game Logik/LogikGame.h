@@ -246,7 +246,7 @@ namespace Logik
   private:
     unsigned int prevc{};                 // number of moves already made
     unsigned int previ[BZ]{};             // indices of moves already made
-    Result<BX, BY, BZ> prevR[BZ]{};       // results of already made moves
+    Result<BX, BY, BZ> prevR[BZ]{ {} };       // results of already made moves
   };
 
 
@@ -423,7 +423,7 @@ namespace Logik
     virtual ~LGame<BX, BY, BZ>(void) {}
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;
-    unsigned int Plies(unsigned int) const { return 1; }
+    unsigned int Plies(unsigned int) const noexcept { return 1; }
     void Execute(const Move& /*m*/) override {}
     void Execute(const LMove<BX, BY, BZ>& m)
     {

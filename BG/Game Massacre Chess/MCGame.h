@@ -63,7 +63,7 @@ namespace MassacreChess
   public:
     MCGame(unsigned int x, unsigned int y);
     virtual ~MCGame(void) override {}
-    virtual unsigned int Plies(unsigned int z) const override { return Game::Plies(0) + (unsigned int)(11.0 / log((double)(max(z, 5) - 3))) - 3; }
+    virtual unsigned int Plies(unsigned int z) const noexcept override { return Game::Plies(0) + (unsigned int)(11.0 / log((double)(max(z, 5) - 3))) - 3; }
   };
 
 }
