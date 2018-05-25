@@ -15,7 +15,7 @@ namespace Template
   }
 
 
-  TemplatePosition::TemplatePosition(unsigned int x, unsigned int y) : MainPosition(x, y)
+  TemplatePosition::TemplatePosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
   {
     for (unsigned int i = 0; i < x; i++)
       for (unsigned int j = 0; j < y; j++)

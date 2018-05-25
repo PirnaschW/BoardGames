@@ -35,7 +35,7 @@ namespace Hasami
   }
 
 
-  HasamiPosition::HasamiPosition(unsigned int x, unsigned int y) : MainPosition(x, y)
+  HasamiPosition::HasamiPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
   {
     for (unsigned int i = 0; i < x; i++)
     {
@@ -127,7 +127,7 @@ namespace Hasami
     return v1 - v2;
   }
 
-  inline unsigned int HasamiPosition::GetValue(unsigned int z) const
+  inline unsigned int HasamiPosition::GetValue(unsigned int z) const noexcept
   {
     switch (z)
     {
@@ -142,7 +142,7 @@ namespace Hasami
 
 
   HasamiGame::HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s,
-    HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) : Game{p,t,s,l,tl,sl}
+    HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
   {
     AddToStock(Location(0, 0), &HasamiPiece::HasamiPieceW);
     AddToStock(Location(1, 0), &HasamiPiece::HasamiPieceB);

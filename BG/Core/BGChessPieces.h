@@ -7,7 +7,7 @@ namespace BoardGamesChessPieces
   class Pawn : public Kind
   {
   private:
-    Pawn(void) : Kind('P') {}
+    Pawn(void) noexcept : Kind('P') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 100; }
@@ -19,7 +19,7 @@ namespace BoardGamesChessPieces
   class Knight : public Kind
   {
   private:
-    Knight(void) : Kind('N') {}
+    Knight(void) noexcept : Kind('N') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 300; }
@@ -31,7 +31,7 @@ namespace BoardGamesChessPieces
   class Bishop : public Kind
   {
   private:
-    Bishop(void) : Kind('B') {}
+    Bishop(void) noexcept : Kind('B') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 300; }
@@ -43,7 +43,7 @@ namespace BoardGamesChessPieces
   class Rook : public Kind
   {
   private:
-    Rook(void) : Kind('R') {}
+    Rook(void) noexcept : Kind('R') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 500; }
@@ -55,7 +55,7 @@ namespace BoardGamesChessPieces
   class Queen : public Kind
   {
   private:
-    Queen(void) : Kind('Q') {}
+    Queen(void) noexcept : Kind('Q') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 900; }
@@ -67,7 +67,7 @@ namespace BoardGamesChessPieces
   class King : public Kind
   {
   private:
-    King(void) : Kind('K') {}
+    King(void) noexcept : Kind('K') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 500; }
