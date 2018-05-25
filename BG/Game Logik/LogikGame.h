@@ -24,7 +24,7 @@ namespace Logik
   template <char k> class Peg : public Kind
   {
   private:
-    Peg<k>(void) : Kind(k) {}
+    Peg<k>(void) noexcept : Kind(k) {}
 
   public:
     void CollectMoves(const MainPosition&, const Location, std::vector<Move>&) {};
@@ -37,12 +37,12 @@ namespace Logik
   class LogikPiece : public Piece
   {
   private:
-    LogikPiece(const Kind* k, const Color* c, UINT l, UINT s) : Piece(k, c, l, l, s) {}
+    LogikPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     LogikPiece(const LogikPiece&) = delete;
     LogikPiece& operator=(const LogikPiece&) = delete;
 
   public:
-    static const LogikPiece& GetPiece(unsigned int z)
+    static const LogikPiece& GetPiece(unsigned int z) noexcept
     {
       switch (z)
       {
@@ -76,12 +76,12 @@ namespace Logik
   class Play                                                    // holds a set of pegs = one potential 'move' or play
   {
   public:
-    Play(unsigned int z) : code(z) { for (unsigned int i = 0; i < BY; ++i) { peg[i] = z % BX; z /= BX; } };
-    Play(const std::array<unsigned int, BY>& p) : peg(p) { for (unsigned int i = 0; i < BY; ++i) { code *= BX; code += p[BY - 1 - i]; } }
-    bool operator==(const Play<BX, BY, BZ>& p) const { return p.code == code; }
-    bool operator!=(const Play<BX, BY, BZ>& p) const { return !(*this == p); }
-    operator unsigned int() const { return code; }
-    unsigned int operator[](unsigned int z) const { return peg[z]; }
+    Play(unsigned int z) noexcept : code(z) { for (unsigned int i = 0; i < BY; ++i) { peg[i] = z % BX; z /= BX; } };
+    Play(const std::array<unsigned int, BY>& p) noexcept : peg(p) { for (unsigned int i = 0; i < BY; ++i) { code *= BX; code += p[BY - 1 - i]; } }
+    bool operator==(const Play<BX, BY, BZ>& p) const noexcept { return p.code == code; }
+    bool operator!=(const Play<BX, BY, BZ>& p) const noexcept { return !(*this == p); }
+    operator unsigned int() const noexcept { return code; }
+    unsigned int operator[](unsigned int z) const noexcept { return peg[z]; }
   private:
     unsigned int code{};
     std::array<unsigned int, BY> peg{};
@@ -103,13 +103,13 @@ namespace Logik
   class Result                                                  // holds a potential result (so many Black and so many White markers)
   {
   public:
-    Result(void) {}
-    Result(unsigned int b, unsigned int w)                      // get the result from marker counts
+    Result(void) noexcept {}
+    Result(unsigned int b, unsigned int w) noexcept             // get the result from marker counts
     {
       if (b == BY) code = Result<BX, BY, BZ>::RN() - 1;
       else { code = w; for (unsigned int i = 0; i < b; i++) code += BY - i + 1; }
     }
-    Result(const Play<BX, BY, BZ>& p1, const Play<BX, BY, BZ>& p2)  // get the result from comparing two plays
+    Result(const Play<BX, BY, BZ>& p1, const Play<BX, BY, BZ>& p2) noexcept  // get the result from comparing two plays
     {
       bool u1[BY]{};
       bool u2[BY]{};
@@ -150,11 +150,11 @@ namespace Logik
       code = w;
       for (unsigned int i = 0; i < b; i++) code += BY - i + 1;
     }
-    constexpr static unsigned int RN(void) { return (BY + 1) * (BY + 2) / 2 - 1; }
-    bool operator==(const Result<BX, BY, BZ>& r) const { return r.code == this->code; }
-    bool operator!=(const Result<BX, BY, BZ>& r) const { return !(*this == r); }
-    operator unsigned int() const { return code; }
-    unsigned int GetMarker(unsigned int m) const
+    constexpr static unsigned int RN(void) noexcept { return (BY + 1) * (BY + 2) / 2 - 1; }
+    bool operator==(const Result<BX, BY, BZ>& r) const noexcept { return r.code == this->code; }
+    bool operator!=(const Result<BX, BY, BZ>& r) const noexcept { return !(*this == r); }
+    operator unsigned int() const noexcept { return code; }
+    unsigned int GetMarker(unsigned int m) const noexcept
     {
       unsigned int z{code};
       if (z == Result<BX, BY, BZ>::RN() - 1) return m ? 0 : BY;
@@ -174,7 +174,7 @@ namespace Logik
   class LMove : public Move
   {
   public:
-    LMove(Move::PositionValue mm) : Move(Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr}), m((unsigned int)mm) {}
+    LMove(Move::PositionValue mm) noexcept : Move(Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr}), m((unsigned int)mm) {}
     unsigned int GetIndex(void) const { return m; }
     virtual ~LMove(void) {}
 
@@ -187,7 +187,7 @@ namespace Logik
   class LPosition : public MainPosition
   {
   public:
-    LPosition<BX, BY, BZ>(void) : MainPosition(4 * BY, BZ)
+    LPosition<BX, BY, BZ>(void) noexcept : MainPosition(4 * BY, BZ)
     {
       for (unsigned int i = 0; i < 4 * BY; i++)
         for (unsigned int j = 0; j < BZ; j++)
@@ -365,7 +365,7 @@ namespace Logik
   class LMarkerStockPosition : public StockPosition
   {
   public:
-    LMarkerStockPosition(void) : StockPosition(2 + 1, 1)
+    LMarkerStockPosition(void) noexcept : StockPosition(2 + 1, 1)
     {
       SetPiece(Location(0, 0), &LogikPiece::LPieceB);
       SetPiece(Location(1, 0), &LogikPiece::LPieceW);
@@ -403,7 +403,7 @@ namespace Logik
   {
   private:
     LGame<BX, BY, BZ>(LPosition<BX, BY, BZ>* p, TakenPosition* t, StockPosition* s,
-      LLayout* l, TakenLayout* tl, LStockLayout* sl) : Game{p,t,s,l,tl,sl}
+      LLayout* l, TakenLayout* tl, LStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
     {
       AddToStock(Location(0, 0), &LogikPiece::LPieceB);
       AddToStock(Location(1, 0), &LogikPiece::LPieceW);
@@ -418,7 +418,7 @@ namespace Logik
       ShowStock(true);
     }
   public:
-    LGame<BX, BY, BZ>(void) : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(BX + 3, 1),
+    LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(BX + 3, 1),
       new LLayout(4 * BY, BZ), nullptr, new LStockLayout(BX, BY, BZ)) {}
     virtual ~LGame<BX, BY, BZ>(void) {}
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)

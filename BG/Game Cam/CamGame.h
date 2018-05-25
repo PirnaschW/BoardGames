@@ -17,7 +17,7 @@ namespace Cam
   class Pawn : public Kind
   {
   private:
-    Pawn(void) : Kind('P') {}
+    Pawn(void) noexcept : Kind('P') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 20; }
@@ -29,7 +29,7 @@ namespace Cam
   class Knight : public Kind
   {
   private:
-    Knight(void) : Kind('N') {}
+    Knight(void) noexcept : Kind('N') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 100; }
@@ -42,7 +42,7 @@ namespace Cam
   class CamPiece : public Piece
   {
   private:
-    CamPiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) : Piece(k, c, l, d, s) {}
+    CamPiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     CamPiece(const CamPiece&) = delete;
     CamPiece& operator=(const CamPiece&) = delete;
 
@@ -68,7 +68,7 @@ namespace Cam
   class CamPosition : public MainPosition
   {
   public:
-    CamPosition(unsigned int x, unsigned int y) : MainPosition(x, y) {}
+    CamPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y) {}
     virtual ~CamPosition(void) override {}
     virtual MainPosition* Clone(void) const override = 0;
     virtual void GetAllMoves(void) override;
@@ -81,7 +81,7 @@ namespace Cam
   class CamLayout : public MainLayout
   {
   public:
-    CamLayout(unsigned int x, unsigned int y) :
+    CamLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
     virtual ~CamLayout() {}
   };
@@ -90,7 +90,7 @@ namespace Cam
   class CamTakenLayout : public TakenLayout
   {
   public:
-    CamTakenLayout(unsigned int x, unsigned int y) :
+    CamTakenLayout(unsigned int x, unsigned int y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
     virtual ~CamTakenLayout() {}
   };
@@ -98,7 +98,7 @@ namespace Cam
   class CamStockLayout : public StockLayout
   {
   public:
-    CamStockLayout(unsigned int /*x*/, unsigned int y) :
+    CamStockLayout(unsigned int /*x*/, unsigned int y) noexcept :
       StockLayout(Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
     virtual ~CamStockLayout() {}
   };
@@ -108,7 +108,7 @@ namespace Cam
   {
   protected:
     CamGame(void) = delete;
-    CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl);
+    CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
   public:
     virtual ~CamGame(void) override {}
   };
@@ -117,7 +117,7 @@ namespace Cam
   class MiniCamPosition : public CamPosition
   { 
   public: 
-    MiniCamPosition(unsigned int x, unsigned int y);
+    MiniCamPosition(unsigned int x, unsigned int y) noexcept;
     virtual MainPosition* Clone(void) const override { return new MiniCamPosition(*this); }
 
   };
@@ -125,14 +125,14 @@ namespace Cam
   
   { 
   public: 
-    FullCamPosition(unsigned int x, unsigned int y); 
+    FullCamPosition(unsigned int x, unsigned int y) noexcept;
     virtual MainPosition* Clone(void) const override { return new FullCamPosition(*this); }
   };
 
   class MiniCamGame : public CamGame
   {
   public:
-    MiniCamGame(void) :
+    MiniCamGame(void) noexcept :
       CamGame(
         new MiniCamPosition(7, 13), new TakenPosition(14, 2), new StockPosition(3, 2),
         new CamLayout(7, 13), new CamTakenLayout(7, 13), new CamStockLayout(7, 13)) {}
@@ -140,7 +140,7 @@ namespace Cam
   class FullCamGame : public CamGame
   {
   public:
-    FullCamGame(void) :
+    FullCamGame(void) noexcept :
       CamGame(
         new FullCamPosition(12, 16), new TakenPosition(24, 2), new StockPosition(3, 2),
         new CamLayout(12, 16), new CamTakenLayout(12, 16), new CamStockLayout(12, 16)) {}

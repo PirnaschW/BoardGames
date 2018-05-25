@@ -167,7 +167,7 @@ namespace Cam
 
 
   CamGame::CamGame(CamPosition* p, TakenPosition* t, StockPosition* s,
-    CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) : Game{p,t,s,l,tl,sl}
+    CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
   {
     AddToStock(Location(0, 0), &CamPiece::WN);
     AddToStock(Location(1, 0), &CamPiece::WP);
@@ -175,7 +175,7 @@ namespace Cam
     AddToStock(Location(1, 1), &CamPiece::BN);
   }
 
-  MiniCamPosition::MiniCamPosition(unsigned int x, unsigned int y) : CamPosition(x, y)
+  MiniCamPosition::MiniCamPosition(unsigned int x, unsigned int y) noexcept : CamPosition(x, y)
   {
     // Black Knights
     SetPiece(Location(2, 3), &CamPiece::BN);
@@ -231,7 +231,7 @@ namespace Cam
     SetPiece(Location(6,12), &Piece::NoTile);
   }
 
-  FullCamPosition::FullCamPosition(unsigned int x, unsigned int y) : CamPosition(x, y)
+  FullCamPosition::FullCamPosition(unsigned int x, unsigned int y) noexcept : CamPosition(x, y)
   {
     // Black Knights
     SetPiece(Location(2, 5), &CamPiece::BN);

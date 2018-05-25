@@ -17,7 +17,7 @@ namespace Hasami
   class Checker : public Kind
   {
   private:
-    Checker(void) : Kind('0') {}
+    Checker(void) noexcept : Kind('0') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 1; }
@@ -29,7 +29,7 @@ namespace Hasami
   class HasamiPiece : public Piece
   {
   private:
-    HasamiPiece(const Kind* k, const Color* c, UINT l, UINT s) : Piece(k, c, l, l, s) {}
+    HasamiPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     HasamiPiece(const HasamiPiece&) = delete;
     HasamiPiece& operator=(const HasamiPiece&) = delete;
 
@@ -45,21 +45,21 @@ namespace Hasami
   class HasamiPosition : public MainPosition
   {
   public:
-    HasamiPosition(unsigned int x, unsigned int y);
+    HasamiPosition(unsigned int x, unsigned int y) noexcept;
     virtual ~HasamiPosition() override {}
     virtual MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual Move::PositionValue EvaluateStatically(void) override;
 
   protected:
-    inline unsigned int GetValue(unsigned int z) const;
+    inline unsigned int GetValue(unsigned int z) const noexcept;
   };
 
 
   class HasamiLayout : public MainLayout
   {
   public:
-    HasamiLayout(unsigned int x, unsigned int y) :
+    HasamiLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
     virtual ~HasamiLayout() {}
   };
@@ -67,7 +67,7 @@ namespace Hasami
   class HasamiTakenLayout : public TakenLayout
   {
   public:
-    HasamiTakenLayout(unsigned int x, unsigned int y) :
+    HasamiTakenLayout(unsigned int x, unsigned int y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
     virtual ~HasamiTakenLayout() {}
   };
@@ -75,7 +75,7 @@ namespace Hasami
   class HasamiStockLayout : public StockLayout
   {
   public:
-    HasamiStockLayout(unsigned int x, unsigned int y) :
+    HasamiStockLayout(unsigned int x, unsigned int y) noexcept :
       StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
     virtual ~HasamiStockLayout() {}
   };
@@ -84,9 +84,9 @@ namespace Hasami
   class HasamiGame : public Game
   {
   private:
-    HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s, HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl);
+    HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s, HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept;
   public:
-    HasamiGame(unsigned int x, unsigned int y) : HasamiGame(
+    HasamiGame(unsigned int x, unsigned int y) noexcept : HasamiGame(
       new HasamiPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
       new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
     virtual ~HasamiGame(void) override {};

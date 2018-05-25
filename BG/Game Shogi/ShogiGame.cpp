@@ -198,12 +198,12 @@ namespace Shogi
   //  return 0;
   //}
 
-  bool MiniShogiPosition::CanPromote(const Location &l) const
+  bool MiniShogiPosition::CanPromote(const Location &l) const noexcept
   {
     return (OnTurn() == &Color::White && (l.y == 0)) || (OnTurn() != &Color::White && (l.y == 4));
   }
 
-  bool FullShogiPosition::CanPromote(const Location &l) const
+  bool FullShogiPosition::CanPromote(const Location &l) const noexcept
   {
     return (OnTurn() == &Color::White && (l.y < 3)) || (OnTurn() != &Color::White && (l.y > 8));
   }
@@ -211,7 +211,7 @@ namespace Shogi
 
   ShogiGame::ShogiGame(
     ShogiPosition* p, TakenPosition* t, StockPosition* s,
-    ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) : Game{p,t,s,l,tl,sl}
+    ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
   {
     AddToStock(Location(0, 0), &ShogiPiece::ShogiSKW);
     AddToStock(Location(1, 0), &ShogiPiece::ShogiSGW);
@@ -246,7 +246,7 @@ namespace Shogi
     AddToStock(Location(13, 1), &ShogiPiece::ShogiPPW);
   }
 
-  MiniShogiPosition::MiniShogiPosition(unsigned int x, unsigned int y) : ShogiPosition(x, y)
+  MiniShogiPosition::MiniShogiPosition(unsigned int x, unsigned int y) noexcept : ShogiPosition(x, y)
   {
     SetPiece(Location(0, 0), &ShogiPiece::ShogiSRB);
     SetPiece(Location(1, 0), &ShogiPiece::ShogiSBB);
@@ -263,7 +263,7 @@ namespace Shogi
     SetPiece(Location(0, 3), &ShogiPiece::ShogiSPW);
   }
 
-  FullShogiPosition::FullShogiPosition(unsigned int x, unsigned int y) : ShogiPosition(x, y)
+  FullShogiPosition::FullShogiPosition(unsigned int x, unsigned int y) noexcept : ShogiPosition(x, y)
   {
     SetPiece(Location(0, 0), &ShogiPiece::ShogiSLB);
     SetPiece(Location(1, 0), &ShogiPiece::ShogiSNB);

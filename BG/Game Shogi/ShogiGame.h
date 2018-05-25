@@ -16,7 +16,7 @@ namespace Shogi
   class Pawn : public Kind
   {
   private:
-    Pawn(void) : Kind('p') {}
+    Pawn(void) noexcept : Kind('p') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 1; }
@@ -29,7 +29,7 @@ namespace Shogi
   class Knight : public Kind
   {
   private:
-    Knight(void) : Kind('n') {}
+    Knight(void) noexcept : Kind('n') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 4; }
@@ -42,7 +42,7 @@ namespace Shogi
   class Bishop : public Kind
   {
   private:
-    Bishop(void) : Kind('b') {}
+    Bishop(void) noexcept : Kind('b') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 8; }
@@ -54,7 +54,7 @@ namespace Shogi
   class Rook : public Kind
   {
   private:
-    Rook(void) : Kind('r') {}
+    Rook(void) noexcept : Kind('r') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 10; }
@@ -66,7 +66,7 @@ namespace Shogi
   class Lance : public Kind
   {
   private:
-    Lance(void) : Kind('l') {}
+    Lance(void) noexcept : Kind('l') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 3; }
@@ -78,7 +78,7 @@ namespace Shogi
   class Silver : public Kind
   {
   private:
-    Silver(void) : Kind('s') {}
+    Silver(void) noexcept : Kind('s') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 5; }
@@ -90,7 +90,7 @@ namespace Shogi
   class Gold : public Kind
   {
   private:
-    Gold(void) : Kind('G') {}
+    Gold(void) noexcept : Kind('G') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 6; }
@@ -103,7 +103,7 @@ namespace Shogi
   class King : public Kind
   {
   private:
-    King(void) : Kind('K') {}
+    King(void) noexcept : Kind('K') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 8; }
@@ -115,7 +115,7 @@ namespace Shogi
   class PPawn : public Kind
   {
   private:
-    PPawn(void) : Kind('P') {}
+    PPawn(void) noexcept : Kind('P') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 7; }
@@ -127,7 +127,7 @@ namespace Shogi
   class PKnight : public Kind
   {
   private:
-    PKnight(void) : Kind('N') {}
+    PKnight(void) noexcept : Kind('N') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 6; }
@@ -139,7 +139,7 @@ namespace Shogi
   class PBishop : public Kind
   {
   private:
-    PBishop(void) : Kind('B') {}
+    PBishop(void) noexcept : Kind('B') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 10; }
@@ -151,7 +151,7 @@ namespace Shogi
   class PRook : public Kind
   {
   private:
-    PRook(void) : Kind('R') {}
+    PRook(void) noexcept : Kind('R') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 12; }
@@ -163,7 +163,7 @@ namespace Shogi
   class PLance : public Kind
   {
   private:
-    PLance(void) : Kind('L') {}
+    PLance(void) noexcept : Kind('L') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 6; }
@@ -175,7 +175,7 @@ namespace Shogi
   class PSilver : public Kind
   {
   private:
-    PSilver(void) : Kind('S') {}
+    PSilver(void) noexcept : Kind('S') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     virtual unsigned int GetValue(void) const noexcept override { return 6; }
@@ -188,7 +188,8 @@ namespace Shogi
   class ShogiPiece : public Piece
   {
   private:
-    ShogiPiece(const Kind* k, const Color* c, const ShogiPiece * u, const ShogiPiece * d, UINT l, UINT s) : Piece(k, c, l, l, s), up(u), down(d) {}
+    ShogiPiece(const Kind* k, const Color* c, const ShogiPiece * u, const ShogiPiece * d, UINT l, UINT s) noexcept
+      : Piece(k, c, l, l, s), up(u), down(d) {}
     ShogiPiece(const ShogiPiece&) = delete;
     ShogiPiece& operator=(const ShogiPiece&) = delete;
   public:
@@ -242,21 +243,21 @@ namespace Shogi
   class ShogiPosition : public MainPosition
   {
   public:
-    ShogiPosition(unsigned int x, unsigned int y) : MainPosition(x, y) {}
+    ShogiPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y) {}
     virtual ~ShogiPosition() override {}
     virtual MainPosition* Clone(void) const override = 0;
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const;
     virtual Move::PositionValue EvaluateStatically(void) override;
 
   public: // extensions to base class
-    virtual bool CanPromote(const Location &l) const = 0;
+    virtual bool CanPromote(const Location &l) const noexcept = 0;
   };
 
 
   class ShogiLayout : public MainLayout
   {
   public:
-    ShogiLayout(unsigned int x, unsigned int y) :
+    ShogiLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
     virtual ~ShogiLayout() {}
   };
@@ -264,7 +265,7 @@ namespace Shogi
   class ShogiTakenLayout : public TakenLayout
   {
   public:
-    ShogiTakenLayout(unsigned int x, unsigned int /*y*/) :
+    ShogiTakenLayout(unsigned int x, unsigned int /*y*/) noexcept :
       TakenLayout(Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4)) { }
     virtual ~ShogiTakenLayout() {}
   };
@@ -282,7 +283,7 @@ namespace Shogi
   {
   protected:
     ShogiGame(void) = delete;
-    ShogiGame(ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl);
+    ShogiGame(ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
   public:
     virtual ~ShogiGame(void) override {}
   };
@@ -290,23 +291,23 @@ namespace Shogi
   class MiniShogiPosition : public ShogiPosition
   {
   public:
-    MiniShogiPosition(unsigned int x, unsigned int y);
+    MiniShogiPosition(unsigned int x, unsigned int y) noexcept;
     virtual MainPosition* Clone(void) const override { return new MiniShogiPosition(*this); }
-    virtual bool CanPromote(const Location &l) const;
+    virtual bool CanPromote(const Location &l) const noexcept;
   };
 
   class FullShogiPosition : public ShogiPosition
   {
   public:
-    FullShogiPosition(unsigned int x, unsigned int y);
+    FullShogiPosition(unsigned int x, unsigned int y) noexcept;
     virtual MainPosition* Clone(void) const override { return new FullShogiPosition(*this); }
-    virtual bool CanPromote(const Location &l) const;
+    virtual bool CanPromote(const Location &l) const noexcept;
   };
 
   class MiniShogiGame : public ShogiGame
   {
   public:
-    MiniShogiGame(void) :
+    MiniShogiGame(void) noexcept :
       ShogiGame(
         new MiniShogiPosition(5, 5), new TakenPosition(15, 2), new StockPosition(15, 2),
         new ShogiLayout(5, 5), new ShogiTakenLayout(5, 5), new ShogiStockLayout(5, 5)) {}
@@ -315,7 +316,7 @@ namespace Shogi
   class FullShogiGame : public ShogiGame
   {
   public:
-    FullShogiGame(void) :
+    FullShogiGame(void) noexcept :
       ShogiGame(
         new FullShogiPosition(9, 9), new TakenPosition(27, 2), new StockPosition(15, 2),
         new ShogiLayout(9, 9), new ShogiTakenLayout(9, 9), new ShogiStockLayout(9, 9)) {}

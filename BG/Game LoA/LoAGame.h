@@ -17,7 +17,7 @@ namespace LoA
   class LoAPeg : public Kind
   {
   private:
-    LoAPeg(void) : Kind('L') {}
+    LoAPeg(void) noexcept : Kind('L') {}
   public:
 
     inline std::vector<const Piece*> CollectAlong(const MainPosition& pos, Location l, const Offset& o) const
