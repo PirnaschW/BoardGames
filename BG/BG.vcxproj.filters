@@ -1,0 +1,558 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="BG">
+      <UniqueIdentifier>{f9f8c861-cc19-49c6-a9e0-ecc374fb29df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BG\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="BG\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="BG\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Game LoA">
+      <UniqueIdentifier>{8370b4ba-a5a3-4904-a405-5eddeff8e3a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game LoA\Header Files">
+      <UniqueIdentifier>{f4afc616-9b11-48aa-9a1e-1bac18af33de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game LoA\Source Files">
+      <UniqueIdentifier>{d492b51d-3925-494c-932a-2a5b52045d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game LoA\Resource Files">
+      <UniqueIdentifier>{e80825d4-c99e-44d3-a355-c080582baca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Logik">
+      <UniqueIdentifier>{4add5905-ccb1-4bd4-8d15-e58107cab519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Logik\Header Files">
+      <UniqueIdentifier>{c4b99968-509d-4319-910c-462986f39db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Logik\Resource Files">
+      <UniqueIdentifier>{c1fbb7be-2ac6-4161-b0e8-8c3c458eb02b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Logik\Source Files">
+      <UniqueIdentifier>{0b1f4278-cf9f-4869-9d3e-2623bbc52d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Massacre Chess">
+      <UniqueIdentifier>{d7ff7ea7-3ea9-43e3-92fb-9428b0c113ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Massacre Chess\Header Files">
+      <UniqueIdentifier>{80d0b229-ed17-46d5-940d-a3b238a114b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Massacre Chess\Resource Files">
+      <UniqueIdentifier>{fc20b2ed-5370-402f-aa62-ac28f120bb6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Massacre Chess\Source Files">
+      <UniqueIdentifier>{14208755-7d42-4ea0-8933-6d7124197681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{89e76541-4d75-44f8-9536-c87b96216916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header Files">
+      <UniqueIdentifier>{6fe5e842-617e-4c09-aa79-622c0f84a8bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Resource Files">
+      <UniqueIdentifier>{6102be26-9970-41a5-8fdf-7852d4383092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{0298910f-1ce3-43b5-b0c1-e8601f04c8e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Template">
+      <UniqueIdentifier>{8ceaa9a5-09fd-4506-885d-46ba4cea78cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Template\Header Files">
+      <UniqueIdentifier>{d8d32550-7c0d-4b5e-a7c5-f28de35c4503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Template\Source Files">
+      <UniqueIdentifier>{dbdfb5bd-0d71-4258-a850-60784438ae42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Template\Resource Files">
+      <UniqueIdentifier>{8c3f4b9f-39f8-4b14-a220-dda96142aa16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cam">
+      <UniqueIdentifier>{6c001b2a-0350-43fb-8912-fe147c2114df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cam\Header Files">
+      <UniqueIdentifier>{06f62761-66a4-4139-968f-d98d771fed7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cam\Source Files">
+      <UniqueIdentifier>{d98688b1-1a25-4142-b1c6-ee818c7194f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cam\Resource Files">
+      <UniqueIdentifier>{8eae4e2f-74e9-45fd-9d62-9888290dca40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Shogi">
+      <UniqueIdentifier>{d693bc5a-45a3-4718-bd72-3cf778fe07d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Shogi\Source Files">
+      <UniqueIdentifier>{0e3126b0-680b-4015-ba79-bbf9c85e1b8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Shogi\Header Files">
+      <UniqueIdentifier>{c1169c16-962a-44fd-810e-700b8fc2167e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Shogi\Respoure Files">
+      <UniqueIdentifier>{187de855-d107-4093-ad30-77135d790904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Hasami">
+      <UniqueIdentifier>{0da20945-a69f-4676-b582-be304f846e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Hasami\Header Files">
+      <UniqueIdentifier>{d091faac-5432-478e-b7bb-b3d57173c4f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Hasami\Source Files">
+      <UniqueIdentifier>{21a77684-6ab0-49c9-b4b1-29580c174fe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Hasami\Resource Files">
+      <UniqueIdentifier>{cf2a2446-b2ed-47c9-aafc-aa00ab6a2e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Test">
+      <UniqueIdentifier>{68aa7a90-0cc6-47d2-b600-a33af379fbff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Test\Header Files">
+      <UniqueIdentifier>{21c94697-71c8-4d7b-b506-eb92a4dc5a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Test\Source Files">
+      <UniqueIdentifier>{aaa3a4be-85f0-4a5a-8b38-13bf8bc9b529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Test\Resource Files">
+      <UniqueIdentifier>{0ba87687-926d-45c0-abc7-b188367baa9c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BG.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrm.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BGDoc.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BGView.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game LoA\LoAGame.h">
+      <Filter>Game LoA\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Logik\LogikGame.h">
+      <Filter>Game Logik\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Massacre Chess\MCGame.h">
+      <Filter>Game Massacre Chess\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BGResource.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game LoA\LoAResource.h">
+      <Filter>Game LoA\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Logik\LogikResource.h">
+      <Filter>Game Logik\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Massacre Chess\MCResource.h">
+      <Filter>Game Massacre Chess\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Template\TemplateGame.h">
+      <Filter>Game Template\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Template\TemplateResource.h">
+      <Filter>Game Template\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Cam\CamGame.h">
+      <Filter>Game Cam\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Cam\CamResource.h">
+      <Filter>Game Cam\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Shogi\ShogiGame.h">
+      <Filter>Game Shogi\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Shogi\ShogiResource.h">
+      <Filter>Game Shogi\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCore.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreResource.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreLayout.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGChessPieces.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Hasami\HasamiGame.h">
+      <Filter>Game Hasami\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Hasami\HasamiResource.h">
+      <Filter>Game Hasami\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Test\TestGame.h">
+      <Filter>Game Test\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Test\TestResource.h">
+      <Filter>Game Test\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BG.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrm.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BGDoc.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BGView.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BGCreateGames.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game LoA\LoAGame.cpp">
+      <Filter>Game LoA\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Logik\LogikGame.cpp">
+      <Filter>Game Logik\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Massacre Chess\MCGame.cpp">
+      <Filter>Game Massacre Chess\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Template\TemplateGame.cpp">
+      <Filter>Game Template\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Cam\CamGame.cpp">
+      <Filter>Game Cam\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Shogi\ShogiGame.cpp">
+      <Filter>Game Shogi\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\BGCore.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\BGCoreLayout.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\BGCoreAI.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\BGChessPieces.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Hasami\HasamiGame.cpp">
+      <Filter>Game Hasami\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Test\TestGame.cpp">
+      <Filter>Game Test\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\BG.rc2">
+      <Filter>BG\Resource Files</Filter>
+    </None>
+    <None Include="BG.reg">
+      <Filter>BG\Resource Files</Filter>
+    </None>
+    <None Include="Game LoA\LoA.rc2">
+      <Filter>Game LoA\Resource Files</Filter>
+    </None>
+    <None Include="Core\Core.rc2">
+      <Filter>Core\Resource Files</Filter>
+    </None>
+    <None Include="Game Logik\Logik.rc2">
+      <Filter>Game Logik\Resource Files</Filter>
+    </None>
+    <None Include="Game Massacre Chess\Massacre Chess.rc2">
+      <Filter>Game Massacre Chess\Resource Files</Filter>
+    </None>
+    <None Include="Game Template\Template.rc2">
+      <Filter>Game Template\Resource Files</Filter>
+    </None>
+    <None Include="Game Cam\Cam.rc2">
+      <Filter>Game Cam\Resource Files</Filter>
+    </None>
+    <None Include="Game Shogi\Shogi.rc2">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </None>
+    <None Include="Game Hasami\Hasami.rc2">
+      <Filter>Game Hasami\Resource Files</Filter>
+    </None>
+    <None Include="Game Test\Test.rc2">
+      <Filter>Game Test\Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BG.rc">
+      <Filter>BG\Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\userimages.bmp">
+      <Filter>BG\Resource Files</Filter>
+    </Image>
+    <Image Include="res\BGDoc.ico">
+      <Filter>BG\Resource Files</Filter>
+    </Image>
+    <Image Include="res\BG.ico">
+      <Filter>BG\Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>BG\Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>BG\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bbd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bbl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bbs.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bkd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bkl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bks.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bnd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bnl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bns.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bpd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bpl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bps.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bqd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bql.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\bqs.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\brd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\brl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\brs.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wbd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wbl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wbs.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wkd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wkl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wks.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wnd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wnl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wns.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wpd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wpl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wps.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wqd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wql.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wqs.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wrd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wrl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\wrs.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\xxd.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\xxl.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikDoc.ico">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPegB.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPegBf.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPegW.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPegWf.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Massacre Chess\res\Massacre ChessDoc.ico">
+      <Filter>Game Massacre Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="Game LoA\res\LoAPegB.bmp">
+      <Filter>Game LoA\Resource Files</Filter>
+    </Image>
+    <Image Include="Game LoA\res\LoAPegBf.bmp">
+      <Filter>Game LoA\Resource Files</Filter>
+    </Image>
+    <Image Include="Game LoA\res\LoAPegW.bmp">
+      <Filter>Game LoA\Resource Files</Filter>
+    </Image>
+    <Image Include="Game LoA\res\LoAPegWf.bmp">
+      <Filter>Game LoA\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg1.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg1f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg2.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg2f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg3.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg3f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg4.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg4f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg5.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg5f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg6.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg6f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg7.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg7f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg8.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Logik\res\LogikPeg8f.bmp">
+      <Filter>Game Logik\Resource Files</Filter>
+    </Image>
+    <Image Include="Game LoA\res\LoADoc.ico">
+      <Filter>Game LoA\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Template\res\TemplateDoc.ico">
+      <Filter>Game Template\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Cam\res\CamelotDoc.ico">
+      <Filter>Game Cam\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\FullShogiDoc.ico">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\MiniShogiDoc.ico">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Cam\res\CamDoc.ico">
+      <Filter>Game Cam\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Hasami\res\HasamiDoc.ico">
+      <Filter>Game Hasami\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Hasami\res\HasamiB.bmp">
+      <Filter>Game Hasami\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Hasami\res\HasamiBs.bmp">
+      <Filter>Game Hasami\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Hasami\res\HasamiW.bmp">
+      <Filter>Game Hasami\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Hasami\res\HasamiWs.bmp">
+      <Filter>Game Hasami\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Test\res\TestDoc.ico">
+      <Filter>Game Test\Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

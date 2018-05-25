@@ -1,0 +1,233 @@
+#include "stdafx.h"
+
+namespace BoardGamesCore
+{
+
+  void Piece::Draw(CDC* pDC, const CRect& r, const TileColor* f) const
+  {
+    if (ID_l == 0 && ID_d == 0) return;
+    if (cb_l.m_hObject == 0) cb_l.LoadBitmap(ID_l);
+    if (cb_d.m_hObject == 0) cb_d.LoadBitmap(ID_d);
+    if (cb_s.m_hObject == 0 && ID_s != 0) cb_s.LoadBitmap(ID_s);
+
+    CBitmap& cb = (f == &TileColor::Light) ? cb_l : ((f == &TileColor::Dark) ? cb_d : cb_s);
+
+    if (cb.m_hObject != 0)
+    {
+      BITMAP bm;
+      cb.GetObject(sizeof(BITMAP), &bm);
+      if ((bm.bmWidth != r.Width()) || (bm.bmHeight != r.Height()))
+      {
+        //throw ("rectangle has wrong size!");
+      }
+    }
+    CDC dcMemory;
+    dcMemory.CreateCompatibleDC(pDC);
+    dcMemory.SelectObject(&cb);
+    pDC->BitBlt(r.TopLeft().x, r.TopLeft().y, r.Width(), r.Height(), &dcMemory, 0, 0, SRCCOPY);
+  }
+
+
+  Layout::Layout(const Dimension& d, LayoutType lt) : dim(d), ltype(lt), tiles{d.xCount*d.yCount,nullptr}
+  {
+    unsigned int z = 0;
+    for (unsigned int i = 0; i < dim.xCount; i++)
+      for (unsigned int j = 0; j < dim.yCount; j++, z++)
+      {
+        const TileColor* f{};
+        switch (ltype)
+        {
+          case LayoutType::Light: f = &TileColor::Light; break;
+          case LayoutType::Dark:  f = &TileColor::Dark;  break;
+          case LayoutType::Small: f = &TileColor::Small; break;
+          case LayoutType::Alternating:
+            if ((i + j) % 2) f = &TileColor::Light;
+            else f = &TileColor::Dark;
+            break;
+        }
+
+        CRect r{
+          (int)(dim.lEdge + dim.xDim * i + dim.xSkip * i),
+          (int)(dim.tEdge + dim.yDim * j + dim.ySkip * j),
+          (int)(dim.lEdge + dim.xDim * (i + 1U) + dim.xSkip * i),
+          (int)(dim.tEdge + dim.yDim * (j + 1U) + dim.ySkip * j)};
+        (tiles)[z] = new Tile(Location(i, j), r, f);
+      }
+  }
+
+  void Layout::Draw(CDC* pDC, const Position* pos) const
+  {
+    for (auto& t : tiles)
+      t->Draw(pDC, pos->GetPiece(t->GetLocation()));
+  }
+
+  void Layout::DrawSelected(CDC* pDC, const Location& l) const
+  {
+    for (auto& t : tiles)
+      if (t->GetLocation() == l)
+      {
+        CRect r = t->GetRect();
+        r.DeflateRect(1, 1, 0, 0);
+        pDC->SelectStockObject(NULL_BRUSH);
+        CPen pen;
+        pen.CreatePen(PS_SOLID, 2, RGB(0, 128, 255));
+        pDC->SelectObject(pen);
+        pDC->Rectangle(r);
+      }
+  }
+
+  bool Layout::GetLocation(const CPoint& p, Location& l) const
+  {
+    for (auto& t : tiles)
+      if (t->InRect(p)) {
+        l = t->GetLocation();
+        return true;
+      }
+    return false;
+  }
+
+  void MainLayout::Draw(CDC* pDC, const Position* pos) const
+  {
+    // frame around the board (needs to be drawn first)
+    for (unsigned int z = 4; z > 0; z--)
+    {
+      if (z != 2)
+        pDC->Rectangle((int)(dim.lEdge - z), (int)(dim.tEdge - z), (int)(dim.lEdge + dim.xCount * dim.xDim + z), (int)(dim.tEdge + dim.yCount * dim.yDim + z));
+    }
+    Layout::Draw(pDC, pos);
+  }
+
+
+  void Game::Draw(CDC* pDC) const
+  {
+    lay->Draw(pDC, pos);
+    // markup selectable tiles
+    for (auto& m : moves)
+    {
+      lay->DrawSelected(pDC, m.GetFr());
+      lay->DrawSelected(pDC, m.GetTo());
+    }
+
+    if (showStock || editing)
+    {
+      if (slay != nullptr) slay->Draw(pDC, spos);
+    }
+
+    if (tlay != nullptr) tlay->Draw(pDC, tpos);
+
+    if (dragging)
+    {
+      CRect r(dragPoint, SIZE{32,32});  // doesn't work for all games! - some have 18x20
+      dragPiece->Draw(pDC, r, &TileColor::Small);
+    }
+
+  }
+
+  bool Game::React(UINT command)                                               // react to button/menu command
+  {
+    switch (command)
+    {
+      case ID_EDIT_MOVE:
+        if (IsAlive())
+        {
+          AIAction();  // execute computer move if it is its turn
+          return true; // update all views
+        }
+        break;
+      case ID_EDIT_BOARD: editing ^= true; return true;
+      case ID_LEVEL_PLUS: plies++; break;
+      case ID_LEVEL_MINUS: if (plies > 1) plies--; break;
+      default:
+        break;
+    }
+    return false; // no view update needed
+  }
+
+  bool Game::React(UINT event, UINT /*nFlags*/, const CPoint& p)                   // react to mouse events
+  {
+    switch (event)
+    {
+      case WM_LBUTTONDOWN:
+        if (editing) DragStart(p);
+        break;
+      case WM_LBUTTONUP:
+        if (dragging) DragEnd(p);
+        else Select(p);
+        break;
+      case WM_LBUTTONDBLCLK: break;
+
+      case WM_RBUTTONDOWN:   break;
+      case WM_RBUTTONUP:
+        Unselect();
+        break;
+      case WM_RBUTTONDBLCLK: break;
+
+      case WM_MOUSEMOVE:
+        if (dragging) DragTo(p);
+        else return false;  // that will skip updating all views
+        break;
+
+      default:               break;
+    }
+    return true; // if in doubt, update all views
+  }
+
+  void Game::React(CCmdUI* pCmdUI)                                             // react to UI events (allows to set buttons greyed, etc.)
+  {
+    switch (pCmdUI->m_nID)
+    {
+      case ID_EDIT_MOVE:   if (!IsAlive() || !CurrentPlayer()->Is(&PlayerType::Computer)) pCmdUI->Enable(FALSE); break;
+      case ID_EDIT_BOARD:  if (editing) pCmdUI->SetCheck(); break;
+      case ID_LEVEL_PLUS:  break;
+      case ID_LEVEL_MINUS: if (plies == 1) pCmdUI->Enable(FALSE); break;
+      default:             break;
+    }
+  }
+
+  void Game::Game::DragStart(const CPoint& point)
+  {
+    Location l{0,0};
+    if (slay->GetLocation(point, l)) { dragPiece = spos->GetPiece(l); }
+    else return; // clicked somewhere outside
+
+    dragPoint = point;
+    dragging = true;
+  }
+
+  void Game::Game::DragEnd(const CPoint& point)
+  {
+    Location l{0,0};
+    if (lay->GetLocation(point, l)) pos->SetPiece(l, dragPiece); // dropped on a valid target
+    dragging = false;
+    dragPoint = {};
+    dragPiece = nullptr;
+  }
+
+  void Game::Select(const CPoint & point)
+  {
+    if (!IsAlive() || CurrentPlayer()->Is(&PlayerType::Computer)) return;
+
+    Location l{0,0};
+    if (!lay->GetLocation(point, l)) return; // user clicked somewhere outside
+
+    if (moves.size() == 0)  // new selection starts
+    {
+      const Piece* p = pos->GetPiece(l);
+      if (p->IsColor(pos->OnTurn()))  // is this one of the player's pieces?
+        p->CollectMoves(*pos, l, moves);  // save possible moves
+    }
+    else  // starting point was already defined
+    {
+      const Piece* p = pos->GetPiece(l);
+      if (!p->IsColor(pos->OnTurn()))  // is this one of the opponent's pieces
+        for (auto &m : moves)               // check through allowed moves
+          if (m.GetTo() == l)
+          {
+            Execute(m);
+            moves.clear();
+            return;
+          }
+    }
+  }
+
+}
