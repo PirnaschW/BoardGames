@@ -24,14 +24,14 @@ namespace BoardGamesCore
 //    return *this;
 //  }
 
-  Move&& Move::operator =(Move&& m)
+  Move&& Move::operator =(Move&& m) noexcept
   {
     std::swap(step, m.step);
     value = m.value;
     return std::move(*this);
   }
 
-  bool Move::IsTake(void) const
+  bool Move::IsTake(void) const noexcept
   {
     for (auto& s : step) if (s.IsTake()) return true;
     return false;
@@ -48,7 +48,7 @@ namespace BoardGamesCore
   }
 
 
-  std::size_t Position::GetHash(void) const
+  std::size_t Position::GetHash(void) const noexcept
   {
     if (hash) return hash;
     std::size_t z{};
@@ -83,13 +83,13 @@ namespace BoardGamesCore
     assert(Test::Test::TestMoveUndo(this));
   }
 
-  void MainPosition::NextPlayer(void)
+  void MainPosition::NextPlayer(void) noexcept
   {
     if (onTurn == &Color::White) onTurn = &Color::Black;
     else onTurn = &Color::White;
   };
 
-  void MainPosition::PreviousPlayer(void)
+  void MainPosition::PreviousPlayer(void) noexcept
   {
     if (onTurn == &Color::White) onTurn = &Color::Black;
     else onTurn = &Color::White;

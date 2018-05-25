@@ -9,8 +9,8 @@ namespace BoardGamesChessPieces
   private:
     Pawn(void) : Kind('P') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 100; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 100; }
 
   public:
     inline const static Pawn ThePawn{};
@@ -21,8 +21,8 @@ namespace BoardGamesChessPieces
   private:
     Knight(void) : Kind('N') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 300; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 300; }
 
   public:
     inline const static Knight TheKnight{};
@@ -33,8 +33,8 @@ namespace BoardGamesChessPieces
   private:
     Bishop(void) : Kind('B') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 300; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 300; }
 
   public:
     inline const static Bishop TheBishop{};
@@ -45,8 +45,8 @@ namespace BoardGamesChessPieces
   private:
     Rook(void) : Kind('R') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 500; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 500; }
 
   public:
     inline const static Rook TheRook{};
@@ -58,7 +58,7 @@ namespace BoardGamesChessPieces
     Queen(void) : Kind('Q') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 900; }
+    virtual unsigned int GetValue(void) const noexcept override { return 900; }
 
   public:
     inline const static Queen TheQueen{};
@@ -70,7 +70,7 @@ namespace BoardGamesChessPieces
     King(void) : Kind('K') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 500; }
+    virtual unsigned int GetValue(void) const noexcept override { return 500; }
 
   public:
     inline const static King TheKing{};

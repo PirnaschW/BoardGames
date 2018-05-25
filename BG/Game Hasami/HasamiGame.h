@@ -19,8 +19,8 @@ namespace Hasami
   private:
     Checker(void) : Kind('0') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 1; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 1; }
   
   public:
     inline const static Checker TheChecker{};

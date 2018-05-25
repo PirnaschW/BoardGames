@@ -80,7 +80,7 @@ namespace LoA
       CollectMoves(pos, l, moves, 1, 1); // check diagonal '\' moves
     }
 
-    virtual unsigned int GetValue(void) const override { return 0; } // in LoA, pieces have no value
+    virtual unsigned int GetValue(void) const noexcept override { return 0; } // in LoA, pieces have no value
 
 
   public:

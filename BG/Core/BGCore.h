@@ -34,7 +34,7 @@ namespace BoardGamesCore
   class Location final
   {
   public:
-    Location(unsigned int xx, unsigned int yy) noexcept : x{ xx }, y{ yy } {}
+    constexpr Location(unsigned int xx, unsigned int yy) noexcept : x{ xx }, y{ yy } {}
 
     inline bool operator==(const Location& l) const noexcept { return l.x == x && l.y == y; }
     inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
@@ -55,12 +55,12 @@ namespace BoardGamesCore
   class Field final // combines a Location and a Piece on it
   {
   public:
-    Field(const Location l, const Piece* p) : l{ l }, p{ p } {}
-    inline bool operator==(const Field& f) const { return l == f.l && p == f.p; }
-    inline bool operator!=(const Field& f) const { return !(f == *this); }
+    constexpr Field(const Location l, const Piece* p) noexcept : l{ l }, p{ p } {}
+    inline bool operator==(const Field& f) const noexcept { return l == f.l && p == f.p; }
+    inline bool operator!=(const Field& f) const noexcept { return !(f == *this); }
 
-    inline const Location GetLocation(void) const { return l; }
-    inline const Piece* GetPiece(void) const { return p; }
+    inline const Location GetLocation(void) const noexcept { return l; }
+    inline const Piece* GetPiece(void) const noexcept { return p; }
 
   private:
     Location l;
@@ -78,15 +78,15 @@ namespace BoardGamesCore
       Promote = 0x08,
     };
   public:
-    Step(const Field& Fr, const Field& To, StepType Ty, const std::vector<Field>& Take) : from{ Fr }, to{ To }, type{ Ty }, take{ Take } {}
-    inline bool operator == (const Step& s) const { return from == s.from && to == s.to && type == s.type && take == s.take; }
-    inline bool operator != (const Step& s) const { return !(s == *this); }
+    Step(const Field& Fr, const Field& To, StepType Ty, const std::vector<Field>& Take) noexcept : from{ Fr }, to{ To }, type{ Ty }, take{ Take } {}
+    inline bool operator == (const Step& s) const noexcept { return from == s.from && to == s.to && type == s.type && take == s.take; }
+    inline bool operator != (const Step& s) const noexcept { return !(s == *this); }
 
-    inline const Field& GetFr(void) const { return from; }
-    inline const Field& GetTo(void) const { return to; }
-    inline const StepType GetType(void) const { return type; }
-    inline const std::vector<Field>& GetTake() const { return take; }
-    inline bool IsTake(void) const { return type & StepType::Take; }
+    inline const Field& GetFr(void) const noexcept { return from; }
+    inline const Field& GetTo(void) const noexcept { return to; }
+    inline const StepType GetType(void) const noexcept { return type; }
+    inline const std::vector<Field>& GetTake() const noexcept { return take; }
+    inline bool IsTake(void) const noexcept { return type & StepType::Take; }
 
   private:
     Field from;
@@ -103,23 +103,23 @@ namespace BoardGamesCore
     constexpr const static PositionValue win{ INT_MAX / 8 };
 
   public:
-    Move(const Field Fr, const Field To, Step::StepType Ty = Step::StepType::Normal, const std::vector<Field>& Take = {}) :
+    constexpr Move(const Field Fr, const Field To, Step::StepType Ty = Step::StepType::Normal, const std::vector<Field>& Take = {}) noexcept :
       step{ Step{Fr,To,Ty,Take} } {}
-    Move(const std::vector<Step> St) : step{ St } {}
+    Move(const std::vector<Step> St) noexcept : step{ St } {}
     Move(const Move& move) = default;
     Move& operator =(const Move& m) = default;
-    Move&& operator =(Move&& m);
+    Move&& operator =(Move&& m) noexcept;
     virtual ~Move(void) {}
-    virtual bool operator==(const Move& m) { return step == m.step && value == m.value; }
+    virtual bool operator==(const Move& m) const noexcept { return step == m.step && value == m.value; }
 
-    virtual const std::vector<Step> GetSteps(void) const { return step; }
-    virtual bool IsTake(void) const;
+    virtual const std::vector<Step> GetSteps(void) const noexcept { return step; }
+    virtual bool IsTake(void) const noexcept;
     virtual const Location GetFr(void) const { return step.front().GetFr().GetLocation(); }
     virtual const Location GetTo(void) const { return step.back().GetTo().GetLocation(); }
     virtual const std::vector<Location> GetJumped(void) const;  // return list of jumped-over locations
-    virtual void SetValue(PositionValue v) { value = v; }
-    virtual PositionValue GetValue(void) const { return value; }
-    virtual bool operator <(const Move& rhs) const { return value > rhs.value; }
+    virtual void SetValue(PositionValue v) noexcept { value = v; }
+    virtual PositionValue GetValue(void) const noexcept { return value; }
+    virtual bool operator <(const Move& rhs) const noexcept { return value > rhs.value; }
 
   private:
     std::vector<Step> step;
@@ -130,7 +130,7 @@ namespace BoardGamesCore
   class TileColor final
   {
   private:
-    TileColor(char f) : tilecolor{ f } {}
+    constexpr TileColor(const char& f) noexcept : tilecolor{ f } {}
   public:
     inline void Serialize(CArchive& ar) const { ar << tilecolor; }
 
@@ -147,10 +147,10 @@ namespace BoardGamesCore
   class Color final
   {
   private:
-    Color(char c) : color{ c } {}
+    constexpr Color(const char& c) noexcept : color{ c } {}
   public:
-    inline size_t GetHash(void) const { return std::hash<char>()(color); }
-    inline const Color* operator !(void) const { return color == 'W' ? &Black : &White; }
+    inline size_t GetHash(void) const noexcept { return std::hash<char>()(color); }
+    inline const Color* operator !(void) const noexcept { return color == 'W' ? &Black : &White; }
     inline void Serialize(CArchive& ar) const { ar << color; }
 
   private:
@@ -166,12 +166,12 @@ namespace BoardGamesCore
   class Kind
   {
   protected:
-    Kind(char k) : kind{ k } {}
+    constexpr Kind(const char& k) noexcept : kind{ k } {}
   public:
-    virtual bool operator==(const Kind& k) const { return k.kind == kind; }
-    virtual size_t GetHash(void) const { return std::hash<char>()(kind); }
+    virtual bool operator==(const Kind& k) const noexcept { return k.kind == kind; }
+    virtual size_t GetHash(void) const noexcept { return std::hash<char>()(kind); }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const {};
-    virtual unsigned int GetValue(void) const { return 0; }
+    virtual unsigned int GetValue(void) const noexcept { return 0; }
     virtual void Serialize(CArchive& ar) const { ar << kind; }
   private:
     const char kind;
@@ -184,7 +184,7 @@ namespace BoardGamesCore
   class PlayerType final
   {
   private:
-    PlayerType(char p) : playertype{ p } {}
+    constexpr PlayerType(const char& p) noexcept : playertype{ p } {}
   public:
     inline void Serialize(CArchive& ar) const { ar << playertype; }
 
@@ -200,26 +200,26 @@ namespace BoardGamesCore
   class Piece
   {
   protected:
-    Piece(const Kind* k, const Color* c, UINT nID_l, UINT nID_d, UINT nID_s)
+    constexpr Piece(const Kind* k, const Color* c, UINT nID_l, UINT nID_d, UINT nID_s) noexcept
       : kind{ k }, color{ c }, ID_l{ nID_l }, ID_d{ nID_d }, ID_s{ nID_s } {}
   public:
-    Piece(const Piece&) = delete;            // delete copy constructor
+    Piece(const Piece&) noexcept = delete;            // delete copy constructor
     Piece& operator=(const Piece&) = delete; // delete assignment operator
-    virtual ~Piece(void) { }
-    virtual size_t GetHash(void) const { return kind->GetHash() + color->GetHash(); }
+    virtual ~Piece(void) noexcept { }
+    virtual size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     virtual void Serialize(CArchive& ar) const { color->Serialize(ar); kind->Serialize(ar); }
     virtual void CollectMoves(const MainPosition& p, const Location l, std::vector<Move>& m) const { kind->CollectMoves(p, l, m); }
-    virtual unsigned int GetValue(void) const { return kind->GetValue(); }
-    virtual bool IsKind(const Kind& k) const { return k == *kind; }
-    virtual bool IsColor(const Color* c) const { return c == color; }
-    virtual const Color* GetColor(void) const { return color; }
-    virtual bool IsBlank(void) const { return color == &Color::NoColor && kind == &Kind::NoKind; }
-    virtual bool IsPromotable(void) const { return false; }
-    virtual const Piece* Promote(bool /*up*/) const { return this; };                         // by default, no promotions
+    virtual unsigned int GetValue(void) const noexcept { return kind->GetValue(); }
+    virtual bool IsKind(const Kind& k) const noexcept { return k == *kind; }
+    virtual bool IsColor(const Color* c) const noexcept { return c == color; }
+    virtual const Color* GetColor(void) const noexcept { return color; }
+    virtual bool IsBlank(void) const noexcept { return color == &Color::NoColor && kind == &Kind::NoKind; }
+    virtual bool IsPromotable(void) const noexcept { return false; }
+    virtual const Piece* Promote(bool /*up*/) const noexcept { return this; };                         // by default: no promotions
     virtual void Draw(CDC* pDC, const CRect& r, const TileColor* f) const;
 
   public:
-    inline const static Piece NoTile{ &Kind::NoKind, &Color::NoColor, 0, 0, 0 };               // nothing exists there, don't draw the tile at all
+    inline const static Piece NoTile{ &Kind::NoKind, &Color::NoColor, 0, 0, 0 };                // nothing exists there, don't draw the tile at all
     inline const static Piece NoPiece{ &Kind::NoKind, &Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
 
   protected:
@@ -239,12 +239,13 @@ namespace BoardGamesCore
   class Position
   {
   public:
-    Position(unsigned int x, unsigned int y, const Piece* init = &Piece::NoPiece) : sizeX(x), sizeY(y), pieces{ x*y,init } {}
+    constexpr Position(unsigned int x, unsigned int y, const Piece* init = &Piece::NoPiece) noexcept
+      : sizeX(x), sizeY(y), pieces{ x*y,init } {}
     virtual ~Position() {}
-    virtual bool operator ==(const Position* p) const { return pieces == p->pieces; }
-    virtual std::size_t GetHash(void) const;
+    virtual bool operator ==(const Position* p) const noexcept { return pieces == p->pieces; }
+    virtual std::size_t GetHash(void) const noexcept;
     virtual void Serialize(CArchive& ar) const { for (auto& p : pieces) p->Serialize(ar); }
-    virtual const Piece* GetPiece(const Location& l) const { return l.Valid(sizeX, sizeY) ? pieces[l.Index(sizeX, sizeY)] : nullptr; }
+    virtual const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pieces[l.Index(sizeX, sizeY)] : nullptr; }
     virtual const Piece* SetPiece(const Location& l, const Piece* p) { hash = 0; return (pieces)[l.Index(sizeX, sizeY)] = p; }
 
   protected:
@@ -259,23 +260,21 @@ namespace BoardGamesCore
   class MainPosition : public Position
   {
   public:
-    //typedef std::shared_ptr<const MainPosition> pMP;
     typedef MainPosition* pMP;
-
-    struct Hash { std::size_t operator()(const pMP p) const { return p->GetHash(); } };
-    struct Equality { bool operator()(const pMP Lhs, const pMP Rhs) const { return *Lhs == *Rhs; } };
+    struct Hash { std::size_t operator()(const pMP p) const noexcept { return p->GetHash(); } };
+    struct Equality { bool operator()(const pMP Lhs, const pMP Rhs) const noexcept { return *Lhs == *Rhs; } };
     typedef std::unordered_set< pMP, Hash, Equality> PList;
 
   public:
-    MainPosition(unsigned int x, unsigned int y) : Position(x, y) {}
+    constexpr MainPosition(unsigned int x, unsigned int y) noexcept : Position(x, y) {}
     virtual ~MainPosition() {}
     virtual MainPosition* Clone(void) const = 0;
-    virtual bool operator ==(const MainPosition& p) const { return Position::operator==(&p); }
+    virtual bool operator ==(const MainPosition& p) const noexcept { return Position::operator==(&p); }
 
-    virtual void SetOnTurn(const Color* c) { onTurn = c; }
-    virtual const Color* OnTurn(void) const { return onTurn; }
-    virtual void NextPlayer(void);
-    virtual void PreviousPlayer(void);  // needed for Undo
+    virtual void SetOnTurn(const Color* c) noexcept { onTurn = c; }
+    virtual const Color* OnTurn(void) const noexcept { return onTurn; }
+    virtual void NextPlayer(void) noexcept;
+    virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
     virtual void GetAllMoves(void);  // generate all moves and save list
     virtual std::vector<Move> CollectMoves(void) const { std::vector<Move> m{}; return m; }
@@ -283,7 +282,7 @@ namespace BoardGamesCore
     virtual Move::PositionValue EvaluateStatically(void);
     virtual Move::PositionValue Evaluate(MainPosition::PList& plist, const Color* on, int alpha, int beta, unsigned int plies);
     virtual MainPosition* GetPosition(MainPosition::PList& plist, Move* m = nullptr);               // execute move, maintain in PList
-    virtual Move::PositionValue Rate(Move::PositionValue z, unsigned int v) const { return z + (Move::PositionValue)(v / 2); }
+//    virtual Move::PositionValue Rate(Move::PositionValue z, unsigned int v) const { return z + (Move::PositionValue)(v / 2); }
     virtual const std::vector<const Piece*> Execute(const Move& m);
     virtual void Undo(const Move& m);
 
@@ -300,7 +299,7 @@ namespace BoardGamesCore
   class TakenPosition : public Position
   {
   public:
-    TakenPosition(unsigned int x, unsigned int y) : Position(x, y, &Piece::NoTile) {}
+    constexpr TakenPosition(unsigned int x, unsigned int y) noexcept : Position(x, y, &Piece::NoTile) {}
     virtual ~TakenPosition() {}
     void Push(unsigned int player, const std::vector<const Piece*>& p);
   };
@@ -308,7 +307,7 @@ namespace BoardGamesCore
   class StockPosition : public Position
   {
   public:
-    StockPosition(unsigned int x, unsigned int y) : Position(x, y) {}
+    constexpr StockPosition(unsigned int x, unsigned int y) noexcept : Position(x, y) {}
     virtual ~StockPosition() {}
   };
 
@@ -316,17 +315,17 @@ namespace BoardGamesCore
   class Player final
   {
   public:
-    Player(const PlayerType* p = &PlayerType::Human, const Color* c = &Color::NoColor) : playertype{ p }, color{ c } {}    // constructor
-    Player(const Player& p) : playertype{ p.playertype }, color{ p.color } {}                                              // copy constructor
-    Player& operator=(const Player& p) { return *this = Player(p.playertype, p.color); }                               // copy assignment
-    Player(Player&& p) : playertype{ std::move(p.playertype) }, color{ std::move(p.color) } {}                             // move constructor
-    Player& operator=(Player&& p) { std::swap(playertype, p.playertype); std::swap(color, p.color); return *this; }    // move assignment
+    constexpr Player(const PlayerType* p = &PlayerType::Human, const Color* c = &Color::NoColor) noexcept : playertype{ p }, color{ c } {}    // constructor
+    constexpr Player(const Player& p) noexcept : playertype{ p.playertype }, color{ p.color } {}                                              // copy constructor
+    Player& operator=(const Player& p) noexcept { return *this = Player(p.playertype, p.color); }                                // copy assignment
+    Player(Player&& p) noexcept : playertype{ std::move(p.playertype) }, color{ std::move(p.color) } {}                          // move constructor
+    Player& operator=(Player&& p) noexcept { std::swap(playertype, p.playertype); std::swap(color, p.color); return *this; }     // move assignment
 
-    inline const Color* SetColor(const Color* c) { return color = c; }
-    inline const Color* GetColor(void) const { return color; }
-    inline const PlayerType* SetPlayerType(const PlayerType* p) { return playertype = p; }
-    inline const PlayerType* GetPlayerType(void) const { return playertype; }
-    inline bool Is(const PlayerType* p) const { return playertype == p; }
+    inline const Color* SetColor(const Color* c) noexcept { return color = c; }
+    inline const Color* GetColor(void) const noexcept { return color; }
+    inline const PlayerType* SetPlayerType(const PlayerType* p) noexcept { return playertype = p; }
+    inline const PlayerType* GetPlayerType(void) const noexcept { return playertype; }
+    inline bool Is(const PlayerType* p) const noexcept { return playertype == p; }
 
   private:
     const std::string name{};

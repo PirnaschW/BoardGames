@@ -18,8 +18,8 @@ namespace Shogi
   private:
     Pawn(void) : Kind('p') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 1; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 1; }
 
   public:
     inline const static Pawn ThePawn{};
@@ -32,7 +32,7 @@ namespace Shogi
     Knight(void) : Kind('n') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 4; }
+    virtual unsigned int GetValue(void) const noexcept override { return 4; }
 
   public:
     inline const static Knight TheKnight{};
@@ -45,7 +45,7 @@ namespace Shogi
     Bishop(void) : Kind('b') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 8; }
+    virtual unsigned int GetValue(void) const noexcept override { return 8; }
 
   public:
     inline const static Bishop TheBishop{};
@@ -57,7 +57,7 @@ namespace Shogi
     Rook(void) : Kind('r') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 10; }
+    virtual unsigned int GetValue(void) const noexcept override { return 10; }
 
   public:
     inline const static Rook TheRook{};
@@ -69,7 +69,7 @@ namespace Shogi
     Lance(void) : Kind('l') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 3; }
+    virtual unsigned int GetValue(void) const noexcept override { return 3; }
 
   public:
     inline const static Lance TheLance{};
@@ -81,7 +81,7 @@ namespace Shogi
     Silver(void) : Kind('s') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 5; }
+    virtual unsigned int GetValue(void) const noexcept override { return 5; }
 
   public:
     inline const static Silver TheSilver{};
@@ -93,7 +93,7 @@ namespace Shogi
     Gold(void) : Kind('G') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 6; }
+    virtual unsigned int GetValue(void) const noexcept override { return 6; }
     static void CollectGoldMoves(const MainPosition&, const Location&, std::vector<Move>&); // enable reuse for other kinds
 
   public:
@@ -106,7 +106,7 @@ namespace Shogi
     King(void) : Kind('K') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 8; }
+    virtual unsigned int GetValue(void) const noexcept override { return 8; }
 
   public:
     inline const static King TheKing{};
@@ -118,7 +118,7 @@ namespace Shogi
     PPawn(void) : Kind('P') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 7; }
+    virtual unsigned int GetValue(void) const noexcept override { return 7; }
 
   public:
     inline const static PPawn ThePPawn{};
@@ -130,7 +130,7 @@ namespace Shogi
     PKnight(void) : Kind('N') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 6; }
+    virtual unsigned int GetValue(void) const noexcept override { return 6; }
 
   public:
     inline const static PKnight ThePKnight{};
@@ -142,7 +142,7 @@ namespace Shogi
     PBishop(void) : Kind('B') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 10; }
+    virtual unsigned int GetValue(void) const noexcept override { return 10; }
 
   public:
     inline const static PBishop ThePBishop{};
@@ -154,7 +154,7 @@ namespace Shogi
     PRook(void) : Kind('R') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 12; }
+    virtual unsigned int GetValue(void) const noexcept override { return 12; }
 
   public:
     inline const static PRook ThePRook{};
@@ -166,7 +166,7 @@ namespace Shogi
     PLance(void) : Kind('L') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 6; }
+    virtual unsigned int GetValue(void) const noexcept override { return 6; }
 
   public:
     inline const static PLance ThePLance{};
@@ -178,7 +178,7 @@ namespace Shogi
     PSilver(void) : Kind('S') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 6; }
+    virtual unsigned int GetValue(void) const noexcept override { return 6; }
 
   public:
     inline const static PSilver ThePSilver{};
@@ -194,8 +194,8 @@ namespace Shogi
   public:
     virtual ~ShogiPiece(void) override {}
 
-    virtual bool IsPromotable(void) const override { return up != this; }            // is this a promotable piece?
-    virtual const Piece* Promote(bool u) const override { return u ? up : down; }    // promote this piece up/down
+    virtual bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
+    virtual const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
 
   private:
     const ShogiPiece * up;    // what this piece promotes up to

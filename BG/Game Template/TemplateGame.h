@@ -17,10 +17,10 @@ namespace Template
   class Checker : public Kind
   {
   private:
-    Checker(void) : Kind('0') {}
+    constexpr Checker(void) : Kind('0') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 8; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 8; }
 
   public:
     inline const static Checker TheChecker{};

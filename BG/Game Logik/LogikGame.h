@@ -27,8 +27,8 @@ namespace Logik
     Peg<k>(void) : Kind(k) {}
 
   public:
-    virtual void CollectMoves(const MainPosition&, const Location, std::vector<Move>&) {};
-    virtual unsigned int GetValue(void) const { return 1; }
+    void CollectMoves(const MainPosition&, const Location, std::vector<Move>&) {};
+    unsigned int GetValue(void) const noexcept override { return 1; }
 
   public:
     inline const static Peg<k> ThePeg{};

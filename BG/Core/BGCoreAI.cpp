@@ -8,7 +8,7 @@ namespace BoardGamesCore
   {
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
 
-    Test::Test::TestPosition(p);
+   // Test::Test::TestPosition(p);
 
     Move::PositionValue value{ p->value };
     plies = 16;

@@ -19,8 +19,8 @@ namespace Cam
   private:
     Pawn(void) : Kind('P') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 20; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 20; }
     
   public:
     inline const static Pawn ThePawn{};
@@ -31,8 +31,8 @@ namespace Cam
   private:
     Knight(void) : Kind('N') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const override { return 100; }
+    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    unsigned int GetValue(void) const noexcept override { return 100; }
     
   public:
     inline const static Knight TheKnight{};
