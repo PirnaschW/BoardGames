@@ -49,11 +49,13 @@ namespace LoA
   }
 
 
-  LoALayout::LoALayout(unsigned int x, unsigned int y) : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-  LoATakenLayout::LoATakenLayout(unsigned int x, unsigned int y) :
+  LoALayout::LoALayout(unsigned int x, unsigned int y) noexcept :
+    MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
+
+  LoATakenLayout::LoATakenLayout(unsigned int x, unsigned int y) noexcept :
     TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
 
-  LoAStockLayout::LoAStockLayout(unsigned int x, unsigned int y) :
+  LoAStockLayout::LoAStockLayout(unsigned int x, unsigned int y) noexcept :
     StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
 
 }

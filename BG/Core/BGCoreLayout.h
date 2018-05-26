@@ -70,23 +70,23 @@ namespace BoardGamesCore
   class MainLayout : public Layout
   {
   public:
-    MainLayout(const Dimension& d, LayoutType lt = LayoutType::Alternating) : Layout(d, lt) {}
-    virtual ~MainLayout() {}
+    constexpr MainLayout(const Dimension& d, LayoutType lt = LayoutType::Alternating) noexcept : Layout(d, lt) {}
+    ~MainLayout() {}
     virtual void Draw(CDC* pDC, const Position* pos) const;
   };
 
   class TakenLayout : public Layout
   {
   public:
-    TakenLayout(const Dimension& d, LayoutType lt = LayoutType::Small) : Layout(d, lt) {}
-    virtual ~TakenLayout() {}
+    constexpr TakenLayout(const Dimension& d, LayoutType lt = LayoutType::Small) noexcept : Layout(d, lt) {}
+    ~TakenLayout() {}
   };
 
   class StockLayout : public Layout
   {
   public:
-    StockLayout(const Dimension& d, LayoutType lt = LayoutType::Light) : Layout(d, lt) {}
-    virtual ~StockLayout() {}
+    constexpr StockLayout(const Dimension& d, LayoutType lt = LayoutType::Light) noexcept : Layout(d, lt) {}
+    ~StockLayout() {}
   };
 
 }

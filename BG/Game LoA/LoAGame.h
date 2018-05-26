@@ -17,13 +17,13 @@ namespace LoA
   class LoAPeg : public Kind
   {
   private:
-    LoAPeg(void) noexcept : Kind('L') {}
-  public:
+    constexpr LoAPeg(void) noexcept : Kind('L') {}
 
+  public:
     inline std::vector<const Piece*> CollectAlong(const MainPosition& pos, Location l, const Offset& o) const
     {
       std::vector<const Piece*> along{};
-      const Piece* p;
+      const Piece* p{};
       while ((p = pos.GetPiece(l = l + o)) != nullptr) along.push_back(p);
       return along;
     }
@@ -72,7 +72,7 @@ namespace LoA
       }
     }
 
-    virtual void CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves) const override
+    void CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves) const override
     {
       CollectMoves(pos, l, moves, 1, 0); // check horizontal moves
       CollectMoves(pos, l, moves, 0, 1); // check vertical moves
@@ -80,7 +80,7 @@ namespace LoA
       CollectMoves(pos, l, moves, 1, 1); // check diagonal '\' moves
     }
 
-    virtual unsigned int GetValue(void) const noexcept override { return 0; } // in LoA, pieces have no value
+    unsigned int GetValue(void) const noexcept override { return 0; } // in LoA, pieces have no value
 
 
   public:
@@ -91,12 +91,12 @@ namespace LoA
   class LoAPiece : public Piece
   {
   private:
-    LoAPiece(const Kind* k, const Color* c, UINT l, UINT s) : Piece(k, c, l, l, s) {}
+    LoAPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     LoAPiece(const LoAPiece&) = delete;
     LoAPiece& operator=(const LoAPiece&) = delete;
 
   public:
-    static const LoAPiece& GetPiece(unsigned int z)
+    static const LoAPiece& GetPiece(unsigned int z) noexcept
     {
       switch (z)
       {
@@ -105,7 +105,6 @@ namespace LoA
       }
     }
 
-    virtual ~LoAPiece(void) override {}
     static const LoAPiece LoAPieceB;
     static const LoAPiece LoAPieceW;
   };
@@ -131,9 +130,8 @@ namespace LoA
             SetPiece(Location(i, j), &Piece::NoPiece);
         }
     }
-    virtual ~LoAPosition() override {}
-    virtual MainPosition* Clone(void) const override { return new LoAPosition(*this); }
-    virtual const Piece* SetPiece(const Location& l, const Piece* p) override
+    MainPosition* Clone(void) const override { return new LoAPosition(*this); }
+    const Piece* SetPiece(const Location& l, const Piece* p) override
     {
       for (auto it = llw.begin(); it != llw.end(); ++it) if (it->l == l) { llw.erase(it); break; }
       for (auto it = llb.begin(); it != llb.end(); ++it) if (it->l == l) { llb.erase(it); break; }
@@ -142,7 +140,7 @@ namespace LoA
       else if (p == &LoAPiece::LoAPieceB) llb.push_back(l);
       return MainPosition::SetPiece(l, p);
     }
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override
+    bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override
     {
       const Piece * p = GetPiece(to);
       if (p == nullptr) return false;  // out of board
@@ -157,7 +155,7 @@ namespace LoA
       }
       return false;
     };
-    virtual Move::PositionValue EvaluateStatically(void) override;
+    Move::PositionValue EvaluateStatically(void) override;
 
   protected: // extensions to base class
     virtual bool IsConnected(bool t) const
@@ -179,8 +177,8 @@ namespace LoA
           for (auto& q : lp)
           {
             if (q.connected) continue;
-            int dx = p.l.x - q.l.x;
-            int dy = p.l.y - q.l.y;
+            const int dx = p.l.x - q.l.x;
+            const int dy = p.l.y - q.l.y;
             if (dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1)
             {
               q.connected = true;
@@ -209,7 +207,7 @@ namespace LoA
     struct Peg
     {
     public:
-      Peg(const Location& ll) : l(ll) {}
+      constexpr Peg(const Location& ll) noexcept : l(ll) {}
     public:
       const Location l;
       bool mutable connected{false};
@@ -225,22 +223,19 @@ namespace LoA
   class LoALayout : public MainLayout
   {
   public:
-    LoALayout(unsigned int x, unsigned int y);
-    virtual ~LoALayout() {}
+    LoALayout(unsigned int x, unsigned int y) noexcept;
   };
 
   class LoATakenLayout : public TakenLayout
   {
   public:
-    LoATakenLayout(unsigned int x, unsigned int y);
-    virtual ~LoATakenLayout() {}
+    LoATakenLayout(unsigned int x, unsigned int y) noexcept;
   };
 
   class LoAStockLayout : public StockLayout
   {
   public:
-    LoAStockLayout(unsigned int x, unsigned int y);
-    virtual ~LoAStockLayout() {}
+    LoAStockLayout(unsigned int x, unsigned int y) noexcept;
   };
 
 
@@ -248,7 +243,7 @@ namespace LoA
   {
   private:
     LoAGame(LoAPosition* p, TakenPosition* t, StockPosition* s,
-      LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) : Game{p,t,s,l,tl,sl}
+      LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
     {
       AddToStock(Location(0, 0), &LoAPiece::LoAPieceW);
       AddToStock(Location(1, 0), &LoAPiece::LoAPieceB);
@@ -258,7 +253,6 @@ namespace LoA
     LoAGame(unsigned int x, unsigned int y) : LoAGame(
       new LoAPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
       new LoALayout(x, y), new LoATakenLayout(x, y), new LoAStockLayout(x, y)) {}
-    virtual ~LoAGame(void) override {};
   };
 
 }
