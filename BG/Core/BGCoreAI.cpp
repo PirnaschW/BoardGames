@@ -44,7 +44,7 @@ namespace BoardGamesCore
 
     for (auto& m : movelist)                                              // for all possible moves
     {
-      const MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
+      const MainPosition* p{ GetPosition(plist,&m) };                     // find the board in the list
       m.SetValue(p->value);                                               // use the known value
     }
 
@@ -57,9 +57,9 @@ namespace BoardGamesCore
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
       MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
-      const Move::PositionValue v = (on == &Color::White ? 1 : -1) *
-        p->Evaluate(plist, !*on, -beta, -alpha, plies - 1);               // evaluate the result
-      m.SetValue(v);                                                      // save value into position and move
+      Move::PositionValue v = p->Evaluate(plist, !*on, -beta, -alpha, plies - 1);               // evaluate the result
+      m.SetValue(v);                                                      // save value into move
+      v *= (on == &Color::White ? 1 : -1);
 
       // apply alpha/beta pruning
       if (v >= beta) { return value = beta; }                             // cut branch off, use current value
@@ -109,7 +109,6 @@ namespace BoardGamesCore
     pos->GetAllMoves();                                                   // fill the move lists
     pos->EvaluateStatically();                                            // evaluate position statically
     auto pl1 = plist.insert(pos);                                         // and save it
-    assert(reinterpret_cast<unsigned int>(*(pl1.first)) != 0xDDDDDDDD);
     assert(pl1.second);
     return *(pl1.first);                                                  // return the pointer to the new entry
   }
