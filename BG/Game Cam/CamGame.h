@@ -17,10 +17,11 @@ namespace Cam
   class Pawn : public Kind
   {
   private:
-    Pawn(void) noexcept : Kind('P') {}
+    constexpr Pawn(void) noexcept : Kind('P') {}
+
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    unsigned int GetValue(void) const noexcept override { return 20; }
+    virtual unsigned int GetValue(void) const noexcept override { return 20; }
     
   public:
     inline const static Pawn ThePawn{};
@@ -29,7 +30,7 @@ namespace Cam
   class Knight : public Kind
   {
   private:
-    Knight(void) noexcept : Kind('N') {}
+    constexpr Knight(void) noexcept : Kind('N') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 100; }
@@ -47,7 +48,6 @@ namespace Cam
     CamPiece& operator=(const CamPiece&) = delete;
 
   public:
-    virtual ~CamPiece(void) override {}
     const static CamPiece WP;
     const static CamPiece WN;
     const static CamPiece BP;
@@ -69,7 +69,6 @@ namespace Cam
   {
   public:
     CamPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y) {}
-    virtual ~CamPosition(void) override {}
     virtual MainPosition* Clone(void) const override = 0;
     virtual void GetAllMoves(void) override;
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
@@ -83,7 +82,7 @@ namespace Cam
   public:
     CamLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-    virtual ~CamLayout() {}
+    ~CamLayout() {}
   };
 
 
@@ -92,7 +91,7 @@ namespace Cam
   public:
     CamTakenLayout(unsigned int x, unsigned int y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    virtual ~CamTakenLayout() {}
+    ~CamTakenLayout() {}
   };
 
   class CamStockLayout : public StockLayout
@@ -100,7 +99,6 @@ namespace Cam
   public:
     CamStockLayout(unsigned int /*x*/, unsigned int y) noexcept :
       StockLayout(Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-    virtual ~CamStockLayout() {}
   };
 
 
@@ -109,8 +107,6 @@ namespace Cam
   protected:
     CamGame(void) = delete;
     CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
-  public:
-    virtual ~CamGame(void) override {}
   };
 
 
@@ -119,10 +115,9 @@ namespace Cam
   public: 
     MiniCamPosition(unsigned int x, unsigned int y) noexcept;
     virtual MainPosition* Clone(void) const override { return new MiniCamPosition(*this); }
-
   };
+
   class FullCamPosition : public CamPosition 
-  
   { 
   public: 
     FullCamPosition(unsigned int x, unsigned int y) noexcept;
@@ -132,15 +127,16 @@ namespace Cam
   class MiniCamGame : public CamGame
   {
   public:
-    MiniCamGame(void) noexcept :
+    MiniCamGame(void) :
       CamGame(
         new MiniCamPosition(7, 13), new TakenPosition(14, 2), new StockPosition(3, 2),
         new CamLayout(7, 13), new CamTakenLayout(7, 13), new CamStockLayout(7, 13)) {}
   };
+
   class FullCamGame : public CamGame
   {
   public:
-    FullCamGame(void) noexcept :
+    FullCamGame(void) :
       CamGame(
         new FullCamPosition(12, 16), new TakenPosition(24, 2), new StockPosition(3, 2),
         new CamLayout(12, 16), new CamTakenLayout(12, 16), new CamStockLayout(12, 16)) {}

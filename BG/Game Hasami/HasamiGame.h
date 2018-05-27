@@ -17,7 +17,7 @@ namespace Hasami
   class Checker : public Kind
   {
   private:
-    Checker(void) noexcept : Kind('0') {}
+    constexpr Checker(void) noexcept : Kind('0') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 1; }
@@ -34,7 +34,7 @@ namespace Hasami
     HasamiPiece& operator=(const HasamiPiece&) = delete;
 
   public:
-    virtual ~HasamiPiece(void) override {}
+    ~HasamiPiece(void) override {}
 
   public:  // the pieces
     static const HasamiPiece HasamiPieceB;
@@ -46,7 +46,7 @@ namespace Hasami
   {
   public:
     HasamiPosition(unsigned int x, unsigned int y) noexcept;
-    virtual ~HasamiPosition() override {}
+    ~HasamiPosition() override {}
     virtual MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual Move::PositionValue EvaluateStatically(void) override;
@@ -61,7 +61,7 @@ namespace Hasami
   public:
     HasamiLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-    virtual ~HasamiLayout() {}
+    ~HasamiLayout() {}
   };
 
   class HasamiTakenLayout : public TakenLayout
@@ -69,7 +69,7 @@ namespace Hasami
   public:
     HasamiTakenLayout(unsigned int x, unsigned int y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    virtual ~HasamiTakenLayout() {}
+    ~HasamiTakenLayout() {}
   };
 
   class HasamiStockLayout : public StockLayout
@@ -77,7 +77,7 @@ namespace Hasami
   public:
     HasamiStockLayout(unsigned int x, unsigned int y) noexcept :
       StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-    virtual ~HasamiStockLayout() {}
+    ~HasamiStockLayout() {}
   };
 
 
@@ -89,7 +89,7 @@ namespace Hasami
     HasamiGame(unsigned int x, unsigned int y) noexcept : HasamiGame(
       new HasamiPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
       new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
-    virtual ~HasamiGame(void) override {};
+    ~HasamiGame(void) override {};
   };
 
 }

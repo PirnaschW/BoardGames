@@ -131,13 +131,17 @@ namespace LoA
         }
     }
     MainPosition* Clone(void) const override { return new LoAPosition(*this); }
-    const Piece* SetPiece(const Location& l, const Piece* p) override
+    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override
     {
-      for (auto it = llw.begin(); it != llw.end(); ++it) if (it->l == l) { llw.erase(it); break; }
-      for (auto it = llb.begin(); it != llb.end(); ++it) if (it->l == l) { llb.erase(it); break; }
+      try
+      {
+        for (auto it = llw.begin(); it != llw.end(); ++it) if (it->l == l) { llw.erase(it); break; }
+        for (auto it = llb.begin(); it != llb.end(); ++it) if (it->l == l) { llb.erase(it); break; }
 
-      if (p == &LoAPiece::LoAPieceW) llw.push_back(l);
-      else if (p == &LoAPiece::LoAPieceB) llb.push_back(l);
+        if (p == &LoAPiece::LoAPieceW) llw.push_back(l);
+        else if (p == &LoAPiece::LoAPieceB) llb.push_back(l);
+      }
+      catch (...) {};
       return MainPosition::SetPiece(l, p);
     }
     bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override

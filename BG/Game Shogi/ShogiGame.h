@@ -193,7 +193,7 @@ namespace Shogi
     ShogiPiece(const ShogiPiece&) = delete;
     ShogiPiece& operator=(const ShogiPiece&) = delete;
   public:
-    virtual ~ShogiPiece(void) override {}
+    ~ShogiPiece(void) override {}
 
     virtual bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
     virtual const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
@@ -244,9 +244,9 @@ namespace Shogi
   {
   public:
     ShogiPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y) {}
-    virtual ~ShogiPosition() override {}
+    ~ShogiPosition() override {}
     virtual MainPosition* Clone(void) const override = 0;
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const;
+    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual Move::PositionValue EvaluateStatically(void) override;
 
   public: // extensions to base class
@@ -259,7 +259,7 @@ namespace Shogi
   public:
     ShogiLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-    virtual ~ShogiLayout() {}
+    ~ShogiLayout() {}
   };
 
   class ShogiTakenLayout : public TakenLayout
@@ -267,15 +267,13 @@ namespace Shogi
   public:
     ShogiTakenLayout(unsigned int x, unsigned int /*y*/) noexcept :
       TakenLayout(Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4)) { }
-    virtual ~ShogiTakenLayout() {}
   };
 
   class ShogiStockLayout : public StockLayout
   {
   public:
-    ShogiStockLayout(unsigned int x, unsigned int y) :
+    ShogiStockLayout(unsigned int x, unsigned int y) noexcept:
       StockLayout(Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY)) {}
-    virtual ~ShogiStockLayout() {}
   };
 
 
@@ -284,8 +282,6 @@ namespace Shogi
   protected:
     ShogiGame(void) = delete;
     ShogiGame(ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
-  public:
-    virtual ~ShogiGame(void) override {}
   };
 
   class MiniShogiPosition : public ShogiPosition
@@ -293,7 +289,7 @@ namespace Shogi
   public:
     MiniShogiPosition(unsigned int x, unsigned int y) noexcept;
     virtual MainPosition* Clone(void) const override { return new MiniShogiPosition(*this); }
-    virtual bool CanPromote(const Location &l) const noexcept;
+    virtual bool CanPromote(const Location &l) const noexcept override;
   };
 
   class FullShogiPosition : public ShogiPosition
@@ -301,7 +297,7 @@ namespace Shogi
   public:
     FullShogiPosition(unsigned int x, unsigned int y) noexcept;
     virtual MainPosition* Clone(void) const override { return new FullShogiPosition(*this); }
-    virtual bool CanPromote(const Location &l) const noexcept;
+    virtual bool CanPromote(const Location &l) const noexcept override;
   };
 
   class MiniShogiGame : public ShogiGame

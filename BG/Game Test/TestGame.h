@@ -21,7 +21,7 @@ namespace Test
   {
   public:
     TestPosition(unsigned int x, unsigned int y);
-    virtual ~TestPosition() override {}
+    ~TestPosition() override {}
     virtual MainPosition* Clone(void) const override { return new TestPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
   };
@@ -31,7 +31,7 @@ namespace Test
   {
   public:
     TestLayout(unsigned int x, unsigned int y) : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-    virtual ~TestLayout() {}
+    ~TestLayout() {}
   };
 
   class TestTakenLayout : public TakenLayout
@@ -39,7 +39,7 @@ namespace Test
   public:
     TestTakenLayout(unsigned int x, unsigned int y) :
       TakenLayout(Dimension(x*y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    virtual ~TestTakenLayout() {}
+    ~TestTakenLayout() {}
   };
 
   class TestStockLayout : public StockLayout
@@ -47,7 +47,7 @@ namespace Test
   public:
     TestStockLayout(unsigned int /*x*/, unsigned int y) :
       StockLayout(Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY)) {}
-    virtual ~TestStockLayout() {}
+    ~TestStockLayout() {}
   };
 
 
@@ -59,7 +59,7 @@ namespace Test
   public:
     TestGame(unsigned int x, unsigned int y);
     MainPosition* GetPosition(void) { return pos; }
-    virtual ~TestGame(void) override {};
+    ~TestGame(void) override {};
   };
 
 

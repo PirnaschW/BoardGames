@@ -24,7 +24,7 @@ namespace Logik
   template <char k> class Peg : public Kind
   {
   private:
-    Peg<k>(void) noexcept : Kind(k) {}
+    constexpr Peg<k>(void) noexcept : Kind(k) {}
 
   public:
     void CollectMoves(const MainPosition&, const Location, std::vector<Move>&) {};
@@ -58,7 +58,6 @@ namespace Logik
       }
     }
 
-    virtual ~LogikPiece(void) {}
     static const LogikPiece LPieceB;
     static const LogikPiece LPieceW;
     static const LogikPiece LPiece1;
@@ -175,8 +174,8 @@ namespace Logik
   {
   public:
     LMove(Move::PositionValue mm) noexcept : Move(Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr}), m((unsigned int)mm) {}
-    unsigned int GetIndex(void) const { return m; }
-    virtual ~LMove(void) {}
+    unsigned int GetIndex(void) const  noexcept { return m; }
+    ~LMove(void) {}
 
   private:
     unsigned int m{};
@@ -195,10 +194,10 @@ namespace Logik
           SetPiece(Location(i, j), &Piece::NoPiece);
         }
     }
-    virtual ~LPosition<BX, BY, BZ>() {}
-    virtual LPosition<BX, BY, BZ>* Clone(void) const { return new LPosition<BX, BY, BZ>(*this); }
+    ~LPosition<BX, BY, BZ>() {}
+    virtual LPosition<BX, BY, BZ>* Clone(void) const override { return new LPosition<BX, BY, BZ>(*this); }
 
-    virtual bool SetFirstFreePeg(const Piece* p)
+    virtual bool SetFirstFreePeg(const Piece* p) noexcept
     {
       for (unsigned int j = 0; j < BZ; j++)
         for (unsigned int i = BY; i < 2 * BY; i++)
@@ -209,7 +208,7 @@ namespace Logik
           }
       return false;
     }
-    virtual bool SetFirstFreeMarker(const Piece* p)
+    virtual bool SetFirstFreeMarker(const Piece* p) noexcept
     {
       for (unsigned int j = 0; j < BZ; j++)
         for (unsigned int i = BY; i < 2 * BY; i++)
@@ -227,13 +226,13 @@ namespace Logik
           }
       return false;
     }
-    virtual void ReadPosition(void);
+    virtual void ReadPosition(void) noexcept;
     virtual Move::PositionValue Evaluate(unsigned int) const;
     virtual const std::vector<const Piece*> Execute(const Move& m) override
     {
       std::vector<const Piece*> taken{};
       previ[prevc] = dynamic_cast<const LMove<BX, BY, BZ>&>(m).GetIndex();
-      Play<BX, BY, BZ> p = previ[prevc];
+      const Play<BX, BY, BZ>& p = previ[prevc];
       for (unsigned int i = 0; i < BY; ++i)
       {
         SetPiece(Location(BY + i, prevc), &LogikPiece::GetPiece(p[i]));
@@ -251,7 +250,7 @@ namespace Logik
 
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
-  void LPosition<BX, BY, BZ>::ReadPosition(void)
+  void LPosition<BX, BY, BZ>::ReadPosition(void) noexcept
   {
     prevc = 0; // number of moves already made
     for (unsigned int k = 0; k < BZ; ++k)
@@ -370,18 +369,16 @@ namespace Logik
       SetPiece(Location(0, 0), &LogikPiece::LPieceB);
       SetPiece(Location(1, 0), &LogikPiece::LPieceW);
     }
-    virtual ~LMarkerStockPosition() {}
   };
 
 
   class LLayout : public MainLayout
   {
   public:
-    LLayout(unsigned int x, unsigned int y);
-    virtual ~LLayout() {}
+    LLayout(unsigned int x, unsigned int y) noexcept;
 
   private:
-    virtual const TileColor* FC(unsigned int i, unsigned int j)
+    inline const TileColor* FC(unsigned int i, unsigned int j) noexcept
     {
       if ((i < dim.xCount / 4) || (i >= 3 * dim.xCount / 4)) return &TileColor::Light;
       if ((j < dim.yCount - 1) || (i < 2 * dim.xCount / 4)) return &TileColor::Dark;
@@ -393,8 +390,7 @@ namespace Logik
   class LStockLayout : public StockLayout
   {
   public:
-    LStockLayout(unsigned int x, unsigned int y, unsigned int z);
-    virtual ~LStockLayout() {}
+    LStockLayout(unsigned int x, unsigned int y, unsigned int z) noexcept;
   };
 
 
@@ -420,10 +416,9 @@ namespace Logik
   public:
     LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(BX + 3, 1),
       new LLayout(4 * BY, BZ), nullptr, new LStockLayout(BX, BY, BZ)) {}
-    virtual ~LGame<BX, BY, BZ>(void) {}
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;
-    unsigned int Plies(unsigned int) const noexcept { return 1; }
+    unsigned int Plies(unsigned int) const noexcept override { return 1; }
     void Execute(const Move& /*m*/) override {}
     void Execute(const LMove<BX, BY, BZ>& m)
     {
@@ -433,7 +428,7 @@ namespace Logik
     virtual void EditMode(void) {}
     virtual void SwitchColors(void) {}
     virtual void EditPlayers(void) {}
-    virtual void Draw(CDC* pDC) const;
+    virtual void Draw(CDC* pDC) const override;
   };
 
 
@@ -454,15 +449,15 @@ namespace Logik
       case '9':
         if (nChar > '0' + BX) return false;
         {
-          unsigned int c = nChar - '1';
-          return static_cast<LPosition<BX, BY, BZ>*>(pos)->SetFirstFreePeg(&LogikPiece::GetPiece(c));
+          const unsigned int c = nChar - '1';
+          return dynamic_cast<LPosition<BX, BY, BZ>*>(pos)->SetFirstFreePeg(&LogikPiece::GetPiece(c));
         }
       case 'B':
       case 'b':
-        return static_cast<LPosition<BX, BY, BZ>*>(pos)->SetFirstFreeMarker(&LogikPiece::LPieceB);
+        return dynamic_cast<LPosition<BX, BY, BZ>*>(pos)->SetFirstFreeMarker(&LogikPiece::LPieceB);
       case 'W':
       case 'w':
-        return static_cast<LPosition<BX, BY, BZ>*>(pos)->SetFirstFreeMarker(&LogikPiece::LPieceW);
+        return dynamic_cast<LPosition<BX, BY, BZ>*>(pos)->SetFirstFreeMarker(&LogikPiece::LPieceW);
       case '\r':
         AIMove();
         return true;
@@ -483,9 +478,9 @@ namespace Logik
       return false;
     }
 
-    unsigned int pl = Plies(0);
+    const unsigned int pl = Plies(0);
 
-    Move::PositionValue e = pos->Evaluate(plist, pos->OnTurn(), -Move::win, Move::win, pl);
+    const Move::PositionValue e = pos->Evaluate(plist, pos->OnTurn(), -Move::win, Move::win, pl);
 
     if (1 == 0)
     {
@@ -512,10 +507,10 @@ namespace Logik
     {
       if (z != 2)
         pDC->Rectangle(
-        (int)(BoardStartX + (3 + 1 + 1 * BY)*FieldSizeX + 0 + BoardFrameX - z),
-          (int)(BoardStartY - z),
-          (int)(BoardStartX + (3 + 1 + 3 * BY)*FieldSizeX + 1 + BoardFrameX + z),
-          (int)(BoardStartY + BZ * FieldSizeY + z));
+          static_cast<int>(BoardStartX + (3 + 1 + 1 * BY)*FieldSizeX + 0 + BoardFrameX - z),
+          static_cast<int>(BoardStartY - z),
+          static_cast<int>(BoardStartX + (3 + 1 + 3 * BY)*FieldSizeX + 1 + BoardFrameX + z),
+          static_cast<int>(BoardStartY + BZ * FieldSizeY + z));
     }
     Game::Draw(pDC);       // let the (generic) parent draw the board itself
   };

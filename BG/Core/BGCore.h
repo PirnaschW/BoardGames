@@ -11,7 +11,7 @@ namespace BoardGamesCore
   public:
     constexpr Offset(int xx, int yy) noexcept : dx{ xx }, dy{ yy } {}
 
-    const Offset operator*(int i) const { return Offset(dx*i, dy*i); }
+    constexpr inline const Offset operator*(int i) const noexcept { return Offset(dx*i, dy*i); }
 
   private:
     const int dx;
@@ -20,14 +20,14 @@ namespace BoardGamesCore
   public:
     // standard 4 'Rook'   directions
     inline const static std::array<const Offset, 4> Rdirection{ Offset(+1, +0), Offset(+0, +1),
-                                                               Offset(+0, -1), Offset(-1, +0) };
+                                                                Offset(+0, -1), Offset(-1, +0) };
     // standard 4 'Bishop' directions
     inline const static std::array<const Offset, 4> Bdirection{ Offset(+1, +1), Offset(+1, -1),
-                                                               Offset(-1, -1), Offset(-1, +1) };
+                                                                Offset(-1, -1), Offset(-1, +1) };
     // standard 8 'Queen'  directions
     inline const static std::array<const Offset, 8> Qdirection{ Offset(+1, +1), Offset(+1, +0), Offset(+1, -1),
-                                                               Offset(+0, +1),                 Offset(+0, -1),
-                                                               Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
+                                                                Offset(+0, +1),                 Offset(+0, -1),
+                                                                Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
   };
 
 
@@ -36,13 +36,13 @@ namespace BoardGamesCore
   public:
     constexpr Location(unsigned int xx, unsigned int yy) noexcept : x{ xx }, y{ yy } {}
 
-    inline bool operator==(const Location& l) const noexcept { return l.x == x && l.y == y; }
-    inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
-    inline Location operator+(const Offset& o) const noexcept { Location l(*this); return l += o; }
-    inline Location& operator+=(const Offset& o) noexcept { x += o.dx, y += o.dy; return *this; }
+    constexpr inline bool operator==(const Location& l) const noexcept { return l.x == x && l.y == y; }
+    constexpr inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
+    constexpr inline Location operator+(const Offset& o) const noexcept { Location l(*this); return l += o; }
+    constexpr inline Location& operator+=(const Offset& o) noexcept { x += o.dx, y += o.dy; return *this; }
 
-    inline bool Valid(unsigned int sizeX, unsigned int sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
-    inline unsigned int Index(unsigned int /*sizeX*/, unsigned int sizeY) const noexcept { return x * sizeY + y; }
+    constexpr inline bool Valid(unsigned int sizeX, unsigned int sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
+    constexpr inline unsigned int Index(unsigned int /*sizeX*/, unsigned int sizeY) const noexcept { return x * sizeY + y; }
 
     // can't be protected, as the values need to be used in many places
     // can't be const, or assignments between Locations wouldn't work.
@@ -56,11 +56,11 @@ namespace BoardGamesCore
   {
   public:
     constexpr Field(const Location l, const Piece* p) noexcept : l{ l }, p{ p } {}
-    inline bool operator==(const Field& f) const noexcept { return l == f.l && p == f.p; }
-    inline bool operator!=(const Field& f) const noexcept { return !(f == *this); }
+    constexpr inline bool operator==(const Field& f) const noexcept { return l == f.l && p == f.p; }
+    constexpr inline bool operator!=(const Field& f) const noexcept { return !(f == *this); }
 
-    inline const Location GetLocation(void) const { return l; }
-    inline const Piece* GetPiece(void) const noexcept { return p; }
+    constexpr inline const Location GetLocation(void) const noexcept { return l; }
+    constexpr inline const Piece* GetPiece(void) const noexcept { return p; }
 
   private:
     Location l;
@@ -109,7 +109,7 @@ namespace BoardGamesCore
     Move(const Move& move) = default;
     Move& operator =(const Move& m) = default;
     Move&& operator =(Move&& m) noexcept;
-    virtual ~Move(void) {}
+    ~Move(void) {}
     virtual bool operator==(const Move& m) const noexcept { return step == m.step && value == m.value; }
 
     virtual const std::vector<Step> GetSteps(void) const noexcept { return step; }
@@ -205,7 +205,7 @@ namespace BoardGamesCore
   public:
     Piece(const Piece&) noexcept = delete;            // delete copy constructor
     Piece& operator=(const Piece&) = delete; // delete assignment operator
-    virtual ~Piece(void) noexcept { }
+    virtual ~Piece(void) noexcept {}
     virtual size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     virtual void Serialize(CArchive& ar) const { color->Serialize(ar); kind->Serialize(ar); }
     virtual void CollectMoves(const MainPosition& p, const Location l, std::vector<Move>& m) const { kind->CollectMoves(p, l, m); }
@@ -241,12 +241,12 @@ namespace BoardGamesCore
   public:
     constexpr Position(unsigned int x, unsigned int y, const Piece* init = &Piece::NoPiece) noexcept
       : sizeX(x), sizeY(y), pieces{ x*y,init } {}
-    virtual ~Position() {}
+    virtual ~Position(void) noexcept {}
     virtual bool operator ==(const Position* p) const noexcept { return pieces == p->pieces; }
     virtual std::size_t GetHash(void) const noexcept;
     virtual void Serialize(CArchive& ar) const { for (auto& p : pieces) p->Serialize(ar); }
     virtual const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pieces[l.Index(sizeX, sizeY)] : nullptr; }
-    virtual const Piece* SetPiece(const Location& l, const Piece* p) { hash = 0; return (pieces)[l.Index(sizeX, sizeY)] = p; }
+    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; return (pieces)[l.Index(sizeX, sizeY)] = p; }
 
   protected:
     const unsigned int sizeX;
@@ -267,7 +267,7 @@ namespace BoardGamesCore
 
   public:
     constexpr MainPosition(unsigned int x, unsigned int y) noexcept : Position(x, y) {}
-    virtual ~MainPosition() {}
+    ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const = 0;
     virtual bool operator ==(const MainPosition& p) const noexcept { return Position::operator==(&p); }
 
@@ -300,15 +300,15 @@ namespace BoardGamesCore
   {
   public:
     constexpr TakenPosition(unsigned int x, unsigned int y) noexcept : Position(x, y, &Piece::NoTile) {}
-    virtual ~TakenPosition() {}
-    void Push(unsigned int player, const std::vector<const Piece*>& p);
+    virtual ~TakenPosition(void) override {}
+    void Push(unsigned int player, const std::vector<const Piece*>& p) noexcept;
   };
 
   class StockPosition : public Position
   {
   public:
     constexpr StockPosition(unsigned int x, unsigned int y) noexcept : Position(x, y) {}
-    virtual ~StockPosition() {}
+    ~StockPosition() {}
   };
 
 
@@ -345,7 +345,7 @@ namespace BoardGamesCore
     Game(void) = delete;
   public:
     Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl) noexcept;
-    virtual ~Game(void);
+    virtual ~Game(void) noexcept;
     virtual void Serialize(CArchive& ar) { pos->Serialize(ar); }
     virtual void AddToStock(const Location& l, const Piece* p) noexcept { spos->SetPiece(l, p); }
     virtual void ShowStock(bool show) noexcept { showStock = show; }

@@ -33,7 +33,7 @@ namespace Template
     TemplatePiece(const TemplatePiece&) = delete;
     TemplatePiece& operator=(const TemplatePiece&) = delete;
   public:
-    virtual ~TemplatePiece(void) override {}
+    ~TemplatePiece(void) override {}
 
   public:
     static const TemplatePiece TemplatePieceB;
@@ -45,7 +45,7 @@ namespace Template
   {
   public:
     TemplatePosition(unsigned int x, unsigned int y) noexcept;
-    virtual ~TemplatePosition() override {}
+    ~TemplatePosition() override {}
     virtual MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual Move::PositionValue EvaluateStatically(void) override;
@@ -56,7 +56,7 @@ namespace Template
   {
   public:
     TemplateLayout(unsigned int x, unsigned int y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-    virtual ~TemplateLayout() {}
+    ~TemplateLayout() {}
   };
 
   class TemplateTakenLayout : public TakenLayout
@@ -64,7 +64,7 @@ namespace Template
   public:
     TemplateTakenLayout(unsigned int x, unsigned int y) noexcept :
       TakenLayout(Dimension(x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    virtual ~TemplateTakenLayout() {}
+    ~TemplateTakenLayout() {}
   };
 
   class TemplateStockLayout : public StockLayout
@@ -72,7 +72,7 @@ namespace Template
   public:
     TemplateStockLayout(unsigned int x, unsigned int y) noexcept :
       StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-    virtual ~TemplateStockLayout() {}
+    ~TemplateStockLayout() {}
   };
 
 
@@ -89,7 +89,7 @@ namespace Template
     TemplateGame(unsigned int x, unsigned int y) noexcept : TemplateGame(
       new TemplatePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
       new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
-    virtual ~TemplateGame(void) override {};
+    ~TemplateGame(void) override {};
   };
 
 }

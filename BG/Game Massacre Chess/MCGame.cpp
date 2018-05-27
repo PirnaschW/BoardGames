@@ -44,11 +44,11 @@ namespace MassacreChess
     for (unsigned int i = 0; i < sizeX; i++)
       for (unsigned int j = 0; j < sizeY; j++)
       {
-        Location l{ i,j };
+        const Location l{ i,j };
         if (GetPiece(l) == &Piece::NoPiece) ll.push_back(l);
       }
     if (ll.size() == 0) return false;
-    unsigned int z = rand() % ll.size();
+    const unsigned int z = rand() % ll.size();
     SetPiece(ll[z], p);
     return true;
   }

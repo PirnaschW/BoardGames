@@ -37,7 +37,7 @@ namespace Template
     if (p == nullptr) return false;  // out of board
     if (p->IsColor(OnTurn())) return false;  // own piece
 
-    Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
+    const Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
     m.push_back(Move{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
     return false;
   };

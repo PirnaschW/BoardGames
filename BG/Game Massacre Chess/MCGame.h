@@ -20,7 +20,6 @@ namespace MassacreChess
   {
   public:
     MCPosition(unsigned int x, unsigned int y);
-    virtual ~MCPosition(void) override {}
     virtual MainPosition* Clone(void) const override { return new MCPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
 
@@ -32,26 +31,23 @@ namespace MassacreChess
   class MCLayout : public MainLayout
   {
   public:
-    MCLayout(unsigned int x, unsigned int y) : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-    virtual ~MCLayout() {}
+    MCLayout(unsigned int x, unsigned int y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
   };
 
 
   class MCTakenLayout : public TakenLayout
   {
   public:
-    MCTakenLayout(unsigned int x, unsigned int y) :
+    MCTakenLayout(unsigned int x, unsigned int y)  noexcept :
       TakenLayout(Dimension(x*y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    virtual ~MCTakenLayout() {}
   };
 
 
   class MCStockLayout : public StockLayout
   {
   public:
-    MCStockLayout(unsigned int /*x*/, unsigned int y) :
+    MCStockLayout(unsigned int /*x*/, unsigned int y)  noexcept :
       StockLayout(Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY)) {}
-    virtual ~MCStockLayout() {}
   };
 
 
@@ -62,8 +58,7 @@ namespace MassacreChess
 
   public:
     MCGame(unsigned int x, unsigned int y);
-    virtual ~MCGame(void) override {}
-    virtual unsigned int Plies(unsigned int z) const noexcept override { return Game::Plies(0) + (unsigned int)(11.0 / log((double)(max(z, 5) - 3))) - 3; }
+    virtual unsigned int Plies(unsigned int z) const noexcept override { return Game::Plies(0) + static_cast<unsigned int>(11.0 / log(static_cast<double>(max(z, 5) - 3))) - 3; }
   };
 
 }

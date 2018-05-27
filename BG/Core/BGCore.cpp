@@ -72,6 +72,7 @@ namespace BoardGamesCore
       for (unsigned int j = 0; j < sizeY; j++)
       {
         const Piece* p = GetPiece(Location(i, j));
+        assert(p != nullptr);
         if (!p->IsColor(&Color::NoColor))
         {
           p->CollectMoves(*this, Location(i, j), p->IsColor(&Color::White) ? movelistW : movelistB);
@@ -144,7 +145,7 @@ namespace BoardGamesCore
   }
 
 
-  void TakenPosition::Push(unsigned int player, const std::vector<const Piece*>& p)
+  void TakenPosition::Push(unsigned int player, const std::vector<const Piece*>& p) noexcept
   {
     for (auto& pp : p)
     {
@@ -152,7 +153,7 @@ namespace BoardGamesCore
       if (pp->IsBlank()) continue;
       for (unsigned int i = 0; ; i++)
       {
-        Location l{ i, player };
+        const Location l{ i, player };
         if (GetPiece(l) == &Piece::NoTile)
         {
           SetPiece(l, pp);
@@ -185,7 +186,7 @@ namespace BoardGamesCore
 
   void Game::Execute(const Move& m)
   {
-    unsigned int z{ pos->OnTurn() == &Color::White ? 1U : 0U }; // need to buffer the index, as Execute changes who's on turn
+    const unsigned int z{ pos->OnTurn() == &Color::White ? 1U : 0U }; // need to buffer the index, as Execute changes who's on turn
     tpos->Push(z, pos->Execute(m));  // execute move (includes setting pos to next player), and display taken pieces
     NextPlayer();                    // the game has also a pointer to the current player
   }

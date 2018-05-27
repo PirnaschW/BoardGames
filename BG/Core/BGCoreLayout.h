@@ -23,11 +23,11 @@ namespace BoardGamesCore
   struct Dimension
   {
   public:
-    Dimension(
-      unsigned int xc, unsigned int yc,            // tile count in x and y directions
-      unsigned int le, unsigned int te,            // starting edge in x and y directions
-      unsigned int xd, unsigned int yd,            // tile size in x and y directions
-      unsigned int xs = 0, unsigned int ys = 0) :  // extra distance between tiles in x and y directions
+    constexpr Dimension(
+      unsigned int xc, unsigned int yc,                     // tile count in x and y directions
+      unsigned int le, unsigned int te,                     // starting edge in x and y directions
+      unsigned int xd, unsigned int yd,                     // tile size in x and y directions
+      unsigned int xs = 0, unsigned int ys = 0) noexcept :  // extra distance between tiles in x and y directions
       xCount(xc), yCount(yc),
       lEdge(le), tEdge(te),
       xDim(xd), yDim(yd),
@@ -35,16 +35,16 @@ namespace BoardGamesCore
       rEdge(lEdge + xCount * xDim), bEdge(tEdge + yCount * yDim) {}
 
   public:
-    unsigned int xCount;
-    unsigned int yCount;
-    unsigned int xDim;
-    unsigned int yDim;
-    unsigned int xSkip;
-    unsigned int ySkip;
-    unsigned int lEdge;
-    unsigned int rEdge;
-    unsigned int tEdge;
-    unsigned int bEdge;
+    const unsigned int xCount;
+    const unsigned int yCount;
+    const unsigned int xDim;
+    const unsigned int yDim;
+    const unsigned int xSkip;
+    const unsigned int ySkip;
+    const unsigned int lEdge;
+    const unsigned int rEdge;
+    const unsigned int tEdge;
+    const unsigned int bEdge;
   };
   
   class Layout  // a layout contains the physical layout of the tiles of the playing board
@@ -55,7 +55,7 @@ namespace BoardGamesCore
     Layout(void) = delete;
   public:
     Layout(const Dimension& d, LayoutType lt);
-    virtual ~Layout() { for (auto& t : tiles) delete t; }
+    ~Layout() { for (auto& t : tiles) delete t; }
     virtual void Draw(CDC* pDC, const Position* pos) const;
     virtual void DrawSelected(CDC* pDC, const Location& l) const;
     virtual bool GetLocation(const CPoint& p, Location& l) const;
@@ -72,7 +72,7 @@ namespace BoardGamesCore
   public:
     constexpr MainLayout(const Dimension& d, LayoutType lt = LayoutType::Alternating) noexcept : Layout(d, lt) {}
     ~MainLayout() {}
-    virtual void Draw(CDC* pDC, const Position* pos) const;
+    virtual void Draw(CDC* pDC, const Position* pos) const override;
   };
 
   class TakenLayout : public Layout

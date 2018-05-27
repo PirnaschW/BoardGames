@@ -43,17 +43,17 @@ namespace Shogi
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    int dy = p.OnTurn() == &Color::White ? -1 : 1;
+    const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(0, dy));
   }
   void Lance::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    int dy = p.OnTurn() == &Color::White ? -1 : 1;
+    const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(0, z*dy)); z++);
   }
   void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    int dy = p.OnTurn() == &Color::White ? -1 : 1;
+    const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, 2 * dy));
     p.AddIfLegal(moves, l, l + Offset(-1, 2 * dy));
   }
@@ -73,7 +73,7 @@ namespace Shogi
   }
   void Silver::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    int dy = p.OnTurn() == &Color::White ? -1 : 1;
+    const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, dy));
     p.AddIfLegal(moves, l, l + Offset(+0, dy));
     p.AddIfLegal(moves, l, l + Offset(-1, dy));
@@ -86,7 +86,7 @@ namespace Shogi
   }
   void Gold::CollectGoldMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves)
   {
-    int dy = p.OnTurn() == &Color::White ? -1 : 1;
+    const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, dy));
     p.AddIfLegal(moves, l, l + Offset(+0, dy));
     p.AddIfLegal(moves, l, l + Offset(-1, dy));

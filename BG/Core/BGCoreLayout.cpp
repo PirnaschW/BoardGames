@@ -46,7 +46,7 @@ namespace BoardGamesCore
             break;
         }
 
-        CRect r{
+        const CRect r{
           (int)(dim.lEdge + dim.xDim * i + dim.xSkip * i),
           (int)(dim.tEdge + dim.yDim * j + dim.ySkip * j),
           (int)(dim.lEdge + dim.xDim * (i + 1U) + dim.xSkip * i),
@@ -117,7 +117,7 @@ namespace BoardGamesCore
 
     if (dragging)
     {
-      CRect r(dragPoint, SIZE{32,32});  // doesn't work for all games! - some have 18x20
+      const CRect r(dragPoint, SIZE{32,32});  // doesn't work for all games! - some have 18x20
       dragPiece->Draw(pDC, r, &TileColor::Small);
     }
 

@@ -320,7 +320,7 @@ namespace Test
         plist.insert(p);
       }
     }
-    catch (const CMemoryException& ex)
+    catch (const CMemoryException& /*ex*/)
     {
 
     }

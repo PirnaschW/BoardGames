@@ -41,8 +41,8 @@ namespace Cam
     {
       std::vector<Step> s1{s};
       const Color* c1{c};
-      Location l1{fr + d};
-      Location l2{l1 + d};
+      const Location l1{fr + d};
+      const Location l2{l1 + d};
 
       // check the jump-over tile
       const Piece * p1 = pos.GetPiece(l1);      // what is on the tile to jump over?

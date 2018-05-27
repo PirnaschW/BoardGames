@@ -7,11 +7,12 @@ namespace BoardGamesCore
   bool Game::AIMove(void)
   {
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
+    assert(p != nullptr);
 
    // Test::Test::TestPosition(p);
 
     Move::PositionValue value{ p->value };
-    plies = 16;
+    plies = 4;
     for (unsigned int pl = 1; pl <= plies; pl++)                          // use iterative deepening
     {
 //      assert(Test::Test::TestPList(plist));
@@ -43,11 +44,11 @@ namespace BoardGamesCore
 
     for (auto& m : movelist)                                              // for all possible moves
     {
-      MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
+      const MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
       m.SetValue(p->value);                                               // use the known value
     }
 
-    auto l = [on](Move const& a, Move const& b)
+    const auto l = [on](Move const& a, Move const& b)
     { return (on == &Color::White) ? a < b : b < a; };                    // define sort predicate, depending on who's turn it is
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value 
     if (plies == 1) return value = movelist.front().GetValue();           // 1-ply means just use that result - return best move
@@ -56,7 +57,7 @@ namespace BoardGamesCore
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
       MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
-      Move::PositionValue v = (on == &Color::White ? 1 : -1) *
+      const Move::PositionValue v = (on == &Color::White ? 1 : -1) *
         p->Evaluate(plist, !*on, -beta, -alpha, plies - 1);               // evaluate the result
       m.SetValue(v);                                                      // save value into position and move
 
