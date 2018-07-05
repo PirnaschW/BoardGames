@@ -153,31 +153,37 @@ namespace Shogi
     if (p->IsColor(OnTurn())) return false;  // own piece
 
     Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
-    m.push_back(Move{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
+    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
     if (CanPromote(to) && GetPiece(fr)->IsPromotable())
     {
       st = static_cast<Step::StepType>(st | Step::StepType::Promote);
-      m.push_back(Move{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
+      m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)->Promote(true)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
     }
     return p->IsBlank();   // if free tile, keep trying this direction
   }
   
-  Move::PositionValue ShogiPosition::EvaluateStatically(void)
+  void ShogiPosition::EvaluateStatically(void)
   {
-    int v{0};
-    for (unsigned int i = 0; i < sizeX; i++)
+    GetAllMoves();                                                        // fill the move lists
+    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Won;
+    else
     {
-      for (unsigned int j = 0; j < sizeY; j++)
+      int v{ 0 };
+      for (unsigned int i = 0; i < sizeX; i++)
       {
-        const Piece* p = GetPiece(Location{i,j});
-        if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;
-        v += ((p->IsColor(OnTurn())) ? 1 : -1) * p->GetValue();
+        for (unsigned int j = 0; j < sizeY; j++)
+        {
+          const Piece* p = GetPiece(Location{ i,j });
+          if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;
+          v += ((p->IsColor(OnTurn())) ? 1 : -1) * p->GetValue();
+        }
       }
+      value = v;
     }
-    return v;
   }
 
-  //Move::PositionValue ShogiPosition::EvaluateWin(void) const
+  //PositionValue ShogiPosition::EvaluateWin(void) const
   //{
   //  bool kw{false};
   //  bool kb{false};
@@ -193,8 +199,8 @@ namespace Shogi
   //  }
 
   //  int dy = OnTurn() == &Color::White ? 1 : -1;
-  //  if (!kw) return -Move::win * dy;  // no white king - opponent wins
-  //  if (!kb) return Move::win * dy;  // no black king - player wins
+  //  if (!kw) return PositionValue::PValueType::Lost * dy;  // no white king - opponent wins
+  //  if (!kb) return PositionValue::PValueType::Won * dy;  // no black king - player wins
   //  return 0;
   //}
 

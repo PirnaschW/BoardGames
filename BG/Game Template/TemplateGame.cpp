@@ -38,14 +38,15 @@ namespace Template
     if (p->IsColor(OnTurn())) return false;  // own piece
 
     const Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
-    m.push_back(Move{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
+    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
     return false;
   };
 
-  Move::PositionValue TemplatePosition::EvaluateStatically(void)
+  void TemplatePosition::EvaluateStatically(void)
   {
     int v1{0};
     int v2{0};
+    GetAllMoves();
 
     for (unsigned int i = 0; i < sizeX; i++)
     {
@@ -57,7 +58,7 @@ namespace Template
         else v2 += 1;
       }
     }
-    return v1 - v2;
+    value = v1 - v2;
   }
 
 }

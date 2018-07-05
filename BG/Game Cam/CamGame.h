@@ -72,7 +72,7 @@ namespace Cam
     virtual MainPosition* Clone(void) const override = 0;
     virtual void GetAllMoves(void) override;
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
-    virtual Move::PositionValue EvaluateStatically(void) override;
+    virtual void EvaluateStatically(void) override;
   };
 
 

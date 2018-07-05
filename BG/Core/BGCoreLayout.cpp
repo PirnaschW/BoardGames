@@ -104,8 +104,8 @@ namespace BoardGamesCore
     // markup selectable tiles
     for (auto& m : moves)
     {
-      lay->DrawSelected(pDC, m.GetFr());
-      lay->DrawSelected(pDC, m.GetTo());
+      lay->DrawSelected(pDC, m.GetFr().GetLocation());
+      lay->DrawSelected(pDC, m.GetTo().GetLocation());
     }
 
     if (showStock || editing)
@@ -210,23 +210,23 @@ namespace BoardGamesCore
     Location l{0,0};
     if (!lay->GetLocation(point, l)) return; // user clicked somewhere outside
 
+    const Piece* p = pos->GetPiece(l);
+    if (placing) pos->AddIfLegal(moves, l, l);
+
     if (moves.size() == 0)  // new selection starts
     {
-      const Piece* p = pos->GetPiece(l);
       if (p->IsColor(pos->OnTurn()))  // is this one of the player's pieces?
         p->CollectMoves(*pos, l, moves);  // save possible moves
     }
     else  // starting point was already defined
     {
-      const Piece* p = pos->GetPiece(l);
-      if (!p->IsColor(pos->OnTurn()))  // is this one of the opponent's pieces
-        for (auto &m : moves)               // check through allowed moves
-          if (m.GetTo() == l)
-          {
-            Execute(m);
-            moves.clear();
-            return;
-          }
+      for (auto &m : moves)               // check through allowed moves
+        if (m.GetTo().GetLocation() == l)
+        {
+          Execute(m);
+          moves.clear();
+          return;
+        }
     }
   }
 

@@ -76,67 +76,82 @@ namespace Hasami
         else t.push_back(Field(l, pp));     // opponents piece, add to potential taken list
       }
     }
-    m.push_back(Move{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)},st,taken});
+    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,taken});
     return true;
   }
 
-  Move::PositionValue HasamiPosition::EvaluateStatically(void)
+  void HasamiPosition::EvaluateStatically(void)
   {
-    int v1{0};
-    int v2{0};
-    
-    for (unsigned int j = 0; j < sizeY; j++)
+    GetAllMoves();                                                        // fill the move lists
+    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Tie;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Tie;
+    else
     {
-      const bool b1{OnTurn() == &Color::White ? j < sizeY - 2 : j > 2};
-      const bool b2{OnTurn() == &Color::White ? j > 2 : j < sizeY - 2};
-      for (unsigned int i = 0; i < sizeX; i++)  // loop through all locations
+
+      int v1{ 0 };
+      int v2{ 0 };
+
+      for (unsigned int j = 0; j < sizeY; j++)
       {
-        const Location l{i,j};
-        const Piece* p = GetPiece(l);
-        if (p->IsColor(&Color::NoColor)) continue;  // nothing here, so no chain can start
-
-        for (unsigned int k = 0; k < 4; k++)
+        const bool b1{ OnTurn() == &Color::White ? j < sizeY - 2 : j > 1 };  // limits for the player on turn
+        const bool b2{ OnTurn() == &Color::White ? j > 1 : j < sizeY - 2 };  // limits for the player not on turn
+        for (unsigned int i = 0; i < sizeX; i++)  // loop through all locations
         {
-          const Offset& d = Offset::Qdirection[k];
-          const Piece * pp{GetPiece(l + d * -1)};
-          if (pp != nullptr && pp->IsColor(p->GetColor())) continue;    // if same color is that direction, we counted it already, so move on
-          Location ll{i,j};
-          unsigned int z{0};
-          if (p->IsColor(OnTurn()) ? b1 : b2) z++;  // count the starting checker only if it is in the valid range
+          const Location l{ i,j };
+          const Piece* p = GetPiece(l);
+          if (p->IsColor(&Color::NoColor)) continue;  // nothing here, so no chain can start
+          const bool w = p->IsColor(&Color::White);
 
-          while ((pp = GetPiece(ll += d)) != nullptr)
+          for (unsigned int k = 0; k < 4; k++)
           {
-            if (pp->IsColor(p->GetColor()))
+            if (k == 1) continue; // horizontal is not allowed
+
+            const Offset& d = Offset::Qdirection[k];
+            const Piece * pp{ GetPiece(l + d * -1) };
+            if (pp != nullptr && pp->IsColor(p->GetColor())) continue;    // if same color is that direction, we counted it already, so move on
+            Location ll{ i,j };
+            unsigned int z{ 0 };
+            if (p->IsColor(OnTurn()) ? b1 : b2) z++;  // count the starting checker only if it is in the valid range
+
+            while ((pp = GetPiece(ll += d)) != nullptr)
             {
-              if (p->IsColor(OnTurn()) ? b1 : b2) z++;   // count each checker only if it is in the valid range
-            }
-            else
-            {
-              if (pp->IsColor(&Color::NoColor))
+              if (pp->IsColor(p->GetColor()))
               {
-                (p->IsColor(OnTurn()) ? v1 : v2) += 1;    // if line ends with free field, give an extra point - much better than opponent's piece
+                if (p->IsColor(OnTurn()) ? b1 : b2) z++;   // count each checker only if it is in the valid range
               }
-              break;
+              else
+              {
+                if (pp->IsColor(&Color::NoColor))
+                {
+                  (p->IsColor(OnTurn()) ? v1 : v2) += 1;    // if line ends with free field, give an extra point - much better than opponent's piece
+                }
+                break;
+              }
             }
+            if (z >= 5)
+            {
+              value = w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
+              return;
+            }
+            (w ? v1 : v2) += GetValue(z);
           }
-          (p->IsColor(OnTurn()) ? v1 : v2) += GetValue(z);
         }
       }
-    }
 
-    return v1 - v2;
+      value = v1 - v2;
+    }
   }
 
   inline unsigned int HasamiPosition::GetValue(unsigned int z) const noexcept
   {
     switch (z)
     {
-      case 0:  return  0;
-      case 1:  return  1;
-      case 2:  return  2;
-      case 3:  return  6;
-      case 4:  return 24;
-      default: return Move::win;
+      case 0:  return   0;
+      case 1:  return  10;
+      case 2:  return  20;
+      case 3:  return  60;
+      case 4:  return 240;
+      default: return   0;
     }
   }
 

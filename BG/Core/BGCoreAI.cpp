@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <chrono>
 #include "../Game Test/TestGame.h"
 
 namespace BoardGamesCore
@@ -11,72 +12,84 @@ namespace BoardGamesCore
 
    // Test::Test::TestPosition(p);
 
-    Move::PositionValue value{ p->value };
-    plies = 4;
-    for (unsigned int pl = 1; pl <= plies; pl++)                          // use iterative deepening
+    auto t_start = std::chrono::high_resolution_clock::now();
+    double limit = 10.0;
+
+    PositionValue value{};
+    for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
     {
 //      assert(Test::Test::TestPList(plist));
-      value = p->Evaluate(plist, CurrentPlayer()->GetColor(), -Move::win, Move::win, pl);
+      value = p->Evaluate(plist, CurrentPlayer()->GetColor() == &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+      if (value == PositionValue::PValueType::Lost)
+      {
+        ::AfxMessageBox(L"Computer resigns - Player wins!");
+        SetAlive(false);
+        return false;
+      }
+      if (value == PositionValue::PValueType::Won) {
+        ::AfxMessageBox(L"You might as well resign - Computer will win!");
+        break;
+      }
+
+      if (value == PositionValue::PValueType::Tie) {
+        ::AfxMessageBox(L"Computer will hold a Draw.");
+        break;
+      }
+
       if (plist.size() > 500000) break;
+
+      auto t_now = std::chrono::high_resolution_clock::now();
+      std::chrono::duration<double> elapsed = t_now - t_start;
+      if (elapsed.count() > limit) break;
     }
 
-    if (value < -100000)
-    {
-      ::AfxMessageBox(L"Computer resigns - Player wins!");
-      SetAlive(false);
-      return false;
-    }
-    if (value > 100000) {
-      ::AfxMessageBox(L"You might as well resign - Computer will win!");
-    }
-
-    Execute(p->movelistB[0]);
+    Execute(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White));
     return true;
   }
 
 
-  Move::PositionValue MainPosition::Evaluate(MainPosition::PList& plist, const Color* on, int alpha, int beta, unsigned int plies)
+  PositionValue MainPosition::Evaluate(MainPosition::PList& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
   {
-    auto& movelist = (on == &Color::White ? movelistW : movelistB);
-    if (movelist.size() == 0) return value;
+    if (plies == 0) return GetValue(w);
+
+    auto& movelist = (w ? movelistW : movelistB);
+    if (movelist.size() == 0) return GetValue(w);
 
     assert(plist.find(this) != plist.end());                              // the current position must have been checked before
 
-    for (auto& m : movelist)                                              // for all possible moves
-    {
-      const MainPosition* p{ GetPosition(plist,&m) };                     // find the board in the list
-      m.SetValue(p->value);                                               // use the known value
-    }
+    const auto l = [](Move const& a, Move const& b) { return b < a; };    // define sort predicate
 
-    const auto l = [on](Move const& a, Move const& b)
-    { return (on == &Color::White) ? a < b : b < a; };                    // define sort predicate, depending on who's turn it is
-    std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value 
-    if (plies == 1) return value = movelist.front().GetValue();           // 1-ply means just use that result - return best move
-
-    // more than 1 ply: drill iteratively deeper                       
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
       MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
-      Move::PositionValue v = p->Evaluate(plist, !*on, -beta, -alpha, plies - 1);               // evaluate the result
-      m.SetValue(v);                                                      // save value into move
-      v *= (on == &Color::White ? 1 : -1);
+      PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);   // evaluate the result
+      m.SetValue(p->GetValue(w));                                         // save real position value into move for sorting
 
       // apply alpha/beta pruning
-      if (v >= beta) { return value = beta; }                             // cut branch off, use current value
       if (v > alpha) { alpha = v; }                                       // reduce range for alpha, continue
+      if (v >= beta)                                                      // cut branch off, use current value
+      { 
+        std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
+        SetValue(w, alpha);                                               // save top value in current position
+        return beta;
+      }
     }
-    return value = alpha;
+
+    std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
+    SetValue(w, alpha);                                                   // save top value in current position
+    return alpha;                                                         // return best value
   }
 
 
-  Move::PositionValue MainPosition::EvaluateStatically(void)   // as seen from White
+  void MainPosition::EvaluateStatically(void)   // as seen from White
   {
     // default evaluation: count all material, and add difference of move count. Overwrite for each game as needed
-    if (movelistW.size() == 0) value = -Move::win;        // if no more moves, game over
-    else if (movelistB.size() == 0) value = Move::win;
+    GetAllMoves();                                                                   // fill the move lists
+    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Won;
     else
     {
-      value = static_cast<Move::PositionValue>(movelistW.size() - movelistB.size()) * 20;
+      value = (movelistW.size() - movelistB.size()) * 20;
       for (unsigned int j = 0; j < sizeY; j++)
       {
         for (unsigned int i = 0; i < sizeX; i++)         // loop through all locations
@@ -88,14 +101,12 @@ namespace BoardGamesCore
         }
       }
     }
-    return value;  // always as seen from White
+    assert(Test::Test::TestValue(this));
   }
+
 
   MainPosition* MainPosition::GetPosition(MainPosition::PList& plist, Move* m) // execute move, maintain in PList
   {
-    //if (plist.size() == plist.bucket_count())
-    //  plist.rehash(plist.bucket_count() * 2);  // increase set proactively
-
     MainPosition* pos(Clone());                                           // create a copy of the board
     if (m != nullptr) pos->Execute(*m);                                   // execute move if provided
 
@@ -106,7 +117,6 @@ namespace BoardGamesCore
       return *pl0;                                                        // found - return it
     }
 
-    pos->GetAllMoves();                                                   // fill the move lists
     pos->EvaluateStatically();                                            // evaluate position statically
     auto pl1 = plist.insert(pos);                                         // and save it
     assert(pl1.second);

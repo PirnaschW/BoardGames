@@ -7,6 +7,19 @@ namespace MassacreChess
 {
   MCPosition::MCPosition(unsigned int x, unsigned int y) : MainPosition(x, y)
   {
+    if (x == x)
+    {
+      SetPiece(Location{ 0,0 }, &ChessPiece::WR);
+      SetPiece(Location{ 0,1 }, &ChessPiece::BR);
+      SetPiece(Location{ 0,2 }, &ChessPiece::BQ);
+      SetPiece(Location{ 0,3 }, &ChessPiece::BB);
+      SetPiece(Location{ 1,2 }, &ChessPiece::WB);
+      SetPiece(Location{ 2,0 }, &ChessPiece::WN);
+      SetPiece(Location{ 3,0 }, &ChessPiece::WN);
+      SetPiece(Location{ 3,3 }, &ChessPiece::BN);
+      return;
+    }
+
     //srand((unsigned)time(NULL));
     std::srand(1);
 
@@ -34,7 +47,7 @@ namespace MassacreChess
     if (pt->GetColor() == pf->GetColor()) return false;                   // own piece; don't keep trying this direction
 
     // valid move, save into collection
-    m.push_back(Move{ Field{fr,pf},Field{to,pt},Step::StepType::Take,std::vector<Field>{Field{to,pt}} });
+    m.push_back(Step{ Field{fr,pf},Field{to,pf},Step::StepType::Take,std::vector<Field>{Field{to,pt}} });
     return false;                                                         // don't keep trying this direction
   };
 
@@ -52,6 +65,29 @@ namespace MassacreChess
     SetPiece(ll[z], p);
     return true;
   }
+
+  void MCPosition::EvaluateStatically(void)   // as seen from White
+  {
+    // default evaluation: count all material, and add difference of move count. Overwrite for each game as needed
+    GetAllMoves();                                                        // fill the move lists
+    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Won;
+    else
+    {
+      value = (movelistW.size() - movelistB.size()) * 1000; // slightly more than a Q
+      for (unsigned int j = 0; j < sizeY; j++)
+      {
+        for (unsigned int i = 0; i < sizeX; i++)                          // loop through all locations
+        {                                                               
+          const Piece* p = GetPiece(Location{ i,j });                   
+          if (p == nullptr) continue;                                     // field does not exist
+          if (p->IsColor(&Color::NoColor)) continue;                      // nothing here
+          value += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue();
+        }
+      }
+    }
+  }
+
 
   MCGame::MCGame(unsigned int x, unsigned int y) : MCGame(
     new MCPosition(x, y), new TakenPosition(x*y / 2, 2), new StockPosition(5, 2),

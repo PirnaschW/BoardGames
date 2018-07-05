@@ -124,6 +124,18 @@
     <Filter Include="Game Test\Resource Files">
       <UniqueIdentifier>{0ba87687-926d-45c0-abc7-b188367baa9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game TicTacToe">
+      <UniqueIdentifier>{6607352b-5eee-4dde-b348-cb335097467e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game TicTacToe\Header Files">
+      <UniqueIdentifier>{838990c0-c129-465d-8c73-8f07035a20e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game TicTacToe\Source Files">
+      <UniqueIdentifier>{62913613-f89a-4ea0-8e0c-ae9152f37795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game TicTacToe\Resource Files">
+      <UniqueIdentifier>{34613837-7e7c-4fac-a364-29a54b0470dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h">
@@ -210,6 +222,12 @@
     <ClInclude Include="Game Test\TestResource.h">
       <Filter>Game Test\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game TicTacToe\TicTacToeGame.h">
+      <Filter>Game TicTacToe\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game TicTacToe\TicTacToeResource.h">
+      <Filter>Game TicTacToe\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
@@ -269,6 +287,9 @@
     <ClCompile Include="Game Test\TestGame.cpp">
       <Filter>Game Test\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game TicTacToe\TicTacToeGame.cpp">
+      <Filter>Game TicTacToe\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\BG.rc2">
@@ -303,6 +324,9 @@
     </None>
     <None Include="Game Test\Test.rc2">
       <Filter>Game Test\Resource Files</Filter>
+    </None>
+    <None Include="Game TicTacToe\TicTacToe.rc2">
+      <Filter>Game TicTacToe\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -553,6 +577,9 @@
     </Image>
     <Image Include="Game Test\res\TestDoc.ico">
       <Filter>Game Test\Resource Files</Filter>
+    </Image>
+    <Image Include="Game TicTacToe\res\TicTacToeDoc.ico">
+      <Filter>Game TicTacToe\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

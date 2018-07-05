@@ -117,6 +117,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -208,6 +209,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -245,6 +247,8 @@
     <ClInclude Include="Game Template\TemplateResource.h" />
     <ClInclude Include="Game Test\TestGame.h" />
     <ClInclude Include="Game Test\TestResource.h" />
+    <ClInclude Include="Game TicTacToe\TicTacToeGame.h" />
+    <ClInclude Include="Game TicTacToe\TicTacToeResource.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="BGResource.h" />
     <ClInclude Include="stdafx.h" />
@@ -268,6 +272,7 @@
     <ClCompile Include="Game Shogi\ShogiGame.cpp" />
     <ClCompile Include="Game Template\TemplateGame.cpp" />
     <ClCompile Include="Game Test\TestGame.cpp" />
+    <ClCompile Include="Game TicTacToe\TicTacToeGame.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -287,6 +292,7 @@
     <None Include="Game Shogi\Shogi.rc2" />
     <None Include="Game Template\Template.rc2" />
     <None Include="Game Test\Test.rc2" />
+    <None Include="Game TicTacToe\TicTacToe.rc2" />
     <None Include="res\BG.rc2" />
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +375,7 @@
     <Image Include="Game Shogi\res\MiniShogiDoc.ico" />
     <Image Include="Game Template\res\TemplateDoc.ico" />
     <Image Include="Game Test\res\TestDoc.ico" />
+    <Image Include="Game TicTacToe\res\TicTacToeDoc.ico" />
     <Image Include="res\BG.ico" />
     <Image Include="res\BGDoc.ico" />
     <Image Include="res\Toolbar.bmp" />

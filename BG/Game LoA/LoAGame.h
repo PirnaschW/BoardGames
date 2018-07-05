@@ -151,15 +151,15 @@ namespace LoA
       if (p->IsColor(OnTurn())) return false;  // own piece
       if (p->IsBlank())
       {
-        m.push_back(Move{Field{fr,GetPiece(fr)},Field{to,GetPiece(to)}});
+        m.push_back(Step{ Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) } });
       }
       else
       {
-        m.push_back(Move{Field{fr,GetPiece(fr)},Field{to,GetPiece(to)},Step::StepType::Take,std::vector<Field>{Field{to,GetPiece(to)}}});
+        m.push_back(Step{Field{fr,GetPiece(fr)},Field{to,GetPiece(fr)},Step::StepType::Take,std::vector<Field>{Field{to,GetPiece(to)}}});
       }
       return false;
     };
-    Move::PositionValue EvaluateStatically(void) override;
+    void EvaluateStatically(void) override;
 
   protected: // extensions to base class
     virtual bool IsConnected(bool t) const

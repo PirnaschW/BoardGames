@@ -49,7 +49,7 @@ namespace Hasami
     ~HasamiPosition() override {}
     virtual MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
-    virtual Move::PositionValue EvaluateStatically(void) override;
+    virtual void EvaluateStatically(void) override;
 
   protected:
     inline unsigned int GetValue(unsigned int z) const noexcept;

@@ -56,7 +56,7 @@ namespace Test
     if (p->IsBlank()) return true;   // not a move, but keep trying this direction
     if (p->IsColor(OnTurn())) return false;  // own piece
 
-    m.push_back(Move{ Field{fr,GetPiece(fr)}, Field{to,p},Step::StepType::Take, std::vector<Field>{Field{to,p}} });
+    m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,p},Step::StepType::Take, std::vector<Field>{Field{to,p}} });
     return false;
   };
 
@@ -140,13 +140,13 @@ namespace Test
       //plist.insert(pos);
 
       //Move Best{std::vector<Step>{}};
-      //Move::PositionValue max = -Move::win;
+      //PositionValue max = PositionValue::PValueType::Lost;
       //for (auto& mi : m)                                      // for all possible opponent's moves
       //{
       //  MainPosition* pp(pos->Clone());                       // create a copy of the board
       //  std::vector<const Piece*> taken = pp->Execute(mi);    // apply the move to the copy, return material taken
       //  pp->NextPlayer();
-      //  Move::PositionValue r{};
+      //  PositionValue r{};
 
       //  auto pp0 = plist.find(pp);
       //  if (pp0 == plist.end())
@@ -214,24 +214,89 @@ namespace Test
       TestMoveUndo(pos);
       TestTaken(pos);
 
+      {
+        bool b00 = !(PositionValue{ PositionValue::Undefined } < PositionValue{ PositionValue::Lost });
+        bool b01 = (PositionValue{ PositionValue::Undefined } < PositionValue{ PositionValue::Tie });
+        bool b02 = (PositionValue{ PositionValue::Undefined } < PositionValue{ PositionValue::Won });
+        bool b03 = (PositionValue{ PositionValue::Undefined } < PositionValue{ PositionValue::Normal });
+        bool b04 = !(PositionValue{ PositionValue::Undefined } < PositionValue{ PositionValue::Undefined });
 
-      Move::PositionValue Best{ 0 };
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 1);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 2);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 3);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 4);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 5);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 6);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 7);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 8);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 9);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 10);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 11);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 12);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 13);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 14);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 15);
-      Best = pos->Evaluate(plist, &Color::White, -Move::win, Move::win, 16);
+        bool b10 = !(PositionValue{ PositionValue::Lost } < PositionValue{ PositionValue::Lost });
+        bool b11 = (PositionValue{ PositionValue::Lost } < PositionValue{ PositionValue::Tie });
+        bool b12 = (PositionValue{ PositionValue::Lost } < PositionValue{ PositionValue::Won });
+        bool b13 = (PositionValue{ PositionValue::Lost } < PositionValue{ PositionValue::Normal });
+        bool b14 = (PositionValue{ PositionValue::Lost } < PositionValue{ PositionValue::Undefined });
+
+        bool b20 = !(PositionValue{ PositionValue::Won } < PositionValue{ PositionValue::Lost });
+        bool b21 = !(PositionValue{ PositionValue::Won } < PositionValue{ PositionValue::Tie });
+        bool b22 = !(PositionValue{ PositionValue::Won } < PositionValue{ PositionValue::Won });
+        bool b23 = !(PositionValue{ PositionValue::Won } < PositionValue{ PositionValue::Normal });
+        bool b24 = !(PositionValue{ PositionValue::Won } < PositionValue{ PositionValue::Undefined });
+
+        bool b30 = !(PositionValue{ PositionValue::Tie } < PositionValue{ PositionValue::Lost });
+        bool b31 = !(PositionValue{ PositionValue::Tie } < PositionValue{ PositionValue::Tie });
+        bool b32 = (PositionValue{ PositionValue::Tie } < PositionValue{ PositionValue::Won });
+        bool b33 = !(PositionValue{ PositionValue::Tie } < PositionValue{ -1 });
+        bool b34 = (PositionValue{ PositionValue::Tie } < PositionValue{ 1 });
+        bool b35 = !(PositionValue{ PositionValue::Tie } < PositionValue{ PositionValue::Undefined });
+
+        bool b40 = !(PositionValue{ PositionValue::Normal } < PositionValue{ PositionValue::Lost });
+        bool b41 = (PositionValue{ -1 } < PositionValue{ PositionValue::Tie });
+        bool b42 = !(PositionValue{ 1 } < PositionValue{ PositionValue::Tie });
+        bool b43 = (PositionValue{ -1 } < PositionValue{ 1 });
+        bool b44 = !(PositionValue{ 1 } < PositionValue{ -1 });
+        bool b45 = (PositionValue{ PositionValue::Normal } < PositionValue{ PositionValue::Won });
+        bool b46 = !(PositionValue{ PositionValue::Normal } < PositionValue{ PositionValue::Undefined });
+
+        bool b99 =
+          b00 &&
+          b01 &&
+          b02 &&
+          b03 &&
+          b04 &&
+          b10 &&
+          b11 &&
+          b12 &&
+          b13 &&
+          b14 &&
+          b20 &&
+          b21 &&
+          b22 &&
+          b23 &&
+          b24 &&
+          b30 &&
+          b31 &&
+          b32 &&
+          b33 &&
+          b34 &&
+          b35 &&
+          b40 &&
+          b41 &&
+          b42 &&
+          b43 &&
+          b44 &&
+          b45 &&
+          b46;
+        assert(b99);
+      }
+
+      PositionValue Best{ 0 };
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 2);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 3);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 4);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 5);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 6);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 7);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 8);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 9);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 10);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 11);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 12);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 13);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 14);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 15);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 16);
 
       bool ok{ true };
       //    ok = game.AIMove();
@@ -253,12 +318,17 @@ namespace Test
     return true;
   }
 
-
+  class TestPosAccess : public MainPosition
+  {
+  public:
+    inline const std::vector<Move> GetMoveList(bool w) const { return w ? movelistW : movelistB; }
+  };
   bool Test::TestMoveUndo(const MainPosition* pos)  // try all moves (for both colors) and undo them, to verify the Undo method
   {
     static int z{ 0 };
+    const TestPosAccess * const tp = static_cast<const TestPosAccess* const>(pos);
 
-    for (auto& m : pos->movelistW)
+    for (auto& m : tp->GetMoveList(true))
     {
       z++;
       std::unique_ptr<MainPosition> pos1(pos->Clone());
@@ -266,7 +336,7 @@ namespace Test
       pos1->Undo(m);
       assert(*pos1 == *pos);
     }
-    for (auto& m : pos->movelistB)
+    for (auto& m : tp->GetMoveList(false))
     {
       z++;
       std::unique_ptr<MainPosition> pos1(pos->Clone());
@@ -280,8 +350,9 @@ namespace Test
   bool Test::TestTaken(const MainPosition* pos)  // verify all taken pieces
   {
     static int z{ 0 };
+    const TestPosAccess * const tp = static_cast<const TestPosAccess* const>(pos);
 
-    for (auto& m : pos->movelistW)
+    for (auto& m : tp->GetMoveList(true))
     {
       for (auto& s : m.GetSteps())
       {
@@ -292,7 +363,7 @@ namespace Test
         }
       }
     }
-    for (auto& m : pos->movelistB)
+    for (auto& m : tp->GetMoveList(false))
     {
       for (auto& s : m.GetSteps())
       {
@@ -343,6 +414,26 @@ namespace Test
       z++;
       assert(TestPosition(it));
     }
+    return true;
+  }
+
+  bool Test::TestValue(const MainPosition* pos)
+  {
+    static int z{ 0 };
+    z++;
+
+    char buffer[100];
+    std::string s{};
+    for (unsigned int i = 0; i < pos->sequence.size(); ++i)
+    {
+      const Move& m = pos->sequence[i];
+      sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m.GetFr().GetLocation().x + 'a', m.GetFr().GetLocation().y + '1',
+                                                    m.GetTo().GetLocation().x + 'a', m.GetTo().GetLocation().y + '1');
+      s += buffer;
+    }
+    sprintf_s(buffer, "pos value = %u\n", (unsigned int) pos->GetValue(true));
+    s += buffer;
+    TRACE(s.c_str());
     return true;
   }
 

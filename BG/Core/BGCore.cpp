@@ -4,25 +4,18 @@
 
 namespace BoardGamesCore
 {
-  //Step& Step::operator =(const Step& s)
+  //constexpr bool PositionValue::operator> (PositionValue v) const noexcept
   //{
-  //  from = s.from; 
-  //  to = s.to; 
-  //  assert(to == s.to);
-  //  type = s.type; 
-  //  take = s.take; 
-  //  return *this;
+  //  assert(type != Undefined && v.type != Undefined);
+  //  switch (type)
+  //  {
+  //    case Lost: return false;                                                 // Lost is not greater than anything
+  //    case Tie: return (v.type == Lost || (v.type == Normal && v.value < 0));  // Tie is better than Lost or losing
+  //    case Won: return v.type != Won;                                          // Won is better than anything except Won
+  //    case Normal: return (v.type == Lost || (v.type == Tie && v.value > 0));  // Any value is better than Lost; positive is better than Tie
+  //  }
   //}
-
-
-//  Move& Move::operator =(const Move& m)
-//  { 
-//    step = m.step;
-//    assert(step == m.step);
-//    value = m.value; 
-////    assert(m == *this);
-//    return *this;
-//  }
+ 
 
   Move&& Move::operator =(Move&& m) noexcept
   {
@@ -101,9 +94,11 @@ namespace BoardGamesCore
     movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
     movelistB.clear();                                                    // after the move is executed, the movelists will be outdated
 
+    sequence.push_back(m);                                                // save the move in the sequence
+
     std::vector<const Piece*> taken{};
     const std::vector<Step> step{ m.GetSteps() };
-    const Piece* p = GetPiece(m.GetFr());
+    const Piece* p = m.GetFr().GetPiece();
 
     // collect taken pieces
     for (auto& s : step)
@@ -119,8 +114,8 @@ namespace BoardGamesCore
       }
     }
 
-    SetPiece(m.GetTo(), p);                                               // move the piece
-    SetPiece(m.GetFr(), &Piece::NoPiece);                                 // empty the start tile
+    SetPiece(m.GetFr().GetLocation(), &Piece::NoPiece);                   // empty the start tile
+    SetPiece(m.GetTo().GetLocation(), m.GetTo().GetPiece());              // place the piece at the target field
 
     NextPlayer();                                                         // after the move, it's the next player's turn
     return taken;                                                         // return the collected taken pieces
@@ -129,17 +124,12 @@ namespace BoardGamesCore
   void MainPosition::Undo(const Move& m)
   {
     const std::vector<Step> step = m.GetSteps();
-    assert(GetPiece(m.GetFr()) == &Piece::NoPiece);                       // verify that the target is really empty
-    SetPiece(m.GetFr(), GetPiece(m.GetTo()));                             // put the piece back on the starting field
-    SetPiece(m.GetTo(), &Piece::NoPiece);                                 // replace it with no piece
+    SetPiece(m.GetFr().GetLocation(), m.GetFr().GetPiece());              // put the piece back on the starting field
+    SetPiece(m.GetTo().GetLocation(), &Piece::NoPiece);                   // empty the target field
     for (auto& s : step)                                                  // for all steps
     {
       const std::vector<Field>& take = s.GetTake();
-      for (auto& t : take)
-      {
-        assert(GetPiece(t.GetLocation()) == &Piece::NoPiece);             // verify that the target is really empty
-        SetPiece(t.GetLocation(), t.GetPiece());                          // Put the taken piece(s) back on the board
-      }
+      for (auto& t : take) SetPiece(t.GetLocation(), t.GetPiece());       // Put the taken piece(s) back on the board
     }
     PreviousPlayer();                                                     // after the undo, it's the previous player's turn
   }
@@ -164,12 +154,12 @@ namespace BoardGamesCore
   }
 
 
-  Game::Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl) noexcept
-    : pos{ p }, tpos(t), spos(s), lay{ l }, tlay(tl), slay(sl)
+  Game::Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl, bool pl) noexcept
+    : pos{ p }, tpos(t), spos(s), lay{ l }, tlay(tl), slay(sl), placing(pl)
   {
     AddPlayer(new Player(&PlayerType::Human, &Color::White));
     AddPlayer(new Player(&PlayerType::Computer, &Color::Black));
-    plist.reserve(10000);
+    plist.reserve(100000);
   }
 
   Game::~Game(void)
@@ -186,9 +176,9 @@ namespace BoardGamesCore
 
   void Game::Execute(const Move& m)
   {
-    const unsigned int z{ pos->OnTurn() == &Color::White ? 1U : 0U }; // need to buffer the index, as Execute changes who's on turn
-    tpos->Push(z, pos->Execute(m));  // execute move (includes setting pos to next player), and display taken pieces
-    NextPlayer();                    // the game has also a pointer to the current player
+    const unsigned int z{ pos->OnTurn() == &Color::White ? 1U : 0U };     // need to buffer the index, as Execute changes who's on turn
+    tpos->Push(z, pos->Execute(m));                                       // execute move (includes setting pos to next player), and display taken pieces
+    NextPlayer();                                                         // the game has also a pointer to the current player
   }
 
 }

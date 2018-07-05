@@ -173,7 +173,7 @@ namespace Logik
   class LMove : public Move
   {
   public:
-    LMove(Move::PositionValue mm) noexcept : Move(Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr}), m((unsigned int)mm) {}
+    LMove(PositionValue mm) noexcept : Move(Step{ Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr} }), m((unsigned int)mm) {}
     unsigned int GetIndex(void) const  noexcept { return m; }
     ~LMove(void) {}
 
@@ -227,11 +227,11 @@ namespace Logik
       return false;
     }
     virtual void ReadPosition(void) noexcept;
-    virtual Move::PositionValue Evaluate(unsigned int) const;
+    virtual PositionValue Evaluate(unsigned int) const;
     virtual const std::vector<const Piece*> Execute(const Move& m) override
     {
       std::vector<const Piece*> taken{};
-      previ[prevc] = dynamic_cast<const LMove<BX, BY, BZ>&>(m).GetIndex();
+      previ[prevc] = static_cast<const LMove<BX, BY, BZ>&>(m).GetIndex();
       const Play<BX, BY, BZ>& p = previ[prevc];
       for (unsigned int i = 0; i < BY; ++i)
       {
@@ -287,7 +287,7 @@ namespace Logik
 
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
-  Move::PositionValue LPosition<BX, BY, BZ>::Evaluate(unsigned int) const // Evaluate best next move
+  PositionValue LPosition<BX, BY, BZ>::Evaluate(unsigned int) const // Evaluate best next move
   {
     // prepare array of previous plays
     std::vector<Play<BX, BY, BZ>> pp0;
@@ -341,8 +341,8 @@ namespace Logik
     }
 
     unsigned int gmin{perms};
-    std::vector<unsigned int> bestI{};
-    for (unsigned int i = 0; i < perms; ++i)                           // for all possible plays, find the best 'worst count'
+    std::vector<long> bestI{};
+    for (unsigned int i = 0; i < perms; ++i)                              // for all possible plays, find the best 'worst count'
     {
       if ((*max)[i] == 0);                                                // ignore useless moves
       else if ((*max)[i] < gmin)                                          // found a better move
@@ -357,7 +357,7 @@ namespace Logik
       }
     }
 
-    return bestI[rand() % bestI.size()];                               // randomly pick one of the equally good tries
+    return bestI[rand() % bestI.size()];                                  // randomly pick one of the equally good tries
   }
 
 
@@ -480,7 +480,7 @@ namespace Logik
 
     const unsigned int pl = Plies(0);
 
-    const Move::PositionValue e = pos->Evaluate(plist, pos->OnTurn(), -Move::win, Move::win, pl);
+    const PositionValue e = pos->Evaluate(plist, pos->OnTurn(), PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
 
     if (1 == 0)
     {

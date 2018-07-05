@@ -125,14 +125,14 @@ namespace Cam
     if (p == &Piece::NoTile) return false;   // out of board
     if (!p->IsBlank()) return false;          // tile occupied
 
-    m.push_back(Move{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)}});
+    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)}});
     return false;
   };
 
 
-  Move::PositionValue CamPosition::EvaluateStatically(void)
+  void CamPosition::EvaluateStatically(void)
   {
-    int v{0};
+    PositionValue v{};
 
     for (unsigned int i = 0; i < sizeX; i++)
     {
@@ -143,10 +143,10 @@ namespace Cam
         v += ((p->IsColor(OnTurn())) ? 1 : -1) * (p->GetValue() + j);
       }
     }
-    return v;
+    value = v;
   }
 
-  //Move::PositionValue CamPosition::EvaluateWin(void) const
+  //PositionValue CamPosition::EvaluateWin(void) const
   //{
   //  bool wfree{false};
   //  bool bfree{false};
@@ -160,8 +160,8 @@ namespace Cam
   //  }
 
   //  int dy = OnTurn() == &Color::White ? 1 : -1;
-  //  if (!bfree) return -Move::win * dy;
-  //  if (!wfree) return Move::win * dy;
+  //  if (!bfree) return PositionValue::PValueType::Lost * dy;
+  //  if (!wfree) return PositionValue::PValueType::Won * dy;
   //  return 0;
   //}
 

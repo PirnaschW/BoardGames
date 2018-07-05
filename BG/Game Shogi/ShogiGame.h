@@ -247,7 +247,7 @@ namespace Shogi
     ~ShogiPosition() override {}
     virtual MainPosition* Clone(void) const override = 0;
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
-    virtual Move::PositionValue EvaluateStatically(void) override;
+    virtual void EvaluateStatically(void) override;
 
   public: // extensions to base class
     virtual bool CanPromote(const Location &l) const noexcept = 0;
