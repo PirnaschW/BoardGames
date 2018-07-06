@@ -73,7 +73,7 @@ namespace Test
     static bool TestMoveUndo(const MainPosition* pos);
     static bool TestTaken(const MainPosition* pos);
     static bool TestPosition(const MainPosition* pos);
-    static bool TestPList(const MainPosition::PList& plist);
+    static bool TestPList(const AIContext& plist);
     static bool TestValue(const MainPosition* pos);
   };
 

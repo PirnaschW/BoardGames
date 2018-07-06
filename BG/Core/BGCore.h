@@ -305,7 +305,7 @@ namespace BoardGamesCore
   {
   public:
     constexpr inline Position(Coordinate x, Coordinate y, const Piece* init = &Piece::NoPiece) noexcept
-      : sizeX(x), sizeY(y), pieces{ x*y,init } {}
+      : sizeX(x), sizeY(y), pieces{ 1ULL*x*y,init } {}
     constexpr inline Position(const Position& p) : sizeX(p.sizeX), sizeY(p.sizeY), pieces(p.pieces) {}
     virtual ~Position(void) noexcept {}
     virtual inline bool operator ==(const Position* p) const noexcept { return pieces == p->pieces; }
@@ -323,13 +323,10 @@ namespace BoardGamesCore
   };
 
 
+  class AIContext;
   class MainPosition : public Position
   {
   public:
-    typedef MainPosition* pMP;
-    struct Hash { std::size_t operator()(const pMP p) const noexcept { return p->GetHash(); } };
-    struct Equality { bool operator()(const pMP Lhs, const pMP Rhs) const noexcept { return *Lhs == *Rhs; } };
-    typedef std::unordered_set< pMP, Hash, Equality> PList;
     typedef unsigned int Depth;
 
   protected:
@@ -350,13 +347,13 @@ namespace BoardGamesCore
     virtual std::vector<Move> CollectMoves(void) const { std::vector<Move> m{}; return m; }
     virtual bool AddIfLegal(std::vector<Move> &, const Location, const Location) const { return false; };
     virtual void EvaluateStatically(void);       // calculate position value and save
-    virtual PositionValue Evaluate(MainPosition::PList& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
+    virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
     inline Depth GetDepth(void) const noexcept { return depth; }
     inline Depth SetDepth(Depth d) noexcept { return depth = d; }
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value = v.Relative(w); }
     virtual inline const Move& GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
-    virtual MainPosition* GetPosition(MainPosition::PList& plist, Move* m = nullptr);     // execute move, maintain in PList
+    virtual MainPosition* GetPosition(AIContext& plist, Move* m = nullptr);     // execute move, maintain in PList
     virtual const std::vector<const Piece*> Execute(const Move& m);
     virtual void Undo(const Move& m);
 
@@ -382,6 +379,20 @@ namespace BoardGamesCore
   {
   public:
     constexpr inline StockPosition(Coordinate x, Coordinate y) noexcept : Position(x, y) {}
+  };
+
+  namespace AIContextHelper
+  {
+    typedef MainPosition* pMP;
+    struct Hash { std::size_t operator()(const pMP p) const noexcept { return p->GetHash(); } };
+    struct Equality { bool operator()(const pMP Lhs, const pMP Rhs) const noexcept { return *Lhs == *Rhs; } };
+//    typedef std::unordered_set< pMP, Hash, Equality> PList;
+  }
+  class AIContext : public std::unordered_set< MainPosition*, AIContextHelper::Hash, AIContextHelper::Equality>
+  {
+  public:
+    std::function<void(void)> callback;          // pointer to CDocument's callback function (to update window)
+    int additionalData{};
   };
 
 
@@ -443,37 +454,34 @@ namespace BoardGamesCore
     virtual bool AIMove(void);
     virtual void Execute(const Move& m);
 
-//  void SetUpdateCallBack(void(*cb)(void)) { callback = cb; }
-    void SetUpdateCallBack(std::function<void(void)> cb) { callback = cb; }
+    void SetUpdateCallBack(std::function<void(void)> cb) { plist.callback = cb; }
 
   protected:
-    MainPosition * pos;               // logical position on the main playing board
-    TakenPosition* tpos;              // taken pieces
-    StockPosition* spos;              // piece list for editing
-
-    Layout* lay;                      // physical layout of the main playing board
-    TakenLayout* tlay;                // physical layout of the taken pieces
-    StockLayout* slay;                // physical layout of the piece list
-    
-    std::function<void(void)> callback;     // pointer to CViews callback function (to update window)
-
-    bool placing;                     // game allows to place new Piece
-
-    MainPosition::PList plist{};      // collected positions with their evaluations
-    bool showStock{ false };          // flag to show/hide the stock
-    bool moveTaken{ false };          // flag to allow moves from taken pieces
-
-  private:
-    unsigned int plies{ 6 };          // standard number of plies
-    bool editing{ false };            // edit mode allows to change the main playing board
-    std::vector<Player*> players{};   // list of players
-    unsigned int current{ 0 };        // current player
-    std::vector<Move> moves{};        // will contain all allowed moves once a start piece is selected
-    bool gameover{ false };           // once game is over, moves are disallowed
-
-    bool dragging{ false };           // currently dragging a piece
-    const Piece* dragPiece{};         // currently dragged piece
-    CPoint dragPoint{};               // point the piece is dragged to
+    MainPosition * pos;                          // logical position on the main playing board
+    TakenPosition* tpos;                         // taken pieces
+    StockPosition* spos;                         // piece list for editing
+                                                
+    Layout* lay;                                 // physical layout of the main playing board
+    TakenLayout* tlay;                           // physical layout of the taken pieces
+    StockLayout* slay;                           // physical layout of the piece list
+                                                                                                
+    bool placing;                                // game allows to place new Piece
+                                                
+    AIContext plist{};                           // collected positions with their evaluations
+    bool showStock{ false };                     // flag to show/hide the stock
+    bool moveTaken{ false };                     // flag to allow moves from taken pieces
+                                                
+  private:                                      
+    unsigned int plies{ 6 };                     // standard number of plies
+    bool editing{ false };                       // edit mode allows to change the main playing board
+    std::vector<Player*> players{};              // list of players
+    unsigned int current{ 0 };                   // current player
+    std::vector<Move> moves{};                   // will contain all allowed moves once a start piece is selected
+    bool gameover{ false };                      // once game is over, moves are disallowed
+                                                
+    bool dragging{ false };                      // currently dragging a piece
+    const Piece* dragPiece{};                    // currently dragged piece
+    CPoint dragPoint{};                          // point the piece is dragged to
   };
 
 }

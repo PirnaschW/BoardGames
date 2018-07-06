@@ -42,7 +42,7 @@ namespace BoardGamesCore
       auto t_now = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double> elapsed = t_now - t_start;
       if (elapsed.count() > limit) break;
-      callback();
+      plist.callback();
     }
 
     Execute(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White));
@@ -50,9 +50,10 @@ namespace BoardGamesCore
   }
 
 
-  PositionValue MainPosition::Evaluate(MainPosition::PList& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
+  PositionValue MainPosition::Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
   {
     if (plies == 0) return GetValue(w);
+    if (plist.size() > 250000) return GetValue(w);
 
     auto& movelist = (w ? movelistW : movelistB);
     if (movelist.empty()) return GetValue(w);
@@ -65,6 +66,7 @@ namespace BoardGamesCore
     {
       MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
       PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);   // evaluate the result
+      assert(v != PositionValue::Undefined);
       m.SetValue(p->GetValue(w));                                         // save real position value into move for sorting
 
       // apply alpha/beta pruning
@@ -74,6 +76,7 @@ namespace BoardGamesCore
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
         SetValue(w, alpha);                                               // save top value in current position
         depth = plies;                                                    // save evaluation depth
+        if (plies == 1) plist.callback();
         return beta;
       }
     }
@@ -81,6 +84,7 @@ namespace BoardGamesCore
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
     depth = plies;                                                        // save evaluation depth
+    if (plies == 1) plist.callback();
     return alpha;                                                         // return best value
   }
 
@@ -98,7 +102,7 @@ namespace BoardGamesCore
     else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
-      value = (movelistW.size() - movelistB.size()) * 20;
+      value = 20 * (movelistW.size() - movelistB.size());
       for (unsigned int j = 0; j < sizeY; j++)
       {
         for (unsigned int i = 0; i < sizeX; i++)         // loop through all locations
@@ -114,7 +118,7 @@ namespace BoardGamesCore
   }
 
 
-  MainPosition* MainPosition::GetPosition(MainPosition::PList& plist, Move* m) // execute move, maintain in PList
+  MainPosition* MainPosition::GetPosition(AIContext& plist, Move* m) // execute move, maintain in PList
   {
     MainPosition* pos(Clone());                                           // create a copy of the board
     if (m != nullptr) pos->Execute(*m);                                   // execute move if provided

@@ -113,105 +113,20 @@ namespace LoA
   class LoAPosition : public MainPosition
   {
   public:
-    LoAPosition(unsigned int x, unsigned int y) : MainPosition(x, y)
-    {
-      for (unsigned int i = 0; i < x; i++)
-        for (unsigned int j = 0; j < y; j++)
-        {
-          if (((i == 0) || (i == x - 1)) && (j != 0) && (j != y - 1))  // left or right border, but not top or bottom corner
-          {
-            SetPiece(Location(i, j), &LoAPiece::LoAPieceW);
-          }
-          else if (((j == 0) || (j == y - 1)) && (i != 0) && (i != x - 1))  // top or bottom border, but not left or right corner
-          {
-            SetPiece(Location(i, j), &LoAPiece::LoAPieceB);
-          }
-          else
-            SetPiece(Location(i, j), &Piece::NoPiece);
-        }
-    }
+    LoAPosition(Coordinate x, Coordinate y);
     MainPosition* Clone(void) const override { return new LoAPosition(*this); }
-    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override
-    {
-      try
-      {
-        for (auto it = llw.begin(); it != llw.end(); ++it) if (it->l == l) { llw.erase(it); break; }
-        for (auto it = llb.begin(); it != llb.end(); ++it) if (it->l == l) { llb.erase(it); break; }
-
-        if (p == &LoAPiece::LoAPieceW) llw.push_back(l);
-        else if (p == &LoAPiece::LoAPieceB) llb.push_back(l);
-      }
-      catch (...) {};
-      return MainPosition::SetPiece(l, p);
-    }
-    bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override
-    {
-      const Piece * p = GetPiece(to);
-      if (p == nullptr) return false;  // out of board
-      if (p->IsColor(OnTurn())) return false;  // own piece
-      if (p->IsBlank())
-      {
-        m.push_back(Step{ Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) } });
-      }
-      else
-      {
-        m.push_back(Step{Field{fr,GetPiece(fr)},Field{to,GetPiece(fr)},Step::StepType::Take,std::vector<Field>{Field{to,GetPiece(to)}}});
-      }
-      return false;
-    };
+    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override;
+    bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     void EvaluateStatically(void) override;
 
   protected: // extensions to base class
-    virtual bool IsConnected(bool t) const
-    {
-      const std::list<Peg>& lp = (t ^ (OnTurn() == &Color::White) ? llb : llw);
-      if (lp.empty()) return true;
-
-      for (auto& p : lp) p.connected = p.checked = false; // reset the flags
-      lp.front().connected = true;                        // seed the first one
-
-      bool grown{false};
-      do  // try to spread the connection
-      {
-        grown = false;
-        for (auto& p : lp)
-        {
-          if (!p.connected) continue;
-          if (p.checked) continue;
-          for (auto& q : lp)
-          {
-            if (q.connected) continue;
-            const int dx = p.l.x - q.l.x;
-            const int dy = p.l.y - q.l.y;
-            if (dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1)
-            {
-              q.connected = true;
-              grown = true;
-            }
-          }
-          p.checked = true;
-        }
-
-        // check if all connected
-        bool connected{true};
-        for (auto& p : lp)
-        {
-          if (!p.connected)
-          {
-            connected = false;
-            break;
-          }
-        }
-        if (connected) return true;
-      } while (grown);
-      return false;
-    }
+    bool IsConnected(bool t) const noexcept;
 
   private:
     struct Peg
     {
     public:
-      constexpr Peg(const Location& ll) noexcept : l(ll) {}
+      constexpr inline Peg(const Location& ll) noexcept : l(ll) {}
     public:
       const Location l;
       bool mutable connected{false};

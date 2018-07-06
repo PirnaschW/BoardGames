@@ -74,7 +74,7 @@ namespace MassacreChess
     else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
-      value = (movelistW.size() - movelistB.size()) * 1000; // slightly more than a Q
+      value = 1000 * (movelistW.size() - movelistB.size()); // slightly more than a Q
       for (unsigned int j = 0; j < sizeY; j++)
       {
         for (unsigned int i = 0; i < sizeX; i++)                          // loop through all locations

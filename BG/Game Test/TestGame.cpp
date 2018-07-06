@@ -135,7 +135,7 @@ namespace Test
       //assert(pos->OnTurn() == &Color::White);
 
 
-      //MainPosition::PList plist{};
+      //AIContext plist{};
       //pos->EvaluateStatically();
       //plist.insert(pos);
 
@@ -205,7 +205,7 @@ namespace Test
       //assert(m[14].GetValue() == -100);
       //assert(m[15].GetValue() ==  -20);
 
-      MainPosition::PList plist{};
+      AIContext plist{};
       TestGame game(3, 3);
       MainPosition* pos = game.GetPosition()->Clone();
       pos->EvaluateStatically();
@@ -379,7 +379,7 @@ namespace Test
 
   bool Test::TestPosition(const MainPosition* pos)  // verify the position is ok
   {
-    MainPosition::PList plist{};
+    AIContext plist{};
 
     try
     {
@@ -406,7 +406,7 @@ namespace Test
     return true;
   }
 
-  bool Test::TestPList(const MainPosition::PList& plist)  // verify the position list
+  bool Test::TestPList(const AIContext& plist)  // verify the position list
   {
     static int z{ 0 };
     for (auto& it : plist)

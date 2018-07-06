@@ -28,11 +28,11 @@ namespace BoardGamesCore
   }
 
 
-  Layout::Layout(const Dimension& d, LayoutType lt) : dim(d), ltype(lt), tiles{d.xCount*d.yCount,nullptr}
+  Layout::Layout(const Dimension& d, LayoutType lt) : dim(d), ltype(lt), tiles{1ULL*d.xCount*d.yCount,nullptr}
   {
     unsigned int z = 0;
-    for (unsigned int i = 0; i < dim.xCount; i++)
-      for (unsigned int j = 0; j < dim.yCount; j++, z++)
+    for (Coordinate i = 0; i < dim.xCount; i++)
+      for (Coordinate j = 0; j < dim.yCount; j++, z++)
       {
         const TileColor* f{};
         switch (ltype)
@@ -124,7 +124,7 @@ namespace BoardGamesCore
     if (true) {
       CString s;
       static char buffer[2000];
-      sprintf_s(buffer, "%d (%d) [%d]", pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)), plist.size());
+      sprintf_s(buffer, "%d (%d) [%zd]", pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)), plist.size());
       s = buffer;
       pDC->TextOutW(500, 20, s);
     }

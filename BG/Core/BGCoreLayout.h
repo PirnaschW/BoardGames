@@ -24,7 +24,7 @@ namespace BoardGamesCore
   {
   public:
     constexpr Dimension(
-      unsigned int xc, unsigned int yc,                     // tile count in x and y directions
+      Coordinate xc, Coordinate yc,                         // tile count in x and y directions
       unsigned int le, unsigned int te,                     // starting edge in x and y directions
       unsigned int xd, unsigned int yd,                     // tile size in x and y directions
       unsigned int xs = 0, unsigned int ys = 0) noexcept :  // extra distance between tiles in x and y directions
@@ -35,8 +35,8 @@ namespace BoardGamesCore
       rEdge(lEdge + xCount * xDim), bEdge(tEdge + yCount * yDim) {}
 
   public:
-    const unsigned int xCount;
-    const unsigned int yCount;
+    const Coordinate xCount;
+    const Coordinate yCount;
     const unsigned int xDim;
     const unsigned int yDim;
     const unsigned int xSkip;
