@@ -165,7 +165,7 @@ namespace LoA
     virtual bool IsConnected(bool t) const
     {
       const std::list<Peg>& lp = (t ^ (OnTurn() == &Color::White) ? llb : llw);
-      if (lp.size() == 0) return true;
+      if (lp.empty()) return true;
 
       for (auto& p : lp) p.connected = p.checked = false; // reset the flags
       lp.front().connected = true;                        // seed the first one

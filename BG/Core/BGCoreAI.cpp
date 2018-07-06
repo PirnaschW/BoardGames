@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <chrono>
 #include "../Game Test/TestGame.h"
 
 namespace BoardGamesCore
@@ -14,12 +13,14 @@ namespace BoardGamesCore
 
     auto t_start = std::chrono::high_resolution_clock::now();
     double limit = 10.0;
+    bool w = CurrentPlayer()->GetColor() == &Color::White;
 
-    PositionValue value{};
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
     {
 //      assert(Test::Test::TestPList(plist));
-      value = p->Evaluate(plist, CurrentPlayer()->GetColor() == &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+      PositionValue value = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+      pos->SetValue(w, p->GetValue(w));
+      pos->SetDepth(p->GetDepth());
       if (value == PositionValue::PValueType::Lost)
       {
         ::AfxMessageBox(L"Computer resigns - Player wins!");
@@ -36,11 +37,12 @@ namespace BoardGamesCore
         break;
       }
 
-      if (plist.size() > 500000) break;
+      if (plist.size() > 250000) break;
 
       auto t_now = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double> elapsed = t_now - t_start;
       if (elapsed.count() > limit) break;
+      callback();
     }
 
     Execute(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White));
@@ -53,7 +55,7 @@ namespace BoardGamesCore
     if (plies == 0) return GetValue(w);
 
     auto& movelist = (w ? movelistW : movelistB);
-    if (movelist.size() == 0) return GetValue(w);
+    if (movelist.empty()) return GetValue(w);
 
     assert(plist.find(this) != plist.end());                              // the current position must have been checked before
 
@@ -71,22 +73,29 @@ namespace BoardGamesCore
       { 
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
         SetValue(w, alpha);                                               // save top value in current position
+        depth = plies;                                                    // save evaluation depth
         return beta;
       }
     }
 
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
+    depth = plies;                                                        // save evaluation depth
     return alpha;                                                         // return best value
   }
 
 
   void MainPosition::EvaluateStatically(void)   // as seen from White
   {
-    // default evaluation: count all material, and add difference of move count. Overwrite for each game as needed
-    GetAllMoves();                                                                   // fill the move lists
-    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Won;
+    assert(movelistW.empty());
+    assert(movelistW.empty());
+    assert(depth == 0);
+
+    // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
+    GetAllMoves();                                                                                        // fill the move lists
+    depth = 1;
+    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
       value = (movelistW.size() - movelistB.size()) * 20;

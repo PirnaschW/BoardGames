@@ -55,11 +55,11 @@ namespace BoardGamesCore
 
   void MainPosition::GetAllMoves(void) // collect all moves for all pieces
   {
-    assert(movelistW.size() == 0);
-    assert(movelistB.size() == 0);
+    assert(movelistW.empty());
+    assert(movelistB.empty());
 
-    movelistW.clear();
-    movelistB.clear();
+    movelistW.reserve(100);
+    movelistB.reserve(100);
     for (unsigned int i = 0; i < sizeX; i++)
     {
       for (unsigned int j = 0; j < sizeY; j++)
@@ -159,7 +159,7 @@ namespace BoardGamesCore
   {
     AddPlayer(new Player(&PlayerType::Human, &Color::White));
     AddPlayer(new Player(&PlayerType::Computer, &Color::Black));
-    plist.reserve(100000);
+    plist.reserve(250000);
   }
 
   Game::~Game(void)

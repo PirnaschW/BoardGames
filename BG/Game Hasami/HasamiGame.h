@@ -45,7 +45,7 @@ namespace Hasami
   class HasamiPosition : public MainPosition
   {
   public:
-    HasamiPosition(unsigned int x, unsigned int y) noexcept;
+    HasamiPosition(Coordinate x, Coordinate y) noexcept;
     ~HasamiPosition() override {}
     virtual MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
@@ -59,7 +59,7 @@ namespace Hasami
   class HasamiLayout : public MainLayout
   {
   public:
-    HasamiLayout(unsigned int x, unsigned int y) noexcept :
+    HasamiLayout(Coordinate x, Coordinate y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
     ~HasamiLayout() {}
   };
@@ -67,7 +67,7 @@ namespace Hasami
   class HasamiTakenLayout : public TakenLayout
   {
   public:
-    HasamiTakenLayout(unsigned int x, unsigned int y) noexcept :
+    HasamiTakenLayout(Coordinate x, Coordinate y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
     ~HasamiTakenLayout() {}
   };
@@ -75,7 +75,7 @@ namespace Hasami
   class HasamiStockLayout : public StockLayout
   {
   public:
-    HasamiStockLayout(unsigned int x, unsigned int y) noexcept :
+    HasamiStockLayout(Coordinate x, Coordinate y) noexcept :
       StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
     ~HasamiStockLayout() {}
   };
@@ -86,7 +86,7 @@ namespace Hasami
   private:
     HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s, HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept;
   public:
-    HasamiGame(unsigned int x, unsigned int y) noexcept : HasamiGame(
+    HasamiGame(Coordinate x, Coordinate y) noexcept : HasamiGame(
       new HasamiPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
       new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
     ~HasamiGame(void) override {};

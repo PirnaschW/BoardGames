@@ -165,8 +165,8 @@ namespace Shogi
   void ShogiPosition::EvaluateStatically(void)
   {
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Won;
+    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
       int v{ 0 };

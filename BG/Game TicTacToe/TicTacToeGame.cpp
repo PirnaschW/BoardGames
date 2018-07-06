@@ -15,8 +15,8 @@ namespace TicTacToe
 
   void TicTacToePosition::GetAllMoves(void) // collect all moves
   {
-    assert(movelistW.size() == 0);
-    assert(movelistB.size() == 0);
+    assert(movelistW.empty());
+    assert(movelistB.empty());
     for (unsigned int i = 0; i < sizeX; i++)
     {
       for (unsigned int j = 0; j < sizeY; j++)
@@ -64,8 +64,8 @@ namespace TicTacToe
     }
 
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Tie;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Tie;
+    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Tie;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Tie;
     else
     {
       for (unsigned int j = 0; j < sizeY; j++)

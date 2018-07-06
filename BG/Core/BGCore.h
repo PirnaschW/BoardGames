@@ -30,32 +30,33 @@ namespace BoardGamesCore
                                                                 Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
   };
 
+  typedef unsigned int Coordinate;
 
   class Location final
   {
   public:
-    constexpr Location(unsigned int xx, unsigned int yy) noexcept : x{ xx }, y{ yy } {}
+    constexpr Location(Coordinate xx, Coordinate yy) noexcept : x{ xx }, y{ yy } {}
 
     constexpr inline bool operator==(const Location& l) const noexcept { return l.x == x && l.y == y; }
     constexpr inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
     constexpr inline Location operator+(const Offset& o) const noexcept { Location l(*this); return l += o; }
     constexpr inline Location& operator+=(const Offset& o) noexcept { x += o.dx, y += o.dy; return *this; }
 
-    constexpr inline bool Valid(unsigned int sizeX, unsigned int sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
-    constexpr inline unsigned int Index(unsigned int /*sizeX*/, unsigned int sizeY) const noexcept { return x * sizeY + y; }
+    constexpr inline bool Valid(Coordinate sizeX, Coordinate sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
+    constexpr inline Coordinate Index(Coordinate /*sizeX*/, Coordinate sizeY) const noexcept { return x * sizeY + y; }
 
     // can't be protected, as the values need to be used in many places
     // can't be const, or assignments between Locations wouldn't work.
   public:
-    unsigned int x;
-    unsigned int y;
+    Coordinate x;
+    Coordinate y;
   };
 
 
   class Field final // combines a Location and a Piece on it
   {
   public:
-    constexpr Field(const Location l, const Piece* p) noexcept : l{ l }, p{ p } {}
+    constexpr inline Field(const Location l, const Piece* p) noexcept : l{ l }, p{ p } {}
     constexpr inline bool operator==(const Field& f) const noexcept { return l == f.l && p == f.p; }
     constexpr inline bool operator!=(const Field& f) const noexcept { return !(f == *this); }
 
@@ -90,10 +91,10 @@ namespace BoardGamesCore
     inline bool IsTake(void) const noexcept { return type & StepType::Take; }
 
   private:
-    Field from;
-    Field to;
-    StepType type;
-    std::vector<Field> take;
+    const Field from;
+    const Field to;
+    const StepType type;
+    const std::vector<Field> take;
   };
 
 
@@ -162,8 +163,8 @@ namespace BoardGamesCore
     constexpr inline operator unsigned int (void) const noexcept { return (int)value; }
 
   private:
+    int value{ 0 };
     PValueType type{ PValueType::Undefined };
-    long value{0};
   };
 
   class Move
@@ -303,8 +304,9 @@ namespace BoardGamesCore
   class Position
   {
   public:
-    constexpr inline Position(unsigned int x, unsigned int y, const Piece* init = &Piece::NoPiece) noexcept
+    constexpr inline Position(Coordinate x, Coordinate y, const Piece* init = &Piece::NoPiece) noexcept
       : sizeX(x), sizeY(y), pieces{ x*y,init } {}
+    constexpr inline Position(const Position& p) : sizeX(p.sizeX), sizeY(p.sizeY), pieces(p.pieces) {}
     virtual ~Position(void) noexcept {}
     virtual inline bool operator ==(const Position* p) const noexcept { return pieces == p->pieces; }
     virtual std::size_t GetHash(void) const noexcept;
@@ -313,8 +315,8 @@ namespace BoardGamesCore
     virtual inline const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; return (pieces)[l.Index(sizeX, sizeY)] = p; }
 
   protected:
-    const unsigned int sizeX;
-    const unsigned int sizeY;
+    const Coordinate sizeX;
+    const Coordinate sizeY;
   private:
     std::vector<const Piece*> pieces;
     mutable std::size_t hash{};
@@ -328,9 +330,13 @@ namespace BoardGamesCore
     struct Hash { std::size_t operator()(const pMP p) const noexcept { return p->GetHash(); } };
     struct Equality { bool operator()(const pMP Lhs, const pMP Rhs) const noexcept { return *Lhs == *Rhs; } };
     typedef std::unordered_set< pMP, Hash, Equality> PList;
+    typedef unsigned int Depth;
+
+  protected:
+    inline MainPosition(const MainPosition& m) noexcept : Position(m), sequence(m.sequence), onTurn(m.onTurn) {}
 
   public:
-    constexpr inline MainPosition(unsigned int x, unsigned int y) noexcept : Position(x, y) {}
+    constexpr inline MainPosition(Coordinate x, Coordinate y) noexcept : Position(x, y) {}
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return Position::operator==(&p); }
@@ -346,6 +352,8 @@ namespace BoardGamesCore
     virtual void EvaluateStatically(void);       // calculate position value and save
     virtual PositionValue Evaluate(MainPosition::PList& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
+    inline Depth GetDepth(void) const noexcept { return depth; }
+    inline Depth SetDepth(Depth d) noexcept { return depth = d; }
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value = v.Relative(w); }
     virtual inline const Move& GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
     virtual MainPosition* GetPosition(MainPosition::PList& plist, Move* m = nullptr);     // execute move, maintain in PList
@@ -357,7 +365,8 @@ namespace BoardGamesCore
 
   protected:
     const Color* onTurn{ &Color::White };
-    PositionValue value{};                 // position value for White
+    Depth depth{0};
+    PositionValue value{ PositionValue::Undefined };                 // position value for White
     std::vector<Move> movelistW{};
     std::vector<Move> movelistB{};
   };
@@ -365,14 +374,14 @@ namespace BoardGamesCore
   class TakenPosition : public Position
   {
   public:
-    constexpr inline TakenPosition(unsigned int x, unsigned int y) noexcept : Position(x, y, &Piece::NoTile) {}
+    constexpr inline TakenPosition(Coordinate x, Coordinate y) noexcept : Position(x, y, &Piece::NoTile) {}
     void Push(unsigned int player, const std::vector<const Piece*>& p) noexcept;
   };
 
   class StockPosition : public Position
   {
   public:
-    constexpr inline StockPosition(unsigned int x, unsigned int y) noexcept : Position(x, y) {}
+    constexpr inline StockPosition(Coordinate x, Coordinate y) noexcept : Position(x, y) {}
   };
 
 
@@ -434,6 +443,9 @@ namespace BoardGamesCore
     virtual bool AIMove(void);
     virtual void Execute(const Move& m);
 
+//  void SetUpdateCallBack(void(*cb)(void)) { callback = cb; }
+    void SetUpdateCallBack(std::function<void(void)> cb) { callback = cb; }
+
   protected:
     MainPosition * pos;               // logical position on the main playing board
     TakenPosition* tpos;              // taken pieces
@@ -442,6 +454,8 @@ namespace BoardGamesCore
     Layout* lay;                      // physical layout of the main playing board
     TakenLayout* tlay;                // physical layout of the taken pieces
     StockLayout* slay;                // physical layout of the piece list
+    
+    std::function<void(void)> callback;     // pointer to CViews callback function (to update window)
 
     bool placing;                     // game allows to place new Piece
 

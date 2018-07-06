@@ -121,6 +121,13 @@ namespace BoardGamesCore
       dragPiece->Draw(pDC, r, &TileColor::Small);
     }
 
+    if (true) {
+      CString s;
+      static char buffer[2000];
+      sprintf_s(buffer, "%d (%d) [%d]", pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)), plist.size());
+      s = buffer;
+      pDC->TextOutW(500, 20, s);
+    }
   }
 
   bool Game::React(UINT command)                                               // react to button/menu command
@@ -213,7 +220,7 @@ namespace BoardGamesCore
     const Piece* p = pos->GetPiece(l);
     if (placing) pos->AddIfLegal(moves, l, l);
 
-    if (moves.size() == 0)  // new selection starts
+    if (moves.empty())  // new selection starts
     {
       if (p->IsColor(pos->OnTurn()))  // is this one of the player's pieces?
         p->CollectMoves(*pos, l, moves);  // save possible moves

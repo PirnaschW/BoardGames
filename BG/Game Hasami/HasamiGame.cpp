@@ -35,9 +35,9 @@ namespace Hasami
   }
 
 
-  HasamiPosition::HasamiPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
+  HasamiPosition::HasamiPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
   {
-    for (unsigned int i = 0; i < x; i++)
+    for (Coordinate i = 0; i < x; i++)
     {
       SetPiece(Location(i, 0), &HasamiPiece::HasamiPieceB);
       SetPiece(Location(i, 1), &HasamiPiece::HasamiPieceB);
@@ -76,26 +76,27 @@ namespace Hasami
         else t.push_back(Field(l, pp));     // opponents piece, add to potential taken list
       }
     }
-    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,taken});
+    const Step s{ Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) },st,taken };
+    m.push_back(s);
     return true;
   }
 
   void HasamiPosition::EvaluateStatically(void)
   {
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Tie;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Tie;
+    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Tie;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Tie;
     else
     {
 
       int v1{ 0 };
       int v2{ 0 };
 
-      for (unsigned int j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
         const bool b1{ OnTurn() == &Color::White ? j < sizeY - 2 : j > 1 };  // limits for the player on turn
         const bool b2{ OnTurn() == &Color::White ? j > 1 : j < sizeY - 2 };  // limits for the player not on turn
-        for (unsigned int i = 0; i < sizeX; i++)  // loop through all locations
+        for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
         {
           const Location l{ i,j };
           const Piece* p = GetPiece(l);

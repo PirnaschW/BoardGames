@@ -7,7 +7,7 @@ namespace MassacreChess
 {
   MCPosition::MCPosition(unsigned int x, unsigned int y) : MainPosition(x, y)
   {
-    if (x == x)
+    if (x == 1)
     {
       SetPiece(Location{ 0,0 }, &ChessPiece::WR);
       SetPiece(Location{ 0,1 }, &ChessPiece::BR);
@@ -60,7 +60,7 @@ namespace MassacreChess
         const Location l{ i,j };
         if (GetPiece(l) == &Piece::NoPiece) ll.push_back(l);
       }
-    if (ll.size() == 0) return false;
+    if (ll.empty()) return false;
     const unsigned int z = rand() % ll.size();
     SetPiece(ll[z], p);
     return true;
@@ -70,8 +70,8 @@ namespace MassacreChess
   {
     // default evaluation: count all material, and add difference of move count. Overwrite for each game as needed
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.size() == 0) value = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.size() == 0) value = PositionValue::PValueType::Won;
+    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
       value = (movelistW.size() - movelistB.size()) * 1000; // slightly more than a Q
