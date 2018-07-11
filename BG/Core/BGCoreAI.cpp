@@ -8,6 +8,7 @@ namespace BoardGamesCore
   {
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
     assert(p != nullptr);
+    const char * emergencyMemory = new char[10000];
 
    // Test::Test::TestPosition(p);
 
@@ -18,26 +19,34 @@ namespace BoardGamesCore
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
     {
 //      assert(Test::Test::TestPList(plist));
-      PositionValue value = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
-      pos->SetValue(w, p->GetValue(w));
-      pos->SetDepth(p->GetDepth());
-      if (value == PositionValue::PValueType::Lost)
+      try
       {
-        ::AfxMessageBox(L"Computer resigns - Player wins!");
-        SetAlive(false);
-        return false;
+        PositionValue value = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+        pos->SetValue(w, p->GetValue(w));
+        pos->SetDepth(p->GetDepth());
+        if (value == PositionValue::PValueType::Lost)
+        {
+          ::AfxMessageBox(L"Computer resigns - Player wins!");
+          SetAlive(false);
+          return false;
+        }
+        if (value == PositionValue::PValueType::Won) {
+          ::AfxMessageBox(L"You might as well resign - Computer will win!");
+          break;
+        }
+
+        if (value == PositionValue::PValueType::Tie) {
+          ::AfxMessageBox(L"Computer will hold a Draw.");
+          break;
+        }
       }
-      if (value == PositionValue::PValueType::Won) {
-        ::AfxMessageBox(L"You might as well resign - Computer will win!");
-        break;
+      catch (std::bad_alloc)
+      {
+        delete[] emergencyMemory;
+        throw;
       }
 
-      if (value == PositionValue::PValueType::Tie) {
-        ::AfxMessageBox(L"Computer will hold a Draw.");
-        break;
-      }
-
-      if (plist.size() > 250000) break;
+      //if (plist.size() > 200000) break;
 
       auto t_now = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double> elapsed = t_now - t_start;
@@ -45,6 +54,7 @@ namespace BoardGamesCore
       plist.callback();
     }
 
+    delete[] emergencyMemory;
     Execute(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White));
     return true;
   }
@@ -53,7 +63,7 @@ namespace BoardGamesCore
   PositionValue MainPosition::Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
   {
     if (plies == 0) return GetValue(w);
-    if (plist.size() > 250000) return GetValue(w);
+    //if (plist.size() > 200000) return GetValue(w);
 
     auto& movelist = (w ? movelistW : movelistB);
     if (movelist.empty()) return GetValue(w);
@@ -76,7 +86,7 @@ namespace BoardGamesCore
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
         SetValue(w, alpha);                                               // save top value in current position
         depth = plies;                                                    // save evaluation depth
-        if (plies == 1) plist.callback();
+        if (plies == 2) plist.callback();
         return beta;
       }
     }
@@ -84,7 +94,7 @@ namespace BoardGamesCore
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
     depth = plies;                                                        // save evaluation depth
-    if (plies == 1) plist.callback();
+    if (plies == 2) plist.callback();
     return alpha;                                                         // return best value
   }
 
@@ -118,8 +128,10 @@ namespace BoardGamesCore
   }
 
 
-  MainPosition* MainPosition::GetPosition(AIContext& plist, Move* m) // execute move, maintain in PList
+  MainPosition* MainPosition::GetPosition(AIContext& plist, Move* m) const // execute move, maintain in PList
   {
+    //if (plist.size() % 10000 == 0) plist.freemem = CheckFreeMem();
+
     MainPosition* pos(Clone());                                           // create a copy of the board
     if (m != nullptr) pos->Execute(*m);                                   // execute move if provided
 
@@ -134,6 +146,33 @@ namespace BoardGamesCore
     auto pl1 = plist.insert(pos);                                         // and save it
     assert(pl1.second);
     return *(pl1.first);                                                  // return the pointer to the new entry
+  }
+
+  size_t MainPosition::CheckFreeMem(void) const noexcept
+  {
+    size_t size = static_cast<size_t>(-1);
+    const char * buffer{ nullptr };
+    while (buffer == nullptr)
+    {
+      try
+      {
+        buffer = new char[size];
+      }
+      catch (std::bad_alloc ex)
+      {
+        size /= 2;
+      }
+      catch (const CMemoryException& c)
+      {
+        size /= 2;
+      }
+      catch (...)
+      {
+        size /= 2;
+      }
+    }
+    delete[] buffer;
+    return size;
   }
 
 }

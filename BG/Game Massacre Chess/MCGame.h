@@ -20,7 +20,7 @@ namespace MassacreChess
   {
   public:
     MCPosition(unsigned int x, unsigned int y);
-    virtual MainPosition* Clone(void) const override { return new MCPosition(*this); }
+    virtual inline MainPosition* Clone(void) const override { return new MCPosition(*this); }
     virtual void EvaluateStatically(void) override;  // calculate position value and save
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
 

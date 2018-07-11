@@ -47,7 +47,7 @@ namespace BoardGamesCore
     std::size_t z{};
     for (auto& p : pieces)
     {
-      z ^= p->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
+      z ^= pm->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
     }
     return hash = z;
   }
