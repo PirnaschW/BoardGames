@@ -136,6 +136,15 @@
     <Filter Include="Game TicTacToe\Resource Files">
       <UniqueIdentifier>{34613837-7e7c-4fac-a364-29a54b0470dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BG\Util">
+      <UniqueIdentifier>{31574150-dded-47ae-becb-b1decfe19fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BG\Util\Header Files">
+      <UniqueIdentifier>{2a9a68e0-325b-4430-8730-0d251c6b94fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BG\Util\Source Files">
+      <UniqueIdentifier>{f4999c97-72db-4733-b3e8-f3937e2d6891}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h">
@@ -228,6 +237,9 @@
     <ClInclude Include="Game TicTacToe\TicTacToeResource.h">
       <Filter>Game TicTacToe\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Util\Util.h">
+      <Filter>BG\Util\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
@@ -289,6 +301,12 @@
     </ClCompile>
     <ClCompile Include="Game TicTacToe\TicTacToeGame.cpp">
       <Filter>Game TicTacToe\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipBoard.cpp">
+      <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Util.cpp">
+      <Filter>BG\Util\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

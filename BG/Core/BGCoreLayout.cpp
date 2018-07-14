@@ -1,4 +1,9 @@
 #include "stdafx.h"
+#include <string>
+namespace ClipBoard
+{
+  std::string GetClipboardText(void);
+};
 
 namespace BoardGamesCore
 {
@@ -131,7 +136,22 @@ namespace BoardGamesCore
     }
   }
 
-  bool Game::React(UINT command)                                               // react to button/menu command
+  void Game::React(CCmdUI* pCmdUI)                                        // react to UI events (allows to set buttons greyed, etc.)
+  {
+    static int i = 0;
+    switch (pCmdUI->m_nID)
+    {
+      case ID_EDIT_MOVE:   if (!IsAlive() || !CurrentPlayer()->Is(&PlayerType::Computer)) pCmdUI->Enable(FALSE);     break;
+      case ID_EDIT_BOARD:  if (editing) pCmdUI->SetCheck();                                                          break;
+      case ID_EDIT_PASTE:  if (!editing) pCmdUI->Enable(::IsClipboardFormatAvailable(CF_TEXT));                      break;
+      case ID_LEVEL_PLUS:                                                                                            break;
+      case ID_LEVEL_MINUS: if (plies == 1) pCmdUI->Enable(FALSE);                                                    break;
+      default:             pCmdUI->Enable(FALSE);                                                                    break;
+    }
+  }
+
+
+  bool Game::React(UINT command)                                          // react to button/menu command
   {
     switch (command)
     {
@@ -143,15 +163,25 @@ namespace BoardGamesCore
         }
         break;
       case ID_EDIT_BOARD: editing ^= true; return true;
+      case ID_EDIT_PASTE:
+      {
+        pos->SetPosition(Piece::ListFromHTML(ClipBoard::GetClipboardText(),GetHTMLPieceMap()));
+        return true;
+      }
       case ID_LEVEL_PLUS: plies++; break;
       case ID_LEVEL_MINUS: if (plies > 1) plies--; break;
       default:
         break;
     }
-    return false; // no view update needed
+    return false;  // no view update needed
   }
 
-  bool Game::React(UINT event, UINT /*nFlags*/, const CPoint& p)                   // react to mouse events
+  bool Game::React(UINT nChar, UINT /*nRepCnt*/, UINT nFlags)             // react to keyboard input (not menu shortcuts, but typing)
+  {
+    return false;  // no view update needed
+  }
+
+  bool Game::React(UINT event, UINT /*nFlags*/, const CPoint& p)          // react to mouse events
   {
     switch (event)
     {
@@ -162,34 +192,22 @@ namespace BoardGamesCore
         if (dragging) DragEnd(p);
         else Select(p);
         break;
-      case WM_LBUTTONDBLCLK: break;
+      case WM_LBUTTONDBLCLK: return false;    // that will skip updating all views
 
-      case WM_RBUTTONDOWN:   break;
+      case WM_RBUTTONDOWN:   return false;    // that will skip updating all views
       case WM_RBUTTONUP:
         Unselect();
         break;
-      case WM_RBUTTONDBLCLK: break;
+      case WM_RBUTTONDBLCLK: return false;    // that will skip updating all views
 
       case WM_MOUSEMOVE:
         if (dragging) DragTo(p);
-        else return false;  // that will skip updating all views
-        break;
-
-      default:               break;
+        else return false;                    // that will skip updating all views
+        break;                               
+                                             
+      default: return false;                  // that will skip updating all views
     }
-    return true; // if in doubt, update all views
-  }
-
-  void Game::React(CCmdUI* pCmdUI)                                             // react to UI events (allows to set buttons greyed, etc.)
-  {
-    switch (pCmdUI->m_nID)
-    {
-      case ID_EDIT_MOVE:   if (!IsAlive() || !CurrentPlayer()->Is(&PlayerType::Computer)) pCmdUI->Enable(FALSE); break;
-      case ID_EDIT_BOARD:  if (editing) pCmdUI->SetCheck(); break;
-      case ID_LEVEL_PLUS:  break;
-      case ID_LEVEL_MINUS: if (plies == 1) pCmdUI->Enable(FALSE); break;
-      default:             break;
-    }
+    return true;                              // update all views
   }
 
   void Game::Game::DragStart(const CPoint& point)

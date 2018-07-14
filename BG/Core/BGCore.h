@@ -43,7 +43,7 @@ namespace BoardGamesCore
     constexpr inline Location& operator+=(const Offset& o) noexcept { x += o.dx, y += o.dy; return *this; }
 
     constexpr inline bool Valid(Coordinate sizeX, Coordinate sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
-    constexpr inline Coordinate Index(Coordinate /*sizeX*/, Coordinate sizeY) const noexcept { return x * sizeY + y; }
+    constexpr inline Coordinate Index(Coordinate sizeX, Coordinate /*sizeY*/) const noexcept { return y * sizeX + x; }
 
     // can't be protected, as the values need to be used in many places
     // can't be const, or assignments between Locations wouldn't work.
@@ -282,6 +282,8 @@ namespace BoardGamesCore
     virtual inline bool IsPromotable(void) const noexcept { return false; }
     virtual inline const Piece* Promote(bool /*up*/) const noexcept { return this; };           // by default: no promotions
     virtual void Draw(CDC* pDC, const CRect& r, const TileColor* f) const;
+    static const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) noexcept;
+    static std::vector<const Piece*> ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece*>&);
 
   public:
     inline const static Piece NoTile{ &Kind::NoKind, &Color::NoColor, 0, 0, 0 };                // nothing exists there, don't draw the tile at all
@@ -328,6 +330,7 @@ namespace BoardGamesCore
     virtual void Serialize(CArchive& ar) const { for (auto& p : pieces) pm->GetPiece(p)->Serialize(ar); }
     inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pm->GetPiece(pieces[l.Index(sizeX, sizeY)]) : nullptr; }
     virtual inline const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; pieces[l.Index(sizeX, sizeY)] = pm->GetIndex(p); return p; }
+    virtual void SetPosition(std::vector<const Piece*> list);
 
   protected:
     const Coordinate sizeX;
@@ -473,10 +476,11 @@ namespace BoardGamesCore
     Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl, bool pl = false) noexcept;
     virtual ~Game(void) noexcept;
     virtual void Serialize(CArchive& ar) { pos->Serialize(ar); }
+    virtual inline const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
     virtual inline void AddToStock(const Location& l, const Piece* p) noexcept { spos->SetPiece(l, p); }
     virtual inline void ShowStock(bool show) noexcept { showStock = show; }
     virtual void Draw(CDC* pDC) const;
-    virtual bool React(UINT /*nChar*/, UINT /*nRepCnt*/, UINT /*nFlags*/) { return false; };   // react to keyboard input (not menu shortcuts, but typing)
+    virtual bool React(UINT /*nChar*/, UINT /*nRepCnt*/, UINT /*nFlags*/);                     // react to keyboard input (not menu shortcuts, but typing)
     virtual bool React(UINT command);                                                          // react to button/menu command
     virtual bool React(UINT event, UINT nFlags, const CPoint& p);                              // react to mouse events
     virtual void React(CCmdUI* pCmdUI);                                                        // react to UI events (allows to set buttons greyed, etc.)
