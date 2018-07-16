@@ -73,11 +73,12 @@ namespace BoardGamesCore
   {
   public:
     enum StepType {
-      Normal = 0x01,
-      Place = 0x02,
-      Take = 0x04,
-      Jump = 0x08,
-      Promote = 0x10,
+      Normal = 0x01,    // normal 'sliding' move
+      Place = 0x02,     // move places new piece (some games only)
+      Take = 0x04,      // move will take one or more pieces
+      Jump = 0x08,      // move jumps over one or more pieces
+      Promote = 0x10,   // move promotes the piece (Chess, Shogi)
+      Drop = 0x20,      // move drops a formerly taken piece back on the board
     };
   public:
     inline Step(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal, const std::vector<Field>& Take = {}) noexcept : from{ Fr }, to{ To }, type{ Ty }, take{ Take } {}
@@ -238,6 +239,8 @@ namespace BoardGamesCore
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const {};
     virtual unsigned int GetValue(void) const noexcept { return 0; }
     virtual void Serialize(CArchive& ar) const { ar << kind; }
+    virtual bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept { return false; }
+
   private:
     const char kind;
 
@@ -332,6 +335,8 @@ namespace BoardGamesCore
     inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pm->GetPiece(pieces[l.Index(sizeX, sizeY)]) : nullptr; }
     virtual inline const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; pieces[l.Index(sizeX, sizeY)] = pm->GetIndex(p); return p; }
     virtual void SetPosition(std::vector<const Piece*> list);
+    inline Coordinate GetSizeX(void) const noexcept { return sizeX; }
+    inline Coordinate GetSizeY(void) const noexcept { return sizeY; }
 
   protected:
     const Coordinate sizeX;

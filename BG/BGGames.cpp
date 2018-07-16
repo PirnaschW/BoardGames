@@ -121,17 +121,18 @@ void BGSelect::SetControlsForGame(void)
   }
 }
 
+
 // Creating the right game
 BoardGamesCore::Game* BGSelect::CreateGame(void)
 {
   BoardGamesCore::Game* g{ nullptr };
   if (DoModal() == IDOK) switch (m_game_id)
   {
-    case IDR_GAMETYPE_LOA:        g = new LoA::LoAGame(m_size_x, m_size_y);                                                 break;    
+    case IDR_GAMETYPE_LOA:        g = new LoA::LoAGame(m_size_x, m_size_y);                                                 break;
     case IDR_GAMETYPE_LOGIK:      g = new Logik::LGame<Logik::PegColors, Logik::PegCount, Logik::MaxTries>();               break;
     case IDR_GAMETYPE_MCHESS:     g = new MassacreChess::MCGame(m_size_x, m_size_y);                                        break;
     case IDR_GAMETYPE_CAMELOT:    g = new Cam::CamGame(m_size_x, m_size_y);                                                 break;
-    case IDR_GAMETYPE_SHOGI:      g = new Shogi::ShogiGame(m_size_x, m_size_y);                                                           break;
+    case IDR_GAMETYPE_SHOGI:      g = new Shogi::ShogiGame(m_size_x, m_size_y);                                             break;
     case IDR_GAMETYPE_HASAMI:     g = new Hasami::HasamiGame(m_size_x, m_size_y);                                           break;
     case IDR_GAMETYPE_TICTACTOE:  g = new TicTacToe::TicTacToeGame(m_size_x, m_size_y);                                     break;
     case IDR_GAMETYPE_TEMPLATE:   g = new Template::TemplateGame(m_size_x, m_size_y);                                       break;
