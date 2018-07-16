@@ -1,45 +1,9 @@
 #include "stdafx.h"
 
-#include "ShogiResource.h"
 #include "ShogiGame.h"
 
 namespace Shogi
 {
-
-  // S = Standard pieces, White
-  const ShogiPiece ShogiPiece::ShogiSKW{&King   ::TheKing,    &Color::White, &ShogiPiece::ShogiSKW, &ShogiPiece::ShogiSKW, IDB_SHOGI_SK_W, IDB_SHOGI_SK_S};
-  const ShogiPiece ShogiPiece::ShogiSGW{&Gold   ::TheGold,    &Color::White, &ShogiPiece::ShogiSGW, &ShogiPiece::ShogiSGW, IDB_SHOGI_SG_W, IDB_SHOGI_SG_S};
-  const ShogiPiece ShogiPiece::ShogiSSW{&Silver ::TheSilver,  &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSW, IDB_SHOGI_SS_W, IDB_SHOGI_SS_S};
-  const ShogiPiece ShogiPiece::ShogiSBW{&Bishop ::TheBishop,  &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBW, IDB_SHOGI_SB_W, IDB_SHOGI_SB_S};
-  const ShogiPiece ShogiPiece::ShogiSRW{&Rook   ::TheRook,    &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRW, IDB_SHOGI_SR_W, IDB_SHOGI_SR_S};
-  const ShogiPiece ShogiPiece::ShogiSNW{&Knight ::TheKnight,  &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNW, IDB_SHOGI_SN_W, IDB_SHOGI_SN_S};
-  const ShogiPiece ShogiPiece::ShogiSLW{&Lance  ::TheLance,   &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLW, IDB_SHOGI_SL_W, IDB_SHOGI_SL_S};
-  const ShogiPiece ShogiPiece::ShogiSPW{&Pawn   ::ThePawn,    &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiSPW, IDB_SHOGI_SP_W, IDB_SHOGI_SP_S};
-  // P = Promoted pieces, White         
-  const ShogiPiece ShogiPiece::ShogiPSW{&PSilver::ThePSilver, &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSW, IDB_SHOGI_PS_W, IDB_SHOGI_PS_S};
-  const ShogiPiece ShogiPiece::ShogiPBW{&PBishop::ThePBishop, &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBW, IDB_SHOGI_PB_W, IDB_SHOGI_PB_S};
-  const ShogiPiece ShogiPiece::ShogiPRW{&PRook  ::ThePRook,   &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRW, IDB_SHOGI_PR_W, IDB_SHOGI_PR_S};
-  const ShogiPiece ShogiPiece::ShogiPNW{&PKnight::ThePKnight, &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNW, IDB_SHOGI_PN_W, IDB_SHOGI_PN_S};
-  const ShogiPiece ShogiPiece::ShogiPLW{&PLance ::ThePLance,  &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLW, IDB_SHOGI_PL_W, IDB_SHOGI_PL_S};
-  const ShogiPiece ShogiPiece::ShogiPPW{&PPawn  ::ThePPawn,   &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiSPW, IDB_SHOGI_PP_W, IDB_SHOGI_PP_S};
-                                        
-  // S = Standard pieces, Black         
-  const ShogiPiece ShogiPiece::ShogiSKB{&King   ::TheKing,    &Color::Black, &ShogiPiece::ShogiSKB, &ShogiPiece::ShogiSKB, IDB_SHOGI_SK_B, IDB_SHOGI_SK_S};
-  const ShogiPiece ShogiPiece::ShogiSGB{&Gold   ::TheGold,    &Color::Black, &ShogiPiece::ShogiSGB, &ShogiPiece::ShogiSGB, IDB_SHOGI_SG_B, IDB_SHOGI_SG_S};
-  const ShogiPiece ShogiPiece::ShogiSSB{&Silver ::TheSilver,  &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSB, IDB_SHOGI_SS_B, IDB_SHOGI_SS_S};
-  const ShogiPiece ShogiPiece::ShogiSBB{&Bishop ::TheBishop,  &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBB, IDB_SHOGI_SB_B, IDB_SHOGI_SB_S};
-  const ShogiPiece ShogiPiece::ShogiSRB{&Rook   ::TheRook,    &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRB, IDB_SHOGI_SR_B, IDB_SHOGI_SR_S};
-  const ShogiPiece ShogiPiece::ShogiSNB{&Knight ::TheKnight,  &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNB, IDB_SHOGI_SN_B, IDB_SHOGI_SN_S};
-  const ShogiPiece ShogiPiece::ShogiSLB{&Lance  ::TheLance,   &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_SL_B, IDB_SHOGI_SL_S};
-  const ShogiPiece ShogiPiece::ShogiSPB{&Pawn   ::ThePawn,    &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_SP_B, IDB_SHOGI_SP_S};
-  // P = Promoted pieces, Black         
-  const ShogiPiece ShogiPiece::ShogiPSB{&PSilver::ThePSilver, &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSB, IDB_SHOGI_PS_B, IDB_SHOGI_PS_S};
-  const ShogiPiece ShogiPiece::ShogiPBB{&PBishop::ThePBishop, &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBB, IDB_SHOGI_PB_B, IDB_SHOGI_PB_S};
-  const ShogiPiece ShogiPiece::ShogiPRB{&PRook  ::ThePRook,   &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRB, IDB_SHOGI_PR_B, IDB_SHOGI_PR_S};
-  const ShogiPiece ShogiPiece::ShogiPNB{&PKnight::ThePKnight, &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNB, IDB_SHOGI_PN_B, IDB_SHOGI_PN_S};
-  const ShogiPiece ShogiPiece::ShogiPLB{&PLance ::ThePLance,  &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_PL_B, IDB_SHOGI_PL_S};
-  const ShogiPiece ShogiPiece::ShogiPPB{&PPawn  ::ThePPawn,   &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_PP_B, IDB_SHOGI_PP_S};
-
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
@@ -146,6 +110,94 @@ namespace Shogi
   }
 
 
+  ShogiPosition::ShogiPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
+  {
+    assert((x == 9 && y == 9) || (x == 5 && y == 5));
+    if (ShogiGame::IsFull(x, y))
+    {
+      SetPiece(Location(0, 0), &ShogiPiece::ShogiSLB);
+      SetPiece(Location(1, 0), &ShogiPiece::ShogiSNB);
+      SetPiece(Location(2, 0), &ShogiPiece::ShogiSSB);
+      SetPiece(Location(3, 0), &ShogiPiece::ShogiSGB);
+      SetPiece(Location(4, 0), &ShogiPiece::ShogiSKB);
+      SetPiece(Location(5, 0), &ShogiPiece::ShogiSGB);
+      SetPiece(Location(6, 0), &ShogiPiece::ShogiSSB);
+      SetPiece(Location(7, 0), &ShogiPiece::ShogiSNB);
+      SetPiece(Location(8, 0), &ShogiPiece::ShogiSLB);
+
+      SetPiece(Location(1, 1), &ShogiPiece::ShogiSRB);
+      SetPiece(Location(7, 1), &ShogiPiece::ShogiSBB);
+
+      SetPiece(Location(0, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(1, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(2, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(3, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(4, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(5, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(6, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(7, 2), &ShogiPiece::ShogiSPB);
+      SetPiece(Location(8, 2), &ShogiPiece::ShogiSPB);
+
+
+      SetPiece(Location(0, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(1, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(2, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(3, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(4, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(5, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(6, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(7, 6), &ShogiPiece::ShogiSPW);
+      SetPiece(Location(8, 6), &ShogiPiece::ShogiSPW);
+
+      SetPiece(Location(1, 7), &ShogiPiece::ShogiSBW);
+      SetPiece(Location(7, 7), &ShogiPiece::ShogiSRW);
+
+      SetPiece(Location(0, 8), &ShogiPiece::ShogiSLW);
+      SetPiece(Location(1, 8), &ShogiPiece::ShogiSNW);
+      SetPiece(Location(2, 8), &ShogiPiece::ShogiSSW);
+      SetPiece(Location(3, 8), &ShogiPiece::ShogiSGW);
+      SetPiece(Location(4, 8), &ShogiPiece::ShogiSKW);
+      SetPiece(Location(5, 8), &ShogiPiece::ShogiSGW);
+      SetPiece(Location(6, 8), &ShogiPiece::ShogiSSW);
+      SetPiece(Location(7, 8), &ShogiPiece::ShogiSNW);
+      SetPiece(Location(8, 8), &ShogiPiece::ShogiSLW);
+    }
+    else
+    {
+      SetPiece(Location(0, 0), &ShogiPiece::ShogiSRB);
+      SetPiece(Location(1, 0), &ShogiPiece::ShogiSBB);
+      SetPiece(Location(2, 0), &ShogiPiece::ShogiSSB);
+      SetPiece(Location(3, 0), &ShogiPiece::ShogiSGB);
+      SetPiece(Location(4, 0), &ShogiPiece::ShogiSKB);
+      SetPiece(Location(4, 1), &ShogiPiece::ShogiSPB);
+
+      SetPiece(Location(4, 4), &ShogiPiece::ShogiSRW);
+      SetPiece(Location(3, 4), &ShogiPiece::ShogiSBW);
+      SetPiece(Location(2, 4), &ShogiPiece::ShogiSSW);
+      SetPiece(Location(1, 4), &ShogiPiece::ShogiSGW);
+      SetPiece(Location(0, 4), &ShogiPiece::ShogiSKW);
+      SetPiece(Location(0, 3), &ShogiPiece::ShogiSPW);
+    }
+  }
+
+  void ShogiPosition::GetAllMoves(void)              // generate all moves and save list
+  {
+    MainPosition::GetAllMoves();    // standard: get moves for all pieces on the board
+
+    for (unsigned int i = 0; i < sizeX; i++)
+      for (unsigned int j = 0; j < sizeY; j++)
+      {
+        if (GetPiece(Location(i, j))->IsBlank())
+        {
+          const Piece* p{ nullptr };
+          for (unsigned int z = 0; (p = tpos->GetPiece(Location(z, 0))) != &Piece::NoTile; z++)
+          {
+            movelistB.push_back(Step{ Field{ Location(z, 1),nullptr }, Field{ Location(i, j),p },Step::StepType::Place,std::vector<Field>{Field{ Location(i, j),GetPiece(Location(i, j)) }} });
+          }
+        }
+      }
+  }
+  
   bool ShogiPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
     const Piece * p = GetPiece(to);
@@ -153,15 +205,15 @@ namespace Shogi
     if (p->IsColor(OnTurn())) return false;  // own piece
 
     Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
-    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
-    if (CanPromote(to) && GetPiece(fr)->IsPromotable())
+    m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,std::vector<Field>{Field{to,GetPiece(to)}} });
+    if ((CanPromote(fr) || CanPromote(to)) && GetPiece(fr)->IsPromotable())
     {
       st = static_cast<Step::StepType>(st | Step::StepType::Promote);
-      m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)->Promote(true)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
+      m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)->Promote(true)},st,std::vector<Field>{Field{to,GetPiece(to)}} });
     }
     return p->IsBlank();   // if free tile, keep trying this direction
   }
-  
+
   void ShogiPosition::EvaluateStatically(void)
   {
     GetAllMoves();                                                        // fill the move lists
@@ -204,21 +256,26 @@ namespace Shogi
   //  return 0;
   //}
 
-  bool MiniShogiPosition::CanPromote(const Location &l) const noexcept
+  inline bool ShogiPosition::CanPromote(const Location &l) const noexcept
   {
-    return (OnTurn() == &Color::White && (l.y == 0)) || (OnTurn() != &Color::White && (l.y == 4));
+    bool f = ShogiGame::IsFull(sizeX, sizeY);
+    return (OnTurn() == &Color::White && (l.y < (f?3U:1U))) || (OnTurn() != &Color::White && (l.y > (f?8U:3U)));
   }
+    
 
-  bool FullShogiPosition::CanPromote(const Location &l) const noexcept
-  {
-    return (OnTurn() == &Color::White && (l.y < 3)) || (OnTurn() != &Color::White && (l.y > 8));
-  }
-
+  ShogiGame::ShogiGame(unsigned int x, unsigned int y) noexcept : ShogiGame(
+    new ShogiPosition(x, y),
+    IsFull(x, y) ? new TakenPosition(27, 2) : new TakenPosition(15, 2),
+    new StockPosition(15, 2),
+    new ShogiLayout(x, y),
+    new ShogiTakenLayout(x, y),
+    new ShogiStockLayout(x, y)) {}
 
   ShogiGame::ShogiGame(
     ShogiPosition* p, TakenPosition* t, StockPosition* s,
-    ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
+    ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
+    p->SetTPos(t);
     AddToStock(Location(0, 0), &ShogiPiece::ShogiSKW);
     AddToStock(Location(1, 0), &ShogiPiece::ShogiSGW);
     AddToStock(Location(2, 0), &ShogiPiece::ShogiSSW);
@@ -250,73 +307,6 @@ namespace Shogi
     AddToStock(Location(11, 1), &ShogiPiece::ShogiPNW);
     AddToStock(Location(12, 1), &ShogiPiece::ShogiPLW);
     AddToStock(Location(13, 1), &ShogiPiece::ShogiPPW);
-  }
-
-  MiniShogiPosition::MiniShogiPosition(unsigned int x, unsigned int y) noexcept : ShogiPosition(x, y)
-  {
-    SetPiece(Location(0, 0), &ShogiPiece::ShogiSRB);
-    SetPiece(Location(1, 0), &ShogiPiece::ShogiSBB);
-    SetPiece(Location(2, 0), &ShogiPiece::ShogiSSB);
-    SetPiece(Location(3, 0), &ShogiPiece::ShogiSGB);
-    SetPiece(Location(4, 0), &ShogiPiece::ShogiSKB);
-    SetPiece(Location(4, 1), &ShogiPiece::ShogiSPB);
-
-    SetPiece(Location(4, 4), &ShogiPiece::ShogiSRW);
-    SetPiece(Location(3, 4), &ShogiPiece::ShogiSBW);
-    SetPiece(Location(2, 4), &ShogiPiece::ShogiSSW);
-    SetPiece(Location(1, 4), &ShogiPiece::ShogiSGW);
-    SetPiece(Location(0, 4), &ShogiPiece::ShogiSKW);
-    SetPiece(Location(0, 3), &ShogiPiece::ShogiSPW);
-  }
-
-  FullShogiPosition::FullShogiPosition(unsigned int x, unsigned int y) noexcept : ShogiPosition(x, y)
-  {
-    SetPiece(Location(0, 0), &ShogiPiece::ShogiSLB);
-    SetPiece(Location(1, 0), &ShogiPiece::ShogiSNB);
-    SetPiece(Location(2, 0), &ShogiPiece::ShogiSSB);
-    SetPiece(Location(3, 0), &ShogiPiece::ShogiSGB);
-    SetPiece(Location(4, 0), &ShogiPiece::ShogiSKB);
-    SetPiece(Location(5, 0), &ShogiPiece::ShogiSGB);
-    SetPiece(Location(6, 0), &ShogiPiece::ShogiSSB);
-    SetPiece(Location(7, 0), &ShogiPiece::ShogiSNB);
-    SetPiece(Location(8, 0), &ShogiPiece::ShogiSLB);
-
-    SetPiece(Location(1, 1), &ShogiPiece::ShogiSRB);
-    SetPiece(Location(7, 1), &ShogiPiece::ShogiSBB);
-
-    SetPiece(Location(0, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(1, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(2, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(3, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(4, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(5, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(6, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(7, 2), &ShogiPiece::ShogiSPB);
-    SetPiece(Location(8, 2), &ShogiPiece::ShogiSPB);
-
-
-    SetPiece(Location(0, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(1, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(2, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(3, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(4, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(5, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(6, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(7, 6), &ShogiPiece::ShogiSPW);
-    SetPiece(Location(8, 6), &ShogiPiece::ShogiSPW);
-
-    SetPiece(Location(1, 7), &ShogiPiece::ShogiSBW);
-    SetPiece(Location(7, 7), &ShogiPiece::ShogiSRW);
-
-    SetPiece(Location(0, 8), &ShogiPiece::ShogiSLW);
-    SetPiece(Location(1, 8), &ShogiPiece::ShogiSNW);
-    SetPiece(Location(2, 8), &ShogiPiece::ShogiSSW);
-    SetPiece(Location(3, 8), &ShogiPiece::ShogiSGW);
-    SetPiece(Location(4, 8), &ShogiPiece::ShogiSKW);
-    SetPiece(Location(5, 8), &ShogiPiece::ShogiSGW);
-    SetPiece(Location(6, 8), &ShogiPiece::ShogiSSW);
-    SetPiece(Location(7, 8), &ShogiPiece::ShogiSNW);
-    SetPiece(Location(8, 8), &ShogiPiece::ShogiSLW);
   }
 
 }

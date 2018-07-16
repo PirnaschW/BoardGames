@@ -48,10 +48,10 @@ namespace Cam
     CamPiece& operator=(const CamPiece&) = delete;
 
   public:
-    const static CamPiece WP;
-    const static CamPiece WN;
-    const static CamPiece BP;
-    const static CamPiece BN;
+    inline const static CamPiece WP{ &Pawn::ThePawn,     &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
+    inline const static CamPiece WN{ &Knight::TheKnight, &Color::White, IDB_WNL, IDB_WND, IDB_WNS };
+    inline const static CamPiece BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
+    inline const static CamPiece BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
   };
 
 
@@ -68,15 +68,14 @@ namespace Cam
   class CamPosition : public MainPosition
   {
   public:
-    CamPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y) {}
-    virtual MainPosition* Clone(void) const override = 0;
+    CamPosition(unsigned int x, unsigned int y) noexcept;
+    inline virtual MainPosition* Clone(void) const override { return new CamPosition(*this); }
     virtual void GetAllMoves(void) override;
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
   };
 
-
-
+  
   class CamLayout : public MainLayout
   {
   public:
@@ -84,7 +83,6 @@ namespace Cam
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
     ~CamLayout() {}
   };
-
 
   class CamTakenLayout : public TakenLayout
   {
@@ -104,42 +102,12 @@ namespace Cam
 
   class CamGame : public Game
   {
+  public:
+    CamGame(unsigned int x, unsigned int y) noexcept;
+    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 12; } //only check for x == 12 -> full Camelot game, all others are Cam.
   protected:
     CamGame(void) = delete;
     CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
-  };
-
-
-  class MiniCamPosition : public CamPosition
-  { 
-  public: 
-    MiniCamPosition(unsigned int x, unsigned int y) noexcept;
-    virtual MainPosition* Clone(void) const override { return new MiniCamPosition(*this); }
-  };
-
-  class FullCamPosition : public CamPosition 
-  { 
-  public: 
-    FullCamPosition(unsigned int x, unsigned int y) noexcept;
-    virtual MainPosition* Clone(void) const override { return new FullCamPosition(*this); }
-  };
-
-  class MiniCamGame : public CamGame
-  {
-  public:
-    MiniCamGame(void) :
-      CamGame(
-        new MiniCamPosition(7, 13), new TakenPosition(14, 2), new StockPosition(3, 2),
-        new CamLayout(7, 13), new CamTakenLayout(7, 13), new CamStockLayout(7, 13)) {}
-  };
-
-  class FullCamGame : public CamGame
-  {
-  public:
-    FullCamGame(void) :
-      CamGame(
-        new FullCamPosition(12, 16), new TakenPosition(24, 2), new StockPosition(3, 2),
-        new CamLayout(12, 16), new CamTakenLayout(12, 16), new CamStockLayout(12, 16)) {}
   };
 
 }

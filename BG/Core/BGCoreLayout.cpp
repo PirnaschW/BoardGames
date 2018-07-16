@@ -210,7 +210,7 @@ namespace BoardGamesCore
     return true;                              // update all views
   }
 
-  void Game::Game::DragStart(const CPoint& point)
+  void Game::DragStart(const CPoint& point)
   {
     Location l{0,0};
     if (slay->GetLocation(point, l)) { dragPiece = spos->GetPiece(l); }
@@ -220,7 +220,7 @@ namespace BoardGamesCore
     dragging = true;
   }
 
-  void Game::Game::DragEnd(const CPoint& point)
+  void Game::DragEnd(const CPoint& point)
   {
     Location l{0,0};
     if (lay->GetLocation(point, l)) pos->SetPiece(l, dragPiece); // dropped on a valid target

@@ -226,6 +226,7 @@
   <ItemGroup>
     <ClInclude Include="BG.h" />
     <ClInclude Include="BGDoc.h" />
+    <ClInclude Include="BGSelect.h" />
     <ClInclude Include="BGView.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="Core\BGChessPieces.h" />
@@ -258,8 +259,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp" />
-    <ClCompile Include="BGCreateGames.cpp" />
+    <ClCompile Include="BGGames.cpp" />
     <ClCompile Include="BGDoc.cpp" />
+    <ClCompile Include="BGSelect.cpp" />
     <ClCompile Include="BGView.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClipBoard.cpp" />

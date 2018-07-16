@@ -16,10 +16,10 @@ namespace Shogi
   class Pawn : public Kind
   {
   private:
-    Pawn(void) noexcept : Kind('p') {}
+    constexpr inline Pawn(void) noexcept : Kind('p') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    unsigned int GetValue(void) const noexcept override { return 1; }
+    inline unsigned int GetValue(void) const noexcept override { return 1; }
 
   public:
     inline const static Pawn ThePawn{};
@@ -29,10 +29,10 @@ namespace Shogi
   class Knight : public Kind
   {
   private:
-    Knight(void) noexcept : Kind('n') {}
+    constexpr inline Knight(void) noexcept : Kind('n') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 4; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 4; }
 
   public:
     inline const static Knight TheKnight{};
@@ -42,10 +42,10 @@ namespace Shogi
   class Bishop : public Kind
   {
   private:
-    Bishop(void) noexcept : Kind('b') {}
+    constexpr inline Bishop(void) noexcept : Kind('b') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 8; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 8; }
 
   public:
     inline const static Bishop TheBishop{};
@@ -54,10 +54,10 @@ namespace Shogi
   class Rook : public Kind
   {
   private:
-    Rook(void) noexcept : Kind('r') {}
+    constexpr inline Rook(void) noexcept : Kind('r') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 10; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 10; }
 
   public:
     inline const static Rook TheRook{};
@@ -66,10 +66,10 @@ namespace Shogi
   class Lance : public Kind
   {
   private:
-    Lance(void) noexcept : Kind('l') {}
+    constexpr inline Lance(void) noexcept : Kind('l') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 3; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 3; }
 
   public:
     inline const static Lance TheLance{};
@@ -78,10 +78,10 @@ namespace Shogi
   class Silver : public Kind
   {
   private:
-    Silver(void) noexcept : Kind('s') {}
+    constexpr inline Silver(void) noexcept : Kind('s') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 5; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 5; }
 
   public:
     inline const static Silver TheSilver{};
@@ -90,10 +90,10 @@ namespace Shogi
   class Gold : public Kind
   {
   private:
-    Gold(void) noexcept : Kind('G') {}
+    constexpr inline Gold(void) noexcept : Kind('G') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 6; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 6; }
     static void CollectGoldMoves(const MainPosition&, const Location&, std::vector<Move>&); // enable reuse for other kinds
 
   public:
@@ -103,10 +103,10 @@ namespace Shogi
   class King : public Kind
   {
   private:
-    King(void) noexcept : Kind('K') {}
+    constexpr inline King(void) noexcept : Kind('K') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 8; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 8; }
 
   public:
     inline const static King TheKing{};
@@ -115,10 +115,10 @@ namespace Shogi
   class PPawn : public Kind
   {
   private:
-    PPawn(void) noexcept : Kind('P') {}
+    constexpr inline PPawn(void) noexcept : Kind('P') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 7; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 7; }
 
   public:
     inline const static PPawn ThePPawn{};
@@ -127,10 +127,10 @@ namespace Shogi
   class PKnight : public Kind
   {
   private:
-    PKnight(void) noexcept : Kind('N') {}
+    constexpr inline PKnight(void) noexcept : Kind('N') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 6; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 6; }
 
   public:
     inline const static PKnight ThePKnight{};
@@ -139,10 +139,10 @@ namespace Shogi
   class PBishop : public Kind
   {
   private:
-    PBishop(void) noexcept : Kind('B') {}
+    constexpr inline PBishop(void) noexcept : Kind('B') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 10; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 10; }
 
   public:
     inline const static PBishop ThePBishop{};
@@ -151,10 +151,10 @@ namespace Shogi
   class PRook : public Kind
   {
   private:
-    PRook(void) noexcept : Kind('R') {}
+    constexpr inline PRook(void) noexcept : Kind('R') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 12; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 12; }
 
   public:
     inline const static PRook ThePRook{};
@@ -163,10 +163,10 @@ namespace Shogi
   class PLance : public Kind
   {
   private:
-    PLance(void) noexcept : Kind('L') {}
+    constexpr inline PLance(void) noexcept : Kind('L') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 6; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 6; }
 
   public:
     inline const static PLance ThePLance{};
@@ -175,10 +175,10 @@ namespace Shogi
   class PSilver : public Kind
   {
   private:
-    PSilver(void) noexcept : Kind('S') {}
+    constexpr inline PSilver(void) noexcept : Kind('S') {}
   public:
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 6; }
+    inline virtual unsigned int GetValue(void) const noexcept override { return 6; }
 
   public:
     inline const static PSilver ThePSilver{};
@@ -188,54 +188,52 @@ namespace Shogi
   class ShogiPiece : public Piece
   {
   private:
-    ShogiPiece(const Kind* k, const Color* c, const ShogiPiece * u, const ShogiPiece * d, UINT l, UINT s) noexcept
+    constexpr inline ShogiPiece(const Kind* k, const Color* c, const ShogiPiece* u, const ShogiPiece* d, UINT l, UINT s) noexcept
       : Piece(k, c, l, l, s), up(u), down(d) {}
     ShogiPiece(const ShogiPiece&) = delete;
     ShogiPiece& operator=(const ShogiPiece&) = delete;
   public:
-    ~ShogiPiece(void) override {}
-
-    virtual bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
-    virtual const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
+    inline virtual bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
+    inline virtual const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
 
   private:
-    const ShogiPiece * up;    // what this piece promotes up to
-    const ShogiPiece * down;  // what this piece promotes down to
+    const ShogiPiece* up;    // what this piece promotes up to
+    const ShogiPiece* down;  // what this piece promotes down to
 
   public:  // the pieces
     // S = Standard pieces, White
-    static const ShogiPiece ShogiSKW;
-    static const ShogiPiece ShogiSGW;
-    static const ShogiPiece ShogiSSW;
-    static const ShogiPiece ShogiSBW;
-    static const ShogiPiece ShogiSRW;
-    static const ShogiPiece ShogiSNW;
-    static const ShogiPiece ShogiSLW;
-    static const ShogiPiece ShogiSPW;
+    inline static const ShogiPiece ShogiSKW{ &King::TheKing,       &Color::White, &ShogiPiece::ShogiSKW, &ShogiPiece::ShogiSKW, IDB_SHOGI_SK_W, IDB_SHOGI_SK_S };
+    inline static const ShogiPiece ShogiSGW{ &Gold::TheGold,       &Color::White, &ShogiPiece::ShogiSGW, &ShogiPiece::ShogiSGW, IDB_SHOGI_SG_W, IDB_SHOGI_SG_S };
+    inline static const ShogiPiece ShogiSSW{ &Silver::TheSilver,   &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSW, IDB_SHOGI_SS_W, IDB_SHOGI_SS_S };
+    inline static const ShogiPiece ShogiSBW{ &Bishop::TheBishop,   &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBW, IDB_SHOGI_SB_W, IDB_SHOGI_SB_S };
+    inline static const ShogiPiece ShogiSRW{ &Rook::TheRook,       &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRW, IDB_SHOGI_SR_W, IDB_SHOGI_SR_S };
+    inline static const ShogiPiece ShogiSNW{ &Knight::TheKnight,   &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNW, IDB_SHOGI_SN_W, IDB_SHOGI_SN_S };
+    inline static const ShogiPiece ShogiSLW{ &Lance::TheLance,     &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLW, IDB_SHOGI_SL_W, IDB_SHOGI_SL_S };
+    inline static const ShogiPiece ShogiSPW{ &Pawn::ThePawn,       &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiSPW, IDB_SHOGI_SP_W, IDB_SHOGI_SP_S };
     // P = Promoted pieces, White
-    static const ShogiPiece ShogiPSW;
-    static const ShogiPiece ShogiPBW;
-    static const ShogiPiece ShogiPRW;
-    static const ShogiPiece ShogiPNW;
-    static const ShogiPiece ShogiPLW;
-    static const ShogiPiece ShogiPPW;
-
+    inline static const ShogiPiece ShogiPSW{ &PSilver::ThePSilver, &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSW, IDB_SHOGI_PS_W, IDB_SHOGI_PS_S };
+    inline static const ShogiPiece ShogiPBW{ &PBishop::ThePBishop, &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBW, IDB_SHOGI_PB_W, IDB_SHOGI_PB_S };
+    inline static const ShogiPiece ShogiPRW{ &PRook::ThePRook,     &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRW, IDB_SHOGI_PR_W, IDB_SHOGI_PR_S };
+    inline static const ShogiPiece ShogiPNW{ &PKnight::ThePKnight, &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNW, IDB_SHOGI_PN_W, IDB_SHOGI_PN_S };
+    inline static const ShogiPiece ShogiPLW{ &PLance::ThePLance,   &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLW, IDB_SHOGI_PL_W, IDB_SHOGI_PL_S };
+    inline static const ShogiPiece ShogiPPW{ &PPawn::ThePPawn,     &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiSPW, IDB_SHOGI_PP_W, IDB_SHOGI_PP_S };
+    
     // S = Standard pieces, Black
-    static const ShogiPiece ShogiSKB;
-    static const ShogiPiece ShogiSGB;
-    static const ShogiPiece ShogiSSB;
-    static const ShogiPiece ShogiSBB;
-    static const ShogiPiece ShogiSRB;
-    static const ShogiPiece ShogiSNB;
-    static const ShogiPiece ShogiSLB;
-    static const ShogiPiece ShogiSPB;
+    inline static const ShogiPiece ShogiSKB{ &King::TheKing,       &Color::Black, &ShogiPiece::ShogiSKB, &ShogiPiece::ShogiSKB, IDB_SHOGI_SK_B, IDB_SHOGI_SK_S };
+    inline static const ShogiPiece ShogiSGB{ &Gold::TheGold,       &Color::Black, &ShogiPiece::ShogiSGB, &ShogiPiece::ShogiSGB, IDB_SHOGI_SG_B, IDB_SHOGI_SG_S };
+    inline static const ShogiPiece ShogiSSB{ &Silver::TheSilver,   &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSB, IDB_SHOGI_SS_B, IDB_SHOGI_SS_S };
+    inline static const ShogiPiece ShogiSBB{ &Bishop::TheBishop,   &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBB, IDB_SHOGI_SB_B, IDB_SHOGI_SB_S };
+    inline static const ShogiPiece ShogiSRB{ &Rook::TheRook,       &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRB, IDB_SHOGI_SR_B, IDB_SHOGI_SR_S };
+    inline static const ShogiPiece ShogiSNB{ &Knight::TheKnight,   &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNB, IDB_SHOGI_SN_B, IDB_SHOGI_SN_S };
+    inline static const ShogiPiece ShogiSLB{ &Lance::TheLance,     &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_SL_B, IDB_SHOGI_SL_S };
+    inline static const ShogiPiece ShogiSPB{ &Pawn::ThePawn,       &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_SP_B, IDB_SHOGI_SP_S };
     // P = Promoted pieces, Black
-    static const ShogiPiece ShogiPSB;
-    static const ShogiPiece ShogiPBB;
-    static const ShogiPiece ShogiPRB;
-    static const ShogiPiece ShogiPNB;
-    static const ShogiPiece ShogiPLB;
-    static const ShogiPiece ShogiPPB;
+    inline static const ShogiPiece ShogiPSB{ &PSilver::ThePSilver, &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSB, IDB_SHOGI_PS_B, IDB_SHOGI_PS_S };
+    inline static const ShogiPiece ShogiPBB{ &PBishop::ThePBishop, &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBB, IDB_SHOGI_PB_B, IDB_SHOGI_PB_S };
+    inline static const ShogiPiece ShogiPRB{ &PRook::ThePRook,     &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRB, IDB_SHOGI_PR_B, IDB_SHOGI_PR_S };
+    inline static const ShogiPiece ShogiPNB{ &PKnight::ThePKnight, &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNB, IDB_SHOGI_PN_B, IDB_SHOGI_PN_S };
+    inline static const ShogiPiece ShogiPLB{ &PLance::ThePLance,   &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_PL_B, IDB_SHOGI_PL_S };
+    inline static const ShogiPiece ShogiPPB{ &PPawn::ThePPawn,     &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_PP_B, IDB_SHOGI_PP_S };
 
   };
 
@@ -243,79 +241,54 @@ namespace Shogi
   class ShogiPosition : public MainPosition
   {
   public:
-    ShogiPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y) {}
-    ~ShogiPosition() override {}
-    virtual MainPosition* Clone(void) const override = 0;
+    ShogiPosition(unsigned int x, unsigned int y) noexcept;
+    inline virtual MainPosition* Clone(void) const override { return new ShogiPosition(*this); };
+    virtual void GetAllMoves(void);              // generate all moves and save list
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
 
-  public: // extensions to base class
-    virtual bool CanPromote(const Location &l) const noexcept = 0;
+  // extensions to base class
+  private:
+  //public:
+    inline bool CanPromote(const Location &l) const noexcept;
+  public:
+    void SetTPos(TakenPosition* t) { tpos = t; }
+
+  private:
+    TakenPosition * tpos{ nullptr };
   };
 
 
   class ShogiLayout : public MainLayout
   {
   public:
-    ShogiLayout(unsigned int x, unsigned int y) noexcept :
+    inline ShogiLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-    ~ShogiLayout() {}
   };
 
   class ShogiTakenLayout : public TakenLayout
   {
   public:
-    ShogiTakenLayout(unsigned int x, unsigned int /*y*/) noexcept :
+    inline ShogiTakenLayout(unsigned int x, unsigned int /*y*/) noexcept :
       TakenLayout(Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4)) { }
   };
 
   class ShogiStockLayout : public StockLayout
   {
   public:
-    ShogiStockLayout(unsigned int x, unsigned int y) noexcept:
+    inline ShogiStockLayout(unsigned int x, unsigned int y) noexcept:
       StockLayout(Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY)) {}
   };
 
 
   class ShogiGame : public Game
   {
+  public:
+    ShogiGame(unsigned int x, unsigned int y) noexcept;
+    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
   protected:
     ShogiGame(void) = delete;
     ShogiGame(ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
-  };
-
-  class MiniShogiPosition : public ShogiPosition
-  {
-  public:
-    MiniShogiPosition(unsigned int x, unsigned int y) noexcept;
-    virtual MainPosition* Clone(void) const override { return new MiniShogiPosition(*this); }
-    virtual bool CanPromote(const Location &l) const noexcept override;
-  };
-
-  class FullShogiPosition : public ShogiPosition
-  {
-  public:
-    FullShogiPosition(unsigned int x, unsigned int y) noexcept;
-    virtual MainPosition* Clone(void) const override { return new FullShogiPosition(*this); }
-    virtual bool CanPromote(const Location &l) const noexcept override;
-  };
-
-  class MiniShogiGame : public ShogiGame
-  {
-  public:
-    MiniShogiGame(void) noexcept :
-      ShogiGame(
-        new MiniShogiPosition(5, 5), new TakenPosition(15, 2), new StockPosition(15, 2),
-        new ShogiLayout(5, 5), new ShogiTakenLayout(5, 5), new ShogiStockLayout(5, 5)) {}
-  };
-
-  class FullShogiGame : public ShogiGame
-  {
-  public:
-    FullShogiGame(void) noexcept :
-      ShogiGame(
-        new FullShogiPosition(9, 9), new TakenPosition(27, 2), new StockPosition(15, 2),
-        new ShogiLayout(9, 9), new ShogiTakenLayout(9, 9), new ShogiStockLayout(9, 9)) {}
   };
 
 }

@@ -123,13 +123,13 @@ namespace BoardGamesCore
       {
         case Lost: return false;                                                        // Lost is not greater than anything
         case Undefined: return v.type == Lost;                                          // Undefined is only greater than lost
-        case Tie: return (v.type == Lost      ||
-                          v.type == Undefined ||
-                         (v.type == Normal && v.value < 0));                            // Tie is better than Lost. Undefined, and losing
+        case Tie: return (v.type == Lost ||
+          v.type == Undefined ||
+          (v.type == Normal && v.value < 0));                            // Tie is better than Lost. Undefined, and losing
         case Normal: return (v.type == Lost ||
-                             v.type == Undefined ||
-                            (v.type == Tie && value > 0) ||                             // Any value is better than Lost; positive is better than Tie
-                            (v.type == Normal && value > v.value));                     // and better is better, of course
+          v.type == Undefined ||
+          (v.type == Tie && value > 0) ||                             // Any value is better than Lost; positive is better than Tie
+          (v.type == Normal && value > v.value));                     // and better is better, of course
         case Won: return v.type != Won;                                                 // Won is better than anything except Won
         default: return false;
       }
@@ -160,7 +160,7 @@ namespace BoardGamesCore
     constexpr inline PositionValue& operator-- (void) noexcept { value--; return *this; }
     constexpr inline PositionValue Relative(bool w) const noexcept { return (w ? *this : -*this); }
 
-    constexpr inline operator unsigned int (void) const noexcept { return (int)value; }
+    constexpr inline operator unsigned int(void) const noexcept { return (int)value; }
 
   private:
     int value{ 0 };
@@ -268,8 +268,9 @@ namespace BoardGamesCore
     constexpr inline Piece(const Kind* k, const Color* c, UINT nID_l, UINT nID_d, UINT nID_s) noexcept
       : kind{ k }, color{ c }, ID_l{ nID_l }, ID_d{ nID_d }, ID_s{ nID_s } {}
   public:
+    Piece(void) noexcept = delete;
     Piece(const Piece&) noexcept = delete;            // delete copy constructor
-    Piece& operator=(const Piece&) = delete; // delete assignment operator
+    Piece& operator=(const Piece&) = delete;          // delete assignment operator
     virtual ~Piece(void) noexcept {}
     inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     virtual void Serialize(CArchive& ar) const { color->Serialize(ar); kind->Serialize(ar); }
@@ -297,9 +298,9 @@ namespace BoardGamesCore
     UINT ID_l;             // bitmap ID for light tile
     UINT ID_d;             // bitmap ID for dark tile
     UINT ID_s;             // bitmap ID for small tile
-    mutable CBitmap cb_l;  // mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
-    mutable CBitmap cb_d;
-    mutable CBitmap cb_s;
+    mutable CBitmap cb_l{};  // mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
+    mutable CBitmap cb_d{};
+    mutable CBitmap cb_s{};
   };
 
 
@@ -312,7 +313,7 @@ namespace BoardGamesCore
     inline PieceIndex GetIndex(const Piece* p) { for (PieceIndex z = 0; z < used; z++) if (map[z] == p) return z; map[used] = p; return used++; }
     inline const Piece* GetPiece(PieceIndex i) { return map[i]; }
   private:
-    constexpr static const PieceIndex max{ 16 };
+    constexpr static const PieceIndex max{ 32 };
     PieceIndex used{ 0 };
     std::array<const Piece*, max> map{};
   };
@@ -406,7 +407,7 @@ namespace BoardGamesCore
 
   protected:
     const Color* onTurn{ &Color::White };
-    Depth depth{0};
+    Depth depth{ 0 };
     PositionValue value{ PositionValue::Undefined };                 // position value for White
     std::vector<Move> movelistW{};
     std::vector<Move> movelistB{};
@@ -430,7 +431,7 @@ namespace BoardGamesCore
     typedef MainPosition* pMP;
     struct Hash { std::size_t operator()(const pMP p) const noexcept { return p->GetHash(); } };
     struct Equality { bool operator()(const pMP Lhs, const pMP Rhs) const noexcept { return *Lhs == *Rhs; } };
-//    typedef std::unordered_set< pMP, Hash, Equality> PList;
+    //    typedef std::unordered_set< pMP, Hash, Equality> PList;
   }
   class AIContext : public std::unordered_set< MainPosition*, AIContextHelper::Hash, AIContextHelper::Equality>
   {
@@ -463,12 +464,56 @@ namespace BoardGamesCore
   };
 
 
+  class IUI  // Interface for UI
+  {
+  public:
+    virtual void Draw(CDC* pDC) const = 0;
+    virtual bool React(UINT /*nChar*/, UINT /*nRepCnt*/, UINT /*nFlags*/) = 0;      // react to keyboard input (not menu shortcuts, but typing)
+    virtual bool React(UINT command) = 0;                                           // react to button/menu command
+    virtual bool React(UINT event, UINT nFlags, const CPoint& p) = 0;               // react to mouse events
+    virtual void React(CCmdUI* pCmdUI) = 0;                                         // react to UI events (allows to set buttons greyed, etc.)
+    virtual void DragTo(const CPoint& point) = 0;
+    virtual void DragStart(const CPoint&) = 0;
+    virtual void DragEnd(const CPoint&) = 0;
+    virtual void Select(const CPoint & point) = 0;
+    virtual inline void Unselect(void) = 0;
+    virtual void SetUpdateCallBack(std::function<void(void)> cb) = 0;
+  protected:
+    bool dragging{ false };         // currently dragging a piece
+    const Piece* dragPiece{};       // currently dragged piece
+    CPoint dragPoint{};             // point the piece is dragged to
+  };
+
+
+  class GameOptions
+  {
+  public:
+    GameOptions(void) {}
+    GameOptions(int minx, int maxx, int miny, int maxy) : minSizeX{ minx }, maxSizeX{ maxx }, minSizeY{ miny }, maxSizeY{ maxy } {}
+  private:
+    int minSizeX{ 2 };
+    int maxSizeX{ 20 };
+    int minSizeY{ 2 };
+    int maxSizeY{ 20 };
+  };
+
+
+  class ICreate  // Interface for Game Creation
+  {
+  public:
+    inline ICreate(void) {}
+    virtual void Draw(CDC* pDC) const = 0;
+  protected:
+    GameOptions opt;
+  };
+
+
   class Layout;
   class TakenLayout;
   class StockLayout;
 
 
-  class Game
+  class Game : public IUI, public ICreate
   {
   private:
     Game(void) = delete;
@@ -479,16 +524,6 @@ namespace BoardGamesCore
     virtual inline const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
     virtual inline void AddToStock(const Location& l, const Piece* p) noexcept { spos->SetPiece(l, p); }
     virtual inline void ShowStock(bool show) noexcept { showStock = show; }
-    virtual void Draw(CDC* pDC) const;
-    virtual bool React(UINT /*nChar*/, UINT /*nRepCnt*/, UINT /*nFlags*/);                     // react to keyboard input (not menu shortcuts, but typing)
-    virtual bool React(UINT command);                                                          // react to button/menu command
-    virtual bool React(UINT event, UINT nFlags, const CPoint& p);                              // react to mouse events
-    virtual void React(CCmdUI* pCmdUI);                                                        // react to UI events (allows to set buttons greyed, etc.)
-    virtual void DragTo(const CPoint& point) { dragPoint = point; }
-    virtual void DragStart(const CPoint&);
-    virtual void DragEnd(const CPoint&);
-    virtual void Select(const CPoint & point);
-    virtual inline void Unselect(void) { moves.clear(); }
     virtual inline void AIAction(void) { while (IsAlive() && CurrentPlayer()->Is(&PlayerType::Computer)) SetAlive(AIMove()); }  // execute computer moves while it is its turn
     virtual inline bool IsAlive(void) const noexcept { return !gameover; }
     virtual inline void SetAlive(bool a) noexcept { gameover = !a; }
@@ -500,34 +535,41 @@ namespace BoardGamesCore
     virtual bool AIMove(void);
     virtual void Execute(const Move& m);
 
-    void SetUpdateCallBack(std::function<void(void)> cb) { plist.callback = cb; }
+  // UI functionality
+    virtual void Draw(CDC* pDC) const override;
+    virtual bool React(UINT /*nChar*/, UINT /*nRepCnt*/, UINT /*nFlags*/) override;                     // react to keyboard input (not menu shortcuts, but typing)
+    virtual bool React(UINT command) override;                                                          // react to button/menu command
+    virtual bool React(UINT event, UINT nFlags, const CPoint& p) override;                              // react to mouse events
+    virtual void React(CCmdUI* pCmdUI) override;                                                        // react to UI events (allows to set buttons greyed, etc.)
+    virtual inline void DragTo(const CPoint& point) override { dragPoint = point; }
+    virtual void DragStart(const CPoint&) override;
+    virtual void DragEnd(const CPoint&) override;
+    virtual void Select(const CPoint & point) override;
+    virtual inline void Unselect(void) override { moves.clear(); }
+    virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { plist.callback = cb; }
 
   protected:
     MainPosition * pos;                          // logical position on the main playing board
     TakenPosition* tpos;                         // taken pieces
     StockPosition* spos;                         // piece list for editing
-                                                
+
     Layout* lay;                                 // physical layout of the main playing board
     TakenLayout* tlay;                           // physical layout of the taken pieces
     StockLayout* slay;                           // physical layout of the piece list
-                                                                                                
+
     bool placing;                                // game allows to place new Piece
-                                                
+
     AIContext plist{};                           // collected positions with their evaluations
     bool showStock{ false };                     // flag to show/hide the stock
     bool moveTaken{ false };                     // flag to allow moves from taken pieces
-                                                
-  private:                                      
+
+  private:
     unsigned int plies{ 6 };                     // standard number of plies
     bool editing{ false };                       // edit mode allows to change the main playing board
     std::vector<Player*> players{};              // list of players
     unsigned int current{ 0 };                   // current player
     std::vector<Move> moves{};                   // will contain all allowed moves once a start piece is selected
     bool gameover{ false };                      // once game is over, moves are disallowed
-                                                
-    bool dragging{ false };                      // currently dragging a piece
-    const Piece* dragPiece{};                    // currently dragged piece
-    CPoint dragPoint{};                          // point the piece is dragged to
   };
 
 }

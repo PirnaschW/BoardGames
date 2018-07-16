@@ -105,8 +105,8 @@ namespace MassacreChess
     AddToStock(Location(2, 1), &ChessPiece::BB);
     AddToStock(Location(3, 1), &ChessPiece::BN);
 
-    std::string html = Util::URL::GetHTMLFromURL(R"(http://brainking.com/en/ShowGame?g=7934562)");
-    pos->SetPosition(Piece::ListFromHTML(html, Piece::GetHTMLPieceMap()));
+    //std::string html = Util::URL::GetHTMLFromURL(R"(http://brainking.com/en/ShowGame?g=7934562)");
+    //pos->SetPosition(Piece::ListFromHTML(html, Piece::GetHTMLPieceMap()));
   }
 
 }
