@@ -113,8 +113,8 @@ namespace BoardGamesCore
     assert(movelistW.empty());
     assert(movelistB.empty());
 
-    movelistW.reserve(100);
-    movelistB.reserve(100);
+    movelistW.reserve(20);
+    movelistB.reserve(20);
     for (unsigned int i = 0; i < sizeX; i++)
     {
       for (unsigned int j = 0; j < sizeY; j++)
