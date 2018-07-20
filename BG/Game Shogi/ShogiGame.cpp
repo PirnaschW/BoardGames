@@ -287,7 +287,7 @@ namespace Shogi
   //  return 0;
   //}
 
-  inline bool ShogiPosition::CanPromote(const Location &l) const noexcept
+  inline bool ShogiPosition::CanPromote(const Location& l) const noexcept
   {
     bool f = ShogiGame::IsFull(sizeX, sizeY);
     return (OnTurn() == &Color::White && (l.y < (f?3U:1U))) || (OnTurn() != &Color::White && (l.y > (f?8U:3U)));

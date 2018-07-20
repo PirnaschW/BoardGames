@@ -1,9 +1,4 @@
 #include "stdafx.h"
-#include <string>
-namespace ClipBoard
-{
-  std::string GetClipboardText(void);
-};
 
 namespace BoardGamesCore
 {
@@ -33,7 +28,7 @@ namespace BoardGamesCore
   }
 
 
-  Layout::Layout(const Dimension& d, LayoutType lt) : dim(d), ltype(lt), tiles{1ULL*d.xCount*d.yCount,nullptr}
+  Layout::Layout(const Dimension& d, LayoutType lt) : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
   {
     unsigned int z = 0;
     for (Coordinate i = 0; i < dim.xCount; i++)
@@ -55,7 +50,7 @@ namespace BoardGamesCore
           (int)(dim.lEdge + dim.xDim * i + dim.xSkip * i),
           (int)(dim.tEdge + dim.yDim * j + dim.ySkip * j),
           (int)(dim.lEdge + dim.xDim * (i + 1U) + dim.xSkip * i),
-          (int)(dim.tEdge + dim.yDim * (j + 1U) + dim.ySkip * j)};
+          (int)(dim.tEdge + dim.yDim * (j + 1U) + dim.ySkip * j) };
         (tiles)[z] = new Tile(Location(i, j), r, f);
       }
   }
@@ -138,14 +133,13 @@ namespace BoardGamesCore
 
   void Game::React(CCmdUI* pCmdUI)                                        // react to UI events (allows to set buttons greyed, etc.)
   {
-    static int i = 0;
     switch (pCmdUI->m_nID)
     {
       case ID_EDIT_MOVE:   if (!IsAlive() || !CurrentPlayer()->Is(&PlayerType::Computer)) pCmdUI->Enable(FALSE);     break;
       case ID_EDIT_BOARD:  if (editing) pCmdUI->SetCheck();                                                          break;
       case ID_EDIT_PASTE:  if (!editing) pCmdUI->Enable(::IsClipboardFormatAvailable(CF_TEXT));                      break;
-      case ID_LEVEL_PLUS:                                                                                            break;
-      case ID_LEVEL_MINUS: if (plies == 1) pCmdUI->Enable(FALSE);                                                    break;
+      case ID_LEVEL_PLUS:  pCmdUI->Enable(FALSE);                                                                    break;
+      case ID_LEVEL_MINUS: pCmdUI->Enable(FALSE);                                                                    break;
       default:             pCmdUI->Enable(FALSE);                                                                    break;
     }
   }
@@ -162,21 +156,21 @@ namespace BoardGamesCore
           return true; // update all views
         }
         break;
-      case ID_EDIT_BOARD: editing ^= true; return true;
+      case ID_EDIT_BOARD:
+        editing ^= true;
+        return true;
       case ID_EDIT_PASTE:
-      {
         pos->SetPosition(Piece::ListFromHTML(ClipBoard::GetClipboardText(),GetHTMLPieceMap()));
         return true;
-      }
-      case ID_LEVEL_PLUS: plies++; break;
-      case ID_LEVEL_MINUS: if (plies > 1) plies--; break;
+//    case ID_LEVEL_PLUS: plies++; break;
+//    case ID_LEVEL_MINUS: if (plies > 1) plies--; break;
       default:
         break;
     }
     return false;  // no view update needed
   }
 
-  bool Game::React(UINT nChar, UINT /*nRepCnt*/, UINT nFlags)             // react to keyboard input (not menu shortcuts, but typing)
+  bool Game::React(UINT /*nChar*/, UINT /*nRepCnt*/, UINT /*nFlags*/)     // react to keyboard input (not menu shortcuts, but keyboard typing)
   {
     return false;  // no view update needed
   }
@@ -193,18 +187,15 @@ namespace BoardGamesCore
         else Select(p);
         break;
       case WM_LBUTTONDBLCLK: return false;    // that will skip updating all views
-
       case WM_RBUTTONDOWN:   return false;    // that will skip updating all views
       case WM_RBUTTONUP:
         Unselect();
         break;
       case WM_RBUTTONDBLCLK: return false;    // that will skip updating all views
-
       case WM_MOUSEMOVE:
         if (dragging) DragTo(p);
         else return false;                    // that will skip updating all views
         break;                               
-                                             
       default: return false;                  // that will skip updating all views
     }
     return true;                              // update all views
@@ -229,7 +220,7 @@ namespace BoardGamesCore
     dragPiece = nullptr;
   }
 
-  void Game::Select(const CPoint & point)
+  void Game::Select(const CPoint& point)
   {
     if (!IsAlive() || CurrentPlayer()->Is(&PlayerType::Computer)) return;
 
@@ -246,7 +237,7 @@ namespace BoardGamesCore
     }
     else  // starting point was already defined
     {
-      for (auto &m : moves)               // check through allowed moves
+      for (const auto& m : moves)               // check through allowed moves
         if (m.GetTo().GetLocation() == l)
         {
           Execute(m);

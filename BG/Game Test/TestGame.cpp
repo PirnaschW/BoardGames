@@ -51,7 +51,7 @@ namespace Test
 
   bool TestPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
-    const Piece * p = GetPiece(to);
+    const Piece* p = GetPiece(to);
     if (p == nullptr) return false;  // out of board
     if (p->IsBlank()) return true;   // not a move, but keep trying this direction
     if (p->IsColor(OnTurn())) return false;  // own piece
@@ -326,7 +326,7 @@ namespace Test
   bool Test::TestMoveUndo(const MainPosition* pos)  // try all moves (for both colors) and undo them, to verify the Undo method
   {
     static int z{ 0 };
-    const TestPosAccess * const tp = static_cast<const TestPosAccess* const>(pos);
+    const TestPosAccess* const tp = static_cast<const TestPosAccess* const>(pos);
 
     for (auto& m : tp->GetMoveList(true))
     {
@@ -350,7 +350,7 @@ namespace Test
   bool Test::TestTaken(const MainPosition* pos)  // verify all taken pieces
   {
     static int z{ 0 };
-    const TestPosAccess * const tp = static_cast<const TestPosAccess* const>(pos);
+    const TestPosAccess* const tp = static_cast<const TestPosAccess* const>(pos);
 
     for (auto& m : tp->GetMoveList(true))
     {

@@ -8,12 +8,12 @@ namespace BoardGamesCore
   {
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
     assert(p != nullptr);
-    const char * emergencyMemory = new char[10000];
+    const char* emergencyMemory = new char[10000];
 
    // Test::Test::TestPosition(p);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 10.0;
+    double limit = 5.0;  // run for 5 seconds
     bool w = CurrentPlayer()->GetColor() == &Color::White;
 
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
@@ -112,7 +112,7 @@ namespace BoardGamesCore
     else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
-      value = 20 * (movelistW.size() - movelistB.size());
+      value = static_cast<PositionValue>(20ULL * (movelistW.size() - movelistB.size()));
       for (unsigned int j = 0; j < sizeY; j++)
       {
         for (unsigned int i = 0; i < sizeX; i++)         // loop through all locations
@@ -130,8 +130,6 @@ namespace BoardGamesCore
 
   MainPosition* MainPosition::GetPosition(AIContext& plist, Move* m) const // execute move, maintain in PList
   {
-    //if (plist.size() % 10000 == 0) plist.freemem = CheckFreeMem();
-
     MainPosition* pos(Clone());                                           // create a copy of the board
     if (m != nullptr) pos->Execute(*m);                                   // execute move if provided
 
@@ -146,33 +144,6 @@ namespace BoardGamesCore
     auto pl1 = plist.insert(pos);                                         // and save it
     assert(pl1.second);
     return *(pl1.first);                                                  // return the pointer to the new entry
-  }
-
-  size_t MainPosition::CheckFreeMem(void) const noexcept
-  {
-    size_t size = static_cast<size_t>(-1);
-    const char * buffer{ nullptr };
-    while (buffer == nullptr)
-    {
-      try
-      {
-        buffer = new char[size];
-      }
-      catch (std::bad_alloc ex)
-      {
-        size /= 2;
-      }
-      catch (const CMemoryException& c)
-      {
-        size /= 2;
-      }
-      catch (...)
-      {
-        size /= 2;
-      }
-    }
-    delete[] buffer;
-    return size;
   }
 
 }

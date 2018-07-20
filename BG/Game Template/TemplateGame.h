@@ -89,7 +89,7 @@ namespace Template
     TemplateGame(unsigned int x, unsigned int y) noexcept : TemplateGame(
       new TemplatePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
       new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
-    ~TemplateGame(void) override {};
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } }; return v; }
   };
 
 }

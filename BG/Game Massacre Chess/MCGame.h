@@ -59,7 +59,7 @@ namespace MassacreChess
 
   public:
     MCGame(unsigned int x, unsigned int y);
-    virtual unsigned int Plies(unsigned int z) const noexcept override { return Game::Plies(0) + static_cast<unsigned int>(11.0 / log(static_cast<double>(max(z, 5) - 3))) - 3; }
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{8, 8, nullptr, 2, 20} } }; return v; }
   };
 
 }

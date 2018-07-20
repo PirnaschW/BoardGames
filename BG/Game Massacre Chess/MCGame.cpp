@@ -38,8 +38,8 @@ namespace MassacreChess
 
   bool MCPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
-    const Piece * pf = GetPiece(fr);
-    const Piece * pt = GetPiece(to);
+    const Piece* pf = GetPiece(fr);
+    const Piece* pt = GetPiece(to);
     assert(pf != nullptr);                                                // start field must exist
     if (pt == nullptr) return false;                                      // out of board
     assert(!pf->IsBlank());                                               // start field must be a piece
@@ -74,7 +74,7 @@ namespace MassacreChess
     else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
-      value = 1000 * (movelistW.size() - movelistB.size()); // slightly more than a Q
+      value = static_cast<PositionValue>(1000ULL * (movelistW.size() - movelistB.size()));    // slightly more than a Q
       for (unsigned int j = 0; j < sizeY; j++)
       {
         for (unsigned int i = 0; i < sizeX; i++)                          // loop through all locations

@@ -14,7 +14,7 @@ namespace Hasami
   {
     for (auto& d : Offset::Rdirection)
     {
-      const Piece * p1 = pos.GetPiece(l + d);
+      const Piece* p1 = pos.GetPiece(l + d);
       if (p1 != nullptr)                    // on the board
       {
         if (p1->IsBlank())                  // free
@@ -48,7 +48,7 @@ namespace Hasami
 
   bool HasamiPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
-    const Piece * p = GetPiece(to);
+    const Piece* p = GetPiece(to);
     if (p == nullptr) return false;          // out of board
     if (!p->IsBlank()) return false;         // occupied
     Step::StepType st{Step::StepType::Normal};
@@ -58,7 +58,7 @@ namespace Hasami
     {
       std::vector<Field> t{};
       Location l = to;
-      const Piece * pp{};
+      const Piece* pp{};
       while ((pp = GetPiece(l += d)) != nullptr)
       {
         if (pp->IsBlank()) break;           // nothing comes from this direction
@@ -108,7 +108,7 @@ namespace Hasami
             if (k == 1) continue; // horizontal is not allowed
 
             const Offset& d = Offset::Qdirection[k];
-            const Piece * pp{ GetPiece(l + d * -1) };
+            const Piece* pp{ GetPiece(l + d * -1) };
             if (pp != nullptr && pp->IsColor(p->GetColor())) continue;    // if same color is that direction, we counted it already, so move on
             Location ll{ i,j };
             unsigned int z{ 0 };

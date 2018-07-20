@@ -59,7 +59,7 @@ namespace Test
   public:
     TestGame(unsigned int x, unsigned int y);
     MainPosition* GetPosition(void) { return pos; }
-    ~TestGame(void) override {};
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 2, 4, nullptr, 2, 20 } } }; return v; }
   };
 
 

@@ -302,17 +302,17 @@
     <ClCompile Include="Game TicTacToe\TicTacToeGame.cpp">
       <Filter>Game TicTacToe\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ClipBoard.cpp">
-      <Filter>BG\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\Util.cpp">
-      <Filter>Util\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BGSelect.cpp">
       <Filter>BG\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BGGames.cpp">
       <Filter>BG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\URL.cpp">
+      <Filter>Util\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\ClipBoard.cpp">
+      <Filter>Util\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

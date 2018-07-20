@@ -40,7 +40,7 @@ namespace Cam
       const Location l2{l1 + d};
 
       // check the jump-over tile
-      const Piece * p1 = pos.GetPiece(l1);      // what is on the tile to jump over?
+      const Piece* p1 = pos.GetPiece(l1);       // what is on the tile to jump over?
       if (p1 == nullptr) continue;              // tile is out of board, can't jump over it
       if (p1 == &Piece::NoTile) continue;       // tile is out of board, can't jump over it
       if (p1->IsBlank()) continue;              // tile is not occupied, can't jump over it
@@ -56,9 +56,9 @@ namespace Cam
       }
 
       // check the jump-to tile
-      const Piece * p2 = pos.GetPiece(l2);      // what is on the jump-to tile
+      const Piece* p2 = pos.GetPiece(l2);       // what is on the jump-to tile
       if (p2 == nullptr) continue;              // tile is out of board, can't jump there
-      if (p2 == &Piece::NoTile) continue;  // tile is out of board, can't jump over it
+      if (p2 == &Piece::NoTile) continue;       // tile is out of board, can't jump over it
       if (!p2->IsBlank()) continue;             // tile is ccupied, can't jump there
 
       // check if the same jump was done before
@@ -115,9 +115,9 @@ namespace Cam
 
   bool CamPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
-    const Piece * p = GetPiece(to);           // what is on the tile to move to?
+    const Piece* p = GetPiece(to);            // what is on the tile to move to?
     if (p == nullptr) return false;           // out of board
-    if (p == &Piece::NoTile) return false;   // out of board
+    if (p == &Piece::NoTile) return false;    // out of board
     if (!p->IsBlank()) return false;          // tile occupied
 
     m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)}});
@@ -298,6 +298,7 @@ namespace Cam
       SetPiece(Location(6, 12), &Piece::NoTile);
     }
   }
+
 
   CamGame::CamGame(unsigned int x, unsigned int y) noexcept : CamGame(
     IsFull(x, y) ? new CamPosition   (12, 16) : new CamPosition   ( 7, 13),

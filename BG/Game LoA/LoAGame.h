@@ -172,6 +172,7 @@ namespace LoA
     LoAGame(unsigned int x, unsigned int y) : LoAGame(
       new LoAPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
       new LoALayout(x, y), new LoATakenLayout(x, y), new LoAStockLayout(x, y)) {}
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 8, nullptr, 3, 20 } } }; return v; }
   };
 
 }

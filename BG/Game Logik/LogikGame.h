@@ -416,9 +416,9 @@ namespace Logik
   public:
     LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(BX + 3, 1),
       new LLayout(4 * BY, BZ), nullptr, new LStockLayout(BX, BY, BZ)) {}
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 5 } } }; return v; }
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;
-    unsigned int Plies(unsigned int) const noexcept override { return 1; }
     void Execute(const Move& /*m*/) override {}
     void Execute(const LMove<BX, BY, BZ>& m)
     {
@@ -478,9 +478,7 @@ namespace Logik
       return false;
     }
 
-    const unsigned int pl = Plies(0);
-
-    const PositionValue e = pos->Evaluate(plist, pos->OnTurn(), PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+    const PositionValue e = pos->Evaluate(plist, pos->OnTurn(), PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
 
     if (1 == 0)
     {

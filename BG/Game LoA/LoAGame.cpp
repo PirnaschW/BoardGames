@@ -43,7 +43,7 @@ namespace LoA
 
   bool LoAPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
-    const Piece * p = GetPiece(to);
+    const Piece* p = GetPiece(to);
     if (p == nullptr) return false;  // out of board
     if (p->IsColor(OnTurn())) return false;  // own piece
     if (p->IsBlank())

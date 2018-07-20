@@ -102,12 +102,13 @@ namespace Cam
 
   class CamGame : public Game
   {
-  public:
-    CamGame(unsigned int x, unsigned int y) noexcept;
-    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 12; } //only check for x == 12 -> full Camelot game, all others are Cam.
   protected:
     CamGame(void) = delete;
     CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
+  public:
+    CamGame(unsigned int x, unsigned int y) noexcept;
+    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 12; } //only check for x == 12 -> full Camelot game, all others are Cam.
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 12, 16, "Camelot" },{ Variant{ 7, 13, "Cam" }}} }; return v; }
   };
 
 }

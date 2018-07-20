@@ -2,16 +2,15 @@
 namespace BoardGamesCore
 {
 
-  class Tile
+  class Tile final
   {
   public:
-    Tile(const Location& l, const CRect& r, const TileColor* f) : location{l}, rect{r}, tilecolor{f} {}
-    ~Tile(void) {}
+    constexpr inline Tile(const Location& l, const CRect& r, const TileColor* f) noexcept : location{l}, rect{r}, tilecolor{f} {}
     Tile& operator=(const Tile&) = delete;
-    bool InRect(const CPoint &p) const { return rect.PtInRect(p) != 0; }
-    const CRect& GetRect(void) const { return rect; }
-    const Location GetLocation(void) const { return location; }
-    void Draw(CDC* pDC, const Piece* p) const { p->Draw(pDC, rect, tilecolor); }
+    inline bool InRect(const CPoint& p) const noexcept { return rect.PtInRect(p) != 0; }
+    constexpr inline const CRect& GetRect(void) const noexcept { return rect; }
+    constexpr inline const Location GetLocation(void) const noexcept { return location; }
+    inline void Draw(CDC* pDC, const Piece* p) const { p->Draw(pDC, rect, tilecolor); }
 
   private:
     const Location location;
@@ -20,7 +19,7 @@ namespace BoardGamesCore
   };
 
 
-  struct Dimension
+  struct Dimension final  /// PoD structure to collect a game's layout dimensions
   {
   public:
     constexpr Dimension(
@@ -47,6 +46,7 @@ namespace BoardGamesCore
     const unsigned int bEdge;
   };
   
+
   class Layout  // a layout contains the physical layout of the tiles of the playing board
   {
   public:
@@ -55,7 +55,7 @@ namespace BoardGamesCore
     Layout(void) = delete;
   public:
     Layout(const Dimension& d, LayoutType lt);
-    ~Layout() { for (auto& t : tiles) delete t; }
+    inline ~Layout() noexcept { for (auto& t : tiles) delete t; }
     virtual void Draw(CDC* pDC, const Position* pos) const;
     virtual void DrawSelected(CDC* pDC, const Location& l) const;
     virtual bool GetLocation(const CPoint& p, Location& l) const;
@@ -70,23 +70,23 @@ namespace BoardGamesCore
   class MainLayout : public Layout
   {
   public:
-    constexpr MainLayout(const Dimension& d, LayoutType lt = LayoutType::Alternating) noexcept : Layout(d, lt) {}
-    ~MainLayout() {}
+    constexpr inline MainLayout(const Dimension& d, LayoutType lt = LayoutType::Alternating) : Layout(d, lt) {}
+    inline ~MainLayout() noexcept {}
     virtual void Draw(CDC* pDC, const Position* pos) const override;
   };
 
   class TakenLayout : public Layout
   {
   public:
-    constexpr TakenLayout(const Dimension& d, LayoutType lt = LayoutType::Small) noexcept : Layout(d, lt) {}
-    ~TakenLayout() {}
+    constexpr inline TakenLayout(const Dimension& d, LayoutType lt = LayoutType::Small) : Layout(d, lt) {}
+    inline ~TakenLayout() {}
   };
 
   class StockLayout : public Layout
   {
   public:
-    constexpr StockLayout(const Dimension& d, LayoutType lt = LayoutType::Light) noexcept : Layout(d, lt) {}
-    ~StockLayout() {}
+    constexpr inline StockLayout(const Dimension& d, LayoutType lt = LayoutType::Light) : Layout(d, lt) {}
+    inline ~StockLayout() {}
   };
 
 }

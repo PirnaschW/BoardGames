@@ -2,10 +2,10 @@
 
 #include<wininet.h>
 
-namespace Util
+namespace URL
 {
 
-  const std::string URL::GetHTMLFromURL(const std::wstring& url)
+  const std::string GetHTMLFromURL(const std::wstring& url)
   {
     constexpr const static int len{ 2 << 15 };
 

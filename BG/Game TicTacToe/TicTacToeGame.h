@@ -83,6 +83,7 @@ namespace TicTacToe
     TicTacToeGame(unsigned int x, unsigned int y) noexcept : TicTacToeGame(
       new TicTacToePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
       new TicTacToeLayout(x, y), new TicTacToeTakenLayout(x, y), new TicTacToeStockLayout(x, y)) {}
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ Variant{ 3, 3 } }; return v; }
   };
 
 }

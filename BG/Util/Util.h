@@ -1,10 +1,15 @@
 
-namespace Util
+namespace ClipBoard
 {
-  class URL
-  {
-  public:
-    static const std::string GetHTMLFromURL(const std::string& url) { return GetHTMLFromURL(std::wstring(url.begin(), url.end())); }
-    static const std::string GetHTMLFromURL(const std::wstring& url);
-  };
+
+  std::string GetClipboardText(void);
+
+};
+
+namespace URL
+{
+
+  const std::string GetHTMLFromURL(const std::wstring& url);
+  inline const std::string GetHTMLFromURL(const std::string& url) { return GetHTMLFromURL(std::wstring(url.begin(), url.end())); }
+
 }

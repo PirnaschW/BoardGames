@@ -263,7 +263,7 @@ namespace Shogi
     void SetTPos(TakenPosition* t) { tpos = t; }
 
   private:
-    TakenPosition * tpos{ nullptr };
+    TakenPosition* tpos{ nullptr };
   };
 
 
@@ -291,12 +291,13 @@ namespace Shogi
 
   class ShogiGame : public Game
   {
-  public:
-    ShogiGame(unsigned int x, unsigned int y) noexcept;
-    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
   protected:
     ShogiGame(void) = delete;
     ShogiGame(ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
+  public:
+    ShogiGame(unsigned int x, unsigned int y) noexcept;
+    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 9, 9, "Shogi" },{ Variant{ 5, 5, "Mini Shogi" } } } }; return v; }
   };
 
 }

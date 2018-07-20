@@ -21,7 +21,7 @@ namespace Hasami
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     unsigned int GetValue(void) const noexcept override { return 1; }
-  
+
   public:
     inline const static Checker TheChecker{};
   };
@@ -89,7 +89,7 @@ namespace Hasami
     HasamiGame(Coordinate x, Coordinate y) noexcept : HasamiGame(
       new HasamiPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
       new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
-    ~HasamiGame(void) override {};
+    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 9, 9, nullptr, 2, 20, 5, 20 } } }; return v; }
   };
 
 }

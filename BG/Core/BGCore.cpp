@@ -4,18 +4,6 @@
 
 namespace BoardGamesCore
 {
-  //constexpr bool PositionValue::operator> (PositionValue v) const noexcept
-  //{
-  //  assert(type != Undefined && v.type != Undefined);
-  //  switch (type)
-  //  {
-  //    case Lost: return false;                                                 // Lost is not greater than anything
-  //    case Tie: return (v.type == Lost || (v.type == Normal && v.value < 0));  // Tie is better than Lost or losing
-  //    case Won: return v.type != Won;                                          // Won is better than anything except Won
-  //    case Normal: return (v.type == Lost || (v.type == Tie && v.value > 0));  // Any value is better than Lost; positive is better than Tie
-  //  }
-  //}
- 
 
   Move&& Move::operator =(Move&& m) noexcept
   {
@@ -214,7 +202,7 @@ namespace BoardGamesCore
   {
     AddPlayer(new Player(&PlayerType::Human, &Color::White));
     AddPlayer(new Player(&PlayerType::Computer, &Color::Black));
-    plist.reserve(250000);
+    // plist.reserve(16384);
   }
 
   Game::~Game(void)

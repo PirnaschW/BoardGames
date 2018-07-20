@@ -37,7 +37,7 @@ namespace TicTacToe
   bool TicTacToePosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
     assert(fr == to);                   // this game allows only placements
-    const Piece * p = GetPiece(fr);
+    const Piece* p = GetPiece(fr);
     if (!p->IsBlank()) return false;    // field must be empty
     m.push_back(Step{ Field{ fr,&Piece::NoPiece }, Field{ fr,&TicTacToePiece::TicTacToePieceW },Step::StepType::Place });
     return false;
@@ -80,7 +80,7 @@ namespace TicTacToe
           for (unsigned int k = 0; k < 4; k++)
           {
             const Offset& d = Offset::Qdirection[k];
-            const Piece * pp{ GetPiece(l + d * -1) };
+            const Piece* pp{ GetPiece(l + d * -1) };
             if (pp != nullptr && pp->IsColor(p->GetColor())) continue;    // if same color is that direction, we counted it already, so move on
             if (pp != nullptr && pp->IsBlank()) (w ? v1 : v2) += 1;       // free field, give an extra point - much better than opponent's piece
             Location ll{ i,j };
