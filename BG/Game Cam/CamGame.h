@@ -20,8 +20,8 @@ namespace Cam
     constexpr Pawn(void) noexcept : Kind('P') {}
 
   public:
+    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override;
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    virtual unsigned int GetValue(void) const noexcept override { return 20; }
     
   public:
     inline const static Pawn ThePawn{};
@@ -30,10 +30,10 @@ namespace Cam
   class Knight : public Kind
   {
   private:
-    constexpr Knight(void) noexcept : Kind('N') {}
+    constexpr inline Knight(void) noexcept : Kind('N') {}
   public:
+    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override;
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    unsigned int GetValue(void) const noexcept override { return 100; }
     
   public:
     inline const static Knight TheKnight{};
@@ -43,7 +43,7 @@ namespace Cam
   class CamPiece : public Piece
   {
   private:
-    CamPiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline CamPiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     CamPiece(const CamPiece&) = delete;
     CamPiece& operator=(const CamPiece&) = delete;
 
@@ -55,47 +55,44 @@ namespace Cam
   };
 
 
-  // class to handle multi-jumps specific to Cam
-  class CollectMoves
-  {
-  public:
-    static bool CollectJumps(const MainPosition& pos, const Location& fr, const std::vector<Step>& s, bool canter, const Color* c, std::vector<Move>& m);
-    static void CollectSlides(const MainPosition& pos, const Location& fr, std::vector<Move>& m);
-    static std::vector<Move> EnforceJumps(std::vector<Move>& moves);
-  };
-
-
   class CamPosition : public MainPosition
   {
   public:
     CamPosition(unsigned int x, unsigned int y) noexcept;
     inline virtual MainPosition* Clone(void) const override { return new CamPosition(*this); }
     virtual void GetAllMoves(void) override;
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
-    virtual void EvaluateStatically(void) override;
+    // extensions:
+  public:
+    bool CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const;
+    std::vector<Move> EnforceJumps(std::vector<Move>& moves) const;
+  };
+
+  class CamTakenPosition : public TakenPosition
+  {
+  public:
+    inline CamTakenPosition(unsigned int x, unsigned int /*y*/) noexcept :
+      TakenPosition(x == 12 ? 24 : 14, 2) {}
   };
 
   
   class CamLayout : public MainLayout
   {
   public:
-    CamLayout(unsigned int x, unsigned int y) noexcept :
+    inline CamLayout(unsigned int x, unsigned int y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-    ~CamLayout() {}
   };
 
   class CamTakenLayout : public TakenLayout
   {
   public:
-    CamTakenLayout(unsigned int x, unsigned int y) noexcept :
+    inline CamTakenLayout(unsigned int x, unsigned int y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    ~CamTakenLayout() {}
   };
 
   class CamStockLayout : public StockLayout
   {
   public:
-    CamStockLayout(unsigned int /*x*/, unsigned int y) noexcept :
+    inline CamStockLayout(unsigned int /*x*/, unsigned int y) noexcept :
       StockLayout(Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
   };
 
@@ -107,7 +104,6 @@ namespace Cam
     CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
   public:
     CamGame(unsigned int x, unsigned int y) noexcept;
-    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 12; } //only check for x == 12 -> full Camelot game, all others are Cam.
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 12, 16, "Camelot" },{ Variant{ 7, 13, "Cam" }}} }; return v; }
   };
 

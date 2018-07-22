@@ -234,8 +234,8 @@ namespace BoardGamesCore
   public:
     inline bool operator==(const Kind& k) const noexcept { return k.kind == kind; }
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(kind); }
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const {};
-    virtual unsigned int GetValue(void) const noexcept { return 0; }
+    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept { return 0; }
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const {};
     virtual void Serialize(CArchive& ar) const { ar << kind; }
     virtual bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept { return false; }
 
@@ -276,7 +276,7 @@ namespace BoardGamesCore
     inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     virtual void Serialize(CArchive& ar) const { color->Serialize(ar); kind->Serialize(ar); }
     inline void CollectMoves(const MainPosition& p, const Location l, std::vector<Move>& m) const { kind->CollectMoves(p, l, m); }
-    inline unsigned int GetValue(void) const noexcept { return kind->GetValue(); }
+    inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind->GetValue(p,l); }
     inline bool IsKind(const Kind& k) const noexcept { return k == *kind; }
     inline bool IsColor(const Color* c) const noexcept { return c == color; }
     inline const Color* GetColor(void) const noexcept { return color; }
@@ -324,7 +324,7 @@ namespace BoardGamesCore
 
   public:
     inline Position(Coordinate x, Coordinate y, const Piece* init = &Piece::NoPiece) noexcept
-      : sizeX(x), sizeY(y), pm{ new PieceMap() }, pieces(x*y, pm->GetIndex(init)) {}
+      : sizeX(x), sizeY(y), pm{ new PieceMap() }, pieces(1ULL*x*y, pm->GetIndex(init)) {}
     inline Position(const Position& p) : sizeX(p.sizeX), sizeY(p.sizeY), pm(p.pm), pieces(p.pieces) {}
     virtual ~Position(void) noexcept {}
     virtual inline bool operator ==(const Position* p) const noexcept { return pm == p->pm && pieces == p->pieces; }
@@ -368,6 +368,7 @@ namespace BoardGamesCore
 
     virtual void GetAllMoves(void);              // generate all moves and save list
     virtual std::vector<Move> CollectMoves(void) const { std::vector<Move> m{}; return m; }
+    inline std::vector<Move>& GetMoveList(bool w) { return w ? movelistW : movelistB; }
     virtual bool AddIfLegal(std::vector<Move>&, const Location, const Location) const { return false; };
     virtual void EvaluateStatically(void);       // calculate position value and save
     virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);

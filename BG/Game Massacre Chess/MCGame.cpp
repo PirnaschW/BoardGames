@@ -78,11 +78,12 @@ namespace MassacreChess
       for (unsigned int j = 0; j < sizeY; j++)
       {
         for (unsigned int i = 0; i < sizeX; i++)                          // loop through all locations
-        {                                                               
-          const Piece* p = GetPiece(Location{ i,j });                   
+        {                
+          const Location l{ i,j };
+          const Piece* p = GetPiece(l);                   
           if (p == nullptr) continue;                                     // field does not exist
           if (p->IsColor(&Color::NoColor)) continue;                      // nothing here
-          value += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue();
+          value += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue(*this,l);
         }
       }
     }

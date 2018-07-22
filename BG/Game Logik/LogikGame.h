@@ -28,7 +28,7 @@ namespace Logik
 
   public:
     void CollectMoves(const MainPosition&, const Location, std::vector<Move>&) {};
-    unsigned int GetValue(void) const noexcept override { return 1; }
+    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1; }
 
   public:
     inline const static Peg<k> ThePeg{};

@@ -80,7 +80,7 @@ namespace LoA
       CollectMoves(pos, l, moves, 1, 1); // check diagonal '\' moves
     }
 
-    unsigned int GetValue(void) const noexcept override { return 0; } // in LoA, pieces have no value
+    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 0; } // in LoA, pieces have no value
 
 
   public:

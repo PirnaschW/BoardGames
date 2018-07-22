@@ -225,19 +225,19 @@ namespace BoardGamesCore
     if (!IsAlive() || CurrentPlayer()->Is(&PlayerType::Computer)) return;
 
     Location l{0,0};
-    if (!lay->GetLocation(point, l)) return; // user clicked somewhere outside
-
-    const Piece* p = pos->GetPiece(l);
-    if (placing) pos->AddIfLegal(moves, l, l);
+    if (!lay->GetLocation(point, l)) return;       // user clicked somewhere outside
 
     if (moves.empty())  // new selection starts
     {
-      if (p->IsColor(pos->OnTurn()))  // is this one of the player's pieces?
-        p->CollectMoves(*pos, l, moves);  // save possible moves
+      std::unique_ptr<MainPosition> p{ pos->GetPosition(plist) };  // need to get ALL legal moves (this piece might not be allowed to move because another one has a mandatory jump)
+      for (const auto& m : p->GetMoveList(true))   // filter moves of the selected piece into 'moves'
+      {
+        if (m.GetFr().GetLocation() == l) moves.push_back(m);
+      }
     }
     else  // starting point was already defined
     {
-      for (const auto& m : moves)               // check through allowed moves
+      for (const auto& m : moves)                  // check through allowed moves
         if (m.GetTo().GetLocation() == l)
         {
           Execute(m);

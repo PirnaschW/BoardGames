@@ -20,7 +20,7 @@ namespace Template
     constexpr Checker(void) noexcept : Kind('0') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    unsigned int GetValue(void) const noexcept override { return 8; }
+    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 5000; }
 
   public:
     inline const static Checker TheChecker{};

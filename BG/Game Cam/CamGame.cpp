@@ -5,96 +5,138 @@
 namespace Cam
 {
 
+  unsigned int Pawn::GetValue(const MainPosition& p, const Location l) const noexcept
+  {
+    return 100 + (p.OnTurn() == &Color::White ? -1 : +1) * l.y;
+  }
+
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     std::vector<Step> s{};
-    CollectMoves::CollectJumps(p, l, s, false, &Color::NoColor, moves);
-    CollectMoves::CollectSlides(p, l, moves);
-    moves = CollectMoves::EnforceJumps(moves);
-  }
-  void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
-  {
-    std::vector<Step> s{};
-    CollectMoves::CollectJumps(p, l, s, true, &Color::NoColor, moves);
-    CollectMoves::CollectSlides(p, l, moves);
-    moves = CollectMoves::EnforceJumps(moves);
-  }
-
-
-  void CollectMoves::CollectSlides(const MainPosition& pos, const Location& fr, std::vector<Move>& m)
-  {
-    for (auto& d : Offset::Qdirection)              // try all eight directions
+    const CamPosition& pos = dynamic_cast<const CamPosition&>(p);
+    pos.CollectJumps(l, s, false, &Color::NoColor, moves);
+    const Piece* p0 = pos.GetPiece(l);                                    // piece that is moving
+    for (auto& d : Offset::Qdirection)                                    // try slides all eight directions
     {
-      pos.AddIfLegal(m, fr, fr + d);
+      const Piece* p1 = pos.GetPiece(l + d);                              // what is on the tile to move to?
+      if (p1 == nullptr) continue;                                        // out of board
+      if (p1 == &Piece::NoTile) continue;                                 // out of board
+      if (!p1->IsBlank()) continue;                                       // tile occupied
+      moves.push_back(Step{ Field{ l,p0 }, Field{ l + d,p0 } });          // ok, so add move to move list
     }
   }
 
-  bool CollectMoves::CollectJumps(const MainPosition& pos, const Location& fr, const std::vector<Step>& s, bool canter, const Color* c, std::vector<Move>& m)
+  unsigned int Knight::GetValue(const MainPosition& p, const Location l) const noexcept
   {
-    bool any{false};                            // were any more jumps possible?
-    for (auto& d : Offset::Qdirection)            // try all eight directions
+    return 100 + (p.OnTurn() == &Color::White ? -1 : +1) * l.y;
+  }
+
+  void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  {
+    std::vector<Step> s{};
+    const CamPosition& pos = dynamic_cast<const CamPosition&>(p);
+    pos.CollectJumps(l, s, true, &Color::NoColor, moves);
+    const Piece* p0 = pos.GetPiece(l);                                    // piece that is moving
+    for (auto& d : Offset::Qdirection)                                    // try slides all eight directions
     {
-      std::vector<Step> s1{s};
-      const Color* c1{c};
-      const Location l1{fr + d};
-      const Location l2{l1 + d};
+      const Piece* p1 = pos.GetPiece(l + d);                              // what is on the tile to move to?
+      if (p1 == nullptr) continue;                                        // out of board
+      if (p1 == &Piece::NoTile) continue;                                 // out of board
+      if (!p1->IsBlank()) continue;                                       // tile occupied
+      moves.push_back(Step{ Field{ l,p0 }, Field{ l + d,p0 } });            // ok, so add move to move list
+    }
+  }
 
-      // check the jump-over tile
-      const Piece* p1 = pos.GetPiece(l1);       // what is on the tile to jump over?
-      if (p1 == nullptr) continue;              // tile is out of board, can't jump over it
-      if (p1 == &Piece::NoTile) continue;       // tile is out of board, can't jump over it
-      if (p1->IsBlank()) continue;              // tile is not occupied, can't jump over it
 
-      Step::StepType st{Step::StepType::Jump};
-      const Color* cp = p1->GetColor();
-      if (cp != pos.OnTurn()) st = (Step::StepType) (Step::StepType::Jump | Step::StepType::Take);
-      if (c1 == &Color::NoColor) c1 = cp;       // first jump - either one is allowed
-      else if (c1 != cp)                        // trying to switch jumped color
+  bool CamPosition::CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const
+  {
+    const Piece* p0 = s.empty() ? GetPiece(fr) : s.front().GetFr().GetPiece(); // the piece that is moving
+    assert(p0 != nullptr);
+    assert(p0 != &Piece::NoTile);
+    assert(!p0->IsBlank());
+
+    const Color* c0 = p0->GetColor();                                     // color of the piece moving
+    bool any{ false };                                                    // were any more jumps possible?
+
+    for (auto& d : Offset::Qdirection)                                    // try all eight directions
+    {
+      std::vector<Step> s1{ s };                                            // copy the previous jump sequence, so we can extend it
+      const Color* cc{ c };                                                 // color last jumped over (can switch once if charge)
+      const Location l1{ fr + d };                                          // location to jump over
+      const Location l2{ l1 + d };                                          // location to jump to
+
+      // check the jumped-over tile                                         
+      const Piece* p1 = GetPiece(l1);                                     // what is on the tile to jump over?
+      if (p1 == nullptr) continue;                                        // tile is out of board, can't jump over it
+      if (p1 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump over it
+      if (p1->IsBlank()) continue;                                        // tile is not occupied, can't jump over it
+      const Color* c1 = p1->GetColor();                                   // color of jumped-over piece
+
+      // check the jump-to tile                                           
+      const Piece* p2 = GetPiece(l2);                                     // what is on the jump-to tile
+      if (p2 == nullptr) continue;                                        // tile is out of board, can't jump there
+      if (p2 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump there
+      if (!p2->IsBlank()) continue;                                       // tile is occupied, can't jump there
+
+      // check the jump is allowed
+      if (cc == &Color::NoColor) cc = c1;                                 // first jump - either one is allowed
+      else if (cc != c1)                                                  // trying to switch jumped color
       {
-        if (c1 != pos.OnTurn()) continue;       // can't switch back to jumping own pieces
-        if (!canter) continue;                  // can't switch to enemy pieces
+        if (cc != c0) continue;                                           // can't switch back to jumping own pieces
+        if (!charge) continue;                                            // can't switch to enemy pieces
       }
 
-      // check the jump-to tile
-      const Piece* p2 = pos.GetPiece(l2);       // what is on the jump-to tile
-      if (p2 == nullptr) continue;              // tile is out of board, can't jump there
-      if (p2 == &Piece::NoTile) continue;       // tile is out of board, can't jump over it
-      if (!p2->IsBlank()) continue;             // tile is ccupied, can't jump there
-
-      // check if the same jump was done before
-      bool repeat{false};
+      // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
+      bool repeat{ false };
       for (auto& ss : s)
       {
         if (ss.GetFr().GetLocation() == fr && ss.GetTo().GetLocation() == l2)
         {
-          repeat = true;
+          repeat = true;  // same jump was done before
           break;
         }
         if (ss.GetFr().GetLocation() == l2 && ss.GetTo().GetLocation() == fr)
         {
-          repeat = true;
+          repeat = true;  // reverse jump was done before
           break;
         }
+        for (const auto& t : ss.GetTake())
+        {
+          if (t.GetLocation() == l1)
+          {
+            repeat = true;  // this piece was taken before
+            break;
+          }
+        }
       }
-      if (repeat) continue;                 // don't make the same move again
+      if (repeat) continue;                                               // don't allow the same move again
+
+      // a legal jump was found
       any = true;
+      Step::StepType st{ Step::StepType::Jump };
+      std::vector<Field> f{};
+      if (c1 != c0)                                                       // jump was over an enemy piece
+      {
+        st = (Step::StepType) (Step::StepType::Jump | Step::StepType::Take);
+        f.push_back(Field{ l1,p1 });
+      }
 
-      s1.push_back(Step(Field{fr, pos.GetPiece(fr)}, Field{l2,pos.GetPiece(l2)}, st, std::vector<Field>{Field{l1,p1}}));       // add the jump to the step list
+      s1.push_back(Step(Field{ fr, p0 }, Field{ l2,p0 }, st, f));         // add the jump to the step list
 
-      if (!CollectMoves::CollectJumps(pos, l2, s1, canter, c1, m) ||       // collect potential further jumps
+      if (!CollectJumps(l2, s1, charge, cc, m) ||                         // collect potential further jumps
         st == Step::StepType::Jump)
       {
-        m.push_back(Move(s1));              // if it could not be extended, or was a jumpOver, add the step list as a move
+        m.push_back(Move(s1));              // if it could not be extended, or was a jump over an own piece, add the step list as a move
       }
     }
     return any;
   }
 
 
-  std::vector<Move> CollectMoves::EnforceJumps(std::vector<Move>& moves)
+  std::vector<Move> CamPosition::EnforceJumps(std::vector<Move>& moves) const
   {
     // if there are any takes (catching opponent pieces) possible, remove all non-takes
-    bool takes{false};
+    bool takes{ false };
     for (auto& m : moves) if (m.GetSteps().front().IsTake()) { takes = true; break; }
     if (takes)
     {
@@ -109,36 +151,8 @@ namespace Cam
   void CamPosition::GetAllMoves(void)  // collect all moves for all pieces
   {
     MainPosition::GetAllMoves();
-    CollectMoves::EnforceJumps(movelistW);
-    CollectMoves::EnforceJumps(movelistB);
-  }
-
-  bool CamPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
-  {
-    const Piece* p = GetPiece(to);            // what is on the tile to move to?
-    if (p == nullptr) return false;           // out of board
-    if (p == &Piece::NoTile) return false;    // out of board
-    if (!p->IsBlank()) return false;          // tile occupied
-
-    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)}});
-    return false;
-  };
-
-
-  void CamPosition::EvaluateStatically(void)
-  {
-    PositionValue v{};
-
-    for (unsigned int i = 0; i < sizeX; i++)
-    {
-      for (unsigned int j = 0; j < sizeY; j++)
-      {
-        const Piece* p = GetPiece(Location{i,j});
-        if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;
-        v += ((p->IsColor(OnTurn())) ? 1 : -1) * (p->GetValue() + j);
-      }
-    }
-    value = v;
+    EnforceJumps(movelistW);
+    EnforceJumps(movelistB);
   }
 
   //PositionValue CamPosition::EvaluateWin(void) const
@@ -162,7 +176,7 @@ namespace Cam
 
   CamPosition::CamPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
   {
-    if (CamGame::IsFull(x,y)) // full Camelot
+    if (x == 12) // full Camelot
     {
       // Black Knights
       SetPiece(Location(2, 5), &CamPiece::BN);
@@ -241,7 +255,7 @@ namespace Cam
       SetPiece(Location(10, 15), &Piece::NoTile);
       SetPiece(Location(11, 15), &Piece::NoTile);
     }
-      
+
     else  // Mini Cam position
     {
       // Black Knights
@@ -299,14 +313,9 @@ namespace Cam
     }
   }
 
-
   CamGame::CamGame(unsigned int x, unsigned int y) noexcept : CamGame(
-    IsFull(x, y) ? new CamPosition   (12, 16) : new CamPosition   ( 7, 13),
-    IsFull(x, y) ? new TakenPosition (24,  2) : new TakenPosition (14,  2),
-                   new StockPosition ( 3,  2),
-    IsFull(x, y) ? new CamLayout     (12, 16) : new CamLayout     ( 7, 13),
-    IsFull(x, y) ? new CamTakenLayout(12, 16) : new CamTakenLayout( 7, 13),
-    IsFull(x, y) ? new CamStockLayout(12, 16) : new CamStockLayout( 7, 13)) {}
+    new CamPosition(x, y), new CamTakenPosition(x, y), new StockPosition(3, 2),
+    new CamLayout(x, y), new CamTakenLayout(x, y), new CamStockLayout(x, y)) {}
 
   CamGame::CamGame(CamPosition* p, TakenPosition* t, StockPosition* s,
     CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }

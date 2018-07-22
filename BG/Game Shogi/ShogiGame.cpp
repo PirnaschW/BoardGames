@@ -257,9 +257,10 @@ namespace Shogi
       {
         for (unsigned int j = 0; j < sizeY; j++)
         {
-          const Piece* p = GetPiece(Location{ i,j });
+          const Location l{ i,j };
+          const Piece* p = GetPiece(l);
           if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;
-          v += ((p->IsColor(OnTurn())) ? 1 : -1) * p->GetValue();
+          v += ((p->IsColor(OnTurn())) ? 1 : -1) * p->GetValue(*this,l);
         }
       }
       value = v;

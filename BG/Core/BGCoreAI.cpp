@@ -65,7 +65,7 @@ namespace BoardGamesCore
     if (plies == 0) return GetValue(w);
     //if (plist.size() > 200000) return GetValue(w);
 
-    auto& movelist = (w ? movelistW : movelistB);
+    auto& movelist = GetMoveList(w);
     if (movelist.empty()) return GetValue(w);
 
     assert(plist.find(this) != plist.end());                              // the current position must have been checked before
@@ -113,18 +113,19 @@ namespace BoardGamesCore
     else
     {
       value = static_cast<PositionValue>(20ULL * (movelistW.size() - movelistB.size()));
-      for (unsigned int j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
-        for (unsigned int i = 0; i < sizeX; i++)         // loop through all locations
-        {
-          const Piece* p = GetPiece(Location{ i,j });
-          if (p == nullptr) continue;                    // field does not exist
-          if (p->IsColor(&Color::NoColor)) continue;     // nothing here
-          value += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue();
+        for (Coordinate i = 0; i < sizeX; i++)                          // loop through all locations
+        {                                                                 
+          const Location l{ i,j };                                        
+          const Piece* p = GetPiece(l);                                   
+          if (p == nullptr) continue;                                     // field does not exist
+          if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;  // nothing here
+          value += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue(*this,l);
         }
       }
     }
-    assert(Test::Test::TestValue(this));
+    //assert(Test::Test::TestValue(this));
   }
 
 

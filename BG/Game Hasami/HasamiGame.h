@@ -20,7 +20,7 @@ namespace Hasami
     constexpr Checker(void) noexcept : Kind('0') {}
   public:
     void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    unsigned int GetValue(void) const noexcept override { return 1; }
+    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
 
   public:
     inline const static Checker TheChecker{};
