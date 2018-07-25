@@ -479,9 +479,8 @@ namespace BoardGamesCore
     Coordinate yMin;
     Coordinate yMax;
   };
-  
   typedef std::vector<Variant> VariantList;
-  
+
   template <class TClass>  // template enforces every Game to have the required static functions (abstract static functions are not possible)
   class Variants {
   public:

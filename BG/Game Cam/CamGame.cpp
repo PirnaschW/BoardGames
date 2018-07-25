@@ -151,8 +151,8 @@ namespace Cam
   void CamPosition::GetAllMoves(void)  // collect all moves for all pieces
   {
     MainPosition::GetAllMoves();
-    EnforceJumps(movelistW);
-    EnforceJumps(movelistB);
+    movelistW = EnforceJumps(movelistW);
+    movelistB = EnforceJumps(movelistB);
   }
 
   //PositionValue CamPosition::EvaluateWin(void) const

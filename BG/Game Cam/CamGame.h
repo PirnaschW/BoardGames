@@ -61,17 +61,18 @@ namespace Cam
     CamPosition(unsigned int x, unsigned int y) noexcept;
     inline virtual MainPosition* Clone(void) const override { return new CamPosition(*this); }
     virtual void GetAllMoves(void) override;
+ 
     // extensions:
   public:
     bool CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const;
+  private:
     std::vector<Move> EnforceJumps(std::vector<Move>& moves) const;
   };
 
   class CamTakenPosition : public TakenPosition
   {
   public:
-    inline CamTakenPosition(unsigned int x, unsigned int /*y*/) noexcept :
-      TakenPosition(x == 12 ? 24 : 14, 2) {}
+    inline CamTakenPosition(unsigned int x, unsigned int /*y*/) noexcept : TakenPosition(x == 12 ? 24 : 14, 2) {}
   };
 
   

@@ -142,7 +142,7 @@ namespace BoardGamesCore
     }
 
     pos->EvaluateStatically();                                            // evaluate position statically
-    auto pl1 = plist.insert(pos);                                         // and save it
+    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist.insert(pos);                                         // and save it
     assert(pl1.second);
     return *(pl1.first);                                                  // return the pointer to the new entry
   }
