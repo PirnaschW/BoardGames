@@ -112,7 +112,7 @@ namespace BoardGamesCore
     else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
-      value = static_cast<PositionValue>(20ULL * (movelistW.size() - movelistB.size()));
+      value = static_cast<PositionValue>(GetMoveCountFactor() * (movelistW.size() - movelistB.size()));
       for (Coordinate j = 0; j < sizeY; j++)
       {
         for (Coordinate i = 0; i < sizeX; i++)                          // loop through all locations

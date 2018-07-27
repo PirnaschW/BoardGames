@@ -5,14 +5,72 @@
 
 namespace LoA
 {
-  const LoAPiece LoAPiece::LoAPieceB{ &LoAPeg::ThePeg, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-  const LoAPiece LoAPiece::LoAPieceW{ &LoAPeg::ThePeg, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
 
+  std::vector<const Piece*> LoAPeg::CollectAlong(const MainPosition& pos, Location l, const Offset& o) const
+  {
+    std::vector<const Piece*> along{};
+    const Piece* p{};
+    while ((p = pos.GetPiece(l = l + o)) != nullptr) along.push_back(p);
+    return along;
+  }
 
+  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves, int dx, int dy) const
+  {
+    unsigned int s{ pos.GetPiece(l)->IsBlank() ? 0U : 1U };
+    std::vector<const Piece*> a1 = CollectAlong(pos, l, Offset(dx, dy));
+    std::vector<const Piece*> a2 = CollectAlong(pos, l, Offset(-dx, -dy));
+
+    for (auto& p : a1) if (!p->IsBlank()) s++;
+    for (auto& p : a2) if (!p->IsBlank()) s++;
+
+    if (a1.size() >= s) // will a move even fit on the board?
+    {
+      bool free{ true };
+      for (unsigned int i = 0; free && i < s; i++)
+      {
+        if (i == s - 1) // last = target place needs to be empty or opponent's
+        {
+          if (!a1[i]->IsBlank() && a1[i]->IsColor(pos.OnTurn())) free = false;
+        }
+        else  // intermediate places need to be empty or own
+        {
+          if (!a1[i]->IsBlank() && !a1[i]->IsColor(pos.OnTurn())) free = false;
+        }
+      }
+      if (free) pos.AddIfLegal(moves, l, l + Offset(dx * s, dy*s));
+    }
+
+    if (a2.size() >= s) // will a move even fit on the board?
+    {
+      bool free{ true };
+      for (unsigned int i = 0; free && i < s; i++)
+      {
+        if (i == s - 1) // last = target place needs to be empty or opponent's
+        {
+          if (!a2[i]->IsBlank() && a2[i]->IsColor(pos.OnTurn())) free = false;
+        }
+        else  // intermediate places need to be empty or own
+        {
+          if (!a2[i]->IsBlank() && !a2[i]->IsColor(pos.OnTurn())) free = false;
+        }
+      }
+      if (free) pos.AddIfLegal(moves, l, l + Offset(-dx * s, -dy * s));
+    }
+  }
+
+  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves) const
+  {
+    CollectMoves(pos, l, moves, 1, 0); // check horizontal moves
+    CollectMoves(pos, l, moves, 0, 1); // check vertical moves
+    CollectMoves(pos, l, moves, 1, -1); // check diagonal '/' moves
+    CollectMoves(pos, l, moves, 1, 1); // check diagonal '\' moves
+  }
+
+  
   LoAPosition::LoAPosition(Coordinate x, Coordinate y) : MainPosition(x, y)
   {
-    for (unsigned int i = 0; i < x; i++)
-      for (unsigned int j = 0; j < y; j++)
+    for (Coordinate i = 0; i < x; i++)
+      for (Coordinate j = 0; j < y; j++)
       {
         if (((i == 0) || (i == x - 1)) && (j != 0) && (j != y - 1))  // left or right border, but not top or bottom corner
         {
@@ -121,9 +179,9 @@ namespace LoA
     else
     {
       value = 0;
-      for (unsigned int i = 0; i < sizeX; i++)
+      for (Coordinate i = 0; i < sizeX; i++)
       {
-        for (unsigned int j = 0; j < sizeY; j++)
+        for (Coordinate j = 0; j < sizeY; j++)
         {
           const Piece* p = GetPiece(Location{ i,j });
           if (p->IsColor(&Color::NoColor)) continue;
@@ -152,13 +210,31 @@ namespace LoA
   }
 
 
-  LoALayout::LoALayout(unsigned int x, unsigned int y) noexcept :
+  LoALayout::LoALayout(Coordinate x, Coordinate y) noexcept :
     MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
 
-  LoATakenLayout::LoATakenLayout(unsigned int x, unsigned int y) noexcept :
+  LoATakenLayout::LoATakenLayout(Coordinate x, Coordinate y) noexcept :
     TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
 
-  LoAStockLayout::LoAStockLayout(unsigned int x, unsigned int y) noexcept :
+  LoAStockLayout::LoAStockLayout(Coordinate x, Coordinate y) noexcept :
     StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
+
+
+  LoAGame::LoAGame(LoAPosition* p, TakenPosition* t, StockPosition* s,
+    LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+  {
+    AddToStock(Location(0, 0), &LoAPiece::LoAPieceW);
+    AddToStock(Location(1, 0), &LoAPiece::LoAPieceB);
+  }
+
+  LoAGame::LoAGame(Coordinate x, Coordinate y) noexcept : LoAGame(
+    new LoAPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
+    new LoALayout(x, y), new LoATakenLayout(x, y), new LoAStockLayout(x, y)) {}
+
+  const VariantList& LoAGame::GetVariants(void) noexcept
+  {
+    static VariantList v{ { Variant{ 8, 8, nullptr, 3, 20 } } };
+    return v;
+  }
 
 }

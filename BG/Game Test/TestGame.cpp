@@ -6,7 +6,7 @@
 
 namespace Test
 {
-  TestPosition::TestPosition(unsigned int x, unsigned int y) : MainPosition(x, y)
+  TestPosition::TestPosition(Coordinate x, Coordinate y) : MainPosition(x, y)
   {
     if (x == 4 and y == 4)
     {
@@ -61,7 +61,7 @@ namespace Test
   };
 
 
-  TestGame::TestGame(unsigned int x, unsigned int y) : TestGame(
+  TestGame::TestGame(Coordinate x, Coordinate y) : TestGame(
     new TestPosition(x, y), new TakenPosition(x*y / 2, 2), new StockPosition(5, 2),
     new TestLayout(x, y), new TestTakenLayout(x, y), new TestStockLayout(x, y)) {}
 

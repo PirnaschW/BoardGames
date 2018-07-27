@@ -15,10 +15,10 @@ namespace Template
   }
 
 
-  TemplatePosition::TemplatePosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
+  TemplatePosition::TemplatePosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
   {
-    for (unsigned int i = 0; i < x; i++)
-      for (unsigned int j = 0; j < y; j++)
+    for (Coordinate i = 0; i < x; i++)
+      for (Coordinate j = 0; j < y; j++)
       {
         if (((i == 0) || (i == x - 1)) && (j != 0) && (j != y - 1))  // left or right border, but not top or bottom corner
         {
@@ -48,9 +48,9 @@ namespace Template
     int v2{0};
     GetAllMoves();
 
-    for (unsigned int i = 0; i < sizeX; i++)
+    for (Coordinate i = 0; i < sizeX; i++)
     {
-      for (unsigned int j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
         const Piece* p = GetPiece(Location{i,j});
         if (p->IsColor(&Color::NoColor)) continue;

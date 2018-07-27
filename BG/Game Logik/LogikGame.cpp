@@ -18,7 +18,7 @@ namespace Logik
   LogikPiece const LogikPiece::LPiece8{&Peg<'8'>::ThePeg, &Color::NoColor, IDB_PEG8, IDB_PEG8F};
 
 
-  LLayout::LLayout(unsigned int x, unsigned int y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY))
+  LLayout::LLayout(Coordinate x, Coordinate y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY))
   {
     unsigned int z = 0;
     for (unsigned int i = 0; i < x; i++)
@@ -33,7 +33,7 @@ namespace Logik
   }
 
 
-  LStockLayout::LStockLayout(unsigned int x, unsigned int y, unsigned int z) noexcept :
+  LStockLayout::LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept :
     StockLayout(Dimension(x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * y - x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * z + 1) / 2, FieldSizeX, FieldSizeY)) {}
 
 }

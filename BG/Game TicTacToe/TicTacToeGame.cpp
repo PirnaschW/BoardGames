@@ -1,25 +1,17 @@
 #include "stdafx.h"
 
-#include "TicTacToeResource.h"
 #include "TicTacToeGame.h"
 
 namespace TicTacToe
 {
-  const TicTacToePiece TicTacToePiece::TicTacToePieceB{&Checker::TheChecker, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF};
-  const TicTacToePiece TicTacToePiece::TicTacToePieceW{&Checker::TheChecker, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF};
-
-
-  TicTacToePosition::TicTacToePosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
-  {
-  }
 
   void TicTacToePosition::GetAllMoves(void) // collect all moves
   {
     assert(movelistW.empty());
     assert(movelistB.empty());
-    for (unsigned int i = 0; i < sizeX; i++)
+    for (Coordinate i = 0; i < sizeX; i++)
     {
-      for (unsigned int j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
         const Location l{ i,j };
         const Piece* p = GetPiece(l);
@@ -34,14 +26,14 @@ namespace TicTacToe
   }
 
 
-  bool TicTacToePosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
-  {
-    assert(fr == to);                   // this game allows only placements
-    const Piece* p = GetPiece(fr);
-    if (!p->IsBlank()) return false;    // field must be empty
-    m.push_back(Step{ Field{ fr,&Piece::NoPiece }, Field{ fr,&TicTacToePiece::TicTacToePieceW },Step::StepType::Place });
-    return false;
-  };
+  //bool TicTacToePosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  //{
+  //  assert(fr == to);                   // this game allows only placements
+  //  const Piece* p = GetPiece(fr);
+  //  if (!p->IsBlank()) return false;    // field must be empty
+  //  m.push_back(Step{ Field{ fr,&Piece::NoPiece }, Field{ fr,&TicTacToePiece::TicTacToePieceW },Step::StepType::Place });
+  //  return false;
+  //};
 
   void TicTacToePosition::EvaluateStatically(void)
   {
@@ -49,9 +41,9 @@ namespace TicTacToe
     int v2{ 0 };
 
     char posi[13]{};
-    for (unsigned int j = 0; j < sizeY; j++)
+    for (Coordinate j = 0; j < sizeY; j++)
     {
-      for (unsigned int i = 0; i < sizeX; i++)  // loop through all locations
+      for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
       {
         const Location l{ i,j };
         const Piece* p = GetPiece(l);
@@ -68,9 +60,9 @@ namespace TicTacToe
     else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Tie;
     else
     {
-      for (unsigned int j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
-        for (unsigned int i = 0; i < sizeX; i++)  // loop through all locations
+        for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
         {
           const Location l{ i,j };
           const Piece* p = GetPiece(l);
@@ -108,7 +100,7 @@ namespace TicTacToe
     }
   }
 
-  unsigned int TicTacToePosition::GetValue(unsigned int z) const noexcept
+  unsigned int TicTacToePosition::GetChainValue(unsigned int z) const noexcept
   {
     switch (z)
     {
@@ -119,7 +111,22 @@ namespace TicTacToe
     }
   }
 
-  TicTacToeLayout::TicTacToeLayout(unsigned int x, unsigned int y) noexcept :
-    MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1), Layout::LayoutType::Light) {}
+
+  TicTacToeGame::TicTacToeGame(Coordinate x, Coordinate y) noexcept : TicTacToeGame(
+    new TicTacToePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
+    new TicTacToeLayout(x, y), new TicTacToeTakenLayout(x, y), new TicTacToeStockLayout(x, y)) {}
+
+  TicTacToeGame::TicTacToeGame(TicTacToePosition* p, TakenPosition* t, StockPosition* s,
+    TicTacToeLayout* l, TicTacToeTakenLayout* tl, TicTacToeStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl,true }
+  {
+    AddToStock(Location(0, 0), &TicTacToePiece::TicTacToePieceW);
+    AddToStock(Location(1, 0), &TicTacToePiece::TicTacToePieceB);
+  }
+
+  const VariantList& TicTacToeGame::GetVariants(void) noexcept
+  {
+    static VariantList v{ Variant{ 3, 3 } };
+    return v;
+  }
 
 }

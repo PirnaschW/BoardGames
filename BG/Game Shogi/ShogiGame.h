@@ -18,9 +18,9 @@ namespace Shogi
   private:
     constexpr inline Pawn(void) noexcept : Kind('p') {}
   public:
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
-    bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
+    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
 
   public:
     inline const static Pawn ThePawn{};
@@ -32,9 +32,9 @@ namespace Shogi
   private:
     constexpr inline Knight(void) noexcept : Kind('n') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 4000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 4000; }
-    bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
+    virtual bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
 
   public:
     inline const static Knight TheKnight{};
@@ -46,9 +46,9 @@ namespace Shogi
   private:
     constexpr inline Bishop(void) noexcept : Kind('b') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 8000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 8000; }
-    inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept override { return true; }  // can drop anywhere
+    virtual inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept override { return true; }  // can drop anywhere
 
   public:
     inline const static Bishop TheBishop{};
@@ -59,9 +59,9 @@ namespace Shogi
   private:
     constexpr inline Rook(void) noexcept : Kind('r') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 10000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 10000; }
-    inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept override { return true; }  // can drop anywhere
+    virtual inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept override { return true; }  // can drop anywhere
 
   public:
     inline const static Rook TheRook{};
@@ -72,9 +72,9 @@ namespace Shogi
   private:
     constexpr inline Lance(void) noexcept : Kind('l') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 3000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 3000; }
-    bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
+    virtual bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
 
   public:
     inline const static Lance TheLance{};
@@ -85,9 +85,9 @@ namespace Shogi
   private:
     constexpr inline Silver(void) noexcept : Kind('s') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 5000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 5000; }
-    inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept override { return true; }  // can drop anywhere
+    virtual inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept override { return true; }  // can drop anywhere
 
   public:
     inline const static Silver TheSilver{};
@@ -98,8 +98,8 @@ namespace Shogi
   private:
     constexpr inline Gold(void) noexcept : Kind('G') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
     static void CollectGoldMoves(const MainPosition&, const Location&, std::vector<Move>&); // enable reuse for other kinds
     inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept override { return true; }  // can drop anywhere
 
@@ -112,8 +112,8 @@ namespace Shogi
   private:
     constexpr inline King(void) noexcept : Kind('K') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 8000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 8000; }
 
   public:
     inline const static King TheKing{};
@@ -124,8 +124,8 @@ namespace Shogi
   private:
     constexpr inline PPawn(void) noexcept : Kind('P') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 7000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 7000; }
 
   public:
     inline const static PPawn ThePPawn{};
@@ -136,8 +136,8 @@ namespace Shogi
   private:
     constexpr inline PKnight(void) noexcept : Kind('N') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
 
   public:
     inline const static PKnight ThePKnight{};
@@ -148,8 +148,8 @@ namespace Shogi
   private:
     constexpr inline PBishop(void) noexcept : Kind('B') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 10000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 10000; }
 
   public:
     inline const static PBishop ThePBishop{};
@@ -160,8 +160,8 @@ namespace Shogi
   private:
     constexpr inline PRook(void) noexcept : Kind('R') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 12000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 12000; }
 
   public:
     inline const static PRook ThePRook{};
@@ -172,8 +172,8 @@ namespace Shogi
   private:
     constexpr inline PLance(void) noexcept : Kind('L') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
 
   public:
     inline const static PLance ThePLance{};
@@ -184,8 +184,8 @@ namespace Shogi
   private:
     constexpr inline PSilver(void) noexcept : Kind('S') {}
   public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    inline virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 6000; }
 
   public:
     inline const static PSilver ThePSilver{};
@@ -200,8 +200,8 @@ namespace Shogi
     ShogiPiece(const ShogiPiece&) = delete;
     ShogiPiece& operator=(const ShogiPiece&) = delete;
   public:
-    inline virtual bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
-    inline virtual const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
+    virtual inline bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
+    virtual inline const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
     inline bool CanDrop(const MainPosition* pos, const Location& l) const noexcept { return kind->CanDrop(pos,l); };
 
   private:
@@ -242,49 +242,53 @@ namespace Shogi
     inline static const ShogiPiece ShogiPNB{ &PKnight::ThePKnight, &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNB, IDB_SHOGI_PN_B, IDB_SHOGI_PN_S };
     inline static const ShogiPiece ShogiPLB{ &PLance::ThePLance,   &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_PL_B, IDB_SHOGI_PL_S };
     inline static const ShogiPiece ShogiPPB{ &PPawn::ThePPawn,     &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_PP_B, IDB_SHOGI_PP_S };
-
   };
 
 
   class ShogiPosition : public MainPosition
   {
   public:
-    ShogiPosition(unsigned int x, unsigned int y) noexcept;
-    inline virtual MainPosition* Clone(void) const override { return new ShogiPosition(*this); };
+    ShogiPosition(Coordinate x, Coordinate y) noexcept;
+    virtual inline MainPosition* Clone(void) const override { return new ShogiPosition(*this); };
     virtual void GetAllMoves(void);              // generate all moves and save list
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
-    virtual void EvaluateStatically(void) override;
 
   // extensions to base class
-  private:
-  //public:
-    inline bool CanPromote(const Location &l) const noexcept;
   public:
-    void SetTPos(TakenPosition* t) { tpos = t; }
+    inline void SetTPos(TakenPosition* t) noexcept { tpos = t; }
+  private:
+    inline bool CanPromote(const Location &l) const noexcept;
 
   private:
     TakenPosition* tpos{ nullptr };
   };
 
 
+  class ShogiTakenPosition : public TakenPosition
+  {
+  public:
+    inline ShogiTakenPosition(Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(x == 9 ? 27 : 15, 2) {}
+  };
+
+
   class ShogiLayout : public MainLayout
   {
   public:
-    inline ShogiLayout(unsigned int x, unsigned int y) noexcept :
+    inline ShogiLayout(Coordinate x, Coordinate y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
   };
 
   class ShogiTakenLayout : public TakenLayout
   {
   public:
-    inline ShogiTakenLayout(unsigned int x, unsigned int /*y*/) noexcept :
+    inline ShogiTakenLayout(Coordinate x, Coordinate /*y*/) noexcept :
       TakenLayout(Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4)) { }
   };
 
   class ShogiStockLayout : public StockLayout
   {
   public:
-    inline ShogiStockLayout(unsigned int x, unsigned int y) noexcept:
+    inline ShogiStockLayout(Coordinate x, Coordinate y) noexcept:
       StockLayout(Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY)) {}
   };
 
@@ -295,9 +299,9 @@ namespace Shogi
     ShogiGame(void) = delete;
     ShogiGame(ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
   public:
-    ShogiGame(unsigned int x, unsigned int y) noexcept;
-    inline constexpr static bool IsFull(unsigned int x, unsigned int /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
-    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 9, 9, "Shogi" },{ Variant{ 5, 5, "Mini Shogi" } } } }; return v; }
+    ShogiGame(Coordinate x, Coordinate y) noexcept;
+    inline constexpr static bool IsFull(Coordinate x, Coordinate /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
+    static const VariantList& GetVariants(void) noexcept;
   };
 
 }

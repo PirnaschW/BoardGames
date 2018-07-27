@@ -17,11 +17,11 @@ namespace Cam
   class Pawn : public Kind
   {
   private:
-    constexpr Pawn(void) noexcept : Kind('P') {}
+    constexpr inline Pawn(void) noexcept : Kind('P') {}
 
   public:
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override;
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     
   public:
     inline const static Pawn ThePawn{};
@@ -33,7 +33,7 @@ namespace Cam
     constexpr inline Knight(void) noexcept : Kind('N') {}
   public:
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override;
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     
   public:
     inline const static Knight TheKnight{};
@@ -48,64 +48,62 @@ namespace Cam
     CamPiece& operator=(const CamPiece&) = delete;
 
   public:
-    inline const static CamPiece WP{ &Pawn::ThePawn,     &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
-    inline const static CamPiece WN{ &Knight::TheKnight, &Color::White, IDB_WNL, IDB_WND, IDB_WNS };
-    inline const static CamPiece BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
-    inline const static CamPiece BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
+    inline static const CamPiece WP{ &Pawn::ThePawn,     &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
+    inline static const CamPiece WN{ &Knight::TheKnight, &Color::White, IDB_WNL, IDB_WND, IDB_WNS };
+    inline static const CamPiece BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
+    inline static const CamPiece BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
   };
 
 
   class CamPosition : public MainPosition
   {
   public:
-    CamPosition(unsigned int x, unsigned int y) noexcept;
-    inline virtual MainPosition* Clone(void) const override { return new CamPosition(*this); }
+    CamPosition(Coordinate x, Coordinate y) noexcept;
+    virtual inline MainPosition* Clone(void) const override { return new CamPosition(*this); }
     virtual void GetAllMoves(void) override;
  
     // extensions:
   public:
     bool CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const;
-  private:
-    std::vector<Move> EnforceJumps(std::vector<Move>& moves) const;
   };
 
   class CamTakenPosition : public TakenPosition
   {
   public:
-    inline CamTakenPosition(unsigned int x, unsigned int /*y*/) noexcept : TakenPosition(x == 12 ? 24 : 14, 2) {}
+    inline CamTakenPosition(Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(x == 12 ? 24 : 14, 2) {}
   };
 
   
   class CamLayout : public MainLayout
   {
   public:
-    inline CamLayout(unsigned int x, unsigned int y) noexcept :
+    inline CamLayout(Coordinate x, Coordinate y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
   };
 
   class CamTakenLayout : public TakenLayout
   {
   public:
-    inline CamTakenLayout(unsigned int x, unsigned int y) noexcept :
+    inline CamTakenLayout(Coordinate x, Coordinate y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
   };
 
   class CamStockLayout : public StockLayout
   {
   public:
-    inline CamStockLayout(unsigned int /*x*/, unsigned int y) noexcept :
+    inline CamStockLayout(Coordinate /*x*/, Coordinate y) noexcept :
       StockLayout(Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
   };
 
 
   class CamGame : public Game
   {
-  protected:
+  private:
     CamGame(void) = delete;
     CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
   public:
-    CamGame(unsigned int x, unsigned int y) noexcept;
-    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 12, 16, "Camelot" },{ Variant{ 7, 13, "Cam" }}} }; return v; }
+    CamGame(Coordinate x, Coordinate y) noexcept;
+    static const VariantList& GetVariants(void) noexcept;
   };
 
 }

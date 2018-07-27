@@ -1,14 +1,9 @@
 #include "stdafx.h"
 
-#include "HasamiResource.h"
 #include "HasamiGame.h"
 
 namespace Hasami
 {
-
-  const HasamiPiece HasamiPiece::HasamiPieceB{&Checker::TheChecker, &Color::Black, IDB_HASAMI_B, IDB_HASAMI_BS};
-  const HasamiPiece HasamiPiece::HasamiPieceW{&Checker::TheChecker, &Color::White, IDB_HASAMI_W, IDB_HASAMI_WS};
-
 
   void Checker::CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves) const
   {
@@ -36,8 +31,7 @@ namespace Hasami
 
 
   HasamiPosition::HasamiPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
-  {
-    for (Coordinate i = 0; i < x; i++)
+  {for (Coordinate i = 0; i < x; i++)
     {
       SetPiece(Location(i, 0), &HasamiPiece::HasamiPieceB);
       SetPiece(Location(i, 1), &HasamiPiece::HasamiPieceB);
@@ -51,7 +45,7 @@ namespace Hasami
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;          // out of board
     if (!p->IsBlank()) return false;         // occupied
-    Step::StepType st{Step::StepType::Normal};
+    Step::StepType st{ Step::StepType::Normal };
 
     std::vector<Field> taken{};
     for (auto& d : Offset::Rdirection)
@@ -63,7 +57,7 @@ namespace Hasami
       {
         if (pp->IsBlank()) break;           // nothing comes from this direction
         if (l == fr)                        // was this going backwards?
-        {                                   
+        {
           if (t.size() == 1)                // if something was inbetween, it was a jump
             st = Step::StepType::Jump;
           break;                            // either way, stop looking into this direction
@@ -76,8 +70,7 @@ namespace Hasami
         else t.push_back(Field(l, pp));     // opponents piece, add to potential taken list
       }
     }
-    const Step s{ Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) },st,taken };
-    m.push_back(s);
+    m.push_back(Step{ Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) },st,taken });
     return true;
   }
 
@@ -134,7 +127,7 @@ namespace Hasami
               value = w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
               return;
             }
-            (w ? v1 : v2) += GetValue(z);
+            (w ? v1 : v2) += GetChainValue(z);
           }
         }
       }
@@ -143,25 +136,34 @@ namespace Hasami
     }
   }
 
-  inline unsigned int HasamiPosition::GetValue(unsigned int z) const noexcept
+  inline unsigned int HasamiPosition::GetChainValue(unsigned int z) const noexcept
   {
     switch (z)
     {
-      case 0:  return   0;
-      case 1:  return  10;
-      case 2:  return  20;
-      case 3:  return  60;
-      case 4:  return 240;
-      default: return   0;
+      case 0:  return    0;
+      case 1:  return  100;
+      case 2:  return  200;
+      case 3:  return  600;
+      case 4:  return 2400;
+      default: return    0;
     }
   }
 
+  HasamiGame::HasamiGame(Coordinate x, Coordinate y) noexcept : HasamiGame(
+    new HasamiPosition(x, y), new HasamiTakenPosition(x, y), new StockPosition(3, 1),
+    new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
 
   HasamiGame::HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s,
     HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
   {
     AddToStock(Location(0, 0), &HasamiPiece::HasamiPieceW);
     AddToStock(Location(1, 0), &HasamiPiece::HasamiPieceB);
+  }
+
+  const VariantList& HasamiGame::GetVariants(void) noexcept
+  {
+    static VariantList v{ { Variant{ 9, 9, nullptr, 2, 20, 5, 20 } } };
+    return v;
   }
 
 }

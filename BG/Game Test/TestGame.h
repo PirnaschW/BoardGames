@@ -20,7 +20,7 @@ namespace Test
   class TestPosition : public MainPosition
   {
   public:
-    TestPosition(unsigned int x, unsigned int y);
+    TestPosition(Coordinate x, Coordinate y);
     ~TestPosition() override {}
     virtual MainPosition* Clone(void) const override { return new TestPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
@@ -30,14 +30,14 @@ namespace Test
   class TestLayout : public MainLayout
   {
   public:
-    TestLayout(unsigned int x, unsigned int y) : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
+    TestLayout(Coordinate x, Coordinate y) : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
     ~TestLayout() {}
   };
 
   class TestTakenLayout : public TakenLayout
   {
   public:
-    TestTakenLayout(unsigned int x, unsigned int y) :
+    TestTakenLayout(Coordinate x, Coordinate y) :
       TakenLayout(Dimension(x*y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
     ~TestTakenLayout() {}
   };
@@ -45,7 +45,7 @@ namespace Test
   class TestStockLayout : public StockLayout
   {
   public:
-    TestStockLayout(unsigned int /*x*/, unsigned int y) :
+    TestStockLayout(Coordinate /*x*/, Coordinate y) :
       StockLayout(Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY)) {}
     ~TestStockLayout() {}
   };
@@ -57,7 +57,7 @@ namespace Test
     TestGame(TestPosition* p, TakenPosition* t, StockPosition* s, TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl);
 
   public:
-    TestGame(unsigned int x, unsigned int y);
+    TestGame(Coordinate x, Coordinate y);
     MainPosition* GetPosition(void) { return pos; }
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 2, 4, nullptr, 2, 20 } } }; return v; }
   };

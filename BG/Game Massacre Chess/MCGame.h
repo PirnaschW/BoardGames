@@ -19,11 +19,12 @@ namespace MassacreChess
   class MCPosition : public MainPosition
   {
   public:
-    MCPosition(unsigned int x, unsigned int y);
+    MCPosition(Coordinate x, Coordinate y);
     virtual inline MainPosition* Clone(void) const override { return new MCPosition(*this); }
-    virtual void EvaluateStatically(void) override;  // calculate position value and save
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual inline unsigned int GetMoveCountFactor(void) const noexcept override { return 1000; }
 
+// extensions
   private:
     virtual bool PlaceRandomly(const Piece* p);
   };
@@ -32,14 +33,15 @@ namespace MassacreChess
   class MCLayout : public MainLayout
   {
   public:
-    MCLayout(unsigned int x, unsigned int y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
+    inline MCLayout(Coordinate x, Coordinate y) noexcept :
+      MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
   };
 
 
   class MCTakenLayout : public TakenLayout
   {
   public:
-    MCTakenLayout(unsigned int x, unsigned int y)  noexcept :
+    inline MCTakenLayout(Coordinate x, Coordinate y)  noexcept :
       TakenLayout(Dimension(x*y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
   };
 
@@ -47,7 +49,7 @@ namespace MassacreChess
   class MCStockLayout : public StockLayout
   {
   public:
-    MCStockLayout(unsigned int /*x*/, unsigned int y)  noexcept :
+    inline MCStockLayout(Coordinate /*x*/, Coordinate y)  noexcept :
       StockLayout(Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY)) {}
   };
 
@@ -55,11 +57,12 @@ namespace MassacreChess
   class MCGame : public Game
   {
   private:
-    MCGame(MCPosition* p, TakenPosition* t, StockPosition* s, MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl);
+    MCGame(void) = delete;
+    MCGame(MCPosition* p, TakenPosition* t, StockPosition* s, MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept;
 
   public:
-    MCGame(unsigned int x, unsigned int y);
-    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{8, 8, nullptr, 2, 20} } }; return v; }
+    MCGame(Coordinate x, Coordinate y) noexcept;
+    static const VariantList& GetVariants(void) noexcept;
   };
 
 }

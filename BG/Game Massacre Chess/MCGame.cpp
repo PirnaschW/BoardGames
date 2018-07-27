@@ -5,21 +5,8 @@
 
 namespace MassacreChess
 {
-  MCPosition::MCPosition(unsigned int x, unsigned int y) : MainPosition(x, y)
+  MCPosition::MCPosition(Coordinate x, Coordinate y) : MainPosition(x, y)
   {
-    if (x == 1)
-    {
-      SetPiece(Location{ 0,0 }, &ChessPiece::WR);
-      SetPiece(Location{ 0,1 }, &ChessPiece::BR);
-      SetPiece(Location{ 0,2 }, &ChessPiece::BQ);
-      SetPiece(Location{ 0,3 }, &ChessPiece::BB);
-      SetPiece(Location{ 1,2 }, &ChessPiece::WB);
-      SetPiece(Location{ 2,0 }, &ChessPiece::WN);
-      SetPiece(Location{ 3,0 }, &ChessPiece::WN);
-      SetPiece(Location{ 3,3 }, &ChessPiece::BN);
-      return;
-    }
-
     //srand((unsigned)time(NULL));
     std::srand(1);
 
@@ -54,8 +41,8 @@ namespace MassacreChess
   bool MCPosition::PlaceRandomly(const Piece* p)
   {
     std::vector<Location> ll;
-    for (unsigned int i = 0; i < sizeX; i++)
-      for (unsigned int j = 0; j < sizeY; j++)
+    for (Coordinate i = 0; i < sizeX; i++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
         const Location l{ i,j };
         if (GetPiece(l) == &Piece::NoPiece) ll.push_back(l);
@@ -66,36 +53,13 @@ namespace MassacreChess
     return true;
   }
 
-  void MCPosition::EvaluateStatically(void)   // as seen from White
-  {
-    // default evaluation: count all material, and add difference of move count. Overwrite for each game as needed
-    GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
-    else
-    {
-      value = static_cast<PositionValue>(1000ULL * (movelistW.size() - movelistB.size()));    // slightly more than a Q
-      for (unsigned int j = 0; j < sizeY; j++)
-      {
-        for (unsigned int i = 0; i < sizeX; i++)                          // loop through all locations
-        {                
-          const Location l{ i,j };
-          const Piece* p = GetPiece(l);                   
-          if (p == nullptr) continue;                                     // field does not exist
-          if (p->IsColor(&Color::NoColor)) continue;                      // nothing here
-          value += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue(*this,l);
-        }
-      }
-    }
-  }
 
-
-  MCGame::MCGame(unsigned int x, unsigned int y) : MCGame(
+  MCGame::MCGame(Coordinate x, Coordinate y) noexcept : MCGame(
     new MCPosition(x, y), new TakenPosition(x*y / 2, 2), new StockPosition(5, 2),
     new MCLayout(x, y), new MCTakenLayout(x, y), new MCStockLayout(x, y)) {}
 
   MCGame::MCGame(MCPosition* p, TakenPosition* t, StockPosition* s,
-    MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) : Game{ p,t,s,l,tl,sl }
+    MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
     AddToStock(Location(0, 0), &ChessPiece::WQ);
     AddToStock(Location(1, 0), &ChessPiece::WR);
@@ -105,9 +69,12 @@ namespace MassacreChess
     AddToStock(Location(1, 1), &ChessPiece::BR);
     AddToStock(Location(2, 1), &ChessPiece::BB);
     AddToStock(Location(3, 1), &ChessPiece::BN);
+  }
 
-    //std::string html = Util::URL::GetHTMLFromURL(R"(http://brainking.com/en/ShowGame?g=7934562)");
-    //pos->SetPosition(Piece::ListFromHTML(html, Piece::GetHTMLPieceMap()));
+  const VariantList& MCGame::GetVariants(void) noexcept
+  {
+    static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } };
+    return v;
   }
 
 }

@@ -44,7 +44,7 @@ namespace Template
   class TemplatePosition : public MainPosition
   {
   public:
-    TemplatePosition(unsigned int x, unsigned int y) noexcept;
+    TemplatePosition(Coordinate x, Coordinate y) noexcept;
     ~TemplatePosition() override {}
     virtual MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
@@ -55,14 +55,14 @@ namespace Template
   class TemplateLayout : public MainLayout
   {
   public:
-    TemplateLayout(unsigned int x, unsigned int y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
+    TemplateLayout(Coordinate x, Coordinate y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
     ~TemplateLayout() {}
   };
 
   class TemplateTakenLayout : public TakenLayout
   {
   public:
-    TemplateTakenLayout(unsigned int x, unsigned int y) noexcept :
+    TemplateTakenLayout(Coordinate x, Coordinate y) noexcept :
       TakenLayout(Dimension(x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
     ~TemplateTakenLayout() {}
   };
@@ -70,7 +70,7 @@ namespace Template
   class TemplateStockLayout : public StockLayout
   {
   public:
-    TemplateStockLayout(unsigned int x, unsigned int y) noexcept :
+    TemplateStockLayout(Coordinate x, Coordinate y) noexcept :
       StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
     ~TemplateStockLayout() {}
   };
@@ -86,7 +86,7 @@ namespace Template
       AddToStock(Location(1, 0), &TemplatePiece::TemplatePieceB);
     }
   public:
-    TemplateGame(unsigned int x, unsigned int y) noexcept : TemplateGame(
+    TemplateGame(Coordinate x, Coordinate y) noexcept : TemplateGame(
       new TemplatePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
       new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } }; return v; }

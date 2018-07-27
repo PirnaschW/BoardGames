@@ -132,7 +132,7 @@ namespace Shogi
   }
 
 
-  ShogiPosition::ShogiPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
+  ShogiPosition::ShogiPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
   {
     assert((x == 9 && y == 9) || (x == 5 && y == 5));
     if (ShogiGame::IsFull(x, y))
@@ -207,8 +207,8 @@ namespace Shogi
     MainPosition::GetAllMoves();    // standard: get moves for all pieces on the board
 
     // add all potential placement moves
-    for (unsigned int i = 0; i < sizeX; i++)
-      for (unsigned int j = 0; j < sizeY; j++)
+    for (Coordinate i = 0; i < sizeX; i++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
         const Location l{ i,j };
         if (GetPiece(l)->IsBlank())
@@ -245,36 +245,14 @@ namespace Shogi
     return pt->IsBlank();   // if free tile, keep trying this direction
   }
 
-  void ShogiPosition::EvaluateStatically(void)
-  {
-    GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
-    else
-    {
-      int v{ 0 };
-      for (unsigned int i = 0; i < sizeX; i++)
-      {
-        for (unsigned int j = 0; j < sizeY; j++)
-        {
-          const Location l{ i,j };
-          const Piece* p = GetPiece(l);
-          if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;
-          v += ((p->IsColor(OnTurn())) ? 1 : -1) * p->GetValue(*this,l);
-        }
-      }
-      value = v;
-    }
-  }
-
   //PositionValue ShogiPosition::EvaluateWin(void) const
   //{
   //  bool kw{false};
   //  bool kb{false};
 
-  //  for (unsigned int i = 0; i < sizeX; i++)
+  //  for (Coordinate i = 0; i < sizeX; i++)
   //  {
-  //    for (unsigned int j = 0; j < sizeY; j++)
+  //    for (Coordinate j = 0; j < sizeY; j++)
   //    {
   //      const Piece* p = GetPiece(Location{i,j});
   //      if ((p == &ShogiPiece::ShogiSKW)) kw = true;
@@ -295,19 +273,15 @@ namespace Shogi
   }
     
 
-  ShogiGame::ShogiGame(unsigned int x, unsigned int y) noexcept : ShogiGame(
-    new ShogiPosition(x, y),
-    IsFull(x, y) ? new TakenPosition(27, 2) : new TakenPosition(15, 2),
-    new StockPosition(15, 2),
-    new ShogiLayout(x, y),
-    new ShogiTakenLayout(x, y),
-    new ShogiStockLayout(x, y)) {}
+  ShogiGame::ShogiGame(Coordinate x, Coordinate y) noexcept : ShogiGame(
+    new ShogiPosition(x, y), new ShogiTakenPosition(x,y), new StockPosition(15, 2),
+    new ShogiLayout(x, y), new ShogiTakenLayout(x, y), new ShogiStockLayout(x, y)) {}
 
   ShogiGame::ShogiGame(
     ShogiPosition* p, TakenPosition* t, StockPosition* s,
     ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
-    p->SetTPos(t);
+    p->SetTPos(t);  // stores the Taken position inide the board position, so the move generator can access it for drops
     AddToStock(Location(0, 0), &ShogiPiece::ShogiSKW);
     AddToStock(Location(1, 0), &ShogiPiece::ShogiSGW);
     AddToStock(Location(2, 0), &ShogiPiece::ShogiSSW);
@@ -339,6 +313,12 @@ namespace Shogi
     AddToStock(Location(11, 1), &ShogiPiece::ShogiPNW);
     AddToStock(Location(12, 1), &ShogiPiece::ShogiPLW);
     AddToStock(Location(13, 1), &ShogiPiece::ShogiPPW);
+  }
+
+  const VariantList& ShogiGame::GetVariants(void) noexcept
+  {
+    static VariantList v{ { Variant{ 9, 9, "Shogi" },{ Variant{ 5, 5, "Mini Shogi" } } } };
+    return v;
   }
 
 }

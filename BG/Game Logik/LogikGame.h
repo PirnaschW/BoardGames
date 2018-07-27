@@ -375,7 +375,7 @@ namespace Logik
   class LLayout : public MainLayout
   {
   public:
-    LLayout(unsigned int x, unsigned int y) noexcept;
+    LLayout(Coordinate x, Coordinate y) noexcept;
 
   private:
     inline const TileColor* FC(unsigned int i, unsigned int j) noexcept
@@ -390,7 +390,7 @@ namespace Logik
   class LStockLayout : public StockLayout
   {
   public:
-    LStockLayout(unsigned int x, unsigned int y, unsigned int z) noexcept;
+    LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept;
   };
 
 

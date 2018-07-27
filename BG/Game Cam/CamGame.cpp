@@ -48,133 +48,7 @@ namespace Cam
   }
 
 
-  bool CamPosition::CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const
-  {
-    const Piece* p0 = s.empty() ? GetPiece(fr) : s.front().GetFr().GetPiece(); // the piece that is moving
-    assert(p0 != nullptr);
-    assert(p0 != &Piece::NoTile);
-    assert(!p0->IsBlank());
-
-    const Color* c0 = p0->GetColor();                                     // color of the piece moving
-    bool any{ false };                                                    // were any more jumps possible?
-
-    for (auto& d : Offset::Qdirection)                                    // try all eight directions
-    {
-      std::vector<Step> s1{ s };                                            // copy the previous jump sequence, so we can extend it
-      const Color* cc{ c };                                                 // color last jumped over (can switch once if charge)
-      const Location l1{ fr + d };                                          // location to jump over
-      const Location l2{ l1 + d };                                          // location to jump to
-
-      // check the jumped-over tile                                         
-      const Piece* p1 = GetPiece(l1);                                     // what is on the tile to jump over?
-      if (p1 == nullptr) continue;                                        // tile is out of board, can't jump over it
-      if (p1 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump over it
-      if (p1->IsBlank()) continue;                                        // tile is not occupied, can't jump over it
-      const Color* c1 = p1->GetColor();                                   // color of jumped-over piece
-
-      // check the jump-to tile                                           
-      const Piece* p2 = GetPiece(l2);                                     // what is on the jump-to tile
-      if (p2 == nullptr) continue;                                        // tile is out of board, can't jump there
-      if (p2 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump there
-      if (!p2->IsBlank()) continue;                                       // tile is occupied, can't jump there
-
-      // check the jump is allowed
-      if (cc == &Color::NoColor) cc = c1;                                 // first jump - either one is allowed
-      else if (cc != c1)                                                  // trying to switch jumped color
-      {
-        if (cc != c0) continue;                                           // can't switch back to jumping own pieces
-        if (!charge) continue;                                            // can't switch to enemy pieces
-      }
-
-      // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
-      bool repeat{ false };
-      for (auto& ss : s)
-      {
-        if (ss.GetFr().GetLocation() == fr && ss.GetTo().GetLocation() == l2)
-        {
-          repeat = true;  // same jump was done before
-          break;
-        }
-        if (ss.GetFr().GetLocation() == l2 && ss.GetTo().GetLocation() == fr)
-        {
-          repeat = true;  // reverse jump was done before
-          break;
-        }
-        for (const auto& t : ss.GetTake())
-        {
-          if (t.GetLocation() == l1)
-          {
-            repeat = true;  // this piece was taken before
-            break;
-          }
-        }
-      }
-      if (repeat) continue;                                               // don't allow the same move again
-
-      // a legal jump was found
-      any = true;
-      Step::StepType st{ Step::StepType::Jump };
-      std::vector<Field> f{};
-      if (c1 != c0)                                                       // jump was over an enemy piece
-      {
-        st = (Step::StepType) (Step::StepType::Jump | Step::StepType::Take);
-        f.push_back(Field{ l1,p1 });
-      }
-
-      s1.push_back(Step(Field{ fr, p0 }, Field{ l2,p0 }, st, f));         // add the jump to the step list
-
-      if (!CollectJumps(l2, s1, charge, cc, m) ||                         // collect potential further jumps
-        st == Step::StepType::Jump)
-      {
-        m.push_back(Move(s1));              // if it could not be extended, or was a jump over an own piece, add the step list as a move
-      }
-    }
-    return any;
-  }
-
-
-  std::vector<Move> CamPosition::EnforceJumps(std::vector<Move>& moves) const
-  {
-    // if there are any takes (catching opponent pieces) possible, remove all non-takes
-    bool takes{ false };
-    for (auto& m : moves) if (m.GetSteps().front().IsTake()) { takes = true; break; }
-    if (takes)
-    {
-      std::vector<Move> allowed;  // here we will collect all take-moves
-      for (auto& m : moves) if (m.IsTake()) allowed.push_back(m);
-      return allowed;
-    }
-    return moves;
-  }
-
-
-  void CamPosition::GetAllMoves(void)  // collect all moves for all pieces
-  {
-    MainPosition::GetAllMoves();
-    movelistW = EnforceJumps(movelistW);
-    movelistB = EnforceJumps(movelistB);
-  }
-
-  //PositionValue CamPosition::EvaluateWin(void) const
-  //{
-  //  bool wfree{false};
-  //  bool bfree{false};
-
-  //  for (unsigned int i = 0; i < sizeX; i++)
-  //  {
-  //    const Piece* pw = GetPiece(Location(i, 0));
-  //    const Piece* pb = GetPiece(Location(i, sizeY - 1));
-  //    if (pw != &Piece::NoTile && !pw->IsColor(&Color::White)) wfree = true;
-  //    if (pb != &Piece::NoTile && !pb->IsColor(&Color::Black)) bfree = true;
-  //  }
-
-  //  int dy = OnTurn() == &Color::White ? 1 : -1;
-  //  if (!bfree) return PositionValue::PValueType::Lost * dy;
-  //  if (!wfree) return PositionValue::PValueType::Won * dy;
-  //  return 0;
-  //}
-
-  CamPosition::CamPosition(unsigned int x, unsigned int y) noexcept : MainPosition(x, y)
+  CamPosition::CamPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
   {
     if (x == 12) // full Camelot
     {
@@ -313,7 +187,117 @@ namespace Cam
     }
   }
 
-  CamGame::CamGame(unsigned int x, unsigned int y) noexcept : CamGame(
+  bool CamPosition::CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const
+  {
+    const Piece* p0 = s.empty() ? GetPiece(fr) : s.front().GetFr().GetPiece(); // the piece that is moving
+    assert(p0 != nullptr);
+    assert(p0 != &Piece::NoTile);
+    assert(!p0->IsBlank());
+
+    const Color* c0 = p0->GetColor();                                     // color of the piece moving
+    bool any{ false };                                                    // were any more jumps possible?
+
+    for (auto& d : Offset::Qdirection)                                    // try all eight directions
+    {
+      std::vector<Step> s1{ s };                                            // copy the previous jump sequence, so we can extend it
+      const Color* cc{ c };                                                 // color last jumped over (can switch once if charge)
+      const Location l1{ fr + d };                                          // location to jump over
+      const Location l2{ l1 + d };                                          // location to jump to
+
+      // check the jumped-over tile                                         
+      const Piece* p1 = GetPiece(l1);                                     // what is on the tile to jump over?
+      if (p1 == nullptr) continue;                                        // tile is out of board, can't jump over it
+      if (p1 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump over it
+      if (p1->IsBlank()) continue;                                        // tile is not occupied, can't jump over it
+      const Color* c1 = p1->GetColor();                                   // color of jumped-over piece
+
+      // check the jump-to tile                                           
+      const Piece* p2 = GetPiece(l2);                                     // what is on the jump-to tile
+      if (p2 == nullptr) continue;                                        // tile is out of board, can't jump there
+      if (p2 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump there
+      if (!p2->IsBlank()) continue;                                       // tile is occupied, can't jump there
+
+      // check the jump is allowed
+      if (cc == &Color::NoColor) cc = c1;                                 // first jump - either one is allowed
+      else if (cc != c1)                                                  // trying to switch jumped color
+      {
+        if (cc != c0) continue;                                           // can't switch back to jumping own pieces
+        if (!charge) continue;                                            // can't switch to enemy pieces
+      }
+
+      // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
+      bool repeat{ false };
+      for (auto& ss : s)
+      {
+        if (ss.GetFr().GetLocation() == fr && ss.GetTo().GetLocation() == l2)
+        {
+          repeat = true;  // same jump was done before
+          break;
+        }
+        if (ss.GetFr().GetLocation() == l2 && ss.GetTo().GetLocation() == fr)
+        {
+          repeat = true;  // reverse jump was done before
+          break;
+        }
+        for (const auto& t : ss.GetTake())
+        {
+          if (t.GetLocation() == l1)
+          {
+            repeat = true;  // this piece was taken before
+            break;
+          }
+        }
+      }
+      if (repeat) continue;                                               // don't allow the same move again
+
+      // a legal jump was found
+      any = true;
+      Step::StepType st{ Step::StepType::Jump };
+      std::vector<Field> f{};
+      if (c1 != c0)                                                       // jump was over an enemy piece
+      {
+        st = (Step::StepType) (Step::StepType::Jump | Step::StepType::Take);
+        f.push_back(Field{ l1,p1 });
+      }
+
+      s1.push_back(Step(Field{ fr, p0 }, Field{ l2,p0 }, st, f));         // add the jump to the step list
+
+      if (!CollectJumps(l2, s1, charge, cc, m) ||                         // collect potential further jumps
+        st == Step::StepType::Jump)
+      {
+        m.push_back(Move(s1));              // if it could not be extended, or was a jump over an own piece, add the step list as a move
+      }
+    }
+    return any;
+  }
+
+  void CamPosition::GetAllMoves(void)  // collect all moves for all pieces
+  {
+    MainPosition::GetAllMoves();
+    JumpsOnly(movelistW);
+    JumpsOnly(movelistB);
+  }
+
+  //PositionValue CamPosition::EvaluateWin(void) const
+  //{
+  //  bool wfree{false};
+  //  bool bfree{false};
+
+  //  for (Coordinate i = 0; i < sizeX; i++)
+  //  {
+  //    const Piece* pw = GetPiece(Location(i, 0));
+  //    const Piece* pb = GetPiece(Location(i, sizeY - 1));
+  //    if (pw != &Piece::NoTile && !pw->IsColor(&Color::White)) wfree = true;
+  //    if (pb != &Piece::NoTile && !pb->IsColor(&Color::Black)) bfree = true;
+  //  }
+
+  //  int dy = OnTurn() == &Color::White ? 1 : -1;
+  //  if (!bfree) return PositionValue::PValueType::Lost * dy;
+  //  if (!wfree) return PositionValue::PValueType::Won * dy;
+  //  return 0;
+  //}
+
+  CamGame::CamGame(Coordinate x, Coordinate y) noexcept : CamGame(
     new CamPosition(x, y), new CamTakenPosition(x, y), new StockPosition(3, 2),
     new CamLayout(x, y), new CamTakenLayout(x, y), new CamStockLayout(x, y)) {}
 
@@ -324,6 +308,12 @@ namespace Cam
     AddToStock(Location(1, 0), &CamPiece::WP);
     AddToStock(Location(0, 1), &CamPiece::BP);
     AddToStock(Location(1, 1), &CamPiece::BN);
+  }
+
+  const VariantList& CamGame::GetVariants(void) noexcept
+  {
+    static VariantList v{ { Variant{ 12, 16, "Camelot" },{ Variant{ 7, 13, "Cam" } } } };
+    return v;
   }
 
 }

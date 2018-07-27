@@ -368,11 +368,13 @@ namespace BoardGamesCore
 
     virtual void GetAllMoves(void);              // generate all moves and save list
     virtual std::vector<Move> CollectMoves(void) const { std::vector<Move> m{}; return m; }
+    bool JumpsOnly(std::vector<Move>& moves) const noexcept;
     inline std::vector<Move>& GetMoveList(bool w) { return w ? movelistW : movelistB; }
     virtual bool AddIfLegal(std::vector<Move>&, const Location, const Location) const { return false; };
     virtual void EvaluateStatically(void);       // calculate position value and save
     virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
+    virtual inline unsigned int GetMoveCountFactor(void) const noexcept { return 20; }
     inline Depth GetDepth(void) const noexcept { return depth; }
     inline Depth SetDepth(Depth d) noexcept { return depth = d; }
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value = v.Relative(w); }
@@ -499,6 +501,7 @@ namespace BoardGamesCore
     Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl, bool pl = false) noexcept;
     virtual ~Game(void) noexcept;
     virtual void Serialize(CArchive& ar) { pos->Serialize(ar); }
+    virtual void ReadFromWWW(const std::string& gameno);
     virtual inline const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
     virtual inline void AddToStock(const Location& l, const Piece* p) noexcept { spos->SetPiece(l, p); }
     virtual inline void ShowStock(bool show) noexcept { showStock = show; }

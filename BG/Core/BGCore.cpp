@@ -103,9 +103,9 @@ namespace BoardGamesCore
 
     movelistW.reserve(20);
     movelistB.reserve(20);
-    for (unsigned int i = 0; i < sizeX; i++)
+    for (Coordinate i = 0; i < sizeX; i++)
     {
-      for (unsigned int j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY; j++)
       {
         const Piece* p = GetPiece(Location(i, j));
         assert(p != nullptr);
@@ -118,6 +118,14 @@ namespace BoardGamesCore
     }
     assert(Test::Test::TestTaken(this));
     assert(Test::Test::TestMoveUndo(this));
+  }
+
+  bool MainPosition::JumpsOnly(std::vector<Move>& moves) const noexcept
+  {
+    // if there are any takes (catching opponent pieces) possible, remove all non-takes
+    if (std::find_if(moves.begin(), moves.end(), [](const Move& m) {return m.GetSteps().front().IsTake(); }) == moves.end()) return false;
+    moves.erase(std::remove_if(moves.begin(), moves.end(), [](const Move& m) {return !m.GetSteps().front().IsTake(); }), moves.end());
+    return true;
   }
 
   void MainPosition::NextPlayer(void) noexcept
@@ -184,7 +192,7 @@ namespace BoardGamesCore
     {
       if (pp == nullptr) continue;
       if (pp->IsBlank()) continue;
-      for (unsigned int i = 0; ; i++)
+      for (Coordinate i = 0; ; i++)
       {
         const Location l{ i, player };
         if (GetPiece(l) == &Piece::NoTile)
@@ -215,6 +223,13 @@ namespace BoardGamesCore
     if (tlay != nullptr) delete tlay;
     if (slay != nullptr) delete slay;
     for (auto& p : players) delete p;
+  }
+
+  void Game::ReadFromWWW(const std::string& gameno)
+  {
+    const std::string url = R"(http://brainking.com/en/ShowGame?g=)" + gameno;
+    std::string html = URL::GetHTMLFromURL(url);
+    pos->SetPosition(Piece::ListFromHTML(html, Piece::GetHTMLPieceMap()));
   }
 
   void Game::Execute(const Move& m)

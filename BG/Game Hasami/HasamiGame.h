@@ -17,10 +17,10 @@ namespace Hasami
   class Checker : public Kind
   {
   private:
-    constexpr Checker(void) noexcept : Kind('0') {}
+    constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
+    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
 
   public:
     inline const static Checker TheChecker{};
@@ -29,16 +29,13 @@ namespace Hasami
   class HasamiPiece : public Piece
   {
   private:
-    HasamiPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline HasamiPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     HasamiPiece(const HasamiPiece&) = delete;
     HasamiPiece& operator=(const HasamiPiece&) = delete;
 
-  public:
-    ~HasamiPiece(void) override {}
-
   public:  // the pieces
-    static const HasamiPiece HasamiPieceB;
-    static const HasamiPiece HasamiPieceW;
+    inline static const HasamiPiece HasamiPieceB{ &Checker::TheChecker, &Color::Black, IDB_HASAMI_B, IDB_HASAMI_BS };
+    inline static const HasamiPiece HasamiPieceW{ &Checker::TheChecker, &Color::White, IDB_HASAMI_W, IDB_HASAMI_WS };
   };
 
 
@@ -46,13 +43,18 @@ namespace Hasami
   {
   public:
     HasamiPosition(Coordinate x, Coordinate y) noexcept;
-    ~HasamiPosition() override {}
-    virtual MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
+    virtual inline MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
 
   protected:
-    inline unsigned int GetValue(unsigned int z) const noexcept;
+    inline unsigned int GetChainValue(unsigned int z) const noexcept;
+  };
+
+  class HasamiTakenPosition : public TakenPosition
+  {
+  public:
+    inline HasamiTakenPosition(Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(2 * x, 2) {}
   };
 
 
@@ -61,7 +63,6 @@ namespace Hasami
   public:
     HasamiLayout(Coordinate x, Coordinate y) noexcept :
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-    ~HasamiLayout() {}
   };
 
   class HasamiTakenLayout : public TakenLayout
@@ -69,7 +70,6 @@ namespace Hasami
   public:
     HasamiTakenLayout(Coordinate x, Coordinate y) noexcept :
       TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    ~HasamiTakenLayout() {}
   };
 
   class HasamiStockLayout : public StockLayout
@@ -77,19 +77,17 @@ namespace Hasami
   public:
     HasamiStockLayout(Coordinate x, Coordinate y) noexcept :
       StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-    ~HasamiStockLayout() {}
   };
 
 
   class HasamiGame : public Game
   {
   private:
+    HasamiGame(void) = delete;
     HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s, HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept;
   public:
-    HasamiGame(Coordinate x, Coordinate y) noexcept : HasamiGame(
-      new HasamiPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
-      new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
-    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 9, 9, nullptr, 2, 20, 5, 20 } } }; return v; }
+    HasamiGame(Coordinate x, Coordinate y) noexcept;
+    static const VariantList& GetVariants(void) noexcept;
   };
 
 }
