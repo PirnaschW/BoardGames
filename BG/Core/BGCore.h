@@ -276,7 +276,7 @@ namespace BoardGamesCore
     inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     virtual void Serialize(CArchive& ar) const { color->Serialize(ar); kind->Serialize(ar); }
     inline void CollectMoves(const MainPosition& p, const Location l, std::vector<Move>& m) const { kind->CollectMoves(p, l, m); }
-    inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind->GetValue(p,l); }
+    virtual inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind->GetValue(p,l); }
     inline bool IsKind(const Kind& k) const noexcept { return k == *kind; }
     inline bool IsColor(const Color* c) const noexcept { return c == color; }
     inline const Color* GetColor(void) const noexcept { return color; }
@@ -359,7 +359,8 @@ namespace BoardGamesCore
     inline MainPosition(Coordinate x, Coordinate y) noexcept : Position(x, y) {}
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const = 0;
-    virtual inline bool operator ==(const MainPosition& p) const noexcept { return Position::operator==(&p); }
+    virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
+    virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + std::hash<const Color*>()(OnTurn()); }
 
     inline void SetOnTurn(const Color* c) noexcept { onTurn = c; }
     inline const Color* OnTurn(void) const noexcept { return onTurn; }

@@ -124,8 +124,9 @@ namespace BoardGamesCore
     if (true) {
       CString s;
       static char buffer[2000];
-      sprintf_s(buffer, "Depth = %d (value = %d) [PList size = %zd] free mem:%zd, sizeof(Position/MainPosition/vector<Move>) = %zd/%zd/%zd",
-        pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)), plist.size(), plist.freemem, sizeof(Position), sizeof(MainPosition),sizeof(std::vector<Move>));
+      sprintf_s(buffer, "Depth = %d (value = %d) [PList size = %zd] free mem:%zd, sizeof(Position/MainPosition/vector<Move>/Move/Step) = %zd/%zd/%zd/%zd/%zd",
+        pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)),
+        plist.size(), plist.freemem, sizeof(Position), sizeof(MainPosition),sizeof(std::vector<Move>), sizeof(Move), sizeof(Step));
       s = buffer;
       pDC->TextOutW(500, 20, s);
     }

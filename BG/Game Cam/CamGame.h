@@ -20,7 +20,7 @@ namespace Cam
     constexpr inline Pawn(void) noexcept : Kind('P') {}
 
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override;
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; };
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     
   public:
@@ -32,7 +32,7 @@ namespace Cam
   private:
     constexpr inline Knight(void) noexcept : Kind('N') {}
   public:
-    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override;
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 400; }
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     
   public:
@@ -46,6 +46,7 @@ namespace Cam
     inline CamPiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     CamPiece(const CamPiece&) = delete;
     CamPiece& operator=(const CamPiece&) = delete;
+    virtual unsigned int GetValue(const MainPosition& p, const Location l) const noexcept override;
 
   public:
     inline static const CamPiece WP{ &Pawn::ThePawn,     &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };

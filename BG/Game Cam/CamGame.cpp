@@ -4,11 +4,7 @@
 
 namespace Cam
 {
-
-  unsigned int Pawn::GetValue(const MainPosition& p, const Location l) const noexcept
-  {
-    return 100 + (p.OnTurn() == &Color::White ? -1 : +1) * l.y;
-  }
+  constexpr inline int isqr(int x) noexcept { return x * x; }
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
@@ -26,11 +22,6 @@ namespace Cam
     }
   }
 
-  unsigned int Knight::GetValue(const MainPosition& p, const Location l) const noexcept
-  {
-    return 100 + (p.OnTurn() == &Color::White ? -1 : +1) * l.y;
-  }
-
   void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     std::vector<Step> s{};
@@ -45,6 +36,12 @@ namespace Cam
       if (!p1->IsBlank()) continue;                                       // tile occupied
       moves.push_back(Step{ Field{ l,p0 }, Field{ l + d,p0 } });            // ok, so add move to move list
     }
+  }
+
+
+  unsigned int CamPiece::GetValue(const MainPosition& p, const Location l) const noexcept
+  {
+    return kind->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l.y : l.y);
   }
 
 
@@ -137,22 +134,22 @@ namespace Cam
       SetPiece(Location(4, 3), &CamPiece::BN);
 
       // Black Pawns
-      SetPiece(Location(1, 4), &CamPiece::BP);
-      SetPiece(Location(2, 4), &CamPiece::BP);
-      SetPiece(Location(3, 4), &CamPiece::BP);
-      SetPiece(Location(4, 4), &CamPiece::BP);
-      SetPiece(Location(5, 4), &CamPiece::BP);
+      //SetPiece(Location(1, 4), &CamPiece::BP);
+      //SetPiece(Location(2, 4), &CamPiece::BP);
+      //SetPiece(Location(3, 4), &CamPiece::BP);
+      //SetPiece(Location(4, 4), &CamPiece::BP);
+      //SetPiece(Location(5, 4), &CamPiece::BP);
 
       // White Knights
       SetPiece(Location(2, 9), &CamPiece::WN);
       SetPiece(Location(4, 9), &CamPiece::WN);
 
       // White Pawns
-      SetPiece(Location(1, 8), &CamPiece::WP);
-      SetPiece(Location(2, 8), &CamPiece::WP);
-      SetPiece(Location(3, 8), &CamPiece::WP);
-      SetPiece(Location(4, 8), &CamPiece::WP);
-      SetPiece(Location(5, 8), &CamPiece::WP);
+      //SetPiece(Location(1, 8), &CamPiece::WP);
+      //SetPiece(Location(2, 8), &CamPiece::WP);
+      //SetPiece(Location(3, 8), &CamPiece::WP);
+      //SetPiece(Location(4, 8), &CamPiece::WP);
+      //SetPiece(Location(5, 8), &CamPiece::WP);
 
       // Illegal tiles
       SetPiece(Location(0, 0), &Piece::NoTile);

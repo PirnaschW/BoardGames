@@ -8,7 +8,6 @@ namespace BoardGamesCore
   {
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
     assert(p != nullptr);
-    const char* emergencyMemory = new char[10000];
 
    // Test::Test::TestPosition(p);
 
@@ -42,7 +41,6 @@ namespace BoardGamesCore
       }
       catch (std::bad_alloc)
       {
-        delete[] emergencyMemory;
         throw;
       }
 
@@ -54,7 +52,6 @@ namespace BoardGamesCore
       plist.callback();
     }
 
-    delete[] emergencyMemory;
     Execute(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White));
     return true;
   }
@@ -102,7 +99,7 @@ namespace BoardGamesCore
   void MainPosition::EvaluateStatically(void)   // as seen from White
   {
     assert(movelistW.empty());
-    assert(movelistW.empty());
+    assert(movelistB.empty());
     assert(depth == 0);
 
     // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
