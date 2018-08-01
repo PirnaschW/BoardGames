@@ -31,7 +31,8 @@ namespace Hasami
 
 
   HasamiPosition::HasamiPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
-  {for (Coordinate i = 0; i < x; i++)
+  {
+    for (Coordinate i = 0; i < x; i++)
     {
       SetPiece(Location(i, 0), &HasamiPiece::HasamiPieceB);
       SetPiece(Location(i, 1), &HasamiPiece::HasamiPieceB);

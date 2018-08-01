@@ -17,10 +17,9 @@ namespace Template
   class Checker : public Kind
   {
   private:
-    constexpr Checker(void) noexcept : Kind('0') {}
+    constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
-    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 5000; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
 
   public:
     inline const static Checker TheChecker{};
@@ -29,24 +28,23 @@ namespace Template
   class TemplatePiece : public Piece
   {
   private:
-    TemplatePiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline TemplatePiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     TemplatePiece(const TemplatePiece&) = delete;
     TemplatePiece& operator=(const TemplatePiece&) = delete;
   public:
     ~TemplatePiece(void) override {}
 
   public:
-    static const TemplatePiece TemplatePieceB;
-    static const TemplatePiece TemplatePieceW;
+    inline static const TemplatePiece TemplatePieceB{ &Checker::TheChecker, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
+    inline static const TemplatePiece TemplatePieceW{ &Checker::TheChecker, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
   };
 
 
   class TemplatePosition : public MainPosition
   {
   public:
-    TemplatePosition(Coordinate x, Coordinate y) noexcept;
-    ~TemplatePosition() override {}
-    virtual MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
+    inline TemplatePosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y) {}
+    virtual inline MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
   };
@@ -55,41 +53,34 @@ namespace Template
   class TemplateLayout : public MainLayout
   {
   public:
-    TemplateLayout(Coordinate x, Coordinate y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-    ~TemplateLayout() {}
+    inline TemplateLayout(Coordinate x, Coordinate y) noexcept : 
+      MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
   };
 
   class TemplateTakenLayout : public TakenLayout
   {
   public:
-    TemplateTakenLayout(Coordinate x, Coordinate y) noexcept :
+    inline TemplateTakenLayout(Coordinate x, Coordinate y) noexcept :
       TakenLayout(Dimension(x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    ~TemplateTakenLayout() {}
   };
 
   class TemplateStockLayout : public StockLayout
   {
   public:
-    TemplateStockLayout(Coordinate x, Coordinate y) noexcept :
+    inline TemplateStockLayout(Coordinate x, Coordinate y) noexcept :
       StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-    ~TemplateStockLayout() {}
   };
 
 
   class TemplateGame : public Game
   {
   private:
-    TemplateGame(TemplatePosition* p, TakenPosition* t, StockPosition* s,
-      TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
-    {
-      AddToStock(Location(0, 0), &TemplatePiece::TemplatePieceW);
-      AddToStock(Location(1, 0), &TemplatePiece::TemplatePieceB);
-    }
+    TemplateGame(void) = delete;
+    TemplateGame(TemplatePosition* p, TakenPosition* t, StockPosition* s, TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept;
+
   public:
-    TemplateGame(Coordinate x, Coordinate y) noexcept : TemplateGame(
-      new TemplatePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
-      new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
-    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } }; return v; }
+    TemplateGame(Coordinate x, Coordinate y) noexcept;
+    static const VariantList& GetVariants(void) noexcept;
   };
 
 }

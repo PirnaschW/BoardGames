@@ -1,35 +1,9 @@
 #include "stdafx.h"
 
-#include "TemplateResource.h"
 #include "TemplateGame.h"
 
 namespace Template
 {
-  const TemplatePiece TemplatePiece::TemplatePieceB{&Checker::TheChecker, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF};
-  const TemplatePiece TemplatePiece::TemplatePieceW{&Checker::TheChecker, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF};
-
-
-  void Checker::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
-  {
-    p.AddIfLegal(moves, l, l + Offset(+1, +1));
-  }
-
-
-  TemplatePosition::TemplatePosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
-  {
-    for (Coordinate i = 0; i < x; i++)
-      for (Coordinate j = 0; j < y; j++)
-      {
-        if (((i == 0) || (i == x - 1)) && (j != 0) && (j != y - 1))  // left or right border, but not top or bottom corner
-        {
-          SetPiece(Location(i, j), &TemplatePiece::TemplatePieceW);
-        }
-        else if (((j == 0) || (j == y - 1)) && (i != 0) && (i != x - 1))  // top or bottom border, but not left or right corner
-        {
-          SetPiece(Location(i, j), &TemplatePiece::TemplatePieceB);
-        }
-      }
-  }
 
   bool TemplatePosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {
@@ -38,27 +12,32 @@ namespace Template
     if (p->IsColor(OnTurn())) return false;  // own piece
 
     const Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
-    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(to)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
+    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
     return false;
   };
 
   void TemplatePosition::EvaluateStatically(void)
   {
-    int v1{0};
-    int v2{0};
-    GetAllMoves();
+    MainPosition::EvaluateStatically();
+    // ...
+  }
 
-    for (Coordinate i = 0; i < sizeX; i++)
-    {
-      for (Coordinate j = 0; j < sizeY; j++)
-      {
-        const Piece* p = GetPiece(Location{i,j});
-        if (p->IsColor(&Color::NoColor)) continue;
-        if (p->IsColor(OnTurn())) v1 += 1;
-        else v2 += 1;
-      }
-    }
-    value = v1 - v2;
+
+  TemplateGame::TemplateGame(Coordinate x, Coordinate y) noexcept : TemplateGame(
+    new TemplatePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
+    new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
+
+  TemplateGame::TemplateGame(TemplatePosition* p, TakenPosition* t, StockPosition* s,
+    TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+  {
+    AddToStock(Location(0, 0), &TemplatePiece::TemplatePieceW);
+    AddToStock(Location(1, 0), &TemplatePiece::TemplatePieceB);
+  }
+
+  const VariantList& TemplateGame::GetVariants(void) noexcept
+  {
+    static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } };
+    return v;
   }
 
 }

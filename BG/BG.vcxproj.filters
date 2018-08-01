@@ -145,6 +145,18 @@
     <Filter Include="Util\Source Files">
       <UniqueIdentifier>{f4999c97-72db-4733-b3e8-f3937e2d6891}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Checkers">
+      <UniqueIdentifier>{20d4971f-88e2-44e8-b296-81036dc3ec4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Checkers\Header Files">
+      <UniqueIdentifier>{5fa8bf56-b836-42e3-88da-b05fdb663b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Checkers\Resource Files">
+      <UniqueIdentifier>{ca2cff44-218d-4f6e-95d5-60771c6f687b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Checkers\Source Files">
+      <UniqueIdentifier>{6a958c18-2aef-4981-9d35-8339ce32203b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h">
@@ -243,6 +255,12 @@
     <ClInclude Include="BGSelect.h">
       <Filter>BG\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game Checkers\CheckersGame.h">
+      <Filter>Game Checkers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Checkers\CheckersResource.h">
+      <Filter>Game Checkers\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
@@ -314,6 +332,9 @@
     <ClCompile Include="Util\ClipBoard.cpp">
       <Filter>Util\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game Checkers\CheckersGame.cpp">
+      <Filter>Game Checkers\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\BG.rc2">
@@ -351,6 +372,9 @@
     </None>
     <None Include="Game TicTacToe\TicTacToe.rc2">
       <Filter>Game TicTacToe\Resource Files</Filter>
+    </None>
+    <None Include="Game Checkers\Checkers.rc2">
+      <Filter>Game Checkers\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -604,6 +628,9 @@
     </Image>
     <Image Include="Game TicTacToe\res\TicTacToeDoc.ico">
       <Filter>Game TicTacToe\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Checkers\res\CheckersDoc.ico">
+      <Filter>Game Checkers\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

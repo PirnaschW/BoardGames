@@ -3,12 +3,13 @@
 
 // this code is in a separate file as it needs to include all games' includes, and will therefore be compiled often
 
+#include "Game Cam\CamGame.h"
+#include "Game Checkers\CheckersGame.h"
+#include "Game Hasami\HasamiGame.h"
 #include "Game LoA\LoAGame.h"
 #include "Game Logik\LogikGame.h"
 #include "Game Massacre Chess\MCGame.h"
-#include "Game Cam\CamGame.h"
 #include "Game Shogi\ShogiGame.h"
-#include "Game Hasami\HasamiGame.h"
 #include "Game TicTacToe\TicTacToeGame.h"
 #include "Game Template\TemplateGame.h"
 #include "Game Test\TestGame.h"
@@ -16,6 +17,7 @@
 void BGSelect::AddGames(void)
 {
   AddGame(IDR_GAMETYPE_CAMELOT);
+  AddGame(IDR_GAMETYPE_CHECKERS);
   AddGame(IDR_GAMETYPE_HASAMI);
   AddGame(IDR_GAMETYPE_LOA);
   AddGame(IDR_GAMETYPE_LOGIK);
@@ -31,6 +33,7 @@ const BoardGamesCore::VariantList& BGSelect::GetVariants(int id) const
   switch (id)
   {
     case IDR_GAMETYPE_CAMELOT:    return Variants<Cam::CamGame>::GetVariants();
+    case IDR_GAMETYPE_CHECKERS:   return Variants<Checkers::CheckersGame>::GetVariants();
     case IDR_GAMETYPE_HASAMI:     return Variants<Hasami::HasamiGame>::GetVariants();
     case IDR_GAMETYPE_LOA:        return Variants<LoA::LoAGame>::GetVariants();
     case IDR_GAMETYPE_LOGIK:      return Variants<Logik::LGame<8, 5, 7>>::GetVariants();
@@ -52,6 +55,7 @@ BoardGamesCore::Game* BGSelect::CreateGame(void)
     switch (m_game_id)
     {
       case IDR_GAMETYPE_CAMELOT:    return new Cam::CamGame(m_size_x, m_size_y);
+      case IDR_GAMETYPE_CHECKERS:   return new Checkers::CheckersGame(m_size_x, m_size_y);
       case IDR_GAMETYPE_HASAMI:     return new Hasami::HasamiGame(m_size_x, m_size_y);
       case IDR_GAMETYPE_LOA:        return new LoA::LoAGame(m_size_x, m_size_y);
       case IDR_GAMETYPE_LOGIK:      return new Logik::LGame<Logik::PegColors, Logik::PegCount, Logik::MaxTries>();

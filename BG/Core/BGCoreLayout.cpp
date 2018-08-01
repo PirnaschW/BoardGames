@@ -37,13 +37,10 @@ namespace BoardGamesCore
         const TileColor* f{};
         switch (ltype)
         {
-          case LayoutType::Light: f = &TileColor::Light; break;
-          case LayoutType::Dark:  f = &TileColor::Dark;  break;
-          case LayoutType::Small: f = &TileColor::Small; break;
-          case LayoutType::Alternating:
-            if ((i + j) % 2) f = &TileColor::Light;
-            else f = &TileColor::Dark;
-            break;
+          case LayoutType::Light:       f = &TileColor::Light;                                     break;
+          case LayoutType::Dark:        f = &TileColor::Dark;                                      break;
+          case LayoutType::Small:       f = &TileColor::Small;                                     break;
+          case LayoutType::Alternating: f = ((i + j) % 2) ? &TileColor::Dark : &TileColor::Light;  break;
         }
 
         const CRect r{

@@ -242,6 +242,8 @@
     <ClInclude Include="Core\BGCoreResource.h" />
     <ClInclude Include="Game Cam\CamGame.h" />
     <ClInclude Include="Game Cam\CamResource.h" />
+    <ClInclude Include="Game Checkers\CheckersGame.h" />
+    <ClInclude Include="Game Checkers\CheckersResource.h" />
     <ClInclude Include="Game Hasami\HasamiGame.h" />
     <ClInclude Include="Game Hasami\HasamiResource.h" />
     <ClInclude Include="Game LoA\LoAGame.h" />
@@ -276,6 +278,7 @@
     <ClCompile Include="Core\BGCoreAI.cpp" />
     <ClCompile Include="Core\BGCoreLayout.cpp" />
     <ClCompile Include="Game Cam\CamGame.cpp" />
+    <ClCompile Include="Game Checkers\CheckersGame.cpp" />
     <ClCompile Include="Game Hasami\HasamiGame.cpp" />
     <ClCompile Include="Game LoA\LoAGame.cpp" />
     <ClCompile Include="Game Logik\LogikGame.cpp" />
@@ -298,6 +301,7 @@
     <None Include="BG.reg" />
     <None Include="Core\Core.rc2" />
     <None Include="Game Cam\Cam.rc2" />
+    <None Include="Game Checkers\Checkers.rc2" />
     <None Include="Game Hasami\Hasami.rc2" />
     <None Include="Game LoA\LoA.rc2" />
     <None Include="Game Logik\Logik.rc2" />
@@ -352,6 +356,7 @@
     <Image Include="Core\res\xxl.bmp" />
     <Image Include="Game Cam\res\CamDoc.ico" />
     <Image Include="Game Cam\res\CamelotDoc.ico" />
+    <Image Include="Game Checkers\res\CheckersDoc.ico" />
     <Image Include="Game Hasami\res\HasamiB.bmp" />
     <Image Include="Game Hasami\res\HasamiBs.bmp" />
     <Image Include="Game Hasami\res\HasamiDoc.ico" />
