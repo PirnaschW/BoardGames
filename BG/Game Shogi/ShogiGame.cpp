@@ -30,6 +30,7 @@ namespace Shogi
   {
     return (pos->OnTurn() == &Color::White) ? (l.y < pos->GetSizeY() - 1) : (l.y > 1);   // drop anywhere except last row
   }
+
   void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
@@ -40,20 +41,17 @@ namespace Shogi
   {
     return (pos->OnTurn() == &Color::White) ? (l.y < pos->GetSizeY() - 2) : (l.y > 2);   // drop anywhere except last two rows
   }
+
   void Bishop::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, -z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, +z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, -z)); z++);
+    for (auto& d : Offset::Bdirection)
+      for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
   void Rook::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+0, +z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+0, -z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +0)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, +0)); z++);
+    for (auto& d : Offset::Rdirection)
+      for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
   void Silver::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
@@ -83,49 +81,41 @@ namespace Shogi
 
   void King::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    p.AddIfLegal(moves, l, l + Offset(+1, +1));
-    p.AddIfLegal(moves, l, l + Offset(+1, -1));
-    p.AddIfLegal(moves, l, l + Offset(-1, +1));
-    p.AddIfLegal(moves, l, l + Offset(-1, -1));
-    p.AddIfLegal(moves, l, l + Offset(+0, +1));
-    p.AddIfLegal(moves, l, l + Offset(+0, -1));
-    p.AddIfLegal(moves, l, l + Offset(+1, +0));
-    p.AddIfLegal(moves, l, l + Offset(-1, +0));
+    for (auto& d : Offset::Qdirection)
+      p.AddIfLegal(moves, l, l + d);
   }
+
   void PPawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
+
   void PLance::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
+
   void PKnight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
+
   void PBishop::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    p.AddIfLegal(moves, l, l + Offset(+1, +0));
-    p.AddIfLegal(moves, l, l + Offset(-1, +0));
-    p.AddIfLegal(moves, l, l + Offset(+0, +1));
-    p.AddIfLegal(moves, l, l + Offset(+0, -1));
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, -z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, +z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, -z)); z++);
+    for (auto& d : Offset::Bdirection)
+      for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
+    for (auto& d : Offset::Rdirection)
+      p.AddIfLegal(moves, l, l + d);
   }
+
   void PRook::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
-    p.AddIfLegal(moves, l, l + Offset(+1, +1));
-    p.AddIfLegal(moves, l, l + Offset(-1, +1));
-    p.AddIfLegal(moves, l, l + Offset(-1, -1));
-    p.AddIfLegal(moves, l, l + Offset(+1, -1));
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+0, +z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+0, -z)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +0)); z++);
-    for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, -0)); z++);
+    for (auto& d : Offset::Rdirection)
+      for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
+    for (auto& d : Offset::Bdirection)
+      p.AddIfLegal(moves, l, l + d);
   }
+
   void PSilver::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
@@ -233,10 +223,10 @@ namespace Shogi
     const ShogiPiece* pf = dynamic_cast<const ShogiPiece*>(GetPiece(fr));
 
     Step::StepType st = pt->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
-    if (pf->CanDrop(this, to))  // 'can drop' is also 'can move there'
-    {
+//    if (pf->CanDrop(this, to))  // 'can drop' is also 'can move there'
+//    {
       m.push_back(Step{ Field{fr,pf}, Field{to,pf},st,std::vector<Field>{Field{to,pt}} });
-    }
+//    }
     if ((CanPromote(fr) || CanPromote(to)) && GetPiece(fr)->IsPromotable())
     {
       st = static_cast<Step::StepType>(st | Step::StepType::Promote);

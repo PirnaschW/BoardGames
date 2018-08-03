@@ -4,6 +4,37 @@
 
 namespace Checkers
 {
+
+  void Checker::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  {
+    const int dy = p.OnTurn() == &Color::White ? -1 : 1;
+    p.AddIfLegal(moves, l, l + Offset(1, dy));
+    p.AddIfLegal(moves, l, l + Offset(-1, dy));
+  }
+
+
+  void King::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  {
+    const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
+    for (auto& d : Offset::Bdirection)
+    {
+      pos.AddIfLegal(moves, l, l + d);  // check for slide moves
+      pos.AddIfLegalJump(moves, l, d);  // check for jump moves
+    }
+  }
+
+
+  void Queen::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  {
+    const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
+    for (auto& d : Offset::Bdirection)
+    {
+      for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);    // check for slide moves
+      for (int z = 1; pos.AddIfLegalJump(moves, l, d * z); z++);    // check for jump moves
+    }
+  }
+
+
   CheckersPosition::CheckersPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
   {
     for (Coordinate j = 0; j < y / 2 - 1; j++)
@@ -25,7 +56,19 @@ namespace Checkers
     const Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
     m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
     return false;
-  };
+  }
+
+
+  bool CheckersPosition::AddIfLegalJump(std::vector<Move>& m, const Location fr, const Offset d) const
+  {
+    const Piece* p = GetPiece(fr + d);
+    if (p == nullptr) return false;  // out of board
+    if (p->IsColor(OnTurn())) return false;  // own piece
+
+    const Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
+    m.push_back(Step{ Field{ fr,GetPiece(fr) }, Field{ fr + d,GetPiece(fr) },st,std::vector<Field>{Field{ fr + d,GetPiece(fr + d) }} });
+    return false;
+  }
 
   void CheckersPosition::EvaluateStatically(void)
   {

@@ -20,6 +20,7 @@ namespace Checkers
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
 
   public:
     inline const static Checker TheChecker{};
@@ -31,6 +32,7 @@ namespace Checkers
     constexpr inline King(void) noexcept : Kind('K') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
 
   public:
     inline const static King TheKing{};
@@ -42,6 +44,7 @@ namespace Checkers
     constexpr inline Queen(void) noexcept : Kind('K') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
 
   public:
     inline const static Queen TheQueen{};
@@ -59,10 +62,10 @@ namespace Checkers
   public:
     inline static const CheckersPiece CheckersPieceB{ &Checker::TheChecker, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
     inline static const CheckersPiece CheckersPieceW{ &Checker::TheChecker, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
-    inline static const CheckersPiece CheckersKingB{  &Checker::TheKing, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-    inline static const CheckersPiece CheckersKingW{  &Checker::TheKing, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
-    inline static const CheckersPiece CheckersQueenB{ &Checker::TheQueen, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-    inline static const CheckersPiece CheckersQueenW{ &Checker::TheQueen, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
+    inline static const CheckersPiece CheckersKingB{  &King::TheKing, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
+    inline static const CheckersPiece CheckersKingW{  &King::TheKing, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
+    inline static const CheckersPiece CheckersQueenB{ &Queen::TheQueen, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
+    inline static const CheckersPiece CheckersQueenW{ &Queen::TheQueen, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
   };
 
 
@@ -73,6 +76,9 @@ namespace Checkers
     virtual inline MainPosition* Clone(void) const override { return new CheckersPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
+// extensions
+  public:
+    bool AddIfLegalJump(std::vector<Move>& m, const Location fr, const Offset d) const;
   };
 
 
