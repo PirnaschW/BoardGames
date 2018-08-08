@@ -78,7 +78,7 @@ namespace Checkers
     virtual void EvaluateStatically(void) override;
 // extensions
   public:
-    bool AddIfLegalJump(std::vector<Move>& m, const Location fr, const Offset d) const;
+    bool AddIfLegalJump(std::vector<Move>& m, std::vector<Step>& s, const Location fr, const Offset d) const;
   };
 
 

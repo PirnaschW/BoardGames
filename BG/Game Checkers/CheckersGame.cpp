@@ -19,7 +19,7 @@ namespace Checkers
     for (auto& d : Offset::Bdirection)
     {
       pos.AddIfLegal(moves, l, l + d);  // check for slide moves
-      pos.AddIfLegalJump(moves, l, d);  // check for jump moves
+      pos.AddIfLegalJump(moves, std::vector<Step>{}, l, d);  // check for jump moves
     }
   }
 
@@ -29,9 +29,9 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
     {
-      for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);    // check for slide moves
-      for (int z = 1; pos.AddIfLegalJump(moves, l, d * z); z++);    // check for jump moves
+      for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
     }
+    pos.AddIfLegalJump(moves, std::vector<Step>{}, l);                    // check for jump moves
   }
 
 
@@ -59,14 +59,18 @@ namespace Checkers
   }
 
 
-  bool CheckersPosition::AddIfLegalJump(std::vector<Move>& m, const Location fr, const Offset d) const
+  bool CheckersPosition::AddIfLegalJump(std::vector<Move>& m, std::vector<Step>& s, const Location fr, const Offset d) const
   {
-    const Piece* p = GetPiece(fr + d);
-    if (p == nullptr) return false;  // out of board
-    if (p->IsColor(OnTurn())) return false;  // own piece
+    const Piece* p1 = GetPiece(fr + d);
+    if (p1 == nullptr) return false;  // out of board
+    if (p1->IsBlank()) return false;  // can't jump blanks
+    if (p1->IsColor(OnTurn())) return false;  // own piece
 
-    const Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
-    m.push_back(Step{ Field{ fr,GetPiece(fr) }, Field{ fr + d,GetPiece(fr) },st,std::vector<Field>{Field{ fr + d,GetPiece(fr + d) }} });
+    const Piece* p2 = GetPiece(fr + d * 2);
+    if (p1 == nullptr) return false;  // out of board
+    if (!p1->IsBlank()) return false;  // needs to be free
+
+    m.push_back(Step{ Field{ fr,GetPiece(fr) }, Field{ fr + d * 2,GetPiece(fr) },Step::StepType::Jump | Step::StepType::Take,std::vector<Field>{Field{ fr + d,GetPiece(fr + d) }} });
     return false;
   }
 
