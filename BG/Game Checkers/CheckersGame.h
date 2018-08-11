@@ -75,10 +75,11 @@ namespace Checkers
     CheckersPosition(Coordinate x, Coordinate y) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new CheckersPosition(*this); }
     virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual void GetAllMoves(void) override;
     virtual void EvaluateStatically(void) override;
 // extensions
   public:
-    bool AddIfLegalJump(std::vector<Move>& m, std::vector<Step>& s, const Location fr, const Offset d) const;
+    bool AddIfLegalJump(std::vector<Move>& m, const std::vector<Step>& s, const Location fr) const;
   };
 
 
