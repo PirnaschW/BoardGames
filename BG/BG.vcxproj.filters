@@ -530,18 +530,6 @@
     <Image Include="Game Massacre Chess\res\Massacre ChessDoc.ico">
       <Filter>Game Massacre Chess\Resource Files</Filter>
     </Image>
-    <Image Include="Game LoA\res\LoAPegB.bmp">
-      <Filter>Game LoA\Resource Files</Filter>
-    </Image>
-    <Image Include="Game LoA\res\LoAPegBf.bmp">
-      <Filter>Game LoA\Resource Files</Filter>
-    </Image>
-    <Image Include="Game LoA\res\LoAPegW.bmp">
-      <Filter>Game LoA\Resource Files</Filter>
-    </Image>
-    <Image Include="Game LoA\res\LoAPegWf.bmp">
-      <Filter>Game LoA\Resource Files</Filter>
-    </Image>
     <Image Include="Game Logik\res\LogikPeg1.bmp">
       <Filter>Game Logik\Resource Files</Filter>
     </Image>
@@ -631,6 +619,24 @@
     </Image>
     <Image Include="Game Checkers\res\CheckersDoc.ico">
       <Filter>Game Checkers\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\CheckerBD.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\CheckerBL.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\CheckerBS.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\CheckerWD.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\CheckerWL.bmp">
+      <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Core\res\CheckerWS.bmp">
+      <Filter>Core\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

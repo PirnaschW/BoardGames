@@ -36,8 +36,16 @@
 #define IDB_BRS                         454
 #define IDB_BQS                         455
 #define IDB_BKS                         456
-#define IDB_P_0                         460
-#define IDB_P_1                         461
-#define IDB_P_2                         462
-#define IDB_P_1S                        463
-#define IDB_P_1R                        464
+
+#define IDB_WCL                         457
+#define IDB_WCD                         458
+#define IDB_WCS                         459
+#define IDB_BCL                         460
+#define IDB_BCD                         461
+#define IDB_BCS                         462
+
+#define IDB_P_0                         470
+#define IDB_P_1                         471
+#define IDB_P_2                         472
+#define IDB_P_1S                        473
+#define IDB_P_1R                        474

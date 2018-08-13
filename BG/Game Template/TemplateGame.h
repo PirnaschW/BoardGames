@@ -28,15 +28,15 @@ namespace Template
   class TemplatePiece : public Piece
   {
   private:
-    inline TemplatePiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline TemplatePiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     TemplatePiece(const TemplatePiece&) = delete;
     TemplatePiece& operator=(const TemplatePiece&) = delete;
   public:
     ~TemplatePiece(void) override {}
 
   public:
-    inline static const TemplatePiece TemplatePieceB{ &Checker::TheChecker, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-    inline static const TemplatePiece TemplatePieceW{ &Checker::TheChecker, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
+    inline static const TemplatePiece TemplatePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
+    inline static const TemplatePiece TemplatePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
   };
 
 

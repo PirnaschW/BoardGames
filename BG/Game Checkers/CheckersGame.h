@@ -60,12 +60,12 @@ namespace Checkers
     ~CheckersPiece(void) override {}
 
   public:
-    inline static const CheckersPiece CheckersPieceB{ &Checker::TheChecker, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-    inline static const CheckersPiece CheckersPieceW{ &Checker::TheChecker, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
-    inline static const CheckersPiece CheckersKingB{  &King::TheKing, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-    inline static const CheckersPiece CheckersKingW{  &King::TheKing, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
-    inline static const CheckersPiece CheckersQueenB{ &Queen::TheQueen, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-    inline static const CheckersPiece CheckersQueenW{ &Queen::TheQueen, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
+    inline static const CheckersPiece CheckersPieceW{ &Checker::TheChecker, &Color::White, IDB_WCD, IDB_WCS };
+    inline static const CheckersPiece CheckersPieceB{ &Checker::TheChecker, &Color::Black, IDB_BCD, IDB_BCS };
+    inline static const CheckersPiece CheckersKingW{  &King::TheKing,       &Color::White, IDB_WKD, IDB_WKS };
+    inline static const CheckersPiece CheckersKingB{  &King::TheKing,       &Color::Black, IDB_BKD, IDB_BKS };
+    inline static const CheckersPiece CheckersQueenW{ &Queen::TheQueen,     &Color::White, IDB_WQD, IDB_WQS };
+    inline static const CheckersPiece CheckersQueenB{ &Queen::TheQueen,     &Color::Black, IDB_BQD, IDB_BQS };
   };
 
 

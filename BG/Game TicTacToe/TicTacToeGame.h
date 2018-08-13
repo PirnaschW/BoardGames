@@ -28,13 +28,13 @@ namespace TicTacToe
   class TicTacToePiece : public Piece
   {
   private:
-    inline TicTacToePiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline TicTacToePiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     TicTacToePiece(const TicTacToePiece&) = delete;
     TicTacToePiece& operator=(const TicTacToePiece&) = delete;
 
   public:
-    inline static const TicTacToePiece TicTacToePieceB{ &Checker::TheChecker, &Color::Black, IDB_LOAPEGB, IDB_LOAPEGBF };
-    inline static const TicTacToePiece TicTacToePieceW{ &Checker::TheChecker, &Color::White, IDB_LOAPEGW, IDB_LOAPEGWF };
+    inline static const TicTacToePiece TicTacToePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+    inline static const TicTacToePiece TicTacToePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
   };
 
 

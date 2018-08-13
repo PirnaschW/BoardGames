@@ -334,6 +334,12 @@
     <Image Include="Core\res\brd.bmp" />
     <Image Include="Core\res\brl.bmp" />
     <Image Include="Core\res\brs.bmp" />
+    <Image Include="Core\res\CheckerBD.bmp" />
+    <Image Include="Core\res\CheckerBL.bmp" />
+    <Image Include="Core\res\CheckerBS.bmp" />
+    <Image Include="Core\res\CheckerWD.bmp" />
+    <Image Include="Core\res\CheckerWL.bmp" />
+    <Image Include="Core\res\CheckerWS.bmp" />
     <Image Include="Core\res\wbd.bmp" />
     <Image Include="Core\res\wbl.bmp" />
     <Image Include="Core\res\wbs.bmp" />
@@ -363,10 +369,6 @@
     <Image Include="Game Hasami\res\HasamiW.bmp" />
     <Image Include="Game Hasami\res\HasamiWs.bmp" />
     <Image Include="Game LoA\res\LoADoc.ico" />
-    <Image Include="Game LoA\res\LoAPegB.bmp" />
-    <Image Include="Game LoA\res\LoAPegBf.bmp" />
-    <Image Include="Game LoA\res\LoAPegW.bmp" />
-    <Image Include="Game LoA\res\LoAPegWf.bmp" />
     <Image Include="Game Logik\res\LogikDoc.ico" />
     <Image Include="Game Logik\res\LogikPeg1.bmp" />
     <Image Include="Game Logik\res\LogikPeg1f.bmp" />
