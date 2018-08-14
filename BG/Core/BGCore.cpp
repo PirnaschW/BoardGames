@@ -175,13 +175,13 @@ namespace BoardGamesCore
   void MainPosition::Undo(const Move& m)
   {
     const std::vector<Step> step = m.GetSteps();
-    SetPiece(m.GetFr().GetLocation(), m.GetFr().GetPiece());              // put the piece back on the starting field
     SetPiece(m.GetTo().GetLocation(), &Piece::NoPiece);                   // empty the target field
     for (auto& s : step)                                                  // for all steps
     {
       const std::vector<Field>& take = s.GetTake();
       for (auto& t : take) SetPiece(t.GetLocation(), t.GetPiece());       // Put the taken piece(s) back on the board
     }
+    SetPiece(m.GetFr().GetLocation(), m.GetFr().GetPiece());              // put the piece back on the starting field
     PreviousPlayer();                                                     // after the undo, it's the previous player's turn
   }
 

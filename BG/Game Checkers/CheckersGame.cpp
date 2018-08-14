@@ -65,7 +65,8 @@ namespace Checkers
 
   bool CheckersPosition::AddIfLegalJump(std::vector<Move>& m, const std::vector<Step>& s, const Location fr) const
   {
-    const Piece* p0 = s.empty() ? GetPiece(fr) : s.front().GetFr().GetPiece(); // the piece that is moving
+    const Location l0{ s.empty() ? fr : s.front().GetFr().GetLocation() };
+    const Piece* p0 = GetPiece(l0);                                       // the piece that is moving
     assert(p0 != nullptr);
     assert(p0 != &Piece::NoTile);
     assert(!p0->IsBlank());
@@ -78,7 +79,7 @@ namespace Checkers
       {
         const Location l1{ fr + d * z1 };                                 // location to jump over
      // check the jumped-over tile                                       
-        const Piece* p1 = GetPiece(l1);                                   // what is on the tile to jump over?
+        const Piece* p1{ l1 == l0 ? &Piece::NoPiece : GetPiece(l1) };     // what is on the tile to jump over?
         if (p1 == nullptr) break;                                         // tile is out of board, can't jump over it
         if (p1 == &Piece::NoTile) break;                                  // tile is not existing, can't jump over it
         if (p1->IsBlank()) continue;                                      // tile is not occupied, keep going (not a jump yet)
@@ -91,7 +92,7 @@ namespace Checkers
           const Location l2{ l1 + d * z2 };                               // location to jump to
 
           // check the jump-to tile                                       
-          const Piece* p2 = GetPiece(l2);                                 // what is on the jump-to tile
+          const Piece* p2{ l2 == l0 ? &Piece::NoPiece : GetPiece(l2) };   // what is on the jump-to tile
           if (p2 == nullptr) break;                                       // tile is out of board, can't jump there
           if (p2 == &Piece::NoTile) break;                                // tile is not existing, can't jump there
           if (!p2->IsBlank()) break;                                      // tile is occupied, can't jump there
