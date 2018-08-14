@@ -194,6 +194,7 @@ namespace BoardGamesCore
       if (pp->IsBlank()) continue;
       for (Coordinate i = 0; ; i++)
       {
+        assert(i < sizeX);
         const Location l{ i, player };
         if (GetPiece(l) == &Piece::NoTile)
         {

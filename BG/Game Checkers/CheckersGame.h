@@ -101,7 +101,7 @@ namespace Checkers
   {
   public:
     inline CheckersStockLayout(Coordinate x, Coordinate y) noexcept :
-      StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
+      StockLayout(Dimension(4, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
   };
 
 
