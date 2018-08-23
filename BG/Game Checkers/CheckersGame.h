@@ -53,19 +53,22 @@ namespace Checkers
   class CheckersPiece : public Piece
   {
   private:
-    inline CheckersPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline CheckersPiece(const Kind* k, const Color* c, const CheckersPiece* u, UINT l, UINT s) noexcept : Piece(k, c, l, l, s), up(u) {}
     CheckersPiece(const CheckersPiece&) = delete;
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:
-    ~CheckersPiece(void) override {}
+    virtual inline bool IsPromotable(void) const noexcept override { return up != this; } // is this a promotable piece?
+    virtual inline const Piece* Promote(bool /*u*/) const noexcept override { return up; }    // promote this piece up/down
+  private:
+    const CheckersPiece* up;    // what this piece promotes up to
 
   public:
-    inline static const CheckersPiece CheckersPieceW{ &Checker::TheChecker, &Color::White, IDB_WCD, IDB_WCS };
-    inline static const CheckersPiece CheckersPieceB{ &Checker::TheChecker, &Color::Black, IDB_BCD, IDB_BCS };
-    inline static const CheckersPiece CheckersKingW{  &King::TheKing,       &Color::White, IDB_WKD, IDB_WKS };
-    inline static const CheckersPiece CheckersKingB{  &King::TheKing,       &Color::Black, IDB_BKD, IDB_BKS };
-    inline static const CheckersPiece CheckersQueenW{ &Queen::TheQueen,     &Color::White, IDB_WQD, IDB_WQS };
-    inline static const CheckersPiece CheckersQueenB{ &Queen::TheQueen,     &Color::Black, IDB_BQD, IDB_BQS };
+    inline static const CheckersPiece CheckersPieceW{ &Checker::TheChecker, &Color::White, &CheckersQueenW, IDB_WCD, IDB_WCS };
+    inline static const CheckersPiece CheckersPieceB{ &Checker::TheChecker, &Color::Black, &CheckersQueenB, IDB_BCD, IDB_BCS };
+    inline static const CheckersPiece CheckersKingW{  &King::TheKing,       &Color::White, NULL,            IDB_WKD, IDB_WKS };
+    inline static const CheckersPiece CheckersKingB{  &King::TheKing,       &Color::Black, NULL,            IDB_BKD, IDB_BKS };
+    inline static const CheckersPiece CheckersQueenW{ &Queen::TheQueen,     &Color::White, NULL,            IDB_WQD, IDB_WQS };
+    inline static const CheckersPiece CheckersQueenB{ &Queen::TheQueen,     &Color::Black, NULL,            IDB_BQD, IDB_BQS };
   };
 
 
@@ -79,7 +82,9 @@ namespace Checkers
     virtual void EvaluateStatically(void) override;
 // extensions
   public:
-    bool AddIfLegalJump(std::vector<Move>& m, const std::vector<Step>& s, const Location fr) const;
+    bool AddIfLegalJump(std::vector<Move>& m, bool longjumps, const std::vector<Step>& s, const Location fr) const;
+  private:
+    inline bool CanPromote(const Location &l) const noexcept;
   };
 
 

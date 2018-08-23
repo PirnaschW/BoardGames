@@ -11,7 +11,7 @@ namespace Checkers
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     pos.AddIfLegal(moves, l, l + Offset(1, dy));
     pos.AddIfLegal(moves, l, l + Offset(-1, dy));
-    pos.AddIfLegalJump(moves, std::vector<Step>{}, l);  // check for jump moves
+    pos.AddIfLegalJump(moves, false, std::vector<Step>{}, l);  // check for jump moves
   }
 
 
@@ -20,7 +20,7 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       pos.AddIfLegal(moves, l, l + d);  // check for slide moves
-    pos.AddIfLegalJump(moves, std::vector<Step>{}, l);  // check for jump moves
+    pos.AddIfLegalJump(moves, false, std::vector<Step>{}, l);  // check for jump moves
   }
 
 
@@ -29,19 +29,19 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
-    pos.AddIfLegalJump(moves, std::vector<Step>{}, l);                    // check for jump moves
+    pos.AddIfLegalJump(moves, true, std::vector<Step>{}, l);                    // check for jump moves
   }
 
 
   CheckersPosition::CheckersPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
   {
-    SetPiece(Location(1, 2), &CheckersPiece::CheckersPieceB);
-    SetPiece(Location(3, 2), &CheckersPiece::CheckersPieceB);
-    SetPiece(Location(5, 2), &CheckersPiece::CheckersPieceB);
-    SetPiece(Location(5, 6), &CheckersPiece::CheckersPieceB);
-    SetPiece(Location(2, 5), &CheckersPiece::CheckersPieceB);
-    SetPiece(Location(4, 7), &CheckersPiece::CheckersQueenW);
-    return;
+    //SetPiece(Location(1, 2), &CheckersPiece::CheckersPieceB);
+    //SetPiece(Location(3, 2), &CheckersPiece::CheckersPieceB);
+    //SetPiece(Location(5, 2), &CheckersPiece::CheckersPieceB);
+    //SetPiece(Location(5, 6), &CheckersPiece::CheckersPieceB);
+    //SetPiece(Location(2, 5), &CheckersPiece::CheckersPieceB);
+    //SetPiece(Location(4, 7), &CheckersPiece::CheckersQueenW);
+    //return;
     for (Coordinate j = 0; j < y / 2 - 1; j++)
     {
       for (Coordinate i = 0; i < x; i++)
@@ -58,12 +58,13 @@ namespace Checkers
     if (p == nullptr) return false;                                       // out of board
     if (!p->IsBlank()) return false;                                      // field is not empty
 
-    m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},Step::StepType::Normal,std::vector<Field>{Field{to,GetPiece(to)}} });
+    const Piece* p2 = CanPromote(to) ? GetPiece(fr)->Promote(true) : GetPiece(fr);
+    m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,p2},Step::StepType::Normal,std::vector<Field>{Field{to,GetPiece(to)}} });
     return true;
   }
 
 
-  bool CheckersPosition::AddIfLegalJump(std::vector<Move>& m, const std::vector<Step>& s, const Location fr) const
+  bool CheckersPosition::AddIfLegalJump(std::vector<Move>& m, bool longjumps, const std::vector<Step>& s, const Location fr) const
   {
     const Location l0{ s.empty() ? fr : s.front().GetFr().GetLocation() };
     const Piece* p0 = GetPiece(l0);                                       // the piece that is moving
@@ -75,7 +76,7 @@ namespace Checkers
 
     for (auto& d : Offset::Bdirection)
     {
-      for (int z1 = 1;; z1++)
+      for (int z1 = 1; longjumps || z1 == 1; z1++)
       {
         const Location l1{ fr + d * z1 };                                 // location to jump over
      // check the jumped-over tile                                       
@@ -87,7 +88,7 @@ namespace Checkers
         const Color* c1 = p1->GetColor();                                 // color of jumped-over piece
         if (p0->IsColor(c1)) break;                                       // can't jump own pieces
 
-        for (int z2 = 1;; z2++)
+        for (int z2 = 1; longjumps || z2 == 1; z2++)
         {
           const Location l2{ l1 + d * z2 };                               // location to jump to
 
@@ -120,7 +121,7 @@ namespace Checkers
           // add the jump to the step list
           s1.push_back(Step(Field{ fr, p0 }, Field{ l2,p0 }, (Step::StepType) (Step::StepType::Jump | Step::StepType::Take), f));
 
-          if (!AddIfLegalJump(m, s1, l2))                                 // collect potential further jumps
+          if (!AddIfLegalJump(m, longjumps, s1, l2))                      // collect potential further jumps
             m.push_back(Move(s1));                                        // if it could not be extended, or was a jump over an own piece, add the step list as a move
         }
         break;
@@ -140,6 +141,11 @@ namespace Checkers
     MainPosition::GetAllMoves();
     JumpsOnly(movelistW);
     JumpsOnly(movelistB);
+  }
+
+  bool CheckersPosition::CanPromote(const Location& l) const noexcept
+  {
+    return (OnTurn() == &Color::White && l.y == 0) || (OnTurn() != &Color::White && l.y == sizeY-1);
   }
 
 
