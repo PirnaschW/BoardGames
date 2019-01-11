@@ -22,7 +22,7 @@ namespace TicTacToe
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 0; }
 
   public:
-    inline const static Checker TheChecker{};
+    static const Checker TheChecker;
   };
 
   class TicTacToePiece : public Piece
@@ -33,8 +33,8 @@ namespace TicTacToe
     TicTacToePiece& operator=(const TicTacToePiece&) = delete;
 
   public:
-    inline static const TicTacToePiece TicTacToePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
-    inline static const TicTacToePiece TicTacToePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
+    static const TicTacToePiece TicTacToePieceB;
+    static const TicTacToePiece TicTacToePieceW;
   };
 
 

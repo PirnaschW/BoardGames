@@ -13,7 +13,7 @@ namespace BoardGamesChessPieces
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
 
   public:
-    inline const static Pawn ThePawn{};
+    static const Pawn ThePawn;
   };
 
   class Knight : public Kind
@@ -25,7 +25,7 @@ namespace BoardGamesChessPieces
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 300; }
 
   public:
-    inline const static Knight TheKnight{};
+    static const Knight TheKnight;
   };
 
   class Bishop : public Kind
@@ -37,7 +37,7 @@ namespace BoardGamesChessPieces
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 300; }
 
   public:
-    inline const static Bishop TheBishop{};
+    static const Bishop TheBishop;
   };
 
   class Rook : public Kind
@@ -49,7 +49,7 @@ namespace BoardGamesChessPieces
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 500; }
 
   public:
-    inline const static Rook TheRook{};
+    static const Rook TheRook;
   };
 
   class Queen : public Kind
@@ -61,7 +61,7 @@ namespace BoardGamesChessPieces
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 900; }
 
   public:
-    inline const static Queen TheQueen{};
+    static const Queen TheQueen;
   };
 
   class King : public Kind
@@ -73,7 +73,7 @@ namespace BoardGamesChessPieces
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 500; }
 
   public:
-    inline const static King TheKing{};
+    static const King TheKing;
   };
 
   class ChessPiece : public Piece
@@ -87,18 +87,18 @@ namespace BoardGamesChessPieces
     virtual ~ChessPiece(void) override {}
 
   public:
-    const static ChessPiece WP;
-    const static ChessPiece WB;
-    const static ChessPiece WN;
-    const static ChessPiece WR;
-    const static ChessPiece WQ;
-    const static ChessPiece WK;
-    const static ChessPiece BP;
-    const static ChessPiece BB;
-    const static ChessPiece BN;
-    const static ChessPiece BR;
-    const static ChessPiece BQ;
-    const static ChessPiece BK;
+    static const ChessPiece WP;
+    static const ChessPiece WB;
+    static const ChessPiece WN;
+    static const ChessPiece WR;
+    static const ChessPiece WQ;
+    static const ChessPiece WK;
+    static const ChessPiece BP;
+    static const ChessPiece BB;
+    static const ChessPiece BN;
+    static const ChessPiece BR;
+    static const ChessPiece BQ;
+    static const ChessPiece BK;
   };
 
 }

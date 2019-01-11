@@ -23,7 +23,7 @@ namespace Hasami
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
 
   public:
-    inline const static Checker TheChecker{};
+    static const Checker TheChecker;
   };
 
   class HasamiPiece : public Piece
@@ -34,8 +34,8 @@ namespace Hasami
     HasamiPiece& operator=(const HasamiPiece&) = delete;
 
   public:  // the pieces
-    inline static const HasamiPiece HasamiPieceB{ &Checker::TheChecker, &Color::Black, IDB_HASAMI_B, IDB_HASAMI_BS };
-    inline static const HasamiPiece HasamiPieceW{ &Checker::TheChecker, &Color::White, IDB_HASAMI_W, IDB_HASAMI_WS };
+    static const HasamiPiece HasamiPieceB;
+    static const HasamiPiece HasamiPieceW;
   };
 
 

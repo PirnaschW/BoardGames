@@ -15,24 +15,20 @@ namespace BoardGamesCore
     const int dy;
 
   public:
-    // standard 4 'Rook'   directions
-    inline const static std::array<const Offset, 4> Rdirection{ Offset(+1, +0), Offset(+0, +1),
-                                                                Offset(+0, -1), Offset(-1, +0) };
-    // standard 4 'Bishop' directions
-    inline const static std::array<const Offset, 4> Bdirection{ Offset(+1, +1), Offset(+1, -1),
-                                                                Offset(-1, -1), Offset(-1, +1) };
-    // standard 8 'Queen'  directions
-    inline const static std::array<const Offset, 8> Qdirection{ Offset(+1, +1), Offset(+1, +0), Offset(+1, -1),
-                                                                Offset(+0, +1),                 Offset(+0, -1),
-                                                                Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
+    static const Offset Rdirection[4];   // standard 4 'Rook'   directions
+    static const Offset Bdirection[4];   // standard 4 'Bishop' directions
+    static const Offset Qdirection[8];   // standard 8 'Queen'  directions
   };
+  static_assert(!std::is_trivially_constructible<class Offset>::value, "must not be trivially constructible");
+  static_assert(std::is_constructible<class Offset, int, int>::value, "is not constructible");
+  static_assert(std::is_nothrow_constructible<class Offset, int, int>::value, "is not nothrow constructible");
 
   typedef unsigned int Coordinate;
 
   class Location final
   {
   public:
-    constexpr Location(Coordinate xx, Coordinate yy) noexcept : x{ xx }, y{ yy } {}
+    constexpr inline Location(Coordinate xx, Coordinate yy) noexcept : x{ xx }, y{ yy } {}
 
     constexpr inline bool operator==(const Location& l) const noexcept { return l.x == x && l.y == y; }
     constexpr inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
@@ -42,9 +38,9 @@ namespace BoardGamesCore
     constexpr inline bool Valid(Coordinate sizeX, Coordinate sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
     constexpr inline Coordinate Index(Coordinate sizeX, Coordinate /*sizeY*/) const noexcept { return y * sizeX + x; }
 
+  public:
     // can't be protected, as the values need to be used in many places
     // can't be const, or assignments between Locations wouldn't work.
-  public:
     Coordinate x;
     Coordinate y;
   };
@@ -61,7 +57,7 @@ namespace BoardGamesCore
     constexpr inline const Piece* GetPiece(void) const noexcept { return p; }
 
   private:
-    Location l;
+    Location l;      // can't be const, or assignments between Fields wouldn't work.
     const Piece* p;
   };
 
@@ -77,6 +73,8 @@ namespace BoardGamesCore
       Promote = 0x10,   // move promotes the piece (Chess, Shogi)
       Drop = 0x20,      // move drops a formerly taken piece back on the board
     };
+  private:
+    Step(void) = delete; // disable blank constructor
   public:
     inline Step(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal, const std::vector<Field>& Take = {}) noexcept : from{ Fr }, to{ To }, type{ Ty }, take{ Take } {}
     inline bool operator == (const Step& s) const noexcept { return from == s.from && to == s.to && type == s.type && take == s.take; }
@@ -201,9 +199,9 @@ namespace BoardGamesCore
     const char tilecolor;
 
   public:  // the only instances ever to exists; handed around by pointer
-    inline const static TileColor Light{ 'L' };
-    inline const static TileColor Dark{ 'D' };
-    inline const static TileColor Small{ 'l' };
+    static const TileColor Light;
+    static const TileColor Dark ;
+    static const TileColor Small;
   };
 
 
@@ -220,9 +218,9 @@ namespace BoardGamesCore
     const char color;
 
   public:  // the only instances ever to exists; handed around by pointer
-    inline const static Color NoColor{ 'X' };
-    inline const static Color White{ 'W' };
-    inline const static Color Black{ 'B' };
+    static const Color NoColor;
+    static const Color White;
+    static const Color Black;
   };
 
 
@@ -243,7 +241,7 @@ namespace BoardGamesCore
     const char kind;
 
   public:
-    inline const static Kind NoKind{ 'X' };
+    static const Kind NoKind;
   };
 
 
@@ -258,8 +256,8 @@ namespace BoardGamesCore
     const char playertype;
 
   public:  // the only instances ever to exists; handed around by pointer
-    inline const static PlayerType Human{ 'H' };
-    inline const static PlayerType Computer{ 'C' };
+    static const PlayerType Human;
+    static const PlayerType Computer;
   };
 
 
@@ -288,8 +286,8 @@ namespace BoardGamesCore
     static std::vector<const Piece*> ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece*>&);
 
   public:
-    inline const static Piece NoTile{ &Kind::NoKind, &Color::NoColor, 0, 0, 0 };                // nothing exists there, don't draw the tile at all
-    inline const static Piece NoPiece{ &Kind::NoKind, &Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
+    static const Piece NoTile;    // nothing exists there, don't draw the tile at all
+    static const Piece NoPiece;   // no piece on the tile, but still draw it
 
   protected:
     const Kind* kind;      // points to a static shared object ('Singleton') - we don't own it

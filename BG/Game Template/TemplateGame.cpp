@@ -4,6 +4,9 @@
 
 namespace Template
 {
+  inline const Checker Checker::TheChecker{};
+  inline const TemplatePiece TemplatePiece::TemplatePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
+  inline const TemplatePiece TemplatePiece::TemplatePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
 
   bool TemplatePosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
   {

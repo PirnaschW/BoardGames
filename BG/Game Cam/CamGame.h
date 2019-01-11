@@ -24,7 +24,7 @@ namespace Cam
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     
   public:
-    inline const static Pawn ThePawn{};
+    static const Pawn ThePawn;
   };
 
   class Knight : public Kind
@@ -36,7 +36,7 @@ namespace Cam
     virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
     
   public:
-    inline const static Knight TheKnight{};
+    static const Knight TheKnight;
   };
 
 
@@ -49,10 +49,10 @@ namespace Cam
     virtual unsigned int GetValue(const MainPosition& p, const Location l) const noexcept override;
 
   public:
-    inline static const CamPiece WP{ &Pawn::ThePawn,     &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
-    inline static const CamPiece WN{ &Knight::TheKnight, &Color::White, IDB_WNL, IDB_WND, IDB_WNS };
-    inline static const CamPiece BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
-    inline static const CamPiece BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
+    static const CamPiece WP;
+    static const CamPiece WN;
+    static const CamPiece BP;
+    static const CamPiece BN;
   };
 
 

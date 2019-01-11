@@ -384,7 +384,7 @@ namespace Test
     try
     {
       std::size_t s = sizeof(*pos);
-      for (unsigned int z = s; z < 500000+s; ++z)
+      for (std::size_t z = s; z < 500000+s; ++z)
       {
         MainPosition* p = pos->Clone();
 

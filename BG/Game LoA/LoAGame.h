@@ -29,7 +29,7 @@ namespace LoA
     void CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves, int dx, int dy) const;
 
   public:
-    inline const static LoAPeg ThePeg{};
+    static const LoAPeg ThePeg;
   };
 
 
@@ -41,8 +41,8 @@ namespace LoA
     LoAPiece& operator=(const LoAPiece&) = delete;
 
   public:
-    inline static const LoAPiece LoAPieceW{ &LoAPeg::ThePeg, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-    inline static const LoAPiece LoAPieceB{ &LoAPeg::ThePeg, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+    static const LoAPiece LoAPieceW; //{ &LoAPeg::ThePeg, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
+    static const LoAPiece LoAPieceB; //{ &LoAPeg::ThePeg, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
   };
 
 

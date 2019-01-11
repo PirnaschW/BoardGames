@@ -7,7 +7,7 @@ namespace URL
 
   const std::string GetHTMLFromURL(const std::wstring& url)
   {
-    constexpr const static int len{ 2 << 15 };
+    constexpr static const int len{ 2 << 15 };
 
     HINTERNET connect = InternetOpen(L"Browser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
     assert(connect);

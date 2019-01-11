@@ -31,8 +31,11 @@ namespace Logik
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1; }
 
   public:
-    inline const static Peg<k> ThePeg{};
+    static const Peg<k> ThePeg;
   };
+  
+  template <char k> inline const Peg<k> Peg<k>::ThePeg{};
+
 
   class LogikPiece : public Piece
   {
@@ -286,6 +289,12 @@ namespace Logik
   }
 
 
+  constexpr unsigned int ipow(unsigned int base, unsigned int exp, unsigned int result = 1)
+  {
+    return exp < 1 ? result : ipow(base*base, exp / 2, (exp % 2) ? result * base : result);
+  }
+
+
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
   PositionValue LPosition<BX, BY, BZ>::Evaluate(unsigned int) const // Evaluate best next move
   {
@@ -512,11 +521,5 @@ namespace Logik
     }
     Game::Draw(pDC);       // let the (generic) parent draw the board itself
   };
-
-
-  constexpr unsigned int ipow(unsigned int base, unsigned int exp, unsigned int result = 1)
-  {
-    return exp < 1 ? result : ipow(base*base, exp / 2, (exp % 2) ? result * base : result);
-  }
 
 }

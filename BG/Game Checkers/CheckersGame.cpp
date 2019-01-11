@@ -4,6 +4,17 @@
 
 namespace Checkers
 {
+  inline const Checker Checker::TheChecker{};
+  inline const King    King   ::TheKing   {};
+  inline const Queen   Queen  ::TheQueen  {};
+
+  inline const CheckersPiece CheckersPiece::CheckersPieceW{ &Checker::TheChecker, &Color::White, &CheckersQueenW, IDB_WCD, IDB_WCS };
+  inline const CheckersPiece CheckersPiece::CheckersPieceB{ &Checker::TheChecker, &Color::Black, &CheckersQueenB, IDB_BCD, IDB_BCS };
+  inline const CheckersPiece CheckersPiece::CheckersKingW { &King::TheKing,       &Color::White, NULL,            IDB_WKD, IDB_WKS };
+  inline const CheckersPiece CheckersPiece::CheckersKingB { &King::TheKing,       &Color::Black, NULL,            IDB_BKD, IDB_BKS };
+  inline const CheckersPiece CheckersPiece::CheckersQueenW{ &Queen::TheQueen,     &Color::White, NULL,            IDB_WQD, IDB_WQS };
+  inline const CheckersPiece CheckersPiece::CheckersQueenB{ &Queen::TheQueen,     &Color::Black, NULL,            IDB_BQD, IDB_BQS };
+
 
   void Checker::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {

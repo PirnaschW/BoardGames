@@ -22,7 +22,7 @@ namespace Template
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
 
   public:
-    inline const static Checker TheChecker{};
+    static const Checker TheChecker;
   };
 
   class TemplatePiece : public Piece
@@ -35,8 +35,8 @@ namespace Template
     ~TemplatePiece(void) override {}
 
   public:
-    inline static const TemplatePiece TemplatePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-    inline static const TemplatePiece TemplatePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+    static const TemplatePiece TemplatePieceW;
+    static const TemplatePiece TemplatePieceB;
   };
 
 

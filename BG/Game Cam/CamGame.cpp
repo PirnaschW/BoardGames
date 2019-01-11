@@ -6,6 +6,13 @@ namespace Cam
 {
   constexpr inline int isqr(int x) noexcept { return x * x; }
 
+  inline const Pawn   Pawn  ::ThePawn  {};
+  inline const Knight Knight::TheKnight{};
+  inline const CamPiece CamPiece::WP{ &Pawn::ThePawn, &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
+  inline const CamPiece CamPiece::WN{ &Knight::TheKnight, &Color::White, IDB_WNL, IDB_WND, IDB_WNS };
+  inline const CamPiece CamPiece::BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
+  inline const CamPiece CamPiece::BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
+
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
   {
     std::vector<Step> s{};

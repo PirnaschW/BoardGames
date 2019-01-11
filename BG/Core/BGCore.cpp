@@ -5,6 +5,34 @@
 namespace BoardGamesCore
 {
 
+  // standard 4 'Rook'   directions
+  inline const Offset Offset::Rdirection[4]{ Offset(+1, +0), Offset(+0, +1),
+                                             Offset(+0, -1), Offset(-1, +0) };
+  // standard 4 'Bishop' directions
+  inline const Offset Offset::Bdirection[4]{ Offset(+1, +1), Offset(+1, -1),
+                                             Offset(-1, -1), Offset(-1, +1) };
+  // standard 8 'Queen'  directions
+  inline const Offset Offset::Qdirection[8]{ Offset(+1, +1), Offset(+1, +0), Offset(+1, -1),
+                                             Offset(+0, +1),                 Offset(+0, -1),
+                                             Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
+
+  inline const TileColor TileColor::Light{ 'L' };
+  inline const TileColor TileColor::Dark { 'D' };
+  inline const TileColor TileColor::Small{ 'l' };
+ 
+  inline const Color Color::NoColor{ 'X' };
+  inline const Color Color::White{ 'W' };
+  inline const Color Color::Black{ 'B' };
+
+  inline const Kind Kind::NoKind{ 'X' };
+ 
+  inline const Piece Piece::NoTile{ &Kind::NoKind, &Color::NoColor, 0, 0, 0 };                // nothing exists there, don't draw the tile at all
+  inline const Piece Piece::NoPiece{ &Kind::NoKind, &Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
+ 
+  inline const PlayerType PlayerType::Human{ 'H' };
+  inline const PlayerType PlayerType::Computer{ 'C' };
+
+  
   Move&& Move::operator =(Move&& m) noexcept
   {
     std::swap(step, m.step);
@@ -53,10 +81,10 @@ namespace BoardGamesCore
 
   std::vector<const Piece*> Piece::ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece*>& map)
   {
-    const static std::string s0{ R"(<div id="game-board-section">)" };
-    const static std::string s1{ R"(<img src=https://i.brainking.com/)" };
-    const static std::string s2{ R"(.gif)" };
-    const static std::string s9{ R"(<div id="game-info-section">)" };
+    static const std::string s0{ R"(<div id="game-board-section">)" };
+    static const std::string s1{ R"(<img src=https://i.brainking.com/)" };
+    static const std::string s2{ R"(.gif)" };
+    static const std::string s9{ R"(<div id="game-info-section">)" };
 
     std::vector<const Piece*> list{};
 
@@ -112,12 +140,12 @@ namespace BoardGamesCore
         if (!p->IsColor(&Color::NoColor))
         {
           p->CollectMoves(*this, Location(i, j), p->IsColor(&Color::White) ? movelistW : movelistB);
-          assert(Test::Test::TestTaken(this));
+          //assert(Test::Test::TestTaken(this));
         }
       }
     }
-    assert(Test::Test::TestTaken(this));
-    assert(Test::Test::TestMoveUndo(this));
+    //assert(Test::Test::TestTaken(this));
+    //assert(Test::Test::TestMoveUndo(this));
   }
 
   bool MainPosition::JumpsOnly(std::vector<Move>& moves) const noexcept

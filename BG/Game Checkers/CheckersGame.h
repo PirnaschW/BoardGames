@@ -23,7 +23,7 @@ namespace Checkers
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
 
   public:
-    inline const static Checker TheChecker{};
+    static const Checker TheChecker;
   };
 
   class King : public Kind
@@ -35,7 +35,7 @@ namespace Checkers
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
 
   public:
-    inline const static King TheKing{};
+    static const King TheKing;
   };
 
   class Queen : public Kind
@@ -47,7 +47,7 @@ namespace Checkers
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
 
   public:
-    inline const static Queen TheQueen{};
+    static const Queen TheQueen;
   };
 
   class CheckersPiece : public Piece
@@ -63,12 +63,12 @@ namespace Checkers
     const CheckersPiece* up;    // what this piece promotes up to
 
   public:
-    inline static const CheckersPiece CheckersPieceW{ &Checker::TheChecker, &Color::White, &CheckersQueenW, IDB_WCD, IDB_WCS };
-    inline static const CheckersPiece CheckersPieceB{ &Checker::TheChecker, &Color::Black, &CheckersQueenB, IDB_BCD, IDB_BCS };
-    inline static const CheckersPiece CheckersKingW{  &King::TheKing,       &Color::White, NULL,            IDB_WKD, IDB_WKS };
-    inline static const CheckersPiece CheckersKingB{  &King::TheKing,       &Color::Black, NULL,            IDB_BKD, IDB_BKS };
-    inline static const CheckersPiece CheckersQueenW{ &Queen::TheQueen,     &Color::White, NULL,            IDB_WQD, IDB_WQS };
-    inline static const CheckersPiece CheckersQueenB{ &Queen::TheQueen,     &Color::Black, NULL,            IDB_BQD, IDB_BQS };
+    static const CheckersPiece CheckersPieceW;
+    static const CheckersPiece CheckersPieceB;
+    static const CheckersPiece CheckersKingW;
+    static const CheckersPiece CheckersKingB;
+    static const CheckersPiece CheckersQueenW;
+    static const CheckersPiece CheckersQueenB;
   };
 
 
