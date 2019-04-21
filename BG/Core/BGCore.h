@@ -8,7 +8,7 @@ namespace BoardGamesCore
   public:
     constexpr Offset(int xx, int yy) noexcept : dx{ xx }, dy{ yy } {}
 
-    constexpr inline const Offset operator*(int i) const noexcept { return Offset(dx*i, dy*i); }
+    constexpr inline const Offset operator*(int i) const noexcept { return Offset(dx * i, dy * i); }
 
   private:
     const int dx;
@@ -261,6 +261,7 @@ namespace BoardGamesCore
   };
 
 
+  // cannot be constexpr as it loads bitmaps at runtime
   class Piece
   {
   protected:

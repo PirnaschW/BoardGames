@@ -6,31 +6,31 @@ namespace BoardGamesCore
 {
 
   // standard 4 'Rook'   directions
-  inline const Offset Offset::Rdirection[4]{ Offset(+1, +0), Offset(+0, +1),
-                                             Offset(+0, -1), Offset(-1, +0) };
+  constexpr const Offset Offset::Rdirection[4]{ Offset(+1, +0), Offset(+0, +1),
+                                                Offset(+0, -1), Offset(-1, +0) };
   // standard 4 'Bishop' directions
-  inline const Offset Offset::Bdirection[4]{ Offset(+1, +1), Offset(+1, -1),
-                                             Offset(-1, -1), Offset(-1, +1) };
+  constexpr const Offset Offset::Bdirection[4]{ Offset(+1, +1), Offset(+1, -1),
+                                                Offset(-1, -1), Offset(-1, +1) };
   // standard 8 'Queen'  directions
-  inline const Offset Offset::Qdirection[8]{ Offset(+1, +1), Offset(+1, +0), Offset(+1, -1),
-                                             Offset(+0, +1),                 Offset(+0, -1),
-                                             Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
+  constexpr const Offset Offset::Qdirection[8]{ Offset(+1, +1), Offset(+1, +0), Offset(+1, -1),
+                                                Offset(+0, +1),                 Offset(+0, -1),
+                                                Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
 
-  inline const TileColor TileColor::Light{ 'L' };
-  inline const TileColor TileColor::Dark { 'D' };
-  inline const TileColor TileColor::Small{ 'l' };
+  constexpr const TileColor TileColor::Light{ 'L' };
+  constexpr const TileColor TileColor::Dark { 'D' };
+  constexpr const TileColor TileColor::Small{ 'l' };
  
-  inline const Color Color::NoColor{ 'X' };
-  inline const Color Color::White{ 'W' };
-  inline const Color Color::Black{ 'B' };
+  constexpr inline const Color Color::NoColor{ 'X' };
+  constexpr inline const Color Color::White{ 'W' };
+  constexpr inline const Color Color::Black{ 'B' };
 
-  inline const Kind Kind::NoKind{ 'X' };
+  constexpr inline const Kind Kind::NoKind{ 'X' };
  
-  inline const Piece Piece::NoTile{ &Kind::NoKind, &Color::NoColor, 0, 0, 0 };                // nothing exists there, don't draw the tile at all
+  inline const Piece Piece::NoTile { &Kind::NoKind, &Color::NoColor, 0, 0, 0 };               // nothing exists there, don't draw the tile at all
   inline const Piece Piece::NoPiece{ &Kind::NoKind, &Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
  
-  inline const PlayerType PlayerType::Human{ 'H' };
-  inline const PlayerType PlayerType::Computer{ 'C' };
+  constexpr inline const PlayerType PlayerType::Human{ 'H' };
+  constexpr inline const PlayerType PlayerType::Computer{ 'C' };
 
   
   Move&& Move::operator =(Move&& m) noexcept
