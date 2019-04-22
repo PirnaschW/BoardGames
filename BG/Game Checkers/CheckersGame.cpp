@@ -16,31 +16,31 @@ namespace Checkers
   inline const CheckersPiece CheckersPiece::CheckersQueenB{ &Queen::TheQueen,     &Color::Black, NULL,            IDB_BQD, IDB_BQS };
 
 
-  void Checker::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     pos.AddIfLegal(moves, l, l + Offset(1, dy));
     pos.AddIfLegal(moves, l, l + Offset(-1, dy));
-    pos.AddIfLegalJump(moves, false, std::vector<Step>{}, l);  // check for jump moves
+    pos.AddIfLegalJump(moves, false, Steps{}, l);  // check for jump moves
   }
 
 
-  void King::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       pos.AddIfLegal(moves, l, l + d);  // check for slide moves
-    pos.AddIfLegalJump(moves, false, std::vector<Step>{}, l);  // check for jump moves
+    pos.AddIfLegalJump(moves, false, Steps{}, l);  // check for jump moves
   }
 
 
-  void Queen::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Queen::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
-    pos.AddIfLegalJump(moves, true, std::vector<Step>{}, l);                    // check for jump moves
+    pos.AddIfLegalJump(moves, true, Steps{}, l);                    // check for jump moves
   }
 
 
@@ -63,21 +63,21 @@ namespace Checkers
     }
   }
 
-  bool CheckersPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  bool CheckersPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;                                       // out of board
     if (!p->IsBlank()) return false;                                      // field is not empty
 
-    const Piece* p2 = CanPromote(to) ? GetPiece(fr)->Promote(true) : GetPiece(fr);
-    m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,p2},Step::StepType::Normal,std::vector<Field>{Field{to,GetPiece(to)}} });
+    const Piece * p2 = CanPromote(to) ? GetPiece(fr)->Promote(true) : GetPiece(fr);
+    m.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<ComplexStep>(Field{ fr,GetPiece(fr) }, Field{ to,p2 }, Step::StepType::Normal, std::vector<Field>{Field{ to,GetPiece(to) }}))));
     return true;
   }
 
 
-  bool CheckersPosition::AddIfLegalJump(std::vector<Move>& m, bool longjumps, const std::vector<Step>& s, const Location fr) const
+  bool CheckersPosition::AddIfLegalJump(Moves& m, bool longjumps, const Steps& s, const Location fr) const
   {
-    const Location l0{ s.empty() ? fr : s.front().GetFr().GetLocation() };
+    const Location l0{ s.empty() ? fr : s.front()->GetFr().GetLocation() };
     const Piece* p0 = GetPiece(l0);                                       // the piece that is moving
     assert(p0 != nullptr);
     assert(p0 != &Piece::NoTile);
@@ -113,7 +113,7 @@ namespace Checkers
           bool repeat{ false };
           for (auto& ss : s)
           {
-            for (const auto& t : ss.GetTake())
+            for (const auto& t : ss->GetTakes())
             {
               if (t.GetLocation() == l1)
               {
@@ -128,12 +128,12 @@ namespace Checkers
           any = true;
           std::vector<Field> f{};
           f.push_back(Field{ l1,p1 });
-          std::vector<Step> s1{ s };                                      // copy the previous jump sequence, so we can extend it
-          // add the jump to the step list
-          s1.push_back(Step(Field{ fr, p0 }, Field{ l2,p0 }, (Step::StepType) (Step::StepType::Jump | Step::StepType::Take), f));
+          Steps s1{ s };                                      // copy the previous jump sequence, so we can extend it
+          // add the jump to the SimpleStep list
+          s1.push_back(std::make_shared<ComplexStep>(Field{ fr, p0 }, Field{ l2,p0 }, (Step::StepType) (Step::StepType::Jump | Step::StepType::Take), f));
 
           if (!AddIfLegalJump(m, longjumps, s1, l2))                      // collect potential further jumps
-            m.push_back(Move(s1));                                        // if it could not be extended, or was a jump over an own piece, add the step list as a move
+            m.push_back(std::make_shared<ComplexMove>(s1));                      // if it could not be extended, or was a jump over an own piece, add the SimpleStep list as a move
         }
         break;
       }

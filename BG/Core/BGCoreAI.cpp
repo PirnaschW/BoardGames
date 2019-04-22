@@ -67,14 +67,14 @@ namespace BoardGamesCore
 
     assert(plist.find(this) != plist.end());                              // the current position must have been checked before
 
-    const auto l = [](Move const& a, Move const& b) { return b < a; };    // define sort predicate
+    const auto l = [](MoveP a, MoveP b) { return *b < *a; };    // define sort predicate
 
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
-      MainPosition* p{ GetPosition(plist,&m) };                           // find the board in the list
+      MainPosition* p{ GetPosition(plist,m) };                           // find the board in the list
       PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);   // evaluate the result
       assert(v != PositionValue::Undefined);
-      m.SetValue(p->GetValue(w));                                         // save real position value into move for sorting
+      m->SetValue(p->GetValue(w));                                         // save real position value into move for sorting
 
       // apply alpha/beta pruning
       if (v > alpha) { alpha = v; }                                       // reduce range for alpha, continue
@@ -109,7 +109,7 @@ namespace BoardGamesCore
     else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
     else
     {
-      value = static_cast<PositionValue>(GetMoveCountFactor() * (movelistW.size() - movelistB.size()));
+      value = GetMoveCountFactor() * (movelistW.size() - movelistB.size());
       for (Coordinate j = 0; j < sizeY; j++)
       {
         for (Coordinate i = 0; i < sizeX; i++)                          // loop through all locations
@@ -126,10 +126,10 @@ namespace BoardGamesCore
   }
 
 
-  MainPosition* MainPosition::GetPosition(AIContext& plist, Move* m) const // execute move, maintain in PList
+  MainPosition* MainPosition::GetPosition(AIContext& plist, MoveP m) const // execute move, maintain in PList
   {
     MainPosition* pos(Clone());                                           // create a copy of the board
-    if (m != nullptr) pos->Execute(*m);                                   // execute move if provided
+    if (m != nullptr) pos->Execute(m);                                    // execute move if provided
 
     auto pl0 = plist.find(pos);                                           // check if we evaluated this position before
     if (pl0 != plist.end())

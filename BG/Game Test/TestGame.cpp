@@ -49,14 +49,14 @@ namespace Test
 
   }
 
-  bool TestPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  bool TestPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;  // out of board
     if (p->IsBlank()) return true;   // not a move, but keep trying this direction
     if (p->IsColor(OnTurn())) return false;  // own piece
 
-    m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,p},Step::StepType::Take, std::vector<Field>{Field{to,p}} });
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,p }, SimpleStep::StepType::Take)));
     return false;
   };
 
@@ -100,7 +100,7 @@ namespace Test
     {
       //TestGame game(4, 4);
 
-      //std::vector<Move> m{game.GetAllMoves()};
+      //Moves m{game.GetAllMoves()};
 
       //assert(m.size() == 16);
       //assert(m[0].GetFr() == Location(0, 0)); assert(m[0].GetTo() == Location(1, 1));
@@ -139,7 +139,7 @@ namespace Test
       //pos->EvaluateStatically();
       //plist.insert(pos);
 
-      //Move Best{std::vector<Step>{}};
+      //Move Best{std::vector<SimpleStep>{}};
       //PositionValue max = PositionValue::PValueType::Lost;
       //for (auto& mi : m)                                      // for all possible opponent's moves
       //{
@@ -171,22 +171,22 @@ namespace Test
       //}
 
       //assert(m.size() == 16);
-      //assert(m[ 0].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 1].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 2].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 3].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 4].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 5].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 6].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 7].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 8].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[ 9].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[10].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[11].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[12].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[13].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[14].GetSteps()[0].GetType() == Step::StepType::Take);
-      //assert(m[15].GetSteps()[0].GetType() == Step::StepType::Take);
+      //assert(m[ 0].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 1].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 2].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 3].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 4].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 5].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 6].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 7].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 8].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 9].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[10].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[11].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[12].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[13].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[14].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[15].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
 
       //assert(m[ 0].GetValue() ==  -40);
       //assert(m[ 1].GetValue() ==  580);
@@ -321,7 +321,7 @@ namespace Test
   class TestPosAccess : public MainPosition
   {
   public:
-    inline const std::vector<Move> GetMoveList(bool w) const { return w ? movelistW : movelistB; }
+    inline const Moves GetMoveList(bool w) const { return w ? movelistW : movelistB; }
   };
   bool Test::TestMoveUndo(const MainPosition* pos)  // try all moves (for both colors) and undo them, to verify the Undo method
   {
@@ -354,9 +354,9 @@ namespace Test
 
     for (auto& m : tp->GetMoveList(true))
     {
-      for (auto& s : m.GetSteps())
+      for (auto& s : m->GetSteps())
       {
-        for (auto& t : s.GetTake())
+        for (auto& t : s->GetTakes())
         {
           z++;
           assert(t.GetPiece() == pos->GetPiece(t.GetLocation()));
@@ -365,9 +365,9 @@ namespace Test
     }
     for (auto& m : tp->GetMoveList(false))
     {
-      for (auto& s : m.GetSteps())
+      for (auto& s : m->GetSteps())
       {
-        for (auto& t : s.GetTake())
+        for (auto& t : s->GetTakes())
         {
           z++;
           assert(t.GetPiece() == pos->GetPiece(t.GetLocation()));
@@ -400,7 +400,7 @@ namespace Test
 
     z++;
     assert(pos != nullptr);
-    assert(reinterpret_cast<unsigned int>(pos) != 0xcdcdcdcd);
+    assert(reinterpret_cast<unsigned long long>(pos) != 0xcdcdcdcd);
     assert(TestTaken(pos));
     assert(TestMoveUndo(pos));
     return true;
@@ -426,9 +426,9 @@ namespace Test
     std::string s{};
     for (unsigned int i = 0; i < pos->sequence.size(); ++i)
     {
-      const Move& m = pos->sequence[i];
-      sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m.GetFr().GetLocation().x + 'a', m.GetFr().GetLocation().y + '1',
-                                                    m.GetTo().GetLocation().x + 'a', m.GetTo().GetLocation().y + '1');
+      const MoveP m = pos->sequence[i];
+      sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m->GetFr().GetLocation().x + 'a', m->GetFr().GetLocation().y + '1',
+                                                    m->GetTo().GetLocation().x + 'a', m->GetTo().GetLocation().y + '1');
       s += buffer;
     }
     sprintf_s(buffer, "pos value = %u\n", (unsigned int) pos->GetValue(true));

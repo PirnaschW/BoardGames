@@ -21,7 +21,7 @@ namespace MassacreChess
   public:
     MCPosition(Coordinate x, Coordinate y);
     virtual inline MainPosition* Clone(void) const override { return new MCPosition(*this); }
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual inline unsigned int GetMoveCountFactor(void) const noexcept override { return 1000; }
 
 // extensions

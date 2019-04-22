@@ -21,20 +21,20 @@ namespace TicTacToe
         assert(p != nullptr);
         if (p->IsBlank())
         {
-          movelistW.push_back(Step{ Field{ l,&Piece::NoPiece }, Field{ l,&TicTacToePiece::TicTacToePieceW },Step::StepType::Place });
-          movelistB.push_back(Step{ Field{ l,&Piece::NoPiece }, Field{ l,&TicTacToePiece::TicTacToePieceB },Step::StepType::Place });
+          movelistW.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ l,&Piece::NoPiece }, Field{ l,&TicTacToePiece::TicTacToePieceW }, SimpleStep::StepType::Place)));
+          movelistB.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ l,&Piece::NoPiece }, Field{ l,&TicTacToePiece::TicTacToePieceB }, SimpleStep::StepType::Place)));
         }
       }
     }
   }
 
 
-  //bool TicTacToePosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  //bool TicTacToePosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   //{
   //  assert(fr == to);                   // this game allows only placements
   //  const Piece* p = GetPiece(fr);
   //  if (!p->IsBlank()) return false;    // field must be empty
-  //  m.push_back(Step{ Field{ fr,&Piece::NoPiece }, Field{ fr,&TicTacToePiece::TicTacToePieceW },Step::StepType::Place });
+  //  m.push_back(SimpleStep{ Field{ fr,&Piece::NoPiece }, Field{ fr,&TicTacToePiece::TicTacToePieceW },SimpleStep::StepType::Place });
   //  return false;
   //};
 

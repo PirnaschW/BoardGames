@@ -33,25 +33,19 @@ namespace BoardGamesCore
   constexpr inline const PlayerType PlayerType::Computer{ 'C' };
 
   
-  Move&& Move::operator =(Move&& m) noexcept
-  {
-    std::swap(step, m.step);
-    value = m.value;
-    return std::move(*this);
-  }
+  //Move&& Move::operator =(Move&& m) noexcept
+  //{
+  //  std::swap(step, m.step);
+  //  value = m.value;
+  //  return std::move(*this);
+  //}
 
-  bool Move::IsTake(void) const noexcept
-  {
-    for (auto& s : step) if (s.IsTake()) return true;
-    return false;
-  }
-
-  const std::vector<Location> Move::GetJumped(void) const  // return list of jumped-over locations
+  const std::vector<Location> ComplexMove::GetJumped(void) const  // return list of jumped-over locations
   {
     std::vector<Location> jumped{};
-    for (auto& s : step)
+    for (auto& s : _steps)
     {
-      if (s.GetType() == Step::StepType::Jump) throw ("code missing!"); // TODO
+      if (s->GetType() == Step::StepType::Jump) throw ("code missing!"); // TODO
     }
     return jumped;
   }
@@ -148,11 +142,11 @@ namespace BoardGamesCore
     //assert(Test::Test::TestMoveUndo(this));
   }
 
-  bool MainPosition::JumpsOnly(std::vector<Move>& moves) const noexcept
+  bool MainPosition::JumpsOnly(Moves& moves) const noexcept
   {
     // if there are any takes (catching opponent pieces) possible, remove all non-takes
-    if (std::find_if(moves.begin(), moves.end(), [](const Move& m) {return m.GetSteps().front().IsTake(); }) == moves.end()) return false;
-    moves.erase(std::remove_if(moves.begin(), moves.end(), [](const Move& m) {return !m.GetSteps().front().IsTake(); }), moves.end());
+    if (std::find_if(moves.begin(), moves.end(), [](const MoveP m) {return m->GetSteps().front()->IsTake(); }) == moves.end()) return false;
+    moves.erase(std::remove_if(moves.begin(), moves.end(), [](const MoveP m) {return !m->GetSteps().front()->IsTake(); }), moves.end());
     return true;
   }
 
@@ -168,7 +162,7 @@ namespace BoardGamesCore
     else onTurn = &Color::White;
   };
 
-  const std::vector<const Piece*> MainPosition::Execute(const Move& m)
+  const std::vector<const Piece*> MainPosition::Execute(MoveP m)
   {
     movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
     movelistB.clear();                                                    // after the move is executed, the movelists will be outdated
@@ -176,15 +170,15 @@ namespace BoardGamesCore
     sequence.push_back(m);                                                // save the move in the sequence
 
     std::vector<const Piece*> taken{};
-    const std::vector<Step> step{ m.GetSteps() };
-    const Piece* p = m.GetFr().GetPiece();
+    const Steps& steps{ m->GetSteps() };
+    const Piece* p = m->GetFr().GetPiece();
 
     // collect taken pieces
-    for (auto& s : step)
+    for (auto& s : steps)
     {
-      if (s.GetType() & Step::StepType::Promote) p = p->Promote(true);
+      if (s->GetType() & Step::StepType::Promote) p = p->Promote(true);
 
-      const std::vector<Field>& take = s.GetTake();
+      const std::vector<Field>& take = s->GetTakes();
       for (auto& t : take)
       {
         assert(t.GetPiece() == GetPiece(t.GetLocation()));                // verify that the piece we expect is really there
@@ -193,23 +187,23 @@ namespace BoardGamesCore
       }
     }
 
-    SetPiece(m.GetFr().GetLocation(), &Piece::NoPiece);                   // empty the start tile
-    SetPiece(m.GetTo().GetLocation(), m.GetTo().GetPiece());              // place the piece at the target field
+    SetPiece(m->GetFr().GetLocation(), &Piece::NoPiece);                   // empty the start tile
+    SetPiece(m->GetTo().GetLocation(), m->GetTo().GetPiece());              // place the piece at the target field
 
     NextPlayer();                                                         // after the move, it's the next player's turn
     return taken;                                                         // return the collected taken pieces
   }
 
-  void MainPosition::Undo(const Move& m)
+  void MainPosition::Undo(const MoveP m)
   {
-    const std::vector<Step> step = m.GetSteps();
-    SetPiece(m.GetTo().GetLocation(), &Piece::NoPiece);                   // empty the target field
-    for (auto& s : step)                                                  // for all steps
+    const Steps& steps = m->GetSteps();
+    SetPiece(m->GetTo().GetLocation(), &Piece::NoPiece);                   // empty the target field
+    for (auto& s : steps)                                                  // for all steps
     {
-      const std::vector<Field>& take = s.GetTake();
-      for (auto& t : take) SetPiece(t.GetLocation(), t.GetPiece());       // Put the taken piece(s) back on the board
+      const std::vector<Field>& takes = s->GetTakes();
+      for (auto& t : takes) SetPiece(t.GetLocation(), t.GetPiece());       // Put the taken piece(s) back on the board
     }
-    SetPiece(m.GetFr().GetLocation(), m.GetFr().GetPiece());              // put the piece back on the starting field
+    SetPiece(m->GetFr().GetLocation(), m->GetFr().GetPiece());              // put the piece back on the starting field
     PreviousPlayer();                                                     // after the undo, it's the previous player's turn
   }
 
@@ -261,7 +255,7 @@ namespace BoardGamesCore
     pos->SetPosition(Piece::ListFromHTML(html, Piece::GetHTMLPieceMap()));
   }
 
-  void Game::Execute(const Move& m)
+  void Game::Execute(MoveP m)
   {
     const unsigned int z{ pos->OnTurn() == &Color::White ? 1U : 0U };     // need to buffer the index, as Execute changes who's on turn
     tpos->Push(z, pos->Execute(m));                                       // execute move (includes setting pos to next player), and display taken pieces

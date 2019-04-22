@@ -62,7 +62,7 @@ namespace BoardGamesCore
   };
 
 
-  class Step final // define one hop in a complete move
+  class Step abstract  // define one hop in a complete move
   {
   public:
     enum StepType {
@@ -76,21 +76,44 @@ namespace BoardGamesCore
   private:
     Step(void) = delete; // disable blank constructor
   public:
-    inline Step(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal, const std::vector<Field>& Take = {}) noexcept : from{ Fr }, to{ To }, type{ Ty }, take{ Take } {}
-    inline bool operator == (const Step& s) const noexcept { return from == s.from && to == s.to && type == s.type && take == s.take; }
-    inline bool operator != (const Step& s) const noexcept { return !(s == *this); }
+    inline Step(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal) noexcept : _from{ Fr }, _to{ To }, _type{ Ty } {}
 
-    inline const Field& GetFr(void) const noexcept { return from; }
-    inline const Field& GetTo(void) const noexcept { return to; }
-    inline const StepType GetType(void) const noexcept { return type; }
-    inline const std::vector<Field>& GetTake() const noexcept { return take; }
-    inline bool IsTake(void) const noexcept { return type & StepType::Take; }
+    inline const Field& GetFr(void) const noexcept { return _from; }
+    inline const Field& GetTo(void) const noexcept { return _to; }
+    inline const StepType GetType(void) const noexcept { return _type; }
+    inline bool IsTake(void) const noexcept { return _type & StepType::Take; }
+
+    virtual inline bool operator == (const Step& s) const noexcept { return _from == s._from && _to == s._to && _type == s._type; }
+    virtual inline bool operator != (const Step& s) const noexcept { return !(s == *this); }
+    virtual inline const std::vector<Field>& GetTakes() const noexcept = 0;
 
   private:
-    const Field from;
-    const Field to;
-    const StepType type;
-    const std::vector<Field> take;
+    const Field _from;
+    const Field _to;
+    const StepType _type;
+  };
+  using StepP = std::shared_ptr<Step>;
+  using Steps = std::vector<StepP>;
+
+
+  class SimpleStep : public Step  // Simple Step means 'Take' is whatever is found on field 'To'
+  {
+  public:
+    inline SimpleStep(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal ) noexcept : Step(Fr,To,Ty) {}
+    virtual inline const std::vector<Field>& GetTakes() const noexcept override { throw; /*return std::vector<Field>{GetTo()};*/ }     // ############## used, needs to be working!
+  };
+
+  class ComplexStep : public Step
+  {
+  public:
+    inline ComplexStep(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal, const std::vector<Field>& Takes = {}) noexcept : Step{Fr, To, Ty }, _takes{ Takes } {}
+
+    virtual inline bool operator == (const ComplexStep& s) const noexcept { return this->Step::operator==(s) && _takes == s._takes; }
+    virtual inline bool operator != (const ComplexStep& s) const noexcept { return !(s == *this); }
+    virtual inline const std::vector<Field>& GetTakes() const noexcept override { return _takes; }
+
+  protected:
+    const std::vector<Field> _takes;
   };
 
 
@@ -109,7 +132,8 @@ namespace BoardGamesCore
 
   public:
     constexpr inline PositionValue(PValueType t = PValueType::Undefined) noexcept : type{ t } {}
-    constexpr inline PositionValue(long v) noexcept : type{ PValueType::Normal }, value{ v } {}
+    constexpr inline PositionValue(int v) noexcept : type{ PValueType::Normal }, value{ v } {}
+    constexpr inline PositionValue(size_t v) noexcept : type{ PValueType::Normal }, value{ static_cast<int>(v) } {}
 
     constexpr inline bool operator== (const PositionValue& v) const noexcept { return type == v.type && value == v.value; }
     constexpr inline bool operator!= (const PositionValue& v) const noexcept { return !(*this == v); }
@@ -163,28 +187,64 @@ namespace BoardGamesCore
     PValueType type{ PValueType::Undefined };
   };
 
-  class Move
+
+  class Move abstract
   {
   public:
-    inline Move(const Step& s) : step{ s } {}
-    inline Move(const std::vector<Step>& St) : step{ St } {}
+    inline Move(void) noexcept {}
     Move(const Move& move) = default;
-    Move&& operator =(Move&& m) noexcept;
-    ~Move(void) {}
-    inline bool operator==(const Move& m) const noexcept { return step == m.step; }
+//    Move&& operator =(Move&& m) noexcept;
+    ~Move(void) noexcept {}
+    constexpr inline void SetValue(PositionValue v) noexcept { _value = v; }
+    constexpr inline PositionValue GetValue(void) const noexcept { return _value; }
+    constexpr inline bool operator <(const Move& rhs) const noexcept { return _value < rhs._value; }
 
-    inline const std::vector<Step> GetSteps(void) const noexcept { return step; }
-    bool IsTake(void) const noexcept;
-    inline const Field& GetFr(void) const { return step.front().GetFr(); }
-    inline const Field& GetTo(void) const { return step.back().GetTo(); }
-    const std::vector<Location> GetJumped(void) const;  // return list of jumped-over locations
-    constexpr inline void SetValue(PositionValue v) noexcept { value = v; }
-    constexpr inline PositionValue GetValue(void) const noexcept { return value; }
-    constexpr inline bool operator <(const Move& rhs) const noexcept { return value < rhs.value; }
+    virtual inline bool operator==(const Move* m) const = 0;
+    virtual inline const Steps& GetSteps(void) const = 0;
+    virtual inline const StepP GetStep(int i = 0) const noexcept = 0;
+    virtual bool IsTake(void) const noexcept = 0;
+    virtual inline const Field& GetFr(void) const noexcept = 0;
+    virtual inline const Field& GetTo(void) const noexcept = 0;
 
   private:
-    std::vector<Step> step;
-    PositionValue value{};
+    PositionValue _value{};
+  };
+  using MoveP = std::shared_ptr<Move>;
+  using Moves = std::vector<MoveP>;
+
+
+  class SimpleMove : public Move   //  one Piece moves one Step, optional takes one Piece from move target
+  {
+  public:
+    inline SimpleMove(const StepP s) : _step(s) {}
+
+    virtual inline bool operator==(const Move* m) const override { return _step == dynamic_cast<const SimpleMove*>(m)->_step; };
+    virtual inline const Field& GetFr(void) const noexcept override { return _step->GetFr(); }
+    virtual inline const Field& GetTo(void) const noexcept override { return _step->GetTo(); }
+    virtual inline const Steps& GetSteps(void) const override { return Steps(1,_step); }   // ##############cannot return a temporary!
+    virtual inline const StepP GetStep(int /* i */ = 0) const noexcept override { return _step; }
+    virtual bool IsTake(void) const noexcept override { return _step->IsTake(); }
+
+  private:
+    const StepP _step;
+  };
+
+  class ComplexMove : public Move  //  optional mutliple Pieces, multi-Step moves, optional multi-takes
+  {
+  public:
+    inline ComplexMove(const Steps& s) : _steps{ s } {}
+
+    virtual inline bool operator==(const Move* m) const override { return _steps == dynamic_cast<const ComplexMove*>(m)->_steps; };
+    virtual inline const Field& GetFr(void) const noexcept override { return _steps.front()->GetFr(); }
+    virtual inline const Field& GetTo(void) const noexcept override { return _steps.back()->GetTo(); }
+    virtual inline const Steps& GetSteps(void) const override { return _steps; }
+    virtual inline const StepP GetStep(int i = 0) const noexcept override { return _steps[i]; }
+    virtual bool IsTake(void) const noexcept override { for (auto s : _steps) if (s->IsTake()) return true; return false; }
+
+    const std::vector<Location> GetJumped(void) const;  // return list of jumped-over locations
+
+  private:
+    const Steps& _steps;
   };
 
 
@@ -233,7 +293,7 @@ namespace BoardGamesCore
     inline bool operator==(const Kind& k) const noexcept { return k.kind == kind; }
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(kind); }
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept { return 0; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const {};
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const {};
     virtual void Serialize(CArchive& ar) const { ar << kind; }
     virtual bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept { return false; }
 
@@ -274,7 +334,7 @@ namespace BoardGamesCore
     virtual ~Piece(void) noexcept {}
     inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     virtual void Serialize(CArchive& ar) const { color->Serialize(ar); kind->Serialize(ar); }
-    inline void CollectMoves(const MainPosition& p, const Location l, std::vector<Move>& m) const { kind->CollectMoves(p, l, m); }
+    inline void CollectMoves(const MainPosition& p, const Location l, Moves& m) const { kind->CollectMoves(p, l, m); }
     virtual inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind->GetValue(p,l); }
     inline bool IsKind(const Kind& k) const noexcept { return k == *kind; }
     inline bool IsColor(const Color* c) const noexcept { return c == color; }
@@ -367,10 +427,10 @@ namespace BoardGamesCore
     virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
     virtual void GetAllMoves(void);              // generate all moves and save list
-    virtual std::vector<Move> CollectMoves(void) const { std::vector<Move> m{}; return m; }
-    bool JumpsOnly(std::vector<Move>& moves) const noexcept;
-    inline std::vector<Move>& GetMoveList(bool w) { return w ? movelistW : movelistB; }
-    virtual bool AddIfLegal(std::vector<Move>&, const Location, const Location) const { return false; };
+    virtual Moves CollectMoves(void) const { Moves m{}; return m; }
+    bool JumpsOnly(Moves& moves) const noexcept;
+    inline Moves& GetMoveList(bool w) { return w ? movelistW : movelistB; }
+    virtual bool AddIfLegal(Moves&, const Location, const Location) const { return false; };
     virtual void EvaluateStatically(void);       // calculate position value and save
     virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
@@ -378,20 +438,22 @@ namespace BoardGamesCore
     inline Depth GetDepth(void) const noexcept { return depth; }
     inline Depth SetDepth(Depth d) noexcept { return depth = d; }
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value = v.Relative(w); }
-    virtual inline const Move& GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
-    virtual MainPosition* GetPosition(AIContext& plist, Move* m = nullptr) const;     // execute move, maintain in PList
-    virtual const std::vector<const Piece*> Execute(const Move& m);
-    virtual void Undo(const Move& m);
+    virtual inline MoveP GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
+    virtual MainPosition* GetPosition(AIContext& plist, MoveP m = nullptr) const;     // execute move, maintain in PList
+    virtual const std::vector<const Piece*> Execute(MoveP m);
+    virtual void Undo(const MoveP m);
 
   public:
-    std::vector<Move> sequence{};
+    Moves sequence{};
 
   protected:
     const Color* onTurn{ &Color::White };
     Depth depth{ 0 };
     PositionValue value{ PositionValue::Undefined };                 // position value for White
-    std::vector<Move> movelistW{};
-    std::vector<Move> movelistB{};
+    Moves movelistW{};
+    Moves movelistB{};
+//  Moves movelistW{};
+//  Moves movelistB{};
   };
 
   class TakenPosition : public Position
@@ -513,7 +575,7 @@ namespace BoardGamesCore
     virtual inline Player* CurrentPlayer(void) const noexcept { return players[current]; }
     virtual inline Player* NextPlayer(void) noexcept { current = ++current % players.size(); return players[current]; }
     virtual bool AIMove(void);
-    virtual void Execute(const Move& m);
+    virtual void Execute(MoveP m);
 
   // UI functionality
     virtual void Draw(CDC* pDC) const override;
@@ -547,7 +609,7 @@ namespace BoardGamesCore
     bool editing{ false };                       // edit mode allows to change the main playing board
     std::vector<Player*> players{};              // list of players
     unsigned int current{ 0 };                   // current player
-    std::vector<Move> moves{};                   // will contain all allowed moves once a start piece is selected
+    Moves moves{};                   // will contain all allowed moves once a start piece is selected
     bool gameover{ false };                      // once game is over, moves are disallowed
   };
 

@@ -26,12 +26,12 @@ namespace BoardGamesChessPieces
   inline const ChessPiece ChessPiece::BQ{ &Queen ::TheQueen,  &Color::Black, IDB_BQL, IDB_BQD, IDB_BQS };
   inline const ChessPiece ChessPiece::BK{ &King  ::TheKing,   &Color::Black, IDB_BKL, IDB_BKD, IDB_BKS };
 
-  void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     p.AddIfLegal(moves, l, l + Offset(1, 1));
     p.AddIfLegal(moves, l, l + Offset(1, -1));
   }
-  void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     p.AddIfLegal(moves, l, l + Offset(+2, +1));
     p.AddIfLegal(moves, l, l + Offset(+1, +2));
@@ -42,21 +42,21 @@ namespace BoardGamesChessPieces
     p.AddIfLegal(moves, l, l + Offset(+1, -2));
     p.AddIfLegal(moves, l, l + Offset(+2, -1));
   }
-  void Bishop::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +z)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, -z)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, +z)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, -z)); z++);
   }
-  void Rook::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Rook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+0, +z)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+0, -z)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +0)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, -0)); z++);
   }
-  void Queen::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Queen::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +z)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, -z)); z++);
@@ -67,7 +67,7 @@ namespace BoardGamesChessPieces
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +0)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(-z, -0)); z++);
   }
-  void King::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     p.AddIfLegal(moves, l, l + Offset(+1, +1));
     p.AddIfLegal(moves, l, l + Offset(+1, -1));

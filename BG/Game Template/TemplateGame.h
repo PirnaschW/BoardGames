@@ -45,7 +45,7 @@ namespace Template
   public:
     inline TemplatePosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y) {}
     virtual inline MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
   };
 

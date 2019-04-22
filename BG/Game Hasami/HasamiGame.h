@@ -20,7 +20,7 @@ namespace Hasami
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
 
   public:
     static const Checker TheChecker;
@@ -44,7 +44,7 @@ namespace Hasami
   public:
     HasamiPosition(Coordinate x, Coordinate y) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
 
   protected:

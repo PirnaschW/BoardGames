@@ -101,8 +101,8 @@ namespace BoardGamesCore
     // markup selectable tiles
     for (auto& m : moves)
     {
-      lay->DrawSelected(pDC, m.GetFr().GetLocation());
-      lay->DrawSelected(pDC, m.GetTo().GetLocation());
+      lay->DrawSelected(pDC, m->GetFr().GetLocation());
+      lay->DrawSelected(pDC, m->GetTo().GetLocation());
     }
 
     if (showStock || editing)
@@ -121,9 +121,9 @@ namespace BoardGamesCore
     if (true) {
       CString s;
       static char buffer[2000];
-      sprintf_s(buffer, "Depth = %d (value = %d) [PList size = %zd] free mem:%zd, sizeof(Position/MainPosition/vector<Move>/Move/Step) = %zd/%zd/%zd/%zd/%zd",
+      sprintf_s(buffer, "Depth = %d (value = %d) [PList size = %zd] free mem:%zd, sizeof(Position/MainPosition/vector<Move>/Move/SimpleMove/ComplexMove/SimpleStep) = %zd/%zd/%zd/%zd/%zd/%zd/%zd",
         pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)),
-        plist.size(), plist.freemem, sizeof(Position), sizeof(MainPosition),sizeof(std::vector<Move>), sizeof(Move), sizeof(Step));
+        plist.size(), plist.freemem, sizeof(Position), sizeof(MainPosition),sizeof(Moves), sizeof(Move), sizeof(SimpleMove), sizeof(ComplexMove), sizeof(SimpleStep));
       s = buffer;
       pDC->TextOutW(500, 20, s);
     }
@@ -230,13 +230,13 @@ namespace BoardGamesCore
       MainPosition* p{ pos->GetPosition(plist) };  // need to get ALL legal moves (this piece might not be allowed to move because another one has a mandatory jump)
       for (const auto& m : p->GetMoveList(pos->OnTurn() == &Color::White))   // filter moves of the selected piece into 'moves'
       {
-        if (m.GetFr().GetLocation() == l) moves.push_back(m);
+        if (m->GetFr().GetLocation() == l) moves.push_back(m);
       }
     }
     else  // starting point was already defined
     {
       for (const auto& m : moves)                  // check through allowed moves
-        if (m.GetTo().GetLocation() == l)
+        if (m->GetTo().GetLocation() == l)
         {
           Execute(m);
           moves.clear();

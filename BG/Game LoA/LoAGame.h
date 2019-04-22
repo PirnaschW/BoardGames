@@ -21,12 +21,12 @@ namespace LoA
 
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 0; } // in LoA, pieces have no value
-    virtual void CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves) const override;
+    virtual void CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const override;
 
 // extensions
   public:
     std::vector<const Piece*> CollectAlong(const MainPosition& pos, Location l, const Offset& o) const;
-    void CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves, int dx, int dy) const;
+    void CollectMoves(const MainPosition& pos, const Location& l, Moves& moves, int dx, int dy) const;
 
   public:
     static const LoAPeg ThePeg;
@@ -52,7 +52,7 @@ namespace LoA
     LoAPosition(Coordinate x, Coordinate y);
     virtual inline MainPosition* Clone(void) const override { return new LoAPosition(*this); }
     virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override;
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
 
     // extensions

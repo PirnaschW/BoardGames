@@ -8,14 +8,14 @@ namespace Template
   inline const TemplatePiece TemplatePiece::TemplatePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
   inline const TemplatePiece TemplatePiece::TemplatePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
 
-  bool TemplatePosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  bool TemplatePosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;  // out of board
     if (p->IsColor(OnTurn())) return false;  // own piece
 
-    const Step::StepType st = p->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
-    m.push_back(Step{Field{fr,GetPiece(fr)}, Field{to,GetPiece(fr)},st,std::vector<Field>{Field{to,GetPiece(to)}}});
+    const SimpleStep::StepType st = p->IsBlank() ? SimpleStep::StepType::Normal : SimpleStep::StepType::Take;
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
     return false;
   };
 

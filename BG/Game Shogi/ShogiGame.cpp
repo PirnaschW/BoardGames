@@ -51,7 +51,7 @@ namespace Shogi
   inline const ShogiPiece ShogiPiece::ShogiPLB{ &PLance::ThePLance,   &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_PL_B, IDB_SHOGI_PL_S };
   const ShogiPiece ShogiPiece::ShogiPPB{ &PPawn::ThePPawn,     &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_PP_B, IDB_SHOGI_PP_S };
 
-  void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(0, dy));
@@ -67,7 +67,7 @@ namespace Shogi
     return true;
   }
 
-  void Lance::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Lance::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(0, z*dy)); z++);
@@ -77,7 +77,7 @@ namespace Shogi
     return (pos->OnTurn() == &Color::White) ? (l.y < pos->GetSizeY() - 1) : (l.y > 1);   // drop anywhere except last row
   }
 
-  void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, 2 * dy));
@@ -88,19 +88,19 @@ namespace Shogi
     return (pos->OnTurn() == &Color::White) ? (l.y < pos->GetSizeY() - 2) : (l.y > 2);   // drop anywhere except last two rows
   }
 
-  void Bishop::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (auto& d : Offset::Bdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
-  void Rook::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Rook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (auto& d : Offset::Rdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
-  void Silver::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Silver::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, dy));
@@ -110,11 +110,11 @@ namespace Shogi
     p.AddIfLegal(moves, l, l + Offset(+1, -dy));
   }
 
-  void Gold::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Gold::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
-  void Gold::CollectGoldMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves)
+  void Gold::CollectGoldMoves(const MainPosition& p, const Location& l, Moves& moves)
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, dy));
@@ -125,28 +125,28 @@ namespace Shogi
     p.AddIfLegal(moves, l, l + Offset(+0, -dy));
   }
 
-  void King::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (auto& d : Offset::Qdirection)
       p.AddIfLegal(moves, l, l + d);
   }
 
-  void PPawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void PPawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
 
-  void PLance::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void PLance::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
 
-  void PKnight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void PKnight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
 
-  void PBishop::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void PBishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (auto& d : Offset::Bdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
@@ -154,7 +154,7 @@ namespace Shogi
       p.AddIfLegal(moves, l, l + d);
   }
 
-  void PRook::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void PRook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     for (auto& d : Offset::Rdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
@@ -162,7 +162,7 @@ namespace Shogi
       p.AddIfLegal(moves, l, l + d);
   }
 
-  void PSilver::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void PSilver::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
@@ -253,14 +253,16 @@ namespace Shogi
           for (unsigned int z = 0; (p = tpos->GetPiece(Location(z, 0))) != &Piece::NoTile; z++)
           {
             const ShogiPiece* pp = dynamic_cast<const ShogiPiece*>(p); // must be a shogipiece, verify it
-            if (pp->CanDrop(this,l))
-              movelistB.push_back(Step{ Field{ Location(z, 0),nullptr }, Field{ l,p },Step::StepType::Drop,std::vector<Field>{} });
+            if (pp->CanDrop(this, l))
+            {
+              movelistB.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ Location(z, 0),nullptr }, Field{ l,p }, SimpleStep::StepType::Drop)));
+            }
           }
         }
       }
   }
   
-  bool ShogiPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  bool ShogiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* pt = GetPiece(to);
     if (pt == nullptr) return false;  // out of board
@@ -268,15 +270,15 @@ namespace Shogi
 
     const ShogiPiece* pf = dynamic_cast<const ShogiPiece*>(GetPiece(fr));
 
-    Step::StepType st = pt->IsBlank() ? Step::StepType::Normal : Step::StepType::Take;
+    SimpleStep::StepType st = pt->IsBlank() ? SimpleStep::StepType::Normal : SimpleStep::StepType::Take;
 //    if (pf->CanDrop(this, to))  // 'can drop' is also 'can move there'
 //    {
-      m.push_back(Step{ Field{fr,pf}, Field{to,pf},st,std::vector<Field>{Field{to,pt}} });
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,pf }, Field{ to,pf }, st)));
 //    }
     if ((CanPromote(fr) || CanPromote(to)) && GetPiece(fr)->IsPromotable())
     {
-      st = static_cast<Step::StepType>(st | Step::StepType::Promote);
-      m.push_back(Step{ Field{fr,GetPiece(fr)}, Field{to,pf->Promote(true)},st,std::vector<Field>{Field{to,pt}} });
+      st = static_cast<SimpleStep::StepType>(st | SimpleStep::StepType::Promote);
+      m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,pf->Promote(true) }, st)));
     }
     return pt->IsBlank();   // if free tile, keep trying this direction
   }

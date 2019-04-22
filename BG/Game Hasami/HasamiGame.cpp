@@ -8,7 +8,7 @@ namespace Hasami
   inline const HasamiPiece HasamiPiece::HasamiPieceB{ &Checker::TheChecker, &Color::Black, IDB_HASAMI_B, IDB_HASAMI_BS };
   inline const HasamiPiece HasamiPiece::HasamiPieceW{ &Checker::TheChecker, &Color::White, IDB_HASAMI_W, IDB_HASAMI_WS };
 
-  void Checker::CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves) const
+  void Checker::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const
   {
     for (auto& d : Offset::Rdirection)
     {
@@ -44,12 +44,12 @@ namespace Hasami
     }
   }
 
-  bool HasamiPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  bool HasamiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;          // out of board
     if (!p->IsBlank()) return false;         // occupied
-    Step::StepType st{ Step::StepType::Normal };
+    SimpleStep::StepType st{ SimpleStep::StepType::Normal };
 
     std::vector<Field> taken{};
     for (auto& d : Offset::Rdirection)
@@ -63,7 +63,7 @@ namespace Hasami
         if (l == fr)                        // was this going backwards?
         {
           if (t.size() == 1)                // if something was inbetween, it was a jump
-            st = Step::StepType::Jump;
+            st = SimpleStep::StepType::Jump;
           break;                            // either way, stop looking into this direction
         }
         if (pp->IsColor(OnTurn()))          // own piece; this 'takes' all intermediate pieces
@@ -74,7 +74,7 @@ namespace Hasami
         else t.push_back(Field(l, pp));     // opponents piece, add to potential taken list
       }
     }
-    m.push_back(Step{ Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) },st,taken });
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
     return true;
   }
 

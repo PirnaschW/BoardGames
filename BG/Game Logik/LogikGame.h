@@ -27,7 +27,7 @@ namespace Logik
     constexpr Peg<k>(void) noexcept : Kind(k) {}
 
   public:
-    void CollectMoves(const MainPosition&, const Location, std::vector<Move>&) {};
+    void CollectMoves(const MainPosition&, const Location, Moves&) {};
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1; }
 
   public:
@@ -173,10 +173,10 @@ namespace Logik
 
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
-  class LMove : public Move
+  class LMove : public SimpleMove
   {
   public:
-    LMove(PositionValue mm) noexcept : Move(Step{ Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr} }), m((unsigned int)mm) {}
+    LMove(PositionValue mm) noexcept : SimpleMove(std::make_shared<SimpleStep>( Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr} )), m((unsigned int)mm) {}
     unsigned int GetIndex(void) const  noexcept { return m; }
     ~LMove(void) {}
 
@@ -231,10 +231,10 @@ namespace Logik
     }
     virtual void ReadPosition(void) noexcept;
     virtual PositionValue Evaluate(unsigned int) const;
-    virtual const std::vector<const Piece*> Execute(const Move& m) override
+    virtual const std::vector<const Piece*> Execute(MoveP m) override
     {
       std::vector<const Piece*> taken{};
-      previ[prevc] = static_cast<const LMove<BX, BY, BZ>&>(m).GetIndex();
+      previ[prevc] = static_cast<LMove<BX, BY, BZ>*>(m.get())->GetIndex();
       const Play<BX, BY, BZ>& p = previ[prevc];
       for (unsigned int i = 0; i < BY; ++i)
       {
@@ -428,8 +428,7 @@ namespace Logik
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 5 } } }; return v; }
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;
-    void Execute(const Move& /*m*/) override {}
-    void Execute(const LMove<BX, BY, BZ>& m)
+    void Execute(MoveP m) override
     {
       pos->Execute(m);
       pos->SetOnTurn(NextPlayer()->GetColor());
@@ -502,7 +501,7 @@ namespace Logik
       ::AfxMessageBox(L"You might as well resign - Computer will win!");
     }
 
-    Execute(LMove<BX, BY, BZ>(e));
+    Execute(std::make_shared<LMove<BX, BY, BZ>>(e));
     return true;
   }
 

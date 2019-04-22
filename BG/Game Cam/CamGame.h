@@ -21,7 +21,7 @@ namespace Cam
 
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; };
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     
   public:
     static const Pawn ThePawn;
@@ -33,7 +33,7 @@ namespace Cam
     constexpr inline Knight(void) noexcept : Kind('N') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 400; }
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     
   public:
     static const Knight TheKnight;
@@ -65,7 +65,7 @@ namespace Cam
  
     // extensions:
   public:
-    bool CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const;
+    bool CollectJumps(const Location& fr, const Steps& s, bool charge, const Color* c, Moves& m) const;
   };
 
   class CamTakenPosition : public TakenPosition

@@ -17,7 +17,7 @@ namespace LoA
     return along;
   }
 
-  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves, int dx, int dy) const
+  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves, int dx, int dy) const
   {
     unsigned int s{ pos.GetPiece(l)->IsBlank() ? 0U : 1U };
     std::vector<const Piece*> a1 = CollectAlong(pos, l, Offset(dx, dy));
@@ -61,7 +61,7 @@ namespace LoA
     }
   }
 
-  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, std::vector<Move>& moves) const
+  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const
   {
     CollectMoves(pos, l, moves, 1, 0); // check horizontal moves
     CollectMoves(pos, l, moves, 0, 1); // check vertical moves
@@ -102,18 +102,18 @@ namespace LoA
     return MainPosition::SetPiece(l, p);
   }
 
-  bool LoAPosition::AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const
+  bool LoAPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;  // out of board
     if (p->IsColor(OnTurn())) return false;  // own piece
     if (p->IsBlank())
     {
-      m.push_back(Step{ Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) } });
+      m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) })));
     }
     else
     {
-      m.push_back(Step{ Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) },Step::StepType::Take,std::vector<Field>{Field{ to,GetPiece(to) }} });
+      m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>( Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) },SimpleStep::StepType::Take/*,std::vector<Field>{Field{ to,GetPiece(to) }}*/ )));
     }
     return false;
   }

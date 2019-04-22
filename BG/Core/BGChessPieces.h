@@ -9,7 +9,7 @@ namespace BoardGamesChessPieces
   private:
     Pawn(void) noexcept : Kind('P') {}
   public:
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
 
   public:
@@ -21,7 +21,7 @@ namespace BoardGamesChessPieces
   private:
     Knight(void) noexcept : Kind('N') {}
   public:
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 300; }
 
   public:
@@ -33,7 +33,7 @@ namespace BoardGamesChessPieces
   private:
     Bishop(void) noexcept : Kind('B') {}
   public:
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 300; }
 
   public:
@@ -45,7 +45,7 @@ namespace BoardGamesChessPieces
   private:
     Rook(void) noexcept : Kind('R') {}
   public:
-    void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 500; }
 
   public:
@@ -57,7 +57,7 @@ namespace BoardGamesChessPieces
   private:
     Queen(void) noexcept : Kind('Q') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 900; }
 
   public:
@@ -69,7 +69,7 @@ namespace BoardGamesChessPieces
   private:
     King(void) noexcept : Kind('K') {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, std::vector<Move>&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 500; }
 
   public:

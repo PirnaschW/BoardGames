@@ -20,7 +20,7 @@ namespace Checkers
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const override;
 
   public:
     static const Checker TheChecker;
@@ -32,7 +32,7 @@ namespace Checkers
     constexpr inline King(void) noexcept : Kind('K') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const override;
 
   public:
     static const King TheKing;
@@ -44,7 +44,7 @@ namespace Checkers
     constexpr inline Queen(void) noexcept : Kind('K') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, std::vector<Move>& /*m*/) const override;
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const override;
 
   public:
     static const Queen TheQueen;
@@ -77,12 +77,12 @@ namespace Checkers
   public:
     CheckersPosition(Coordinate x, Coordinate y) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new CheckersPosition(*this); }
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void GetAllMoves(void) override;
     virtual void EvaluateStatically(void) override;
 // extensions
   public:
-    bool AddIfLegalJump(std::vector<Move>& m, bool longjumps, const std::vector<Step>& s, const Location fr) const;
+    bool AddIfLegalJump(Moves& m, bool longjumps, const Steps& s, const Location fr) const;
   private:
     inline bool CanPromote(const Location &l) const noexcept;
   };

@@ -23,7 +23,7 @@ namespace Test
     TestPosition(Coordinate x, Coordinate y);
     ~TestPosition() override {}
     virtual MainPosition* Clone(void) const override { return new TestPosition(*this); }
-    virtual bool AddIfLegal(std::vector<Move>& m, const Location fr, const Location to) const override;
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
   };
 
 

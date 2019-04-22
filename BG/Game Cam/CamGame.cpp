@@ -13,9 +13,9 @@ namespace Cam
   inline const CamPiece CamPiece::BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
   inline const CamPiece CamPiece::BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
 
-  void Pawn::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
-    std::vector<Step> s{};
+    Steps s{};
     const CamPosition& pos = dynamic_cast<const CamPosition&>(p);
     pos.CollectJumps(l, s, false, &Color::NoColor, moves);
     const Piece* p0 = pos.GetPiece(l);                                    // piece that is moving
@@ -25,13 +25,13 @@ namespace Cam
       if (p1 == nullptr) continue;                                        // out of board
       if (p1 == &Piece::NoTile) continue;                                 // out of board
       if (!p1->IsBlank()) continue;                                       // tile occupied
-      moves.push_back(Step{ Field{ l,p0 }, Field{ l + d,p0 } });          // ok, so add move to move list
+      moves.push_back(std::make_shared<ComplexMove>(Steps(1,std::make_shared<ComplexStep>( Field{ l,p0 }, Field{ l + d,p0 } )))); // ok, so add move to move list
     }
   }
 
-  void Knight::CollectMoves(const MainPosition& p, const Location& l, std::vector<Move>& moves) const
+  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
-    std::vector<Step> s{};
+    Steps s{};
     const CamPosition& pos = dynamic_cast<const CamPosition&>(p);
     pos.CollectJumps(l, s, true, &Color::NoColor, moves);
     const Piece* p0 = pos.GetPiece(l);                                    // piece that is moving
@@ -41,10 +41,9 @@ namespace Cam
       if (p1 == nullptr) continue;                                        // out of board
       if (p1 == &Piece::NoTile) continue;                                 // out of board
       if (!p1->IsBlank()) continue;                                       // tile occupied
-      moves.push_back(Step{ Field{ l,p0 }, Field{ l + d,p0 } });            // ok, so add move to move list
+      moves.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<ComplexStep>(Field{ l,p0 }, Field{ l + d,p0 }))));  // ok, so add move to move list
     }
   }
-
 
   unsigned int CamPiece::GetValue(const MainPosition& p, const Location l) const noexcept
   {
@@ -191,9 +190,9 @@ namespace Cam
     }
   }
 
-  bool CamPosition::CollectJumps(const Location& fr, const std::vector<Step>& s, bool charge, const Color* c, std::vector<Move>& m) const
+  bool CamPosition::CollectJumps(const Location& fr, const Steps& s, bool charge, const Color* c, Moves& m) const
   {
-    const Piece* p0 = s.empty() ? GetPiece(fr) : s.front().GetFr().GetPiece(); // the piece that is moving
+    const Piece* p0 = s.empty() ? GetPiece(fr) : s.front()->GetFr().GetPiece(); // the piece that is moving
     assert(p0 != nullptr);
     assert(p0 != &Piece::NoTile);
     assert(!p0->IsBlank());
@@ -203,7 +202,7 @@ namespace Cam
 
     for (auto& d : Offset::Qdirection)                                    // try all eight directions
     {
-      std::vector<Step> s1{ s };                                            // copy the previous jump sequence, so we can extend it
+      Steps s1{ s };                                            // copy the previous jump sequence, so we can extend it
       const Color* cc{ c };                                                 // color last jumped over (can switch once if charge)
       const Location l1{ fr + d };                                          // location to jump over
       const Location l2{ l1 + d };                                          // location to jump to
@@ -233,17 +232,17 @@ namespace Cam
       bool repeat{ false };
       for (auto& ss : s)
       {
-        if (ss.GetFr().GetLocation() == fr && ss.GetTo().GetLocation() == l2)
+        if (ss->GetFr().GetLocation() == fr && ss->GetTo().GetLocation() == l2)
         {
           repeat = true;  // same jump was done before
           break;
         }
-        if (ss.GetFr().GetLocation() == l2 && ss.GetTo().GetLocation() == fr)
+        if (ss->GetFr().GetLocation() == l2 && ss->GetTo().GetLocation() == fr)
         {
           repeat = true;  // reverse jump was done before
           break;
         }
-        for (const auto& t : ss.GetTake())
+        for (const auto& t : ss->GetTakes())
         {
           if (t.GetLocation() == l1)
           {
@@ -260,16 +259,16 @@ namespace Cam
       std::vector<Field> f{};
       if (c1 != c0)                                                       // jump was over an enemy piece
       {
-        st = (Step::StepType) (Step::StepType::Jump | Step::StepType::Take);
+        st = (Step::StepType) (Step::StepType::Jump | SimpleStep::StepType::Take);
         f.push_back(Field{ l1,p1 });
       }
 
-      s1.push_back(Step(Field{ fr, p0 }, Field{ l2,p0 }, st, f));         // add the jump to the step list
+      s1.push_back(std::make_shared<ComplexStep>(Field{ fr, p0 }, Field{ l2,p0 }, st, f));         // add the jump to the SimpleStep list
 
       if (!CollectJumps(l2, s1, charge, cc, m) ||                         // collect potential further jumps
         st == Step::StepType::Jump)
       {
-        m.push_back(Move(s1));              // if it could not be extended, or was a jump over an own piece, add the step list as a move
+        m.push_back(std::make_shared<ComplexMove>(s1));                          // if it could not be extended, or was a jump over an own piece, add the SimpleStep list as a move
       }
     }
     return any;
