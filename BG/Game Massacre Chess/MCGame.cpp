@@ -61,14 +61,14 @@ namespace MassacreChess
   MCGame::MCGame(MCPosition* p, TakenPosition* t, StockPosition* s,
     MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
-    AddToStock(Location(0, 0), &ChessPiece::WQ);
-    AddToStock(Location(1, 0), &ChessPiece::WR);
-    AddToStock(Location(2, 0), &ChessPiece::WB);
-    AddToStock(Location(3, 0), &ChessPiece::WN);
-    AddToStock(Location(0, 1), &ChessPiece::BQ);
-    AddToStock(Location(1, 1), &ChessPiece::BR);
-    AddToStock(Location(2, 1), &ChessPiece::BB);
-    AddToStock(Location(3, 1), &ChessPiece::BN);
+    AddToStock(Location(0U, 0U), &ChessPiece::WQ);
+    AddToStock(Location(1U, 0U), &ChessPiece::WR);
+    AddToStock(Location(2U, 0U), &ChessPiece::WB);
+    AddToStock(Location(3U, 0U), &ChessPiece::WN);
+    AddToStock(Location(0U, 1U), &ChessPiece::BQ);
+    AddToStock(Location(1U, 1U), &ChessPiece::BR);
+    AddToStock(Location(2U, 1U), &ChessPiece::BB);
+    AddToStock(Location(3U, 1U), &ChessPiece::BN);
   }
 
   const VariantList& MCGame::GetVariants(void) noexcept

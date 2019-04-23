@@ -261,6 +261,9 @@
     <ClInclude Include="Game Checkers\CheckersResource.h">
       <Filter>Game Checkers\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BGCoreLocation.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">

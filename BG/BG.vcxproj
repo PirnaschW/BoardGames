@@ -239,6 +239,7 @@
     <ClInclude Include="BGSelect.h" />
     <ClInclude Include="BGView.h" />
     <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="BGCoreLocation.h" />
     <ClInclude Include="Core\BGChessPieces.h" />
     <ClInclude Include="Core\BGCore.h" />
     <ClInclude Include="Core\BGCoreLayout.h" />

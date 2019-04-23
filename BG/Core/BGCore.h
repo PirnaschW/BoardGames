@@ -2,49 +2,6 @@
 namespace BoardGamesCore
 {
 
-  class Offset final
-  {
-    friend class Location;
-  public:
-    constexpr Offset(int xx, int yy) noexcept : dx{ xx }, dy{ yy } {}
-
-    constexpr inline const Offset operator*(int i) const noexcept { return Offset(dx * i, dy * i); }
-
-  private:
-    const int dx;
-    const int dy;
-
-  public:
-    static const Offset Rdirection[4];   // standard 4 'Rook'   directions
-    static const Offset Bdirection[4];   // standard 4 'Bishop' directions
-    static const Offset Qdirection[8];   // standard 8 'Queen'  directions
-  };
-  static_assert(!std::is_trivially_constructible<class Offset>::value, "must not be trivially constructible");
-  static_assert(std::is_constructible<class Offset, int, int>::value, "is not constructible");
-  static_assert(std::is_nothrow_constructible<class Offset, int, int>::value, "is not nothrow constructible");
-
-  typedef unsigned int Coordinate;
-
-  class Location final
-  {
-  public:
-    constexpr inline Location(Coordinate xx, Coordinate yy) noexcept : x{ xx }, y{ yy } {}
-
-    constexpr inline bool operator==(const Location& l) const noexcept { return l.x == x && l.y == y; }
-    constexpr inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
-    constexpr inline Location operator+(const Offset& o) const noexcept { Location l(*this); return l += o; }
-    constexpr inline Location& operator+=(const Offset& o) noexcept { x += o.dx, y += o.dy; return *this; }
-
-    constexpr inline bool Valid(Coordinate sizeX, Coordinate sizeY) const noexcept { return x >= 0 && x < sizeX && y >= 0 && y < sizeY; }
-    constexpr inline Coordinate Index(Coordinate sizeX, Coordinate /*sizeY*/) const noexcept { return y * sizeX + x; }
-
-  public:
-    // can't be protected, as the values need to be used in many places
-    // can't be const, or assignments between Locations wouldn't work.
-    Coordinate x;
-    Coordinate y;
-  };
-
   class Piece;  // forward declaration needed in class Field
   class Field final // combines a Location and a Piece on it
   {
@@ -85,7 +42,7 @@ namespace BoardGamesCore
 
     virtual inline bool operator == (const Step& s) const noexcept { return _from == s._from && _to == s._to && _type == s._type; }
     virtual inline bool operator != (const Step& s) const noexcept { return !(s == *this); }
-    virtual inline const std::vector<Field>& GetTakes() const noexcept = 0;
+    virtual inline const std::vector<Field> GetTakes(void) const noexcept = 0;
 
   private:
     const Field _from;
@@ -100,7 +57,7 @@ namespace BoardGamesCore
   {
   public:
     inline SimpleStep(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal ) noexcept : Step(Fr,To,Ty) {}
-    virtual inline const std::vector<Field>& GetTakes() const noexcept override { throw; /*return std::vector<Field>{GetTo()};*/ }     // ############## used, needs to be working!
+    virtual inline const std::vector<Field> GetTakes(void) const noexcept override { return std::vector<Field>{GetTo()}; }
   };
 
   class ComplexStep : public Step
@@ -110,7 +67,7 @@ namespace BoardGamesCore
 
     virtual inline bool operator == (const ComplexStep& s) const noexcept { return this->Step::operator==(s) && _takes == s._takes; }
     virtual inline bool operator != (const ComplexStep& s) const noexcept { return !(s == *this); }
-    virtual inline const std::vector<Field>& GetTakes() const noexcept override { return _takes; }
+    virtual inline const std::vector<Field> GetTakes(void) const noexcept override { return _takes; }
 
   protected:
     const std::vector<Field> _takes;
@@ -200,7 +157,7 @@ namespace BoardGamesCore
     constexpr inline bool operator <(const Move& rhs) const noexcept { return _value < rhs._value; }
 
     virtual inline bool operator==(const Move* m) const = 0;
-    virtual inline const Steps& GetSteps(void) const = 0;
+    virtual inline const Steps GetSteps(void) const = 0;
     virtual inline const StepP GetStep(int i = 0) const noexcept = 0;
     virtual bool IsTake(void) const noexcept = 0;
     virtual inline const Field& GetFr(void) const noexcept = 0;
@@ -221,7 +178,7 @@ namespace BoardGamesCore
     virtual inline bool operator==(const Move* m) const override { return _step == dynamic_cast<const SimpleMove*>(m)->_step; };
     virtual inline const Field& GetFr(void) const noexcept override { return _step->GetFr(); }
     virtual inline const Field& GetTo(void) const noexcept override { return _step->GetTo(); }
-    virtual inline const Steps& GetSteps(void) const override { return Steps(1,_step); }   // ##############cannot return a temporary!
+    virtual inline const Steps GetSteps(void) const override { return Steps(1,_step); }
     virtual inline const StepP GetStep(int /* i */ = 0) const noexcept override { return _step; }
     virtual bool IsTake(void) const noexcept override { return _step->IsTake(); }
 
@@ -237,7 +194,7 @@ namespace BoardGamesCore
     virtual inline bool operator==(const Move* m) const override { return _steps == dynamic_cast<const ComplexMove*>(m)->_steps; };
     virtual inline const Field& GetFr(void) const noexcept override { return _steps.front()->GetFr(); }
     virtual inline const Field& GetTo(void) const noexcept override { return _steps.back()->GetTo(); }
-    virtual inline const Steps& GetSteps(void) const override { return _steps; }
+    virtual inline const Steps GetSteps(void) const override { return _steps; }
     virtual inline const StepP GetStep(int i = 0) const noexcept override { return _steps[i]; }
     virtual bool IsTake(void) const noexcept override { for (auto s : _steps) if (s->IsTake()) return true; return false; }
 
@@ -247,13 +204,12 @@ namespace BoardGamesCore
     const Steps& _steps;
   };
 
-
   class TileColor final
   {
   private:
     constexpr inline TileColor(const char& f) noexcept : tilecolor{ f } {}
   public:
-    inline void Serialize(CArchive& ar) const { ar << tilecolor; }
+    void Serialize(CArchive* ar) const;
 
   private:
     const char tilecolor;
@@ -272,7 +228,7 @@ namespace BoardGamesCore
   public:
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(color); }
     inline const Color* operator !(void) const noexcept { return color == 'W' ? &Black : &White; }
-    inline void Serialize(CArchive& ar) const { ar << color; }
+    inline void Serialize(CArchive* ar) const;
 
   private:
     const char color;
@@ -294,7 +250,7 @@ namespace BoardGamesCore
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(kind); }
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept { return 0; }
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const {};
-    virtual void Serialize(CArchive& ar) const { ar << kind; }
+    virtual void Serialize(CArchive* ar) const;
     virtual bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept { return false; }
 
   private:
@@ -310,7 +266,7 @@ namespace BoardGamesCore
   private:
     constexpr inline PlayerType(const char& p) noexcept : playertype{ p } {}
   public:
-    inline void Serialize(CArchive& ar) const { ar << playertype; }
+    inline void Serialize(CArchive* ar) const;
 
   private:
     const char playertype;
@@ -333,7 +289,7 @@ namespace BoardGamesCore
     Piece& operator=(const Piece&) = delete;          // delete assignment operator
     virtual ~Piece(void) noexcept {}
     inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
-    virtual void Serialize(CArchive& ar) const { color->Serialize(ar); kind->Serialize(ar); }
+    inline virtual void Serialize(CArchive* ar) const { color->Serialize(ar); kind->Serialize(ar); }
     inline void CollectMoves(const MainPosition& p, const Location l, Moves& m) const { kind->CollectMoves(p, l, m); }
     virtual inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind->GetValue(p,l); }
     inline bool IsKind(const Kind& k) const noexcept { return k == *kind; }
@@ -388,7 +344,7 @@ namespace BoardGamesCore
     virtual ~Position(void) noexcept {}
     virtual inline bool operator ==(const Position* p) const noexcept { return pm == p->pm && pieces == p->pieces; }
     virtual std::size_t GetHash(void) const noexcept;
-    virtual void Serialize(CArchive& ar) const { for (auto& p : pieces) pm->GetPiece(p)->Serialize(ar); }
+    virtual void Serialize(CArchive* ar) const { for (auto& p : pieces) pm->GetPiece(p)->Serialize(ar); }
     inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pm->GetPiece(pieces[l.Index(sizeX, sizeY)]) : nullptr; }
     virtual inline const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; pieces[l.Index(sizeX, sizeY)] = pm->GetIndex(p); return p; }
     virtual void SetPosition(std::vector<const Piece*> list);
@@ -452,8 +408,6 @@ namespace BoardGamesCore
     PositionValue value{ PositionValue::Undefined };                 // position value for White
     Moves movelistW{};
     Moves movelistB{};
-//  Moves movelistW{};
-//  Moves movelistB{};
   };
 
   class TakenPosition : public Position
@@ -562,7 +516,7 @@ namespace BoardGamesCore
   public:
     Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl, bool pl = false) noexcept;
     virtual ~Game(void) noexcept;
-    virtual void Serialize(CArchive& ar) { pos->Serialize(ar); }
+    virtual void Serialize(CArchive* ar) { pos->Serialize(ar); }
     virtual void ReadFromWWW(const std::string& gameno);
     virtual inline const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
     virtual inline void AddToStock(const Location& l, const Piece* p) noexcept { spos->SetPiece(l, p); }
@@ -588,7 +542,7 @@ namespace BoardGamesCore
     virtual void DragEnd(const CPoint&) override;
     virtual void Select(const CPoint& point) override;
     virtual inline void Unselect(void) override { moves.clear(); }
-    virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { plist.callback = cb; }
+    virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist.callback = cb; }
 
   protected:
     MainPosition* pos;                           // logical position on the main playing board

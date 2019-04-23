@@ -137,8 +137,8 @@ namespace LoA
         for (auto& q : lp)
         {
           if (q.connected) continue;
-          const int dx = p.l.x - q.l.x;
-          const int dy = p.l.y - q.l.y;
+          const int dx = p.l._x - q.l._x;
+          const int dy = p.l._y - q.l._y;
           if (dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1)
           {
             q.connected = true;
@@ -226,8 +226,8 @@ namespace LoA
   LoAGame::LoAGame(LoAPosition* p, TakenPosition* t, StockPosition* s,
     LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
-    AddToStock(Location(0, 0), &LoAPiece::LoAPieceW);
-    AddToStock(Location(1, 0), &LoAPiece::LoAPieceB);
+    AddToStock(Location(0U, 0U), &LoAPiece::LoAPieceW);
+    AddToStock(Location(1U, 0U), &LoAPiece::LoAPieceB);
   }
 
   LoAGame::LoAGame(Coordinate x, Coordinate y) noexcept : LoAGame(

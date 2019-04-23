@@ -156,7 +156,7 @@ namespace Checkers
 
   bool CheckersPosition::CanPromote(const Location& l) const noexcept
   {
-    return (OnTurn() == &Color::White && l.y == 0) || (OnTurn() != &Color::White && l.y == sizeY-1);
+    return (OnTurn() == &Color::White && l._y == 0) || (OnTurn() != &Color::White && l._y == sizeY-1);
   }
 
 
@@ -167,12 +167,12 @@ namespace Checkers
   CheckersGame::CheckersGame(CheckersPosition* p, TakenPosition* t, StockPosition* s,
     CheckersLayout* l, CheckersTakenLayout* tl, CheckersStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
-    AddToStock(Location(0, 0), &CheckersPiece::CheckersPieceW);
-    AddToStock(Location(1, 0), &CheckersPiece::CheckersKingW);
-    AddToStock(Location(2, 0), &CheckersPiece::CheckersQueenW);
-    AddToStock(Location(0, 1), &CheckersPiece::CheckersPieceB);
-    AddToStock(Location(1, 1), &CheckersPiece::CheckersKingB);
-    AddToStock(Location(2, 1), &CheckersPiece::CheckersQueenB);
+    AddToStock(Location(0U, 0U), &CheckersPiece::CheckersPieceW);
+    AddToStock(Location(1U, 0U), &CheckersPiece::CheckersKingW);
+    AddToStock(Location(2U, 0U), &CheckersPiece::CheckersQueenW);
+    AddToStock(Location(0U, 1U), &CheckersPiece::CheckersPieceB);
+    AddToStock(Location(1U, 1U), &CheckersPiece::CheckersKingB);
+    AddToStock(Location(2U, 1U), &CheckersPiece::CheckersQueenB);
   }
 
   const VariantList& CheckersGame::GetVariants(void) noexcept

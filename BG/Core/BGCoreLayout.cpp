@@ -201,7 +201,7 @@ namespace BoardGamesCore
 
   void Game::DragStart(const CPoint& point)
   {
-    Location l{0,0};
+    Location l{0U,0U};
     if (slay->GetLocation(point, l)) { dragPiece = spos->GetPiece(l); }
     else return; // clicked somewhere outside
 
@@ -211,7 +211,7 @@ namespace BoardGamesCore
 
   void Game::DragEnd(const CPoint& point)
   {
-    Location l{0,0};
+    Location l{0U,0U};
     if (lay->GetLocation(point, l)) pos->SetPiece(l, dragPiece); // dropped on a valid target
     dragging = false;
     dragPoint = {};
@@ -222,7 +222,7 @@ namespace BoardGamesCore
   {
     if (!IsAlive() || CurrentPlayer()->Is(&PlayerType::Computer)) return;
 
-    Location l{0,0};
+    Location l{0U,0U };
     if (!lay->GetLocation(point, l)) return;       // user clicked somewhere outside
 
     if (moves.empty())  // new selection starts

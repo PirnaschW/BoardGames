@@ -33,6 +33,12 @@ namespace BoardGamesCore
   constexpr inline const PlayerType PlayerType::Computer{ 'C' };
 
   
+  void TileColor::Serialize(CArchive* ar) const { *ar << tilecolor; }
+  void Color::Serialize(CArchive* ar) const { *ar << color; }
+  void Kind::Serialize(CArchive* ar) const { *ar << kind; }
+  void PlayerType::Serialize(CArchive* ar) const { *ar << playertype; }
+
+
   //Move&& Move::operator =(Move&& m) noexcept
   //{
   //  std::swap(step, m.step);
@@ -49,6 +55,7 @@ namespace BoardGamesCore
     }
     return jumped;
   }
+  
 
   const std::unordered_map<std::string, const Piece*>& Piece::GetHTMLPieceMap(void) noexcept
   {

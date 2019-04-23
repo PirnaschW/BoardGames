@@ -37,8 +37,8 @@ namespace Hasami
   {
     for (Coordinate i = 0; i < x; i++)
     {
-      SetPiece(Location(i, 0), &HasamiPiece::HasamiPieceB);
-      SetPiece(Location(i, 1), &HasamiPiece::HasamiPieceB);
+      SetPiece(Location(i, 0U), &HasamiPiece::HasamiPieceB);
+      SetPiece(Location(i, 1U), &HasamiPiece::HasamiPieceB);
       SetPiece(Location(i, y - 1), &HasamiPiece::HasamiPieceW);
       SetPiece(Location(i, y - 2), &HasamiPiece::HasamiPieceW);
     }
@@ -160,8 +160,8 @@ namespace Hasami
   HasamiGame::HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s,
     HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
   {
-    AddToStock(Location(0, 0), &HasamiPiece::HasamiPieceW);
-    AddToStock(Location(1, 0), &HasamiPiece::HasamiPieceB);
+    AddToStock(Location(0U, 0U), &HasamiPiece::HasamiPieceW);
+    AddToStock(Location(1U, 0U), &HasamiPiece::HasamiPieceB);
   }
 
   const VariantList& HasamiGame::GetVariants(void) noexcept

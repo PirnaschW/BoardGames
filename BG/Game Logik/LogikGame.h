@@ -176,7 +176,7 @@ namespace Logik
   class LMove : public SimpleMove
   {
   public:
-    LMove(PositionValue mm) noexcept : SimpleMove(std::make_shared<SimpleStep>( Field{Location(0, 0),nullptr}, Field{Location(0, 0),nullptr} )), m((unsigned int)mm) {}
+    LMove(PositionValue mm) noexcept : SimpleMove(std::make_shared<SimpleStep>( Field{Location(0U, 0U),nullptr}, Field{Location(0U, 0U),nullptr} )), m((unsigned int)mm) {}
     unsigned int GetIndex(void) const  noexcept { return m; }
     ~LMove(void) {}
 
@@ -375,8 +375,8 @@ namespace Logik
   public:
     LMarkerStockPosition(void) noexcept : StockPosition(2 + 1, 1)
     {
-      SetPiece(Location(0, 0), &LogikPiece::LPieceB);
-      SetPiece(Location(1, 0), &LogikPiece::LPieceW);
+      SetPiece(Location(0U, 0U), &LogikPiece::LPieceB);
+      SetPiece(Location(1U, 0U), &LogikPiece::LPieceW);
     }
   };
 
@@ -410,16 +410,16 @@ namespace Logik
     LGame<BX, BY, BZ>(LPosition<BX, BY, BZ>* p, TakenPosition* t, StockPosition* s,
       LLayout* l, TakenLayout* tl, LStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
     {
-      AddToStock(Location(0, 0), &LogikPiece::LPieceB);
-      AddToStock(Location(1, 0), &LogikPiece::LPieceW);
-      if (BX > 0) AddToStock(Location(2, 0), &LogikPiece::LPiece1);
-      if (BX > 1) AddToStock(Location(3, 0), &LogikPiece::LPiece2);
-      if (BX > 2) AddToStock(Location(4, 0), &LogikPiece::LPiece3);
-      if (BX > 3) AddToStock(Location(5, 0), &LogikPiece::LPiece4);
-      if (BX > 4) AddToStock(Location(6, 0), &LogikPiece::LPiece5);
-      if (BX > 5) AddToStock(Location(7, 0), &LogikPiece::LPiece6);
-      if (BX > 6) AddToStock(Location(8, 0), &LogikPiece::LPiece7);
-      if (BX > 7) AddToStock(Location(9, 0), &LogikPiece::LPiece8);
+      AddToStock(Location(0U, 0U), &LogikPiece::LPieceB);
+      AddToStock(Location(1U, 0U), &LogikPiece::LPieceW);
+      if (BX > 0) AddToStock(Location(2U, 0U), &LogikPiece::LPiece1);
+      if (BX > 1) AddToStock(Location(3U, 0U), &LogikPiece::LPiece2);
+      if (BX > 2) AddToStock(Location(4U, 0U), &LogikPiece::LPiece3);
+      if (BX > 3) AddToStock(Location(5U, 0U), &LogikPiece::LPiece4);
+      if (BX > 4) AddToStock(Location(6U, 0U), &LogikPiece::LPiece5);
+      if (BX > 5) AddToStock(Location(7U, 0U), &LogikPiece::LPiece6);
+      if (BX > 6) AddToStock(Location(8U, 0U), &LogikPiece::LPiece7);
+      if (BX > 7) AddToStock(Location(9U, 0U), &LogikPiece::LPiece8);
       ShowStock(true);
     }
   public:

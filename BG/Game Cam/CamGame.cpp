@@ -47,7 +47,7 @@ namespace Cam
 
   unsigned int CamPiece::GetValue(const MainPosition& p, const Location l) const noexcept
   {
-    return kind->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l.y : l.y);
+    return kind->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l._y : l._y);
   }
 
 
@@ -56,137 +56,137 @@ namespace Cam
     if (x == 12) // full Camelot
     {
       // Black Knights
-      SetPiece(Location(2, 5), &CamPiece::BN);
-      SetPiece(Location(3, 6), &CamPiece::BN);
-      SetPiece(Location(8, 6), &CamPiece::BN);
-      SetPiece(Location(9, 5), &CamPiece::BN);
+      SetPiece(Location( 2U,  5U), &CamPiece::BN);
+      SetPiece(Location( 3U,  6U), &CamPiece::BN);
+      SetPiece(Location( 8U,  6U), &CamPiece::BN);
+      SetPiece(Location( 9U,  5U), &CamPiece::BN);
+                              
+      // Black Pawns          
+      SetPiece(Location( 3U,  5U), &CamPiece::BP);
+      SetPiece(Location( 4U,  5U), &CamPiece::BP);
+      SetPiece(Location( 5U,  5U), &CamPiece::BP);
+      SetPiece(Location( 6U,  5U), &CamPiece::BP);
+      SetPiece(Location( 7U,  5U), &CamPiece::BP);
+      SetPiece(Location( 8U,  5U), &CamPiece::BP);
+                              
+      SetPiece(Location( 4U,  6U), &CamPiece::BP);
+      SetPiece(Location( 5U,  6U), &CamPiece::BP);
+      SetPiece(Location( 6U,  6U), &CamPiece::BP);
+      SetPiece(Location( 7U,  6U), &CamPiece::BP);
+                         
+      // White Knights    
+      SetPiece(Location( 2U, 10U), &CamPiece::WN);
+      SetPiece(Location( 3U,  9U), &CamPiece::WN);
+      SetPiece(Location( 8U,  9U), &CamPiece::WN);
+      SetPiece(Location( 9U, 10U), &CamPiece::WN);
+                         
+      // White Pawns      
+      SetPiece(Location( 3U, 10U), &CamPiece::WP);
+      SetPiece(Location( 4U, 10U), &CamPiece::WP);
+      SetPiece(Location( 5U, 10U), &CamPiece::WP);
+      SetPiece(Location( 6U, 10U), &CamPiece::WP);
+      SetPiece(Location( 7U, 10U), &CamPiece::WP);
+      SetPiece(Location( 8U, 10U), &CamPiece::WP);
+                         
+      SetPiece(Location( 4U,  9U), &CamPiece::WP);
+      SetPiece(Location( 5U,  9U), &CamPiece::WP);
+      SetPiece(Location( 6U,  9U), &CamPiece::WP);
+      SetPiece(Location( 7U,  9U), &CamPiece::WP);
 
-      // Black Pawns
-      SetPiece(Location(3, 5), &CamPiece::BP);
-      SetPiece(Location(4, 5), &CamPiece::BP);
-      SetPiece(Location(5, 5), &CamPiece::BP);
-      SetPiece(Location(6, 5), &CamPiece::BP);
-      SetPiece(Location(7, 5), &CamPiece::BP);
-      SetPiece(Location(8, 5), &CamPiece::BP);
+      // Illegal tiles   
+      SetPiece(Location( 0U,  0U), &Piece::NoTile);
+      SetPiece(Location( 1U,  0U), &Piece::NoTile);
+      SetPiece(Location( 2U,  0U), &Piece::NoTile);
+      SetPiece(Location( 3U,  0U), &Piece::NoTile);
+      SetPiece(Location( 4U,  0U), &Piece::NoTile);
+      SetPiece(Location( 7U,  0U), &Piece::NoTile);
+      SetPiece(Location( 8U,  0U), &Piece::NoTile);
+      SetPiece(Location( 9U,  0U), &Piece::NoTile);
+      SetPiece(Location(10U,  0U), &Piece::NoTile);
+      SetPiece(Location(11U,  0U), &Piece::NoTile);
 
-      SetPiece(Location(4, 6), &CamPiece::BP);
-      SetPiece(Location(5, 6), &CamPiece::BP);
-      SetPiece(Location(6, 6), &CamPiece::BP);
-      SetPiece(Location(7, 6), &CamPiece::BP);
+      SetPiece(Location( 0U,  1U), &Piece::NoTile);
+      SetPiece(Location( 1U,  1U), &Piece::NoTile);
+      SetPiece(Location(10U,  1U), &Piece::NoTile);
+      SetPiece(Location(11U,  1U), &Piece::NoTile);
 
-      // White Knights
-      SetPiece(Location(2, 10), &CamPiece::WN);
-      SetPiece(Location(3, 9), &CamPiece::WN);
-      SetPiece(Location(8, 9), &CamPiece::WN);
-      SetPiece(Location(9, 10), &CamPiece::WN);
+      SetPiece(Location( 0U,  2U), &Piece::NoTile);
+      SetPiece(Location(11U,  2U), &Piece::NoTile);
 
-      // White Pawns
-      SetPiece(Location(3, 10), &CamPiece::WP);
-      SetPiece(Location(4, 10), &CamPiece::WP);
-      SetPiece(Location(5, 10), &CamPiece::WP);
-      SetPiece(Location(6, 10), &CamPiece::WP);
-      SetPiece(Location(7, 10), &CamPiece::WP);
-      SetPiece(Location(8, 10), &CamPiece::WP);
+      SetPiece(Location( 0U, 13U), &Piece::NoTile);
+      SetPiece(Location(11U, 13U), &Piece::NoTile);
 
-      SetPiece(Location(4, 9), &CamPiece::WP);
-      SetPiece(Location(5, 9), &CamPiece::WP);
-      SetPiece(Location(6, 9), &CamPiece::WP);
-      SetPiece(Location(7, 9), &CamPiece::WP);
+      SetPiece(Location( 0U, 14U), &Piece::NoTile);
+      SetPiece(Location( 1U, 14U), &Piece::NoTile);
+      SetPiece(Location(10U, 14U), &Piece::NoTile);
+      SetPiece(Location(11U, 14U), &Piece::NoTile);
 
-      // Illegal tiles
-      SetPiece(Location(0, 0), &Piece::NoTile);
-      SetPiece(Location(1, 0), &Piece::NoTile);
-      SetPiece(Location(2, 0), &Piece::NoTile);
-      SetPiece(Location(3, 0), &Piece::NoTile);
-      SetPiece(Location(4, 0), &Piece::NoTile);
-      SetPiece(Location(7, 0), &Piece::NoTile);
-      SetPiece(Location(8, 0), &Piece::NoTile);
-      SetPiece(Location(9, 0), &Piece::NoTile);
-      SetPiece(Location(10, 0), &Piece::NoTile);
-      SetPiece(Location(11, 0), &Piece::NoTile);
-
-      SetPiece(Location(0, 1), &Piece::NoTile);
-      SetPiece(Location(1, 1), &Piece::NoTile);
-      SetPiece(Location(10, 1), &Piece::NoTile);
-      SetPiece(Location(11, 1), &Piece::NoTile);
-
-      SetPiece(Location(0, 2), &Piece::NoTile);
-      SetPiece(Location(11, 2), &Piece::NoTile);
-
-      SetPiece(Location(0, 13), &Piece::NoTile);
-      SetPiece(Location(11, 13), &Piece::NoTile);
-
-      SetPiece(Location(0, 14), &Piece::NoTile);
-      SetPiece(Location(1, 14), &Piece::NoTile);
-      SetPiece(Location(10, 14), &Piece::NoTile);
-      SetPiece(Location(11, 14), &Piece::NoTile);
-
-      SetPiece(Location(0, 15), &Piece::NoTile);
-      SetPiece(Location(1, 15), &Piece::NoTile);
-      SetPiece(Location(2, 15), &Piece::NoTile);
-      SetPiece(Location(3, 15), &Piece::NoTile);
-      SetPiece(Location(4, 15), &Piece::NoTile);
-      SetPiece(Location(7, 15), &Piece::NoTile);
-      SetPiece(Location(8, 15), &Piece::NoTile);
-      SetPiece(Location(9, 15), &Piece::NoTile);
-      SetPiece(Location(10, 15), &Piece::NoTile);
-      SetPiece(Location(11, 15), &Piece::NoTile);
+      SetPiece(Location( 0U, 15U), &Piece::NoTile);
+      SetPiece(Location( 1U, 15U), &Piece::NoTile);
+      SetPiece(Location( 2U, 15U), &Piece::NoTile);
+      SetPiece(Location( 3U, 15U), &Piece::NoTile);
+      SetPiece(Location( 4U, 15U), &Piece::NoTile);
+      SetPiece(Location( 7U, 15U), &Piece::NoTile);
+      SetPiece(Location( 8U, 15U), &Piece::NoTile);
+      SetPiece(Location( 9U, 15U), &Piece::NoTile);
+      SetPiece(Location(10U, 15U), &Piece::NoTile);
+      SetPiece(Location(11U, 15U), &Piece::NoTile);
     }
 
     else  // Mini Cam position
     {
       // Black Knights
-      SetPiece(Location(2, 3), &CamPiece::BN);
-      SetPiece(Location(4, 3), &CamPiece::BN);
+      SetPiece(Location( 2U,  3U), &CamPiece::BN);
+      SetPiece(Location( 4U,  3U), &CamPiece::BN);
 
       // Black Pawns
-      //SetPiece(Location(1, 4), &CamPiece::BP);
-      //SetPiece(Location(2, 4), &CamPiece::BP);
-      //SetPiece(Location(3, 4), &CamPiece::BP);
-      //SetPiece(Location(4, 4), &CamPiece::BP);
-      //SetPiece(Location(5, 4), &CamPiece::BP);
+      SetPiece(Location( 1U,  4U), &CamPiece::BP);
+      SetPiece(Location( 2U,  4U), &CamPiece::BP);
+      SetPiece(Location( 3U,  4U), &CamPiece::BP);
+      SetPiece(Location( 4U,  4U), &CamPiece::BP);
+      SetPiece(Location( 5U,  4U), &CamPiece::BP);
 
       // White Knights
-      SetPiece(Location(2, 9), &CamPiece::WN);
-      SetPiece(Location(4, 9), &CamPiece::WN);
+      SetPiece(Location( 2U,  9U), &CamPiece::WN);
+      SetPiece(Location( 4U,  9U), &CamPiece::WN);
 
       // White Pawns
-      //SetPiece(Location(1, 8), &CamPiece::WP);
-      //SetPiece(Location(2, 8), &CamPiece::WP);
-      //SetPiece(Location(3, 8), &CamPiece::WP);
-      //SetPiece(Location(4, 8), &CamPiece::WP);
-      //SetPiece(Location(5, 8), &CamPiece::WP);
+      SetPiece(Location( 1U,  8U), &CamPiece::WP);
+      SetPiece(Location( 2U,  8U), &CamPiece::WP);
+      SetPiece(Location( 3U,  8U), &CamPiece::WP);
+      SetPiece(Location( 4U,  8U), &CamPiece::WP);
+      SetPiece(Location( 5U,  8U), &CamPiece::WP);
 
       // Illegal tiles
-      SetPiece(Location(0, 0), &Piece::NoTile);
-      SetPiece(Location(1, 0), &Piece::NoTile);
-      SetPiece(Location(2, 0), &Piece::NoTile);
-      SetPiece(Location(4, 0), &Piece::NoTile);
-      SetPiece(Location(5, 0), &Piece::NoTile);
-      SetPiece(Location(6, 0), &Piece::NoTile);
-
-      SetPiece(Location(0, 1), &Piece::NoTile);
-      SetPiece(Location(1, 1), &Piece::NoTile);
-      SetPiece(Location(5, 1), &Piece::NoTile);
-      SetPiece(Location(6, 1), &Piece::NoTile);
-
-      SetPiece(Location(0, 2), &Piece::NoTile);
-      SetPiece(Location(6, 2), &Piece::NoTile);
-
-      SetPiece(Location(0, 10), &Piece::NoTile);
-      SetPiece(Location(6, 10), &Piece::NoTile);
-
-      SetPiece(Location(0, 11), &Piece::NoTile);
-      SetPiece(Location(1, 11), &Piece::NoTile);
-      SetPiece(Location(5, 11), &Piece::NoTile);
-      SetPiece(Location(6, 11), &Piece::NoTile);
-
-      SetPiece(Location(0, 12), &Piece::NoTile);
-      SetPiece(Location(1, 12), &Piece::NoTile);
-      SetPiece(Location(2, 12), &Piece::NoTile);
-      SetPiece(Location(4, 12), &Piece::NoTile);
-      SetPiece(Location(5, 12), &Piece::NoTile);
-      SetPiece(Location(6, 12), &Piece::NoTile);
+      SetPiece(Location( 0U,  0U), &Piece::NoTile);
+      SetPiece(Location( 1U,  0U), &Piece::NoTile);
+      SetPiece(Location( 2U,  0U), &Piece::NoTile);
+      SetPiece(Location( 4U,  0U), &Piece::NoTile);
+      SetPiece(Location( 5U,  0U), &Piece::NoTile);
+      SetPiece(Location( 6U,  0U), &Piece::NoTile);
+                               
+      SetPiece(Location( 0U,  1U), &Piece::NoTile);
+      SetPiece(Location( 1U,  1U), &Piece::NoTile);
+      SetPiece(Location( 5U,  1U), &Piece::NoTile);
+      SetPiece(Location( 6U,  1U), &Piece::NoTile);
+                               
+      SetPiece(Location( 0U,  2U), &Piece::NoTile);
+      SetPiece(Location( 6U,  2U), &Piece::NoTile);
+                          
+      SetPiece(Location( 0U, 10U), &Piece::NoTile);
+      SetPiece(Location( 6U, 10U), &Piece::NoTile);
+                         
+      SetPiece(Location( 0U, 11U), &Piece::NoTile);
+      SetPiece(Location( 1U, 11U), &Piece::NoTile);
+      SetPiece(Location( 5U, 11U), &Piece::NoTile);
+      SetPiece(Location( 6U, 11U), &Piece::NoTile);
+                         
+      SetPiece(Location( 0U, 12U), &Piece::NoTile);
+      SetPiece(Location( 1U, 12U), &Piece::NoTile);
+      SetPiece(Location( 2U, 12U), &Piece::NoTile);
+      SetPiece(Location( 4U, 12U), &Piece::NoTile);
+      SetPiece(Location( 5U, 12U), &Piece::NoTile);
+      SetPiece(Location( 6U, 12U), &Piece::NoTile);
     }
   }
 
@@ -307,10 +307,10 @@ namespace Cam
   CamGame::CamGame(CamPosition* p, TakenPosition* t, StockPosition* s,
     CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
-    AddToStock(Location(0, 0), &CamPiece::WN);
-    AddToStock(Location(1, 0), &CamPiece::WP);
-    AddToStock(Location(0, 1), &CamPiece::BP);
-    AddToStock(Location(1, 1), &CamPiece::BN);
+    AddToStock(Location(0U, 0U), &CamPiece::WN);
+    AddToStock(Location(1U, 0U), &CamPiece::WP);
+    AddToStock(Location(0U, 1U), &CamPiece::BP);
+    AddToStock(Location(1U, 1U), &CamPiece::BN);
   }
 
   const VariantList& CamGame::GetVariants(void) noexcept

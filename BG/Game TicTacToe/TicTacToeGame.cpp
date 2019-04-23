@@ -122,8 +122,8 @@ namespace TicTacToe
   TicTacToeGame::TicTacToeGame(TicTacToePosition* p, TakenPosition* t, StockPosition* s,
     TicTacToeLayout* l, TicTacToeTakenLayout* tl, TicTacToeStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl,true }
   {
-    AddToStock(Location(0, 0), &TicTacToePiece::TicTacToePieceW);
-    AddToStock(Location(1, 0), &TicTacToePiece::TicTacToePieceB);
+    AddToStock(Location(0U, 0U), &TicTacToePiece::TicTacToePieceW);
+    AddToStock(Location(1U, 0U), &TicTacToePiece::TicTacToePieceB);
   }
 
   const VariantList& TicTacToeGame::GetVariants(void) noexcept

@@ -33,8 +33,8 @@ namespace Template
   TemplateGame::TemplateGame(TemplatePosition* p, TakenPosition* t, StockPosition* s,
     TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
   {
-    AddToStock(Location(0, 0), &TemplatePiece::TemplatePieceW);
-    AddToStock(Location(1, 0), &TemplatePiece::TemplatePieceB);
+    AddToStock(Location(0U, 0U), &TemplatePiece::TemplatePieceW);
+    AddToStock(Location(1U, 0U), &TemplatePiece::TemplatePieceB);
   }
 
   const VariantList& TemplateGame::GetVariants(void) noexcept

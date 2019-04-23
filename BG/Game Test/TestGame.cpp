@@ -10,41 +10,41 @@ namespace Test
   {
     if (x == 4 and y == 4)
     {
-      SetPiece(Location(0, 0), &ChessPiece::WQ);
-      SetPiece(Location(0, 1), &ChessPiece::BQ);
-      SetPiece(Location(0, 2), &ChessPiece::WR);
-      SetPiece(Location(0, 3), &ChessPiece::BR);
-      SetPiece(Location(1, 0), &ChessPiece::WB);
-      SetPiece(Location(1, 1), &ChessPiece::BB);
-      SetPiece(Location(1, 2), &ChessPiece::WN);
-      SetPiece(Location(1, 3), &ChessPiece::BN);
-      SetPiece(Location(2, 0), &ChessPiece::WQ);
-      SetPiece(Location(2, 1), &ChessPiece::BQ);
-      SetPiece(Location(2, 2), &ChessPiece::WR);
-      SetPiece(Location(2, 3), &ChessPiece::BR);
-      SetPiece(Location(3, 0), &ChessPiece::WB);
-      SetPiece(Location(3, 1), &ChessPiece::BB);
-      SetPiece(Location(3, 2), &ChessPiece::WN);
-      SetPiece(Location(3, 3), &ChessPiece::BN);
+      SetPiece(Location(0U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(0U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(0U, 2U), &ChessPiece::WR);
+      SetPiece(Location(0U, 3U), &ChessPiece::BR);
+      SetPiece(Location(1U, 0U), &ChessPiece::WB);
+      SetPiece(Location(1U, 1U), &ChessPiece::BB);
+      SetPiece(Location(1U, 2U), &ChessPiece::WN);
+      SetPiece(Location(1U, 3U), &ChessPiece::BN);
+      SetPiece(Location(2U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(2U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(2U, 2U), &ChessPiece::WR);
+      SetPiece(Location(2U, 3U), &ChessPiece::BR);
+      SetPiece(Location(3U, 0U), &ChessPiece::WB);
+      SetPiece(Location(3U, 1U), &ChessPiece::BB);
+      SetPiece(Location(3U, 2U), &ChessPiece::WN);
+      SetPiece(Location(3U, 3U), &ChessPiece::BN);
     }
     else if (x == 3 and y == 3)
     {
-      SetPiece(Location(0, 0), &ChessPiece::WQ);
-      SetPiece(Location(0, 1), &ChessPiece::BQ);
-      SetPiece(Location(0, 2), &ChessPiece::WR);
-      SetPiece(Location(1, 0), &ChessPiece::BR);
-      SetPiece(Location(1, 1), &ChessPiece::WB);
-      SetPiece(Location(1, 2), &ChessPiece::BB);
-      SetPiece(Location(2, 0), &ChessPiece::WN);
-      SetPiece(Location(2, 1), &ChessPiece::BN);
-      SetPiece(Location(2, 2), &ChessPiece::WQ);
+      SetPiece(Location(0U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(0U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(0U, 2U), &ChessPiece::WR);
+      SetPiece(Location(1U, 0U), &ChessPiece::BR);
+      SetPiece(Location(1U, 1U), &ChessPiece::WB);
+      SetPiece(Location(1U, 2U), &ChessPiece::BB);
+      SetPiece(Location(2U, 0U), &ChessPiece::WN);
+      SetPiece(Location(2U, 1U), &ChessPiece::BN);
+      SetPiece(Location(2U, 2U), &ChessPiece::WQ);
     }
     else if (x == 2 and y == 2)
     {
-      SetPiece(Location(0, 0), &ChessPiece::WQ);
-      SetPiece(Location(0, 1), &ChessPiece::BQ);
-      SetPiece(Location(1, 0), &ChessPiece::BB);
-      SetPiece(Location(1, 1), &ChessPiece::WR);
+      SetPiece(Location(0U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(0U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(1U, 0U), &ChessPiece::BB);
+      SetPiece(Location(1U, 1U), &ChessPiece::WR);
     }
 
   }
@@ -68,25 +68,25 @@ namespace Test
   TestGame::TestGame(TestPosition* p, TakenPosition* t, StockPosition* s,
     TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl) : Game{ p,t,s,l,tl,sl }
   {
-    AddToStock(Location(0, 0), &ChessPiece::WQ);
-    AddToStock(Location(1, 0), &ChessPiece::WR);
-    AddToStock(Location(2, 0), &ChessPiece::WB);
-    AddToStock(Location(3, 0), &ChessPiece::WN);
-    AddToStock(Location(0, 1), &ChessPiece::BQ);
-    AddToStock(Location(1, 1), &ChessPiece::BR);
-    AddToStock(Location(2, 1), &ChessPiece::BB);
-    AddToStock(Location(3, 1), &ChessPiece::BN);
+    AddToStock(Location(0U, 0U), &ChessPiece::WQ);
+    AddToStock(Location(1U, 0U), &ChessPiece::WR);
+    AddToStock(Location(2U, 0U), &ChessPiece::WB);
+    AddToStock(Location(3U, 0U), &ChessPiece::WN);
+    AddToStock(Location(0U, 1U), &ChessPiece::BQ);
+    AddToStock(Location(1U, 1U), &ChessPiece::BR);
+    AddToStock(Location(2U, 1U), &ChessPiece::BB);
+    AddToStock(Location(3U, 1U), &ChessPiece::BN);
   }
 
 
   bool Test::TestOffset(void)
   {
-    Location l{ 2,2 };
-    assert((l == Location{ 2,2 }));
+    Location l{ 2U,2U };
+    assert((l == Location{ 2U,2U }));
 
     for (auto& d : Offset::Rdirection)
     {
-      Location l1{ 2,2 };
+      Location l1{ 2U,2U };
       Location l2 = l1 + d;
       l1 += d;
       assert((l1 == l2));
@@ -427,8 +427,8 @@ namespace Test
     for (unsigned int i = 0; i < pos->sequence.size(); ++i)
     {
       const MoveP m = pos->sequence[i];
-      sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m->GetFr().GetLocation().x + 'a', m->GetFr().GetLocation().y + '1',
-                                                    m->GetTo().GetLocation().x + 'a', m->GetTo().GetLocation().y + '1');
+      sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m->GetFr().GetLocation()._x + 'a', m->GetFr().GetLocation()._y + '1',
+                                                    m->GetTo().GetLocation()._x + 'a', m->GetTo().GetLocation()._y + '1');
       s += buffer;
     }
     sprintf_s(buffer, "pos value = %u\n", (unsigned int) pos->GetValue(true));
