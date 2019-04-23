@@ -34,7 +34,7 @@ namespace MassacreChess
     if (pt->GetColor() == pf->GetColor()) return false;                   // own piece; don't keep trying this direction
 
     // valid move, save into collection
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared < SimpleStep>( Field{fr,pf},Field{to,pf},SimpleStep::StepType::Take/*,std::vector<Field>{Field{to,pt}}*/ )));
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared < SimpleStep>( Field{fr,pf},Field{to,pf},SimpleStep::StepType::Take/*,Fields{Field{to,pt}}*/ )));
     return false;                                                         // don't keep trying this direction
   };
 

@@ -261,7 +261,16 @@
     <ClInclude Include="Game Checkers\CheckersResource.h">
       <Filter>Game Checkers\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BGCoreLocation.h">
+    <ClInclude Include="Core\BGCoreOffset.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreLocation.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreField.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreStep.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

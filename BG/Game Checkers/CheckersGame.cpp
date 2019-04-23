@@ -70,7 +70,7 @@ namespace Checkers
     if (!p->IsBlank()) return false;                                      // field is not empty
 
     const Piece * p2 = CanPromote(to) ? GetPiece(fr)->Promote(true) : GetPiece(fr);
-    m.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<ComplexStep>(Field{ fr,GetPiece(fr) }, Field{ to,p2 }, Step::StepType::Normal, std::vector<Field>{Field{ to,GetPiece(to) }}))));
+    m.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<ComplexStep>(Field{ fr,GetPiece(fr) }, Field{ to,p2 }, Step::StepType::Normal, Fields{Field{ to,GetPiece(to) }}))));
     return true;
   }
 
@@ -126,7 +126,7 @@ namespace Checkers
 
           // a legal jump was found
           any = true;
-          std::vector<Field> f{};
+          Fields f{};
           f.push_back(Field{ l1,p1 });
           Steps s1{ s };                                      // copy the previous jump sequence, so we can extend it
           // add the jump to the SimpleStep list

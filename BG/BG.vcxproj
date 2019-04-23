@@ -239,11 +239,14 @@
     <ClInclude Include="BGSelect.h" />
     <ClInclude Include="BGView.h" />
     <ClInclude Include="ChildFrm.h" />
-    <ClInclude Include="BGCoreLocation.h" />
     <ClInclude Include="Core\BGChessPieces.h" />
     <ClInclude Include="Core\BGCore.h" />
+    <ClInclude Include="Core\BGCoreField.h" />
     <ClInclude Include="Core\BGCoreLayout.h" />
+    <ClInclude Include="Core\BGCoreLocation.h" />
+    <ClInclude Include="Core\BGCoreOffset.h" />
     <ClInclude Include="Core\BGCoreResource.h" />
+    <ClInclude Include="Core\BGCoreStep.h" />
     <ClInclude Include="Game Cam\CamGame.h" />
     <ClInclude Include="Game Cam\CamResource.h" />
     <ClInclude Include="Game Checkers\CheckersGame.h" />

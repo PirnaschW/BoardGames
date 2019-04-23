@@ -113,7 +113,7 @@ namespace LoA
     }
     else
     {
-      m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>( Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) },SimpleStep::StepType::Take/*,std::vector<Field>{Field{ to,GetPiece(to) }}*/ )));
+      m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>( Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) },SimpleStep::StepType::Take/*,Fields{Field{ to,GetPiece(to) }}*/ )));
     }
     return false;
   }

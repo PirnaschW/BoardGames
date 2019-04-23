@@ -185,7 +185,7 @@ namespace BoardGamesCore
     {
       if (s->GetType() & Step::StepType::Promote) p = p->Promote(true);
 
-      const std::vector<Field>& take = s->GetTakes();
+      const Fields& take = s->GetTakes();
       for (auto& t : take)
       {
         assert(t.GetPiece() == GetPiece(t.GetLocation()));                // verify that the piece we expect is really there
@@ -207,7 +207,7 @@ namespace BoardGamesCore
     SetPiece(m->GetTo().GetLocation(), &Piece::NoPiece);                   // empty the target field
     for (auto& s : steps)                                                  // for all steps
     {
-      const std::vector<Field>& takes = s->GetTakes();
+      const Fields& takes = s->GetTakes();
       for (auto& t : takes) SetPiece(t.GetLocation(), t.GetPiece());       // Put the taken piece(s) back on the board
     }
     SetPiece(m->GetFr().GetLocation(), m->GetFr().GetPiece());              // put the piece back on the starting field

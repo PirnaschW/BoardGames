@@ -256,7 +256,7 @@ namespace Cam
       // a legal jump was found
       any = true;
       Step::StepType st{ Step::StepType::Jump };
-      std::vector<Field> f{};
+      Fields f{};
       if (c1 != c0)                                                       // jump was over an enemy piece
       {
         st = (Step::StepType) (Step::StepType::Jump | SimpleStep::StepType::Take);

@@ -51,10 +51,10 @@ namespace Hasami
     if (!p->IsBlank()) return false;         // occupied
     SimpleStep::StepType st{ SimpleStep::StepType::Normal };
 
-    std::vector<Field> taken{};
+    Fields taken{};
     for (auto& d : Offset::Rdirection)
     {
-      std::vector<Field> t{};
+      Fields t{};
       Location l = to;
       const Piece* pp{};
       while ((pp = GetPiece(l += d)) != nullptr)
