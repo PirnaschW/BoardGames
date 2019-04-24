@@ -42,9 +42,15 @@ namespace Microsoft
       template<> inline static std::wstring ToString<>(const ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
       template<> inline static std::wstring ToString<>(      ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
 
+      template<> inline static std::wstring ToString<>(const PositionValue& p) { std::wstringstream _s; _s << static_cast<unsigned int>( p); return _s.str(); }
+      template<> inline static std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<unsigned int>(*p); return _s.str(); }
+      template<> inline static std::wstring ToString<>(      PositionValue* p) { std::wstringstream _s; _s << static_cast<unsigned int>(*p); return _s.str(); }
+
     }
   }
 }
+
+#include <functional>
 
 namespace UnitTestCore
 {
@@ -144,17 +150,62 @@ namespace UnitTestCore
       Assert::IsFalse(s1.IsTake());
 
       Step::StepType st1 = static_cast<Step::StepType>(BoardGamesCore::Step::StepType::Take | BoardGamesCore::Step::StepType::Jump);
-      ComplexStep s2{ f2,f1, st1 };
+      ComplexStep s2{ f2,f1, st1 };  // Takes defaults to empty, not like in SimpleStep!
       Assert::AreNotEqual(s1, s2);
       Assert::AreEqual(st1, s2.GetType());
       Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
       Assert::IsTrue(s2.IsTake());
-      Assert::IsTrue(s1 != s2);
-      Assert::AreEqual(Fields{ f1 }, s2.GetTakes());
-      Assert::AreEqual(s2.GetTakes().size(), 1U);
-      Assert::AreEqual(s2.GetTakes()[0], f1);
+      Assert::AreNotEqual(Fields{ f1 }, s2.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
+      Assert::AreEqual(s2.GetTakes().size(), 0U);
 
+      //std::function<const Field&(void)>_l1 = [&s2] { return s2.GetTake(); };
+      //Assert::ExpectException<std::exception>(_l1);
+
+      Fields f{ f1,f2 };
+      ComplexStep s3{ f2,f1, st1, f};
+      Assert::AreNotEqual(s3, s1);
+      Assert::AreNotEqual(s3, s2);
+      Assert::AreEqual(st1, s3.GetType());
+      Assert::AreNotEqual(Step::StepType::Normal, s3.GetType());
+      Assert::IsTrue(s3.IsTake());
+      Assert::AreNotEqual(Fields{ f1 }, s3.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
+      Assert::AreEqual(s3.GetTakes().size(), 2U);
+      Assert::AreEqual(s3.GetTake(0),f1);
+      Assert::AreEqual(s3.GetTake(1),f2);
     }
 
+    TEST_METHOD(TestPValue)
+    {
+      PositionValue p0;
+      PositionValue p1(45);
+      PositionValue p2(56U);
+
+      Assert::AreNotEqual(p0, p1);
+      Assert::AreNotEqual(p0, p2);
+      Assert::AreNotEqual(p1, p2);
+
+      Assert::AreNotEqual(p0, PositionValue(0));
+      Assert::AreEqual(p0, PositionValue());
+      Assert::AreEqual(p1, PositionValue(45U));
+      Assert::AreEqual(p2, PositionValue(56));
+
+//    Assert::AreNotEqual(static_cast<unsigned int>(p0), 0U);
+      Assert::AreEqual(static_cast<unsigned int>(p1), 45U);
+      Assert::AreEqual(static_cast<unsigned int>(p2), 56U);
+
+      Assert::IsTrue(p1 > p0);
+      Assert::IsTrue(p2 > p0);
+      Assert::IsTrue(p2 > p1);
+      Assert::IsFalse(p1 < p0);
+      Assert::IsFalse(p2 < p0);
+      Assert::IsFalse(p2 < p1);
+      Assert::IsTrue(p1 >= p0);
+      Assert::IsTrue(p2 >= p0);
+      Assert::IsTrue(p2 >= p1);
+      Assert::IsFalse(p1 <= p0);
+      Assert::IsFalse(p2 <= p0);
+      Assert::IsFalse(p2 <= p1);
+
+    }
   };
 }

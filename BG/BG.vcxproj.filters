@@ -273,6 +273,9 @@
     <ClInclude Include="Core\BGCoreStep.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\BGCorePValue.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">

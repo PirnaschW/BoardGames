@@ -25,6 +25,7 @@ namespace BoardGamesCore
     virtual inline bool operator == (const Step& s) const noexcept { return _from == s._from && _to == s._to && _type == s._type; }
     virtual inline bool operator != (const Step& s) const noexcept { return !(s == *this); }
     virtual inline const Fields GetTakes(void) const noexcept = 0;
+    virtual inline const Field& GetTake(unsigned int z = 0) const = 0;
 
   private:
     const Field _from;
@@ -43,6 +44,7 @@ namespace BoardGamesCore
   public:
     inline SimpleStep(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal) noexcept : Step(Fr, To, Ty) {}
     virtual inline const Fields GetTakes(void) const noexcept override { return Fields{GetTo()}; }
+    virtual inline const Field& GetTake(unsigned int /*z*/ = 0) const { return GetTo(); }
   };
   static_assert(!std::is_abstract<SimpleStep>::value, "must not be constructible");
   static_assert(!std::is_trivially_constructible<SimpleStep>::value, "must not be trivially constructible");
@@ -57,6 +59,7 @@ namespace BoardGamesCore
     virtual inline bool operator == (const ComplexStep& s) const noexcept { return this->Step::operator==(s) && _takes == s._takes; }
     virtual inline bool operator != (const ComplexStep& s) const noexcept { return !(s == *this); }
     virtual inline const Fields GetTakes(void) const noexcept override { return _takes; }
+    virtual inline const Field& GetTake(unsigned int z = 0) const { return _takes[z]; }
 
   private:
     const Fields _takes;
