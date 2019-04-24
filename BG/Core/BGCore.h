@@ -2,65 +2,6 @@
 namespace BoardGamesCore
 {
 
-  class Move abstract
-  {
-  public:
-    inline Move(void) noexcept {}
-    Move(const Move& move) = default;
-//    Move&& operator =(Move&& m) noexcept;
-    ~Move(void) noexcept {}
-    constexpr inline void SetValue(PositionValue v) noexcept { _value = v; }
-    constexpr inline PositionValue GetValue(void) const noexcept { return _value; }
-    constexpr inline bool operator <(const Move& rhs) const noexcept { return _value < rhs._value; }
-
-    virtual inline bool operator==(const Move* m) const = 0;
-    virtual inline const Steps GetSteps(void) const = 0;
-    virtual inline const StepP GetStep(int i = 0) const noexcept = 0;
-    virtual bool IsTake(void) const noexcept = 0;
-    virtual inline const Field& GetFr(void) const noexcept = 0;
-    virtual inline const Field& GetTo(void) const noexcept = 0;
-
-  private:
-    PositionValue _value{};
-  };
-  using MoveP = std::shared_ptr<Move>;
-  using Moves = std::vector<MoveP>;
-
-
-  class SimpleMove : public Move   //  one Piece moves one Step, optional takes one Piece from move target
-  {
-  public:
-    inline SimpleMove(const StepP s) : _step(s) {}
-
-    virtual inline bool operator==(const Move* m) const override { return _step == dynamic_cast<const SimpleMove*>(m)->_step; };
-    virtual inline const Field& GetFr(void) const noexcept override { return _step->GetFr(); }
-    virtual inline const Field& GetTo(void) const noexcept override { return _step->GetTo(); }
-    virtual inline const Steps GetSteps(void) const override { return Steps(1,_step); }
-    virtual inline const StepP GetStep(int /* i */ = 0) const noexcept override { return _step; }
-    virtual bool IsTake(void) const noexcept override { return _step->IsTake(); }
-
-  private:
-    const StepP _step;
-  };
-
-  class ComplexMove : public Move  //  optional mutliple Pieces, multi-Step moves, optional multi-takes
-  {
-  public:
-    inline ComplexMove(const Steps& s) : _steps{ s } {}
-
-    virtual inline bool operator==(const Move* m) const override { return _steps == dynamic_cast<const ComplexMove*>(m)->_steps; };
-    virtual inline const Field& GetFr(void) const noexcept override { return _steps.front()->GetFr(); }
-    virtual inline const Field& GetTo(void) const noexcept override { return _steps.back()->GetTo(); }
-    virtual inline const Steps GetSteps(void) const override { return _steps; }
-    virtual inline const StepP GetStep(int i = 0) const noexcept override { return _steps[i]; }
-    virtual bool IsTake(void) const noexcept override { for (auto s : _steps) if (s->IsTake()) return true; return false; }
-
-    const std::vector<Location> GetJumped(void) const;  // return list of jumped-over locations
-
-  private:
-    const Steps& _steps;
-  };
-
   class TileColor final
   {
   private:

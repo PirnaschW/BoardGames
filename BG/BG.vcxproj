@@ -244,6 +244,7 @@
     <ClInclude Include="Core\BGCoreField.h" />
     <ClInclude Include="Core\BGCoreLayout.h" />
     <ClInclude Include="Core\BGCoreLocation.h" />
+    <ClInclude Include="Core\BGCoreMove.h" />
     <ClInclude Include="Core\BGCoreOffset.h" />
     <ClInclude Include="Core\BGCorePValue.h" />
     <ClInclude Include="Core\BGCoreResource.h" />

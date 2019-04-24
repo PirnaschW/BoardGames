@@ -42,9 +42,9 @@ namespace Microsoft
       template<> inline static std::wstring ToString<>(const ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
       template<> inline static std::wstring ToString<>(      ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const PositionValue& p) { std::wstringstream _s; _s << static_cast<unsigned int>( p); return _s.str(); }
-      template<> inline static std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<unsigned int>(*p); return _s.str(); }
-      template<> inline static std::wstring ToString<>(      PositionValue* p) { std::wstringstream _s; _s << static_cast<unsigned int>(*p); return _s.str(); }
+      template<> inline static std::wstring ToString<>(const PositionValue& p) { std::wstringstream _s; _s << static_cast<int>( p); return _s.str(); }
+      template<> inline static std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
+      template<> inline static std::wstring ToString<>(      PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
 
     }
   }
@@ -176,36 +176,171 @@ namespace UnitTestCore
 
     TEST_METHOD(TestPValue)
     {
-      PositionValue p0;
+      PositionValue p0(PositionValue::Undefined);
       PositionValue p1(45);
-      PositionValue p2(56U);
+      PositionValue p2(56);
+      PositionValue p3(-67);
+      PositionValue p4(-67);
 
-      Assert::AreNotEqual(p0, p1);
-      Assert::AreNotEqual(p0, p2);
-      Assert::AreNotEqual(p1, p2);
+      Assert::IsFalse(p0 == p1);
+      Assert::IsTrue(p0 != p1);
+      Assert::IsTrue(p0 != p2);
+      Assert::IsTrue(p0 != p3);
+      Assert::IsTrue(p1 != p2);
+      Assert::IsTrue(p1 != p3);
+      Assert::IsTrue(p2 != p3);
+      Assert::IsTrue(p4 == p3);
+      Assert::IsFalse(p4 != p3);
 
-      Assert::AreNotEqual(p0, PositionValue(0));
-      Assert::AreEqual(p0, PositionValue());
-      Assert::AreEqual(p1, PositionValue(45U));
+      Assert::IsFalse(p0 == PositionValue(0));
+      Assert::IsTrue(p0 == PositionValue(PositionValue::Undefined));
+      Assert::AreEqual(p1, PositionValue(45));
       Assert::AreEqual(p2, PositionValue(56));
+      Assert::AreEqual(p3, PositionValue(-67));
 
-//    Assert::AreNotEqual(static_cast<unsigned int>(p0), 0U);
-      Assert::AreEqual(static_cast<unsigned int>(p1), 45U);
-      Assert::AreEqual(static_cast<unsigned int>(p2), 56U);
+      std::function<int(void)>_l1 = [&p0] { return static_cast<int>(p0); };
+      Assert::ExpectException<std::exception>(_l1);
+
+      Assert::AreEqual(static_cast<int>(p1), 45);
+      Assert::AreEqual(static_cast<int>(p2), 56);
+      Assert::AreEqual(static_cast<int>(p3), -67);
 
       Assert::IsTrue(p1 > p0);
       Assert::IsTrue(p2 > p0);
+      Assert::IsTrue(p3 > p0);
       Assert::IsTrue(p2 > p1);
+      Assert::IsFalse(p3 > p1);
+      Assert::IsFalse(p3 > p2);
+
       Assert::IsFalse(p1 < p0);
       Assert::IsFalse(p2 < p0);
+      Assert::IsFalse(p3 < p0);
       Assert::IsFalse(p2 < p1);
+      Assert::IsTrue(p3 < p1);
+      Assert::IsTrue(p3 < p2);
+
       Assert::IsTrue(p1 >= p0);
       Assert::IsTrue(p2 >= p0);
+      Assert::IsTrue(p3 >= p0);
       Assert::IsTrue(p2 >= p1);
+      Assert::IsFalse(p3 >= p1);
+      Assert::IsFalse(p3 >= p2);
+
       Assert::IsFalse(p1 <= p0);
       Assert::IsFalse(p2 <= p0);
+      Assert::IsFalse(p3 <= p0);
       Assert::IsFalse(p2 <= p1);
+      Assert::IsTrue(p3 <= p1);
+      Assert::IsTrue(p3 <= p2);
 
+      PositionValue pu(BoardGamesCore::PositionValue::PValueType::Undefined);
+      PositionValue pw(BoardGamesCore::PositionValue::PValueType::Won);
+      PositionValue pl(BoardGamesCore::PositionValue::PValueType::Lost);
+      PositionValue pt(BoardGamesCore::PositionValue::PValueType::Tie);
+
+      Assert::IsTrue(pu == p0);
+
+      Assert::IsFalse(pl > pl);
+      Assert::IsTrue(pu > pl);
+      Assert::IsTrue(p1 > pl);
+      Assert::IsTrue(p2 > pl);
+      Assert::IsTrue(p3 > pl);
+      Assert::IsTrue(pt > pl);
+      Assert::IsTrue(pw > pl);
+
+      Assert::IsFalse(pl > pu);
+      Assert::IsFalse(pu > pu);
+      Assert::IsTrue(p1 > pu);
+      Assert::IsTrue(p2 > pu);
+      Assert::IsTrue(p3 > pu);
+      Assert::IsTrue(pt > pu);
+      Assert::IsTrue(pw > pu);
+
+      Assert::IsFalse(pl > pt);
+      Assert::IsFalse(pu > pt);
+      Assert::IsTrue(p1 > pt);
+      Assert::IsTrue(p2 > pt);
+      Assert::IsFalse(p3 > pt);
+      Assert::IsFalse(pt > pt);
+      Assert::IsTrue(pw > pt);
+
+      Assert::IsFalse(pl > pw);
+      Assert::IsFalse(pu > pw);
+      Assert::IsFalse(p1 > pw);
+      Assert::IsFalse(p2 > pw);
+      Assert::IsFalse(p3 > pw);
+      Assert::IsFalse(pt > pw);
+      Assert::IsFalse(pw > pw);
     }
+
+    TEST_METHOD(TestSimpleMove)
+    {
+      Location l1(2U, 3U);
+      Location l2(3U, 2U);
+      const Piece* p0{ nullptr };
+      Field f1{ l1,p0 };
+      Field f2{ l2,p0 };
+      Assert::AreNotEqual(f1, f2);
+      SimpleStep s1{ f1,f2 };
+      Assert::AreEqual(f1, s1.GetFr());
+      Assert::AreEqual(f2, s1.GetTo());
+      Assert::AreNotEqual(f2, s1.GetFr());
+      Assert::AreNotEqual(f1, s1.GetTo());
+      Assert::AreEqual(Step::StepType::Normal, s1.GetType());
+      Assert::IsFalse(s1.IsTake());
+
+      Step::StepType st1 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
+      SimpleStep s2{ f2,f1, st1 };
+      Assert::AreNotEqual(s1, s2);
+      Assert::AreEqual(st1, s2.GetType());
+      Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
+      Assert::IsTrue(s2.IsTake());
+      Assert::IsTrue(s1 != s2);
+      Assert::AreEqual(Fields{ f1 }, s2.GetTakes());
+      Assert::AreEqual(s2.GetTakes().size(), 1U);
+      Assert::AreEqual(s2.GetTakes()[0], f1);
+    }
+
+    TEST_METHOD(TestComplexMove)
+    {
+      Location l1(2U, 3U);
+      Location l2(3U, 2U);
+      const Piece* p0{ nullptr };
+      Field f1{ l1,p0 };
+      Field f2{ l2,p0 };
+      Assert::AreNotEqual(f1, f2);
+      ComplexStep s1{ f1,f2 };
+      Assert::AreEqual(f1, s1.GetFr());
+      Assert::AreEqual(f2, s1.GetTo());
+      Assert::AreNotEqual(f2, s1.GetFr());
+      Assert::AreNotEqual(f1, s1.GetTo());
+      Assert::AreEqual(Step::StepType::Normal, s1.GetType());
+      Assert::IsFalse(s1.IsTake());
+
+      Step::StepType st1 = static_cast<Step::StepType>(BoardGamesCore::Step::StepType::Take | BoardGamesCore::Step::StepType::Jump);
+      ComplexStep s2{ f2,f1, st1 };  // Takes defaults to empty, not like in SimpleStep!
+      Assert::AreNotEqual(s1, s2);
+      Assert::AreEqual(st1, s2.GetType());
+      Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
+      Assert::IsTrue(s2.IsTake());
+      Assert::AreNotEqual(Fields{ f1 }, s2.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
+      Assert::AreEqual(s2.GetTakes().size(), 0U);
+
+      //std::function<const Field&(void)>_l1 = [&s2] { return s2.GetTake(); };
+      //Assert::ExpectException<std::exception>(_l1);
+
+      Fields f{ f1,f2 };
+      ComplexStep s3{ f2,f1, st1, f };
+      Assert::AreNotEqual(s3, s1);
+      Assert::AreNotEqual(s3, s2);
+      Assert::AreEqual(st1, s3.GetType());
+      Assert::AreNotEqual(Step::StepType::Normal, s3.GetType());
+      Assert::IsTrue(s3.IsTake());
+      Assert::AreNotEqual(Fields{ f1 }, s3.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
+      Assert::AreEqual(s3.GetTakes().size(), 2U);
+      Assert::AreEqual(s3.GetTake(0), f1);
+      Assert::AreEqual(s3.GetTake(1), f2);
+    }
+
   };
 }
