@@ -46,6 +46,15 @@ namespace Microsoft
       template<> inline static std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
       template<> inline static std::wstring ToString<>(      PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
 
+      template<> inline static std::wstring ToString<>(const SimpleMove& s) { std::wstringstream _s; _s << ToString(s. GetStep()->GetFr()) << ToString(s. GetStep()->GetTo()) << s. GetStep()->GetType(); return _s.str(); }
+      template<> inline static std::wstring ToString<>(const SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
+      template<> inline static std::wstring ToString<>(      SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
+
+      template<> inline static std::wstring ToString<>(const ComplexMove& c) { std::wstringstream _c; _c << ToString(c. GetSteps()[0]->GetFr()) << ToString(c. GetSteps()[0]->GetTo()) << c. GetSteps()[0]->GetType(); return _c.str(); }
+      template<> inline static std::wstring ToString<>(const ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
+      template<> inline static std::wstring ToString<>(      ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
+
+
     }
   }
 }
@@ -280,25 +289,38 @@ namespace UnitTestCore
       const Piece* p0{ nullptr };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
-      Assert::AreNotEqual(f1, f2);
-      SimpleStep s1{ f1,f2 };
-      Assert::AreEqual(f1, s1.GetFr());
-      Assert::AreEqual(f2, s1.GetTo());
-      Assert::AreNotEqual(f2, s1.GetFr());
-      Assert::AreNotEqual(f1, s1.GetTo());
-      Assert::AreEqual(Step::StepType::Normal, s1.GetType());
-      Assert::IsFalse(s1.IsTake());
+      std::shared_ptr<Step> s1 = std::make_shared<SimpleStep>(f1, f2);
+      SimpleMove m1(s1);
+      Assert::IsTrue(m1.GetValue() == PositionValue(PositionValue::Undefined));
+
+      PositionValue pw(BoardGamesCore::PositionValue::PValueType::Won);
+      PositionValue pl(BoardGamesCore::PositionValue::PValueType::Lost);
+      PositionValue pt(BoardGamesCore::PositionValue::PValueType::Tie);
+
+      m1.SetValue(pw);
+      Assert::IsTrue(m1.GetValue() == pw);
+      m1.SetValue(pl);
+      Assert::IsTrue(m1.GetValue() == pl);
+      m1.SetValue(pt);
+      Assert::IsTrue(m1.GetValue() == pt);
 
       Step::StepType st1 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
-      SimpleStep s2{ f2,f1, st1 };
-      Assert::AreNotEqual(s1, s2);
-      Assert::AreEqual(st1, s2.GetType());
-      Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
-      Assert::IsTrue(s2.IsTake());
+      std::shared_ptr<Step> s2 = std::make_shared<SimpleStep>(f2,f1, st1);
+      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s1) == dynamic_cast<const SimpleStep&>(*s2));
+
+      SimpleMove m2(s2);
+      Assert::IsFalse(m1 == m2);
+
+
+
+
+      Assert::AreEqual(st1, s2->GetType());
+      Assert::AreNotEqual(Step::StepType::Normal, s2->GetType());
+      Assert::IsTrue(s2->IsTake());
       Assert::IsTrue(s1 != s2);
-      Assert::AreEqual(Fields{ f1 }, s2.GetTakes());
-      Assert::AreEqual(s2.GetTakes().size(), 1U);
-      Assert::AreEqual(s2.GetTakes()[0], f1);
+      Assert::AreEqual(Fields{ f1 }, s2->GetTakes());
+      Assert::AreEqual(s2->GetTakes().size(), 1U);
+      Assert::AreEqual(s2->GetTakes()[0], f1);
     }
 
     TEST_METHOD(TestComplexMove)

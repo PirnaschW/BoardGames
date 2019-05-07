@@ -3,16 +3,16 @@ namespace BoardGamesCore
 
   class Move abstract
   {
-  public:
+  protected:
     inline Move(void) noexcept {}
-    Move(const Move& move) = default;
-    //    Move&& operator =(Move&& m) noexcept;
+
+  public:
     ~Move(void) noexcept {}
     constexpr inline void SetValue(const PositionValue& v) noexcept { _value = v; }
     constexpr inline PositionValue GetValue(void) const noexcept { return _value; }
     constexpr inline bool operator <(const Move& rhs) const noexcept { return _value < rhs._value; }
 
-    virtual inline bool operator==(const Move* m) const = 0;
+//    virtual inline bool operator==(const Move& m) const = 0;
     virtual inline const Steps GetSteps(void) const = 0;
     virtual inline const StepP GetStep(int i = 0) const noexcept = 0;
     virtual inline bool IsTake(void) const noexcept = 0;
@@ -34,7 +34,7 @@ namespace BoardGamesCore
   public:
     inline SimpleMove(const StepP s) noexcept : _step(s) {}
 
-    virtual inline bool operator==(const Move* m) const override { return _step == dynamic_cast<const SimpleMove*>(m)->_step; };
+    virtual inline bool operator==(const SimpleMove& m) const { return _step == m._step; };
     virtual inline const Steps GetSteps(void) const override { return Steps(1, _step); }
     virtual inline const StepP GetStep(int /* i */ = 0) const noexcept override { return _step; }
     virtual inline bool IsTake(void) const noexcept override { return _step->IsTake(); }
@@ -44,7 +44,7 @@ namespace BoardGamesCore
   private:
     const StepP _step;
   };
-  static_assert(!std::is_abstract<SimpleMove>::value, "must not be constructible");
+  static_assert(!std::is_abstract<SimpleMove>::value, "is not constructible");
   static_assert(!std::is_trivially_constructible<SimpleMove>::value, "must not be trivially constructible");
   static_assert(std::is_constructible<SimpleMove, const StepP>::value, "is not constructible");
   static_assert(std::is_nothrow_constructible<SimpleMove, const StepP>::value, "is not nothrow constructible");
@@ -54,7 +54,7 @@ namespace BoardGamesCore
   public:
     inline ComplexMove(const Steps& s) noexcept : _steps{ s } {}
 
-    virtual inline bool operator==(const Move* m) const override { return _steps == dynamic_cast<const ComplexMove*>(m)->_steps; };
+    virtual inline bool operator==(const ComplexMove& m) const { return _steps == m._steps; };
     virtual inline const Steps GetSteps(void) const override { return _steps; }
     virtual inline const StepP GetStep(int i = 0) const noexcept override { return _steps[i]; }
     virtual inline bool IsTake(void) const noexcept override { for (auto s : _steps) if (s->IsTake()) return true; return false; }
