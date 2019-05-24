@@ -5,7 +5,7 @@ namespace BoardGamesCore
   class Tile final
   {
   public:
-    constexpr inline Tile(const Location& l, const CRect& r, const TileColor* f) noexcept : location{l}, rect{r}, tilecolor{f} {}
+    constexpr inline Tile(const Location& l, const CRect& r, const TileColor* f) noexcept : location{ l }, tilecolor{ f }, rect{ r } {}
     Tile& operator=(const Tile&) = delete;
     inline bool InRect(const CPoint& p) const noexcept { return rect.PtInRect(p) != 0; }
     constexpr inline const CRect& GetRect(void) const noexcept { return rect; }
@@ -28,9 +28,9 @@ namespace BoardGamesCore
       unsigned int xd, unsigned int yd,                     // tile size in x and y directions
       unsigned int xs = 0, unsigned int ys = 0) noexcept :  // extra distance between tiles in x and y directions
       xCount(xc), yCount(yc),
-      lEdge(le), tEdge(te),
       xDim(xd), yDim(yd),
       xSkip(xs), ySkip(ys),
+      lEdge(le), tEdge(te),
       rEdge(lEdge + xCount * xDim), bEdge(tEdge + yCount * yDim) {}
 
   public:
@@ -41,8 +41,8 @@ namespace BoardGamesCore
     const unsigned int xSkip;
     const unsigned int ySkip;
     const unsigned int lEdge;
-    const unsigned int rEdge;
     const unsigned int tEdge;
+    const unsigned int rEdge;
     const unsigned int bEdge;
   };
   
@@ -55,7 +55,7 @@ namespace BoardGamesCore
     Layout(void) = delete;
   public:
     Layout(const Dimension& d, LayoutType lt);
-    inline ~Layout() noexcept { for (auto& t : tiles) delete t; }
+    virtual inline ~Layout() noexcept { for (auto& t : tiles) delete t; }
     virtual void Draw(CDC* pDC, const Position* pos) const;
     virtual void DrawSelected(CDC* pDC, const Location& l) const;
     virtual bool GetLocation(const CPoint& p, Location& l) const;
@@ -71,7 +71,7 @@ namespace BoardGamesCore
   {
   public:
     constexpr inline MainLayout(const Dimension& d, LayoutType lt = LayoutType::Alternating) : Layout(d, lt) {}
-    inline ~MainLayout() noexcept {}
+    virtual inline ~MainLayout() noexcept {}
     virtual void Draw(CDC* pDC, const Position* pos) const override;
   };
 

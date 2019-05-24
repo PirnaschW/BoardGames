@@ -68,8 +68,8 @@ namespace BoardGamesCore
     constexpr inline operator int(void) const { if (_type != Normal) throw std::exception("undefined PValue"); return _value; }
 
   private:
-    int _value{ 0 };
     PValueType _type{ PValueType::Undefined };
+    int _value{ 0 };
   };
 
   static_assert(!std::is_abstract<PositionValue>::value, "must not be constructible");

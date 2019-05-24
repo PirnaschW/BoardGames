@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace BoardGamesCore;
@@ -10,49 +9,49 @@ namespace Microsoft
   {
     namespace CppUnitTestFramework
     {
-      template<> inline static std::wstring ToString<Offset>(const Offset& o) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
-      template<> inline static std::wstring ToString<Offset>(const Offset* o) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
-      template<> inline static std::wstring ToString<Offset>(      Offset* o) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
+      template<> inline std::wstring ToString<Offset>(const Offset& /*o*/) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
+      template<> inline std::wstring ToString<Offset>(const Offset* /*o*/) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
+      template<> inline std::wstring ToString<Offset>(      Offset* /*o*/) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
 
-      template<> inline static std::wstring ToString<Location>(const Location& l) { std::wstringstream _s; _s << '(' << l. _x << '|' << l. _y << ')'; return _s.str(); }
-      template<> inline static std::wstring ToString<Location>(const Location* l) { std::wstringstream _s; _s << '(' << l->_x << '|' << l->_y << ')'; return _s.str(); }
-      template<> inline static std::wstring ToString<Location>(      Location* l) { std::wstringstream _s; _s << '(' << l->_x << '|' << l->_y << ')'; return _s.str(); }
+      template<> inline std::wstring ToString<Location>(const Location& l) { std::wstringstream _s; _s << '(' << l. _x << '|' << l. _y << ')'; return _s.str(); }
+      template<> inline std::wstring ToString<Location>(const Location* l) { std::wstringstream _s; _s << '(' << l->_x << '|' << l->_y << ')'; return _s.str(); }
+      template<> inline std::wstring ToString<Location>(      Location* l) { std::wstringstream _s; _s << '(' << l->_x << '|' << l->_y << ')'; return _s.str(); }
 
-      template<> inline static std::wstring ToString<Field>(const Field& f) { std::wstringstream _s; _s << ToString(f. GetLocation()) << ',' << static_cast<const void*>(f. GetPiece()); return _s.str(); }
-      template<> inline static std::wstring ToString<Field>(const Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(f->GetPiece()); return _s.str(); }
-      template<> inline static std::wstring ToString<Field>(      Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(f->GetPiece()); return _s.str(); }
+      template<> inline std::wstring ToString<Field>(const Field& f) { std::wstringstream _s; _s << ToString(f. GetLocation()) << ',' << static_cast<const void*>(f. GetPiece()); return _s.str(); }
+      template<> inline std::wstring ToString<Field>(const Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(f->GetPiece()); return _s.str(); }
+      template<> inline std::wstring ToString<Field>(      Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(f->GetPiece()); return _s.str(); }
 
-      template<> inline static std::wstring ToString<Fields>(const Fields& f) { std::wstringstream _s; _s << f. size(); return _s.str(); }
-      template<> inline static std::wstring ToString<Fields>(const Fields* f) { std::wstringstream _s; _s << f->size(); return _s.str(); }
-      template<> inline static std::wstring ToString<Fields>(      Fields* f) { std::wstringstream _s; _s << f->size(); return _s.str(); }
+      template<> inline std::wstring ToString<Fields>(const Fields& f) { std::wstringstream _s; _s << f. size(); return _s.str(); }
+      template<> inline std::wstring ToString<Fields>(const Fields* f) { std::wstringstream _s; _s << f->size(); return _s.str(); }
+      template<> inline std::wstring ToString<Fields>(      Fields* f) { std::wstringstream _s; _s << f->size(); return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const Piece& p) { std::wstringstream _s; _s << static_cast<const void*>(&p); return _s.str(); }
-      template<> inline static std::wstring ToString<>(const Piece* p) { std::wstringstream _s; _s << static_cast<const void*>( p); return _s.str(); }
-      template<> inline static std::wstring ToString<>(      Piece* p) { std::wstringstream _s; _s << static_cast<const void*>( p); return _s.str(); }
+      template<> inline std::wstring ToString<>(const Piece& p) { std::wstringstream _s; _s << static_cast<const void*>(&p); return _s.str(); }
+      template<> inline std::wstring ToString<>(const Piece* p) { std::wstringstream _s; _s << static_cast<const void*>( p); return _s.str(); }
+      template<> inline std::wstring ToString<>(      Piece* p) { std::wstringstream _s; _s << static_cast<const void*>( p); return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const Step::StepType& s) { std::wstringstream _s; _s << s; return _s.str(); }
-      template<> inline static std::wstring ToString<>(const Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
-      template<> inline static std::wstring ToString<>(      Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
+      template<> inline std::wstring ToString<>(const Step::StepType& s) { std::wstringstream _s; _s << s; return _s.str(); }
+      template<> inline std::wstring ToString<>(const Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
+      template<> inline std::wstring ToString<>(      Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const SimpleStep& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
-      template<> inline static std::wstring ToString<>(const SimpleStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
-      template<> inline static std::wstring ToString<>(      SimpleStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const SimpleStep& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const SimpleStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(      SimpleStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const ComplexStep& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
-      template<> inline static std::wstring ToString<>(const ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
-      template<> inline static std::wstring ToString<>(      ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const ComplexStep& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(      ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const PositionValue& p) { std::wstringstream _s; _s << static_cast<int>( p); return _s.str(); }
-      template<> inline static std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
-      template<> inline static std::wstring ToString<>(      PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
+      template<> inline std::wstring ToString<>(const PositionValue& p) { std::wstringstream _s; _s << static_cast<int>( p); return _s.str(); }
+      template<> inline std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
+      template<> inline std::wstring ToString<>(      PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const SimpleMove& s) { std::wstringstream _s; _s << ToString(s. GetStep()->GetFr()) << ToString(s. GetStep()->GetTo()) << s. GetStep()->GetType(); return _s.str(); }
-      template<> inline static std::wstring ToString<>(const SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
-      template<> inline static std::wstring ToString<>(      SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const SimpleMove& s) { std::wstringstream _s; _s << ToString(s. GetStep()->GetFr()) << ToString(s. GetStep()->GetTo()) << s. GetStep()->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(      SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
 
-      template<> inline static std::wstring ToString<>(const ComplexMove& c) { std::wstringstream _c; _c << ToString(c. GetSteps()[0]->GetFr()) << ToString(c. GetSteps()[0]->GetTo()) << c. GetSteps()[0]->GetType(); return _c.str(); }
-      template<> inline static std::wstring ToString<>(const ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
-      template<> inline static std::wstring ToString<>(      ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
+      template<> inline std::wstring ToString<>(const ComplexMove& c) { std::wstringstream _c; _c << ToString(c. GetSteps()[0]->GetFr()) << ToString(c. GetSteps()[0]->GetTo()) << c. GetSteps()[0]->GetType(); return _c.str(); }
+      template<> inline std::wstring ToString<>(const ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
+      template<> inline std::wstring ToString<>(      ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
 
 
     }
@@ -289,8 +288,8 @@ namespace UnitTestCore
       const Piece* p0{ nullptr };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
-      std::shared_ptr<Step> s1 = std::make_shared<SimpleStep>(f1, f2);
-      SimpleMove m1(s1);
+      std::shared_ptr<Step> s0 = std::make_shared<SimpleStep>(f1, f2);
+      SimpleMove m1(s0);
       Assert::IsTrue(m1.GetValue() == PositionValue(PositionValue::Undefined));
 
       PositionValue pw(BoardGamesCore::PositionValue::PValueType::Won);
@@ -304,23 +303,56 @@ namespace UnitTestCore
       m1.SetValue(pt);
       Assert::IsTrue(m1.GetValue() == pt);
 
-      Step::StepType st1 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
-      std::shared_ptr<Step> s2 = std::make_shared<SimpleStep>(f2,f1, st1);
-      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s1) == dynamic_cast<const SimpleStep&>(*s2));
+      std::shared_ptr<Step> s1 = std::make_shared<SimpleStep>(f1, f2);
+      Assert::IsTrue(dynamic_cast<const SimpleStep&>(*s1) == dynamic_cast<const SimpleStep&>(*s0));
 
-      SimpleMove m2(s2);
-      Assert::IsFalse(m1 == m2);
+      std::shared_ptr<Step> s2 = std::make_shared<SimpleStep>(f2, f1);
+      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s2) == dynamic_cast<const SimpleStep&>(*s0));
 
+      Step::StepType st0 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
+      std::shared_ptr<Step> s3 = std::make_shared<SimpleStep>(f2,f1, st0);
+      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s3) == dynamic_cast<const SimpleStep&>(*s0));
+      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s3) == dynamic_cast<const SimpleStep&>(*s2));
 
+      SimpleMove m3(s3);
+      Assert::IsFalse(m1 == m3);
 
+      m1.SetValue(pt);
+      m3.SetValue(pw);
+      Assert::IsTrue(m1 < m3);
+      m3.SetValue(pl);
+      Assert::IsFalse(m1 < m3);
+      m1.SetValue(pt);
+      Assert::IsFalse(m1 < m3);
 
-      Assert::AreEqual(st1, s2->GetType());
-      Assert::AreNotEqual(Step::StepType::Normal, s2->GetType());
-      Assert::IsTrue(s2->IsTake());
-      Assert::IsTrue(s1 != s2);
-      Assert::AreEqual(Fields{ f1 }, s2->GetTakes());
-      Assert::AreEqual(s2->GetTakes().size(), 1U);
-      Assert::AreEqual(s2->GetTakes()[0], f1);
+      std::shared_ptr<Step> s1r = m1.GetStep();
+      Assert::IsTrue(*s1 == *s1r);
+
+      std::shared_ptr<Step> s3r = m3.GetStep();
+      Assert::IsTrue(*s3 == *s3r);
+      Assert::IsFalse(*s1r == *s3r);
+
+      Steps ss1 = m1.GetSteps();
+      Steps ss3 = m3.GetSteps();
+      Assert::IsTrue(ss1.size() == 1);
+      Assert::IsTrue(ss3.size() == 1);
+      Assert::IsTrue(ss1[0] == s0);
+      Assert::IsTrue(ss3[0] == s3);
+      Assert::IsFalse(ss1[0] == s1);
+      Assert::IsFalse(ss1[0] == s2);
+      Assert::IsFalse(ss1[0] == s3);
+
+      Assert::IsFalse(m1.IsTake());
+      Assert::IsTrue(m3.IsTake());
+
+      Assert::IsTrue(m1.GetFr().GetPiece() == p0);
+      Assert::IsTrue(m3.GetFr().GetPiece() == p0);
+      Assert::IsTrue(m1.GetTo().GetPiece() == p0);
+      Assert::IsTrue(m3.GetTo().GetPiece() == p0);
+      Assert::IsTrue(m1.GetFr().GetLocation() == l1);
+      Assert::IsTrue(m1.GetTo().GetLocation() == l2);
+      Assert::IsTrue(m3.GetFr().GetLocation() == l2);
+      Assert::IsTrue(m3.GetTo().GetLocation() == l1);
     }
 
     TEST_METHOD(TestComplexMove)
@@ -330,38 +362,77 @@ namespace UnitTestCore
       const Piece* p0{ nullptr };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
-      Assert::AreNotEqual(f1, f2);
-      ComplexStep s1{ f1,f2 };
-      Assert::AreEqual(f1, s1.GetFr());
-      Assert::AreEqual(f2, s1.GetTo());
-      Assert::AreNotEqual(f2, s1.GetFr());
-      Assert::AreNotEqual(f1, s1.GetTo());
-      Assert::AreEqual(Step::StepType::Normal, s1.GetType());
-      Assert::IsFalse(s1.IsTake());
+      std::shared_ptr<Step> s0 = std::make_shared<ComplexStep>(f1, f2);
+      Steps ss1{ s0 };
+      ComplexMove m1(ss1);
+      Assert::IsTrue(m1.GetValue() == PositionValue(PositionValue::Undefined));
 
-      Step::StepType st1 = static_cast<Step::StepType>(BoardGamesCore::Step::StepType::Take | BoardGamesCore::Step::StepType::Jump);
-      ComplexStep s2{ f2,f1, st1 };  // Takes defaults to empty, not like in SimpleStep!
-      Assert::AreNotEqual(s1, s2);
-      Assert::AreEqual(st1, s2.GetType());
-      Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
-      Assert::IsTrue(s2.IsTake());
-      Assert::AreNotEqual(Fields{ f1 }, s2.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
-      Assert::AreEqual(s2.GetTakes().size(), 0U);
+      PositionValue pw(BoardGamesCore::PositionValue::PValueType::Won);
+      PositionValue pl(BoardGamesCore::PositionValue::PValueType::Lost);
+      PositionValue pt(BoardGamesCore::PositionValue::PValueType::Tie);
 
+      m1.SetValue(pw);
+      Assert::IsTrue(m1.GetValue() == pw);
+      m1.SetValue(pl);
+      Assert::IsTrue(m1.GetValue() == pl);
+      m1.SetValue(pt);
+      Assert::IsTrue(m1.GetValue() == pt);
+
+      std::shared_ptr<Step> s1 = std::make_shared<ComplexStep>(f1, f2);
+      Assert::IsTrue(dynamic_cast<const ComplexStep&>(*s1) == dynamic_cast<const ComplexStep&>(*s0));
+
+      std::shared_ptr<Step> s2 = std::make_shared<ComplexStep>(f2, f1);
+      Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s2) == dynamic_cast<const ComplexStep&>(*s0));
+
+      Step::StepType st0 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
+      std::shared_ptr<Step> s3 = std::make_shared<ComplexStep>(f2, f1, st0);
+      Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s3) == dynamic_cast<const ComplexStep&>(*s0));
+      Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s3) == dynamic_cast<const ComplexStep&>(*s2));
+
+      Steps ss3{ s3 };
+      ComplexMove m3(ss3);
+      Assert::IsFalse(m1 == m3);
+
+      m1.SetValue(pt);
+      m3.SetValue(pw);
+      Assert::IsTrue(m1 < m3);
+      m3.SetValue(pl);
+      Assert::IsFalse(m1 < m3);
+      m1.SetValue(pt);
+      Assert::IsFalse(m1 < m3);
+
+      std::shared_ptr<Step> s1r = m1.GetStep();
+      Assert::IsTrue(*s1 == *s1r);
+
+      std::shared_ptr<Step> s3r = m3.GetStep();
+      Assert::IsTrue(*s3 == *s3r);
+      Assert::IsFalse(*s1r == *s3r);
+
+      Steps ss1r = m1.GetSteps();
+      Steps ss3r = m3.GetSteps();
+      Assert::IsTrue(ss1r.size() == 1);
+      Assert::IsTrue(ss3r.size() == 1);
+      Assert::IsTrue(ss1r[0] == s0);
+      Assert::IsTrue(ss3r[0] == s3);
+      Assert::IsFalse(ss1r[0] == s1);
+      Assert::IsFalse(ss1r[0] == s2);
+      Assert::IsFalse(ss1r[0] == s3);
+
+      Assert::IsFalse(m1.IsTake());
+      Assert::IsTrue(m3.IsTake());
+
+      Assert::IsTrue(m1.GetFr().GetPiece() == p0);
+      Assert::IsTrue(m3.GetFr().GetPiece() == p0);
+      Assert::IsTrue(m1.GetTo().GetPiece() == p0);
+      Assert::IsTrue(m3.GetTo().GetPiece() == p0);
+      Assert::IsTrue(m1.GetFr().GetLocation() == l1);
+      Assert::IsTrue(m1.GetTo().GetLocation() == l2);
+      Assert::IsTrue(m3.GetFr().GetLocation() == l2);
+      Assert::IsTrue(m3.GetTo().GetLocation() == l1);
       //std::function<const Field&(void)>_l1 = [&s2] { return s2.GetTake(); };
       //Assert::ExpectException<std::exception>(_l1);
-
-      Fields f{ f1,f2 };
-      ComplexStep s3{ f2,f1, st1, f };
-      Assert::AreNotEqual(s3, s1);
-      Assert::AreNotEqual(s3, s2);
-      Assert::AreEqual(st1, s3.GetType());
-      Assert::AreNotEqual(Step::StepType::Normal, s3.GetType());
-      Assert::IsTrue(s3.IsTake());
-      Assert::AreNotEqual(Fields{ f1 }, s3.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
-      Assert::AreEqual(s3.GetTakes().size(), 2U);
-      Assert::AreEqual(s3.GetTake(0), f1);
-      Assert::AreEqual(s3.GetTake(1), f2);
+      //std::function<Steps(void)>_l1 = [&m1] { return m1.GetSteps(); };
+      //Assert::ExpectException<std::exception>(_l1);
     }
 
   };

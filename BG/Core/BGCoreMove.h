@@ -7,14 +7,14 @@ namespace BoardGamesCore
     inline Move(void) noexcept {}
 
   public:
-    ~Move(void) noexcept {}
+    virtual ~Move(void) noexcept {}
     constexpr inline void SetValue(const PositionValue& v) noexcept { _value = v; }
     constexpr inline PositionValue GetValue(void) const noexcept { return _value; }
     constexpr inline bool operator <(const Move& rhs) const noexcept { return _value < rhs._value; }
 
 //    virtual inline bool operator==(const Move& m) const = 0;
     virtual inline const Steps GetSteps(void) const = 0;
-    virtual inline const StepP GetStep(int i = 0) const noexcept = 0;
+    virtual inline const StepP GetStep(unsigned int i = 0) const noexcept = 0;
     virtual inline bool IsTake(void) const noexcept = 0;
     virtual inline const Field& GetFr(void) const noexcept = 0;
     virtual inline const Field& GetTo(void) const noexcept = 0;
@@ -36,7 +36,7 @@ namespace BoardGamesCore
 
     virtual inline bool operator==(const SimpleMove& m) const { return _step == m._step; };
     virtual inline const Steps GetSteps(void) const override { return Steps(1, _step); }
-    virtual inline const StepP GetStep(int /* i */ = 0) const noexcept override { return _step; }
+    virtual inline const StepP GetStep(unsigned int /* i */ = 0) const noexcept override { return _step; }
     virtual inline bool IsTake(void) const noexcept override { return _step->IsTake(); }
     virtual inline const Field& GetFr(void) const noexcept override { return _step->GetFr(); }
     virtual inline const Field& GetTo(void) const noexcept override { return _step->GetTo(); }
@@ -56,7 +56,7 @@ namespace BoardGamesCore
 
     virtual inline bool operator==(const ComplexMove& m) const { return _steps == m._steps; };
     virtual inline const Steps GetSteps(void) const override { return _steps; }
-    virtual inline const StepP GetStep(int i = 0) const noexcept override { return _steps[i]; }
+    virtual inline const StepP GetStep(unsigned int i = 0) const noexcept override { return _steps[i]; }
     virtual inline bool IsTake(void) const noexcept override { for (auto s : _steps) if (s->IsTake()) return true; return false; }
     virtual inline const Field& GetFr(void) const noexcept override { return _steps.front()->GetFr(); }
     virtual inline const Field& GetTo(void) const noexcept override { return _steps.back()->GetTo(); }

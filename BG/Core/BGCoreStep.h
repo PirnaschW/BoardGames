@@ -17,13 +17,14 @@ namespace BoardGamesCore
   protected:
     inline Step(const Field& Fr, const Field& To, Step::StepType Ty = Step::StepType::Normal) noexcept : _from{ Fr }, _to{ To }, _type{ Ty } {}
   public:
+    inline virtual ~Step(void) noexcept {}
     inline const Field& GetFr(void) const noexcept { return _from; }
     inline const Field& GetTo(void) const noexcept { return _to; }
     inline const StepType GetType(void) const noexcept { return _type; }
     inline bool IsTake(void) const noexcept { return _type & StepType::Take; }
+    inline bool operator == (const Step& s) const noexcept { return _from == s._from && _to == s._to && _type == s._type; }
+    inline bool operator != (const Step& s) const noexcept { return !(s == *this); }
 
-    virtual inline bool operator == (const Step& s) const noexcept { return _from == s._from && _to == s._to && _type == s._type; }
-    virtual inline bool operator != (const Step& s) const noexcept { return !(s == *this); }
     virtual inline const Fields GetTakes(void) const noexcept = 0;
     virtual inline const Field& GetTake(unsigned int z = 0) const = 0;
 
