@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "stdafx.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace BoardGamesCore;
@@ -389,7 +389,7 @@ namespace UnitTestCore
       Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s3) == dynamic_cast<const ComplexStep&>(*s0));
       Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s3) == dynamic_cast<const ComplexStep&>(*s2));
 
-      Steps ss3{ s3 };
+      Steps ss3{ s3, s0 };
       ComplexMove m3(ss3);
       Assert::IsFalse(m1 == m3);
 
@@ -411,9 +411,10 @@ namespace UnitTestCore
       Steps ss1r = m1.GetSteps();
       Steps ss3r = m3.GetSteps();
       Assert::IsTrue(ss1r.size() == 1);
-      Assert::IsTrue(ss3r.size() == 1);
+      Assert::IsTrue(ss3r.size() == 2);
       Assert::IsTrue(ss1r[0] == s0);
       Assert::IsTrue(ss3r[0] == s3);
+      Assert::IsTrue(ss3r[1] == s0);
       Assert::IsFalse(ss1r[0] == s1);
       Assert::IsFalse(ss1r[0] == s2);
       Assert::IsFalse(ss1r[0] == s3);
@@ -428,12 +429,52 @@ namespace UnitTestCore
       Assert::IsTrue(m1.GetFr().GetLocation() == l1);
       Assert::IsTrue(m1.GetTo().GetLocation() == l2);
       Assert::IsTrue(m3.GetFr().GetLocation() == l2);
-      Assert::IsTrue(m3.GetTo().GetLocation() == l1);
+      Assert::IsTrue(m3.GetTo().GetLocation() == l2);
+
+      std::vector<Location> l0{ m3.GetJumped() };
+      Assert::IsTrue(l0.size() == 0);
+
       //std::function<const Field&(void)>_l1 = [&s2] { return s2.GetTake(); };
       //Assert::ExpectException<std::exception>(_l1);
       //std::function<Steps(void)>_l1 = [&m1] { return m1.GetSteps(); };
       //Assert::ExpectException<std::exception>(_l1);
     }
+
+    TEST_METHOD(TestColor)
+    {
+      Assert::IsFalse(&BoardGamesCore::Color::NoColor == nullptr);
+      Assert::IsFalse(&BoardGamesCore::Color::White   == nullptr);
+      Assert::IsFalse(&BoardGamesCore::Color::Black   == nullptr);
+
+      Assert::IsFalse(&BoardGamesCore::Color::NoColor == &BoardGamesCore::Color::White);
+      Assert::IsFalse(&BoardGamesCore::Color::NoColor == &BoardGamesCore::Color::Black);
+      Assert::IsFalse(&BoardGamesCore::Color::White   == &BoardGamesCore::Color::Black);
+
+      Assert::IsTrue(!BoardGamesCore::Color::White   == &BoardGamesCore::Color::Black);
+      Assert::IsTrue(!BoardGamesCore::Color::Black   == &BoardGamesCore::Color::White);
+      Assert::IsTrue(!BoardGamesCore::Color::NoColor == &BoardGamesCore::Color::White);
+
+    }
+
+    TEST_METHOD(TestTileColor)
+    {
+      Assert::IsFalse(&BoardGamesCore::TileColor::Light == nullptr);
+      Assert::IsFalse(&BoardGamesCore::TileColor::Dark  == nullptr);
+      Assert::IsFalse(&BoardGamesCore::TileColor::Small == nullptr);
+
+      Assert::IsFalse(&BoardGamesCore::TileColor::Light == &BoardGamesCore::TileColor::Dark);
+      Assert::IsFalse(&BoardGamesCore::TileColor::Light == &BoardGamesCore::TileColor::Small);
+      Assert::IsFalse(&BoardGamesCore::TileColor::Dark  == &BoardGamesCore::TileColor::Small);
+
+    }
+
+    TEST_METHOD(TestKind)
+    {
+      Assert::IsFalse(&BoardGamesCore::noKind::NoKind == nullptr);
+
+    }
+
+
 
   };
 }

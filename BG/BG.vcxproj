@@ -241,11 +241,14 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="Core\BGChessPieces.h" />
     <ClInclude Include="Core\BGCore.h" />
+    <ClInclude Include="Core\BGCoreColor.h" />
     <ClInclude Include="Core\BGCoreField.h" />
+    <ClInclude Include="Core\BGCoreKind.h" />
     <ClInclude Include="Core\BGCoreLayout.h" />
     <ClInclude Include="Core\BGCoreLocation.h" />
     <ClInclude Include="Core\BGCoreMove.h" />
     <ClInclude Include="Core\BGCoreOffset.h" />
+    <ClInclude Include="Core\BGCorePiece.h" />
     <ClInclude Include="Core\BGCorePValue.h" />
     <ClInclude Include="Core\BGCoreResource.h" />
     <ClInclude Include="Core\BGCoreStep.h" />
@@ -285,7 +288,11 @@
     <ClCompile Include="Core\BGChessPieces.cpp" />
     <ClCompile Include="Core\BGCore.cpp" />
     <ClCompile Include="Core\BGCoreAI.cpp" />
+    <ClCompile Include="Core\BGCoreColor.cpp" />
+    <ClCompile Include="Core\BGCoreKind.cpp" />
     <ClCompile Include="Core\BGCoreLayout.cpp" />
+    <ClCompile Include="Core\BGCoreMove.cpp" />
+    <ClCompile Include="Core\BGCoreOffset.cpp" />
     <ClCompile Include="Game Cam\CamGame.cpp" />
     <ClCompile Include="Game Checkers\CheckersGame.cpp" />
     <ClCompile Include="Game Hasami\HasamiGame.cpp" />

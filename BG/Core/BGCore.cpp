@@ -1,61 +1,17 @@
 #include "stdafx.h"
 
-#include "Game Test/TestGame.h"
-
 namespace BoardGamesCore
 {
 
-  // standard 4 'Rook'   directions
-  constexpr const Offset Offset::Rdirection[4]{ Offset(+1, +0), Offset(+0, +1),
-                                                Offset(+0, -1), Offset(-1, +0) };
-  // standard 4 'Bishop' directions
-  constexpr const Offset Offset::Bdirection[4]{ Offset(+1, +1), Offset(+1, -1),
-                                                Offset(-1, -1), Offset(-1, +1) };
-  // standard 8 'Queen'  directions
-  constexpr const Offset Offset::Qdirection[8]{ Offset(+1, +1), Offset(+1, +0), Offset(+1, -1),
-                                                Offset(+0, +1),                 Offset(+0, -1),
-                                                Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
-
-  constexpr const TileColor TileColor::Light{ 'L' };
-  constexpr const TileColor TileColor::Dark { 'D' };
-  constexpr const TileColor TileColor::Small{ 'l' };
- 
-  constexpr inline const Color Color::NoColor{ 'X' };
-  constexpr inline const Color Color::White{ 'W' };
-  constexpr inline const Color Color::Black{ 'B' };
-
-  constexpr inline const Kind Kind::NoKind{ 'X' };
- 
-  inline const Piece Piece::NoTile { &Kind::NoKind, &Color::NoColor, 0, 0, 0 };               // nothing exists there, don't draw the tile at all
-  inline const Piece Piece::NoPiece{ &Kind::NoKind, &Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
+  inline const Piece Piece::NoTile { &noKind::NoKind, &Color::NoColor, 0, 0, 0 };               // nothing exists there, don't draw the tile at all
+  inline const Piece Piece::NoPiece{ &noKind::NoKind, &Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
  
   constexpr inline const PlayerType PlayerType::Human{ 'H' };
   constexpr inline const PlayerType PlayerType::Computer{ 'C' };
 
   
-  void TileColor::Serialize(CArchive* ar) const { *ar << tilecolor; }
-  void Color::Serialize(CArchive* ar) const { *ar << color; }
-  void Kind::Serialize(CArchive* ar) const { *ar << kind; }
   void PlayerType::Serialize(CArchive* ar) const { *ar << playertype; }
 
-
-  //Move&& Move::operator =(Move&& m) noexcept
-  //{
-  //  std::swap(step, m.step);
-  //  value = m.value;
-  //  return std::move(*this);
-  //}
-
-  const std::vector<Location> ComplexMove::GetJumped(void) const  // return list of jumped-over locations
-  {
-    std::vector<Location> jumped{};
-    for (auto& s : _steps)
-    {
-      if (s->GetType() == Step::StepType::Jump) throw ("code missing!"); // TODO
-    }
-    return jumped;
-  }
-  
 
   const std::unordered_map<std::string, const Piece*>& Piece::GetHTMLPieceMap(void) noexcept
   {

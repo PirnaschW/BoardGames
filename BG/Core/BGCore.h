@@ -2,63 +2,6 @@
 namespace BoardGamesCore
 {
 
-  class TileColor final
-  {
-  private:
-    constexpr inline TileColor(const char& f) noexcept : tilecolor{ f } {}
-  public:
-    void Serialize(CArchive* ar) const;
-
-  private:
-    const char tilecolor;
-
-  public:  // the only instances ever to exists; handed around by pointer
-    static const TileColor Light;
-    static const TileColor Dark ;
-    static const TileColor Small;
-  };
-
-
-  class Color final
-  {
-  private:
-    constexpr inline Color(const char& c) noexcept : color{ c } {}
-  public:
-    inline size_t GetHash(void) const noexcept { return std::hash<char>()(color); }
-    inline const Color* operator !(void) const noexcept { return color == 'W' ? &Black : &White; }
-    inline void Serialize(CArchive* ar) const;
-
-  private:
-    const char color;
-
-  public:  // the only instances ever to exists; handed around by pointer
-    static const Color NoColor;
-    static const Color White;
-    static const Color Black;
-  };
-
-
-  class MainPosition;  // forward declaration needed in class Kind
-  class Kind
-  {
-  protected:
-    constexpr inline Kind(const char& k) noexcept : kind{ k } {}
-  public:
-    inline bool operator==(const Kind& k) const noexcept { return k.kind == kind; }
-    inline size_t GetHash(void) const noexcept { return std::hash<char>()(kind); }
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept { return 0; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const {};
-    virtual void Serialize(CArchive* ar) const;
-    virtual bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept { return false; }
-
-  private:
-    const char kind;
-
-  public:
-    static const Kind NoKind;
-  };
-
-
   class PlayerType final
   {
   private:
@@ -73,50 +16,6 @@ namespace BoardGamesCore
     static const PlayerType Human;
     static const PlayerType Computer;
   };
-
-
-  // cannot be constexpr as it loads bitmaps at runtime
-  class Piece
-  {
-  protected:
-    inline Piece(const Kind* k, const Color* c, UINT nID_l, UINT nID_d, UINT nID_s) noexcept
-      : kind{ k }, color{ c }, ID_l{ nID_l }, ID_d{ nID_d }, ID_s{ nID_s } {}
-  public:
-    Piece(void) noexcept = delete;
-    Piece(const Piece&) noexcept = delete;            // delete copy constructor
-    Piece& operator=(const Piece&) = delete;          // delete assignment operator
-    virtual ~Piece(void) noexcept {}
-    inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
-    inline virtual void Serialize(CArchive* ar) const { color->Serialize(ar); kind->Serialize(ar); }
-    inline void CollectMoves(const MainPosition& p, const Location l, Moves& m) const { kind->CollectMoves(p, l, m); }
-    virtual inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind->GetValue(p,l); }
-    inline bool IsKind(const Kind& k) const noexcept { return k == *kind; }
-    inline bool IsColor(const Color* c) const noexcept { return c == color; }
-    inline const Color* GetColor(void) const noexcept { return color; }
-    inline bool IsBlank(void) const noexcept { return color == &Color::NoColor && kind == &Kind::NoKind; }
-    virtual inline bool IsPromotable(void) const noexcept { return false; }
-    virtual inline const Piece* Promote(bool /*up*/) const noexcept { return this; };           // by default: no promotions
-    virtual void Draw(CDC* pDC, const CRect& r, const TileColor* f) const;
-    static const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) noexcept;
-    static std::vector<const Piece*> ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece*>&);
-
-  public:
-    static const Piece NoTile;    // nothing exists there, don't draw the tile at all
-    static const Piece NoPiece;   // no piece on the tile, but still draw it
-
-  protected:
-    const Kind* kind;      // points to a static shared object ('Singleton') - we don't own it
-    const Color* color;    // points to a static shared object ('Singleton') - we don't own it
-
-  private:
-    UINT ID_l;             // bitmap ID for light tile
-    UINT ID_d;             // bitmap ID for dark tile
-    UINT ID_s;             // bitmap ID for small tile
-    mutable CBitmap cb_l{};  // mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
-    mutable CBitmap cb_d{};
-    mutable CBitmap cb_s{};
-  };
-
 
   class Position
   {
