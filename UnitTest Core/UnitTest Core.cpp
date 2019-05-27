@@ -442,17 +442,29 @@ namespace UnitTestCore
 
     TEST_METHOD(TestColor)
     {
+      Assert::IsFalse(&BoardGamesCore::Color::Void    == nullptr);
       Assert::IsFalse(&BoardGamesCore::Color::NoColor == nullptr);
       Assert::IsFalse(&BoardGamesCore::Color::White   == nullptr);
       Assert::IsFalse(&BoardGamesCore::Color::Black   == nullptr);
 
+      Assert::IsFalse(&BoardGamesCore::Color::Void    == &BoardGamesCore::Color::NoColor);
+      Assert::IsFalse(&BoardGamesCore::Color::Void    == &BoardGamesCore::Color::White);
+      Assert::IsFalse(&BoardGamesCore::Color::Void    == &BoardGamesCore::Color::Black);
       Assert::IsFalse(&BoardGamesCore::Color::NoColor == &BoardGamesCore::Color::White);
       Assert::IsFalse(&BoardGamesCore::Color::NoColor == &BoardGamesCore::Color::Black);
       Assert::IsFalse(&BoardGamesCore::Color::White   == &BoardGamesCore::Color::Black);
 
+      Assert::IsFalse(BoardGamesCore::Color::Void    == BoardGamesCore::Color::NoColor);
+      Assert::IsFalse(BoardGamesCore::Color::Void    == BoardGamesCore::Color::White);
+      Assert::IsFalse(BoardGamesCore::Color::Void    == BoardGamesCore::Color::Black);
+      Assert::IsFalse(BoardGamesCore::Color::NoColor == BoardGamesCore::Color::White);
+      Assert::IsFalse(BoardGamesCore::Color::NoColor == BoardGamesCore::Color::Black);
+      Assert::IsFalse(BoardGamesCore::Color::White   == BoardGamesCore::Color::Black);
+
       Assert::IsTrue(!BoardGamesCore::Color::White   == &BoardGamesCore::Color::Black);
       Assert::IsTrue(!BoardGamesCore::Color::Black   == &BoardGamesCore::Color::White);
       Assert::IsTrue(!BoardGamesCore::Color::NoColor == &BoardGamesCore::Color::White);
+      Assert::IsTrue(!BoardGamesCore::Color::Void    == &BoardGamesCore::Color::White);
 
     }
 
@@ -494,8 +506,25 @@ namespace UnitTestCore
       BoardGamesCore::Piece::NoTile.CollectMoves(*p, l1, m);
       Assert::IsTrue(m.size() == 0);
 
+      Assert::IsTrue(BoardGamesCore::Piece::NoTile.IsKind(BoardGamesCore::noKind::NoKind));
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.IsKind(BoardGamesCore::noKind::NoKind));
 
+      Assert::IsTrue(BoardGamesCore::Piece::NoTile.IsColor(&BoardGamesCore::Color::Void));
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.IsColor(&BoardGamesCore::Color::NoColor));
 
+      Assert::IsTrue(*BoardGamesCore::Piece::NoTile.GetColor() == BoardGamesCore::Color::Void);
+      Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.GetColor() == BoardGamesCore::Color::NoColor);
+
+      Assert::IsTrue(BoardGamesCore::Piece::NoTile.GetValue(*p,l1) == 0);
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.GetValue(*p, l1) == 0);
+
+      Assert::IsFalse(BoardGamesCore::Piece::NoTile. IsPromotable());
+      Assert::IsFalse(BoardGamesCore::Piece::NoPiece.IsPromotable());
+
+      Assert::IsTrue(*BoardGamesCore::Piece::NoTile. Promote(true) == BoardGamesCore::Piece::NoTile);
+      Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.Promote(true) == BoardGamesCore::Piece::NoPiece);
+      Assert::IsTrue(*BoardGamesCore::Piece::NoTile. Promote(false) == BoardGamesCore::Piece::NoTile);
+      Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.Promote(false) == BoardGamesCore::Piece::NoPiece);
     }
 
   };

@@ -6,8 +6,9 @@ namespace BoardGamesCore
   private:
     constexpr inline Color(const char& c) noexcept : color{ c } {}
   public:
+    constexpr inline bool operator ==(const Color& c) const noexcept { return c.color == color; }
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(color); }
-    inline const Color* operator !(void) const noexcept { return color == 'W' ? &Black : &White; }
+    constexpr inline const Color* operator !(void) const noexcept { return color == 'W' ? &Black : &White; }
     void Serialize(CArchive* ar) const;
 
   private:

@@ -14,12 +14,13 @@ namespace BoardGamesCore
     Piece& operator=(const Piece&) = delete;          // delete assignment operator
     virtual inline ~Piece(void) noexcept {}
 
-    inline bool IsBlank(void) const noexcept { return color == &Color::NoColor && kind == &noKind::NoKind; }
+    constexpr inline bool operator ==(const Piece& p) const noexcept { return p.IsKind(*kind) && p.IsColor(color); }
+    constexpr inline bool IsBlank(void) const noexcept { return color == &Color::NoColor && kind == &noKind::NoKind; }
     inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     inline void CollectMoves(const MainPosition& p, const Location l, Moves& m) const { kind->CollectMoves(p, l, m); }
-    inline bool IsKind(const Kind& k) const noexcept { return k == *kind; }
-    inline bool IsColor(const Color* c) const noexcept { return c == color; }
-    inline const Color* GetColor(void) const noexcept { return color; }
+    constexpr inline bool IsKind(const Kind& k) const noexcept { return k == *kind; }
+    constexpr inline bool IsColor(const Color* c) const noexcept { return c == color; }
+    constexpr inline const Color* GetColor(void) const noexcept { return color; }
 
     virtual inline void Serialize(CArchive* ar) const { color->Serialize(ar); kind->Serialize(ar); }
     virtual inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind->GetValue(p, l); }

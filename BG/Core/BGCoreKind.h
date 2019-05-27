@@ -10,8 +10,9 @@ namespace BoardGamesCore
   public:
     Kind& operator=(const Kind&) = delete;          // delete assignment operator
 
-    inline bool operator==(const Kind& k) const noexcept { return k.kind == kind; }
+    constexpr inline bool operator==(const Kind& k) const noexcept { return k.kind == kind; }
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(kind); }
+
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept = 0;          // no useful default implementation provided!
     virtual inline void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const {};         // useful default implementation: No moves possible
     virtual inline bool CanDrop(const MainPosition* /*pos*/, const Location& /*l*/) const noexcept { return false; }   // useful default implementation: cannot drop
