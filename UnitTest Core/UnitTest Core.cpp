@@ -525,7 +525,21 @@ namespace UnitTestCore
       Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.Promote(true) == BoardGamesCore::Piece::NoPiece);
       Assert::IsTrue(*BoardGamesCore::Piece::NoTile. Promote(false) == BoardGamesCore::Piece::NoTile);
       Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.Promote(false) == BoardGamesCore::Piece::NoPiece);
+
     }
+
+    TEST_METHOD(TestPlayerType)
+    {
+      Assert::IsFalse(&BoardGamesCore::PlayerType::Human == nullptr);
+      Assert::IsFalse(&BoardGamesCore::PlayerType::Computer == nullptr);
+
+      Assert::IsFalse(&BoardGamesCore::PlayerType::Human == &BoardGamesCore::PlayerType::Computer);
+      Assert::IsFalse(BoardGamesCore::PlayerType::Human == BoardGamesCore::PlayerType::Computer);
+
+    }
+
+
+
 
   };
 }

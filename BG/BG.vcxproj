@@ -249,6 +249,8 @@
     <ClInclude Include="Core\BGCoreMove.h" />
     <ClInclude Include="Core\BGCoreOffset.h" />
     <ClInclude Include="Core\BGCorePiece.h" />
+    <ClInclude Include="Core\BGCorePlayer.h" />
+    <ClInclude Include="Core\BGCorePosition.h" />
     <ClInclude Include="Core\BGCorePValue.h" />
     <ClInclude Include="Core\BGCoreResource.h" />
     <ClInclude Include="Core\BGCoreStep.h" />
@@ -294,6 +296,8 @@
     <ClCompile Include="Core\BGCoreMove.cpp" />
     <ClCompile Include="Core\BGCoreOffset.cpp" />
     <ClCompile Include="Core\BGCorePiece.cpp" />
+    <ClCompile Include="Core\BGCorePlayer.cpp" />
+    <ClCompile Include="Core\BGCorePosition.cpp" />
     <ClCompile Include="Game Cam\CamGame.cpp" />
     <ClCompile Include="Game Checkers\CheckersGame.cpp" />
     <ClCompile Include="Game Hasami\HasamiGame.cpp" />
