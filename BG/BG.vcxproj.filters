@@ -374,6 +374,9 @@
     <ClCompile Include="Core\BGCoreOffset.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\BGCorePiece.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\BG.rc2">

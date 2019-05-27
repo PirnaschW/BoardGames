@@ -47,4 +47,9 @@ namespace BoardGamesCore
     mutable CBitmap cb_s{};
   };
 
+  static_assert(!std::is_abstract<Piece>::value, "is abstract");
+  static_assert(!std::is_trivially_constructible<Piece>::value, "must not be trivially constructible");
+  static_assert(!std::is_constructible<Piece, Kind*, Color*, UINT, UINT, UINT>::value, "is not constructible");
+  static_assert(!std::is_assignable<Piece, Piece>::value, "is assignable");
+
 }

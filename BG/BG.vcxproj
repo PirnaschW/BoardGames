@@ -293,6 +293,7 @@
     <ClCompile Include="Core\BGCoreLayout.cpp" />
     <ClCompile Include="Core\BGCoreMove.cpp" />
     <ClCompile Include="Core\BGCoreOffset.cpp" />
+    <ClCompile Include="Core\BGCorePiece.cpp" />
     <ClCompile Include="Game Cam\CamGame.cpp" />
     <ClCompile Include="Game Checkers\CheckersGame.cpp" />
     <ClCompile Include="Game Hasami\HasamiGame.cpp" />
