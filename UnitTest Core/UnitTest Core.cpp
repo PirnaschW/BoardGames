@@ -474,7 +474,29 @@ namespace UnitTestCore
 
     }
 
+    TEST_METHOD(TestPiece)
+    {
+      Assert::IsFalse(&BoardGamesCore::Piece::NoTile == nullptr);
+      Assert::IsFalse(&BoardGamesCore::Piece::NoPiece == nullptr);
 
+      Assert::IsFalse(&BoardGamesCore::Piece::NoTile == &BoardGamesCore::Piece::NoPiece);
+
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.IsBlank());
+      Assert::IsFalse(BoardGamesCore::Piece::NoTile.IsBlank());
+
+      size_t ht = BoardGamesCore::Piece::NoTile.GetHash();
+      size_t hp = BoardGamesCore::Piece::NoPiece.GetHash();
+      Assert::IsFalse(BoardGamesCore::Piece::NoTile.GetHash() == BoardGamesCore::Piece::NoPiece.GetHash());
+
+      Location l1(2U, 3U);
+      Moves m{};
+      MainPosition* p{};
+      BoardGamesCore::Piece::NoTile.CollectMoves(*p, l1, m);
+      Assert::IsTrue(m.size() == 0);
+
+
+
+    }
 
   };
 }

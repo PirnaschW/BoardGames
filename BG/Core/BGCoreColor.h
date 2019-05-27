@@ -14,6 +14,7 @@ namespace BoardGamesCore
     const char color;
 
   public:  // the only instances ever to exists; handed around by pointer
+    static const Color Void;
     static const Color NoColor;
     static const Color White;
     static const Color Black;

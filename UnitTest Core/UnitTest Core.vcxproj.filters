@@ -30,6 +30,9 @@
     <ClCompile Include="..\BG\Core\BGCoreKind.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCorePiece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

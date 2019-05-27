@@ -5,7 +5,8 @@ namespace BoardGamesCore
 
   void Color::Serialize(CArchive* ar) const { *ar << color; }
 
-  constexpr const Color Color::NoColor{ 'X' };
+  constexpr const Color Color::Void   { 'X' };
+  constexpr const Color Color::NoColor{ ' ' };
   constexpr const Color Color::White  { 'W' };
   constexpr const Color Color::Black  { 'B' };
 

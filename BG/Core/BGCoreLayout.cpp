@@ -3,30 +3,6 @@
 namespace BoardGamesCore
 {
 
-  void Piece::Draw(CDC* pDC, const CRect& r, const TileColor* f) const
-  {
-    if (ID_l == 0 && ID_d == 0) return;
-    if (cb_l.m_hObject == 0) cb_l.LoadBitmap(ID_l);
-    if (cb_d.m_hObject == 0) cb_d.LoadBitmap(ID_d);
-    if (cb_s.m_hObject == 0 && ID_s != 0) cb_s.LoadBitmap(ID_s);
-
-    CBitmap& cb = (f == &TileColor::Light) ? cb_l : ((f == &TileColor::Dark) ? cb_d : cb_s);
-
-    if (cb.m_hObject != 0)
-    {
-      BITMAP bm;
-      cb.GetObject(sizeof(BITMAP), &bm);
-      if ((bm.bmWidth != r.Width()) || (bm.bmHeight != r.Height()))
-      {
-        //throw ("rectangle has wrong size!");
-      }
-    }
-    CDC dcMemory;
-    dcMemory.CreateCompatibleDC(pDC);
-    dcMemory.SelectObject(&cb);
-    pDC->BitBlt(r.TopLeft().x, r.TopLeft().y, r.Width(), r.Height(), &dcMemory, 0, 0, SRCCOPY);
-  }
-
 
   Layout::Layout(const Dimension& d, LayoutType lt) : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
   {
@@ -118,7 +94,7 @@ namespace BoardGamesCore
       dragPiece->Draw(pDC, r, &TileColor::Small);
     }
 
-    if (true) {
+    if (!true) {
       CString s;
       static char buffer[2000];
       sprintf_s(buffer, "Depth = %d (value = %d) [PList size = %zd] free mem:%zd, sizeof(Position/MainPosition/vector<Move>/Move/SimpleMove/ComplexMove/SimpleStep) = %zd/%zd/%zd/%zd/%zd/%zd/%zd",
