@@ -53,4 +53,24 @@ namespace BoardGamesCore
   static_assert(!std::is_constructible<Piece, Kind*, Color*, UINT, UINT, UINT>::value, "is not constructible");
   static_assert(!std::is_assignable<Piece, Piece>::value, "is assignable");
 
+  using PieceIndex = unsigned char;
+  class PieceMap final  // collects all the existing pieces for the game.
+                      // Intention is to be able to save inside Positions a 'PieceIndex' (= unsigned char = 1 byte)
+                      // instead of a 'Piece*' (= 4 or 8 byte)
+  {
+  public:
+    constexpr inline PieceMap(void) noexcept {}
+    constexpr inline PieceMap(const PieceMap& p) noexcept : used{ p.used }, map{ p.map } {}
+    constexpr inline PieceIndex GetIndex(const Piece* p) const { for (PieceIndex z = 0; z < used; z++) if (map[z] == p) return z; throw; }
+    constexpr inline void Add(const Piece* p) noexcept { map[used++] = p; }
+    constexpr inline const Piece* GetPiece(PieceIndex i) const noexcept { return map[i]; }
+
+  private:
+    constexpr static const PieceIndex max{ 32 };
+    PieceIndex used{ 0 };
+    std::array<const Piece*, max> map{};
+  };
+
+  using PieceMapP = std::shared_ptr<PieceMap>;
+
 }

@@ -41,7 +41,7 @@ namespace TicTacToe
   class TicTacToePosition : public MainPosition
   {
   public:
-    inline TicTacToePosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y) {}
+    inline TicTacToePosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y) {}
 
     virtual inline MainPosition* Clone(void) const override { return new TicTacToePosition(*this); }
     virtual void GetAllMoves(void) override;
@@ -79,10 +79,10 @@ namespace TicTacToe
   {
   private:
     TicTacToeGame(void) = delete;
-    TicTacToeGame(TicTacToePosition* p, TakenPosition* t, StockPosition* s, TicTacToeLayout* l, TicTacToeTakenLayout* tl, TicTacToeStockLayout* sl) noexcept;
+    TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TakenPosition* t, StockPosition* s, TicTacToeLayout* l, TicTacToeTakenLayout* tl, TicTacToeStockLayout* sl) noexcept;
 
   public:
-    TicTacToeGame(Coordinate x, Coordinate y) noexcept;
+    TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
   };
 

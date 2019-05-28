@@ -168,7 +168,7 @@ namespace Shogi
   }
 
 
-  ShogiPosition::ShogiPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
+  ShogiPosition::ShogiPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
   {
     assert((x == 9 && y == 9) || (x == 5 && y == 5));
     if (ShogiGame::IsFull(x, y))
@@ -311,13 +311,13 @@ namespace Shogi
   }
     
 
-  ShogiGame::ShogiGame(Coordinate x, Coordinate y) noexcept : ShogiGame(
-    new ShogiPosition(x, y), new ShogiTakenPosition(x,y), new StockPosition(15, 2),
+  ShogiGame::ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : ShogiGame(m,
+    new ShogiPosition(m, x, y), new ShogiTakenPosition(m, x, y), new StockPosition(m, 15, 2),
     new ShogiLayout(x, y), new ShogiTakenLayout(x, y), new ShogiStockLayout(x, y)) {}
 
-  ShogiGame::ShogiGame(
+  ShogiGame::ShogiGame(const PieceMapP& m,
     ShogiPosition* p, TakenPosition* t, StockPosition* s,
-    ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+    ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
   {
     p->SetTPos(t);  // stores the Taken position inide the board position, so the move generator can access it for drops
     AddToStock(Location(0U, 0U), &ShogiPiece::ShogiSKW);

@@ -115,12 +115,12 @@ namespace TicTacToe
   }
 
 
-  TicTacToeGame::TicTacToeGame(Coordinate x, Coordinate y) noexcept : TicTacToeGame(
-    new TicTacToePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
+  TicTacToeGame::TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TicTacToeGame(m,
+    new TicTacToePosition(m, x, y), new TakenPosition(m, x, 2), new StockPosition(m, 3, 1),
     new TicTacToeLayout(x, y), new TicTacToeTakenLayout(x, y), new TicTacToeStockLayout(x, y)) {}
 
-  TicTacToeGame::TicTacToeGame(TicTacToePosition* p, TakenPosition* t, StockPosition* s,
-    TicTacToeLayout* l, TicTacToeTakenLayout* tl, TicTacToeStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl,true }
+  TicTacToeGame::TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TakenPosition* t, StockPosition* s,
+    TicTacToeLayout* l, TicTacToeTakenLayout* tl, TicTacToeStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl,true }
   {
     AddToStock(Location(0U, 0U), &TicTacToePiece::TicTacToePieceW);
     AddToStock(Location(1U, 0U), &TicTacToePiece::TicTacToePieceB);

@@ -22,7 +22,7 @@ namespace Cam
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; };
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
-    
+
   public:
     static const Pawn ThePawn;
   };
@@ -34,7 +34,7 @@ namespace Cam
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 400; }
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
-    
+
   public:
     static const Knight TheKnight;
   };
@@ -59,10 +59,10 @@ namespace Cam
   class CamPosition : public MainPosition
   {
   public:
-    CamPosition(Coordinate x, Coordinate y) noexcept;
+    CamPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new CamPosition(*this); }
     virtual void GetAllMoves(void) override;
- 
+
     // extensions:
   public:
     bool CollectJumps(const Location& fr, const Steps& s, bool charge, const Color* c, Moves& m) const;
@@ -71,10 +71,9 @@ namespace Cam
   class CamTakenPosition : public TakenPosition
   {
   public:
-    inline CamTakenPosition(Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(x == 12 ? 24 : 14, 2) {}
+    inline CamTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, x == 12 ? 24 : 14, 2) {};
   };
 
-  
   class CamLayout : public MainLayout
   {
   public:
@@ -86,7 +85,7 @@ namespace Cam
   {
   public:
     inline CamTakenLayout(Coordinate x, Coordinate y) noexcept :
-      TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
+      TakenLayout(Dimension(2 * x, 2, FieldSizeX* (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY* y - FieldSizeSY * 4)) {}
   };
 
   class CamStockLayout : public StockLayout
@@ -101,9 +100,9 @@ namespace Cam
   {
   private:
     CamGame(void) = delete;
-    CamGame(CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
+    CamGame(const PieceMapP& m, CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
   public:
-    CamGame(Coordinate x, Coordinate y) noexcept;
+    CamGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
   };
 

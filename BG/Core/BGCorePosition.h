@@ -5,49 +5,50 @@ namespace BoardGamesCore
   class Position abstract
   {
   private:
-    class PieceMap final  // local helper class, collects all the existing pieces for the game.
-                          // Intention is to be able to save inside Positions a 'PieceIndex' (= unsigned char = 1 byte)
-                          // instead of a 'Piece*' (= 4 or 8 byte)
-    {
-    public:
-      using PieceIndex = unsigned char;
-    public:
-      constexpr inline PieceMap(void) noexcept {}
-      constexpr inline PieceMap(const PieceMap& p) noexcept : used{ p.used }, map{ p.map } {}
-      constexpr inline PieceIndex GetIndex(const Piece* p) noexcept { for (PieceIndex z = 0; z < used; z++) if (map[z] == p) return z; map[used] = p; return used++; }
-      constexpr inline const Piece* GetPiece(PieceIndex i) noexcept { return map[i]; }
+    //class PieceMap final  // local helper class, collects all the existing pieces for the game.
+    //                      // Intention is to be able to save inside Positions a 'PieceIndex' (= unsigned char = 1 byte)
+    //                      // instead of a 'Piece*' (= 4 or 8 byte)
+    //{
+    //public:
+    //  using PieceIndex = unsigned char;
+    //public:
+    //  constexpr inline PieceMap(void) noexcept {}
+    //  constexpr inline PieceMap(const PieceMap& p) noexcept : used{ p.used }, map{ p.map } {}
+    //  constexpr inline PieceIndex GetIndex(const Piece* p) noexcept { for (PieceIndex z = 0; z < used; z++) if (map[z] == p) return z; map[used] = p; return used++; }
+    //  constexpr inline const Piece* GetPiece(PieceIndex i) noexcept { return map[i]; }
 
-    private:
-      constexpr static const PieceIndex max{ 32 };
-      PieceIndex used{ 0 };
-      std::array<const Piece*, max> map{};
-    };
+    //private:
+    //  constexpr static const PieceIndex max{ 32 };
+    //  PieceIndex used{ 0 };
+    //  std::array<const Piece*, max> map{};
+    //};
 
   private:
     constexpr inline Position(void) noexcept = delete;
 
   public:
-    inline Position(Coordinate x, Coordinate y, const Piece* init = &Piece::NoPiece) noexcept
-      : sizeX(x), sizeY(y), pm{}, pieces(1ULL * x * y, pm->GetIndex(init)) {}
-    inline Position(const Position& p) noexcept : sizeX(p.sizeX), sizeY(p.sizeY), pm{ p.pm }, pieces{ p.pieces } {}
+    inline Position(const PieceMapP& p, Coordinate x, Coordinate y, const Piece* init = &Piece::NoPiece) noexcept
+      : pMap{ p }, sizeX(x), sizeY(y), pieces(1ULL * x * y, pMap->GetIndex(init)) {}
+    inline Position(const Position& p) noexcept : pMap{p.pMap}, sizeX(p.sizeX), sizeY(p.sizeY), pieces{ p.pieces } {}
     inline virtual ~Position(void) noexcept {}
 
     constexpr inline Coordinate GetSizeX(void) const noexcept { return sizeX; }  // potentially needed for positional value calculations
     constexpr inline Coordinate GetSizeY(void) const noexcept { return sizeY; }  // only needed for positional value calculations
-    constexpr inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pm->GetPiece(pieces[l.Index(sizeX, sizeY)]) : nullptr; }
+    constexpr inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pMap->GetPiece(pieces[l.Index(sizeX, sizeY)]) : nullptr; }
 
     virtual bool operator ==(const Position* p) const noexcept;
     virtual std::size_t GetHash(void) const noexcept;
-    virtual void Serialize(CArchive* ar) const { for (auto& p : pieces) pm->GetPiece(p)->Serialize(ar); }
-    virtual inline const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; pieces[l.Index(sizeX, sizeY)] = pm->GetIndex(p); return p; }
+    virtual void Serialize(CArchive* ar) const { for (auto& p : pieces) pMap->GetPiece(p)->Serialize(ar); }
+    virtual inline const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; pieces[l.Index(sizeX, sizeY)] = pMap->GetIndex(p); return p; }
     virtual void SetPosition(std::vector<const Piece*> list);
 
   protected:
+    const PieceMapP& pMap;
     const Coordinate sizeX;
     const Coordinate sizeY;
   private:
-    std::shared_ptr<PieceMap> pm;
-    std::vector<PieceMap::PieceIndex> pieces;
+//    std::shared_ptr<PieceMap> pm;
+    std::vector<PieceIndex> pieces;
     mutable std::size_t hash{};
   };
 
@@ -62,7 +63,7 @@ namespace BoardGamesCore
     inline MainPosition(const MainPosition& m) noexcept : Position(m), sequence(m.sequence), onTurn(m.onTurn) {}
 
   public:
-    inline MainPosition(Coordinate x, Coordinate y) noexcept : Position(x, y) {}
+    inline MainPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
@@ -104,14 +105,14 @@ namespace BoardGamesCore
   class TakenPosition : public Position
   {
   public:
-    inline TakenPosition(Coordinate x, Coordinate y) noexcept : Position(x, y, &Piece::NoTile) {}
+    inline TakenPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y, &Piece::NoTile) {}
     void Push(unsigned int player, const std::vector<const Piece*>& p) noexcept;
   };
 
   class StockPosition : public Position
   {
   public:
-    inline StockPosition(Coordinate x, Coordinate y) noexcept : Position(x, y) {}
+    inline StockPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
   };
 
 }

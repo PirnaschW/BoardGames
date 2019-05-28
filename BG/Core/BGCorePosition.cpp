@@ -22,7 +22,7 @@ namespace BoardGamesCore
     std::size_t z{};
     for (auto& p : pieces)
     {
-      z ^= pm->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
+      z ^= pMap->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
     }
     return hash = z;
   }
@@ -32,8 +32,8 @@ namespace BoardGamesCore
     unsigned int z{};
     for (const auto& p : list)
     {
-      while (pieces[z] == pm->GetIndex(&Piece::NoTile)) z++; // skip non-existing fields
-      pieces[z++] = pm->GetIndex(p);
+      while (pieces[z] == pMap->GetIndex(&Piece::NoTile)) z++; // skip non-existing fields
+      pieces[z++] = pMap->GetIndex(p);
     }
   }
 

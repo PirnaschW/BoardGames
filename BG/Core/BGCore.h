@@ -84,7 +84,7 @@ namespace BoardGamesCore
     constexpr inline static const VariantList& GetVariants(void) noexcept { return TClass::GetVariants(); }
   };
 
-
+  
   class Layout;       // forward declaration need inside class Game
   class TakenLayout;  // forward declaration need inside class Game
   class StockLayout;  // forward declaration need inside class Game
@@ -93,7 +93,7 @@ namespace BoardGamesCore
   private:
     Game(void) = delete;
   public:
-    Game(MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl, bool pl = false) noexcept;
+    Game(const PieceMapP& m, MainPosition* p, TakenPosition* t, StockPosition* s, Layout* l, TakenLayout* tl, StockLayout* sl, bool pl = false) noexcept;
     virtual ~Game(void) noexcept;
     virtual void Serialize(CArchive* ar) { pos->Serialize(ar); }
     virtual void ReadFromWWW(const std::string& gameno);
@@ -124,6 +124,7 @@ namespace BoardGamesCore
     virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist.callback = cb; }
 
   protected:
+    const PieceMapP& pMap;                       // map of all pieces used in the game
     MainPosition* pos;                           // logical position on the main playing board
     TakenPosition* tpos;                         // taken pieces
     StockPosition* spos;                         // piece list for editing
@@ -142,7 +143,7 @@ namespace BoardGamesCore
     bool editing{ false };                       // edit mode allows to change the main playing board
     std::vector<Player*> players{};              // list of players
     unsigned int current{ 0 };                   // current player
-    Moves moves{};                   // will contain all allowed moves once a start piece is selected
+    Moves moves{};                               // will contain all allowed moves once a start piece is selected
     bool gameover{ false };                      // once game is over, moves are disallowed
   };
 

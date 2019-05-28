@@ -189,7 +189,7 @@ namespace Logik
   class LPosition : public MainPosition
   {
   public:
-    LPosition<BX, BY, BZ>(void) noexcept : MainPosition(4 * BY, BZ)
+    LPosition<BX, BY, BZ>(void) noexcept : MainPosition(nullptr, 4 * BY, BZ)
     {
       for (unsigned int i = 0; i < 4 * BY; i++)
         for (unsigned int j = 0; j < BZ; j++)
@@ -373,7 +373,7 @@ namespace Logik
   class LMarkerStockPosition : public StockPosition
   {
   public:
-    LMarkerStockPosition(void) noexcept : StockPosition(2 + 1, 1)
+    LMarkerStockPosition(void) noexcept : StockPosition(nullptr, 2 + 1, 1)
     {
       SetPiece(Location(0U, 0U), &LogikPiece::LPieceB);
       SetPiece(Location(1U, 0U), &LogikPiece::LPieceW);
@@ -408,7 +408,7 @@ namespace Logik
   {
   private:
     LGame<BX, BY, BZ>(LPosition<BX, BY, BZ>* p, TakenPosition* t, StockPosition* s,
-      LLayout* l, TakenLayout* tl, LStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
+      LLayout* l, TakenLayout* tl, LStockLayout* sl) noexcept : Game{nullptr,p,t,s,l,tl,sl}
     {
       AddToStock(Location(0U, 0U), &LogikPiece::LPieceB);
       AddToStock(Location(1U, 0U), &LogikPiece::LPieceW);
@@ -423,7 +423,7 @@ namespace Logik
       ShowStock(true);
     }
   public:
-    LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(BX + 3, 1),
+    LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(nullptr, BX + 3, 1),
       new LLayout(4 * BY, BZ), nullptr, new LStockLayout(BX, BY, BZ)) {}
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 5 } } }; return v; }
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)

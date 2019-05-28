@@ -19,7 +19,7 @@ namespace MassacreChess
   class MCPosition : public MainPosition
   {
   public:
-    MCPosition(Coordinate x, Coordinate y);
+    MCPosition(const PieceMapP& m, Coordinate x, Coordinate y);
     virtual inline MainPosition* Clone(void) const override { return new MCPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual inline unsigned int GetMoveCountFactor(void) const noexcept override { return 1000; }
@@ -58,10 +58,10 @@ namespace MassacreChess
   {
   private:
     MCGame(void) = delete;
-    MCGame(MCPosition* p, TakenPosition* t, StockPosition* s, MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept;
+    MCGame(const PieceMapP& m, MCPosition* p, TakenPosition* t, StockPosition* s, MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept;
 
   public:
-    MCGame(Coordinate x, Coordinate y) noexcept;
+    MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
   };
 

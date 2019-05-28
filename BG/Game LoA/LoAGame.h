@@ -49,7 +49,7 @@ namespace LoA
   class LoAPosition : public MainPosition
   {
   public:
-    LoAPosition(Coordinate x, Coordinate y);
+    LoAPosition(const PieceMapP& p, Coordinate x, Coordinate y);
     virtual inline MainPosition* Clone(void) const override { return new LoAPosition(*this); }
     virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
@@ -99,10 +99,10 @@ namespace LoA
   {
   private:
     LoAGame(void) = delete;
-    LoAGame(LoAPosition* p, TakenPosition* t, StockPosition* s, LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept;
+    LoAGame(const PieceMapP& m, LoAPosition* p, TakenPosition* t, StockPosition* s, LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept;
 
   public:
-    LoAGame(Coordinate x, Coordinate y) noexcept;
+    LoAGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
   };
 

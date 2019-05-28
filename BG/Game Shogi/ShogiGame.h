@@ -246,7 +246,7 @@ namespace Shogi
   class ShogiPosition : public MainPosition
   {
   public:
-    ShogiPosition(Coordinate x, Coordinate y) noexcept;
+    ShogiPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new ShogiPosition(*this); };
     virtual void GetAllMoves(void);              // generate all moves and save list
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
@@ -265,7 +265,7 @@ namespace Shogi
   class ShogiTakenPosition : public TakenPosition
   {
   public:
-    inline ShogiTakenPosition(Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(x == 9 ? 27 : 15, 2) {}
+    inline ShogiTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, x == 9 ? 27 : 15, 2) {}
   };
 
 
@@ -295,9 +295,9 @@ namespace Shogi
   {
   protected:
     ShogiGame(void) = delete;
-    ShogiGame(ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
+    ShogiGame(const PieceMapP& m, ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
   public:
-    ShogiGame(Coordinate x, Coordinate y) noexcept;
+    ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     inline constexpr static bool IsFull(Coordinate x, Coordinate /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
     static const VariantList& GetVariants(void) noexcept;
   };

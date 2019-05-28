@@ -6,7 +6,7 @@
 
 namespace Test
 {
-  TestPosition::TestPosition(Coordinate x, Coordinate y) : MainPosition(x, y)
+  TestPosition::TestPosition(const PieceMapP& p, Coordinate x, Coordinate y) : MainPosition(p, x, y)
   {
     if (x == 4 and y == 4)
     {
@@ -61,12 +61,12 @@ namespace Test
   };
 
 
-  TestGame::TestGame(Coordinate x, Coordinate y) : TestGame(
-    new TestPosition(x, y), new TakenPosition(x*y / 2, 2), new StockPosition(5, 2),
+  TestGame::TestGame(const PieceMapP& m, Coordinate x, Coordinate y) : TestGame(m,
+    new TestPosition(m, x, y), new TakenPosition(m, x*y / 2, 2), new StockPosition(m, 5, 2),
     new TestLayout(x, y), new TestTakenLayout(x, y), new TestStockLayout(x, y)) {}
 
-  TestGame::TestGame(TestPosition* p, TakenPosition* t, StockPosition* s,
-    TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl) : Game{ p,t,s,l,tl,sl }
+  TestGame::TestGame(const PieceMapP& m, TestPosition* p, TakenPosition* t, StockPosition* s,
+    TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl) : Game{ m,p,t,s,l,tl,sl }
   {
     AddToStock(Location(0U, 0U), &ChessPiece::WQ);
     AddToStock(Location(1U, 0U), &ChessPiece::WR);
@@ -206,7 +206,7 @@ namespace Test
       //assert(m[15].GetValue() ==  -20);
 
       AIContext plist{};
-      TestGame game(3, 3);
+      TestGame game(std::make_shared<PieceMap>(), 3, 3);
       MainPosition* pos = game.GetPosition()->Clone();
       pos->EvaluateStatically();
       plist.insert(pos);

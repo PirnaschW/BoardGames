@@ -44,7 +44,7 @@ namespace Checkers
   }
 
 
-  CheckersPosition::CheckersPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
+  CheckersPosition::CheckersPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
   {
     //SetPiece(Location(1, 2), &CheckersPiece::CheckersPieceB);
     //SetPiece(Location(3, 2), &CheckersPiece::CheckersPieceB);
@@ -160,12 +160,12 @@ namespace Checkers
   }
 
 
-  CheckersGame::CheckersGame(Coordinate x, Coordinate y) noexcept : CheckersGame(
-    new CheckersPosition(x, y), new TakenPosition(3*x/2, 2), new StockPosition(4, 2),
+  CheckersGame::CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CheckersGame(m,
+    new CheckersPosition(m, x, y), new TakenPosition(m, 3*x/2, 2), new StockPosition(m, 4, 2),
     new CheckersLayout(x, y), new CheckersTakenLayout(x, y), new CheckersStockLayout(x, y)) {}
 
-  CheckersGame::CheckersGame(CheckersPosition* p, TakenPosition* t, StockPosition* s,
-    CheckersLayout* l, CheckersTakenLayout* tl, CheckersStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+  CheckersGame::CheckersGame(const PieceMapP& m, CheckersPosition* p, TakenPosition* t, StockPosition* s,
+    CheckersLayout* l, CheckersTakenLayout* tl, CheckersStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
   {
     AddToStock(Location(0U, 0U), &CheckersPiece::CheckersPieceW);
     AddToStock(Location(1U, 0U), &CheckersPiece::CheckersKingW);

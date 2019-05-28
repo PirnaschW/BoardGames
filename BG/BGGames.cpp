@@ -52,18 +52,21 @@ BoardGamesCore::Game* BGSelect::CreateGame(void)
 {
   if (DoModal() == IDOK)
   {
+    const PieceMapP p = std::make_shared<PieceMap>();
+    p->Add(&Piece::NoPiece);
+    p->Add(&Piece::NoTile);
     switch (m_game_id)
     {
-      case IDR_GAMETYPE_CAMELOT:    return new Cam::CamGame(m_size_x, m_size_y);
-      case IDR_GAMETYPE_CHECKERS:   return new Checkers::CheckersGame(m_size_x, m_size_y);
-      case IDR_GAMETYPE_HASAMI:     return new Hasami::HasamiGame(m_size_x, m_size_y);
-      case IDR_GAMETYPE_LOA:        return new LoA::LoAGame(m_size_x, m_size_y);
+      case IDR_GAMETYPE_CAMELOT:    return new Cam::CamGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_CHECKERS:   return new Checkers::CheckersGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_HASAMI:     return new Hasami::HasamiGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_LOA:        return new LoA::LoAGame(p, m_size_x, m_size_y);
       case IDR_GAMETYPE_LOGIK:      return new Logik::LGame<Logik::PegColors, Logik::PegCount, Logik::MaxTries>();
-      case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame(m_size_x, m_size_y);
-      case IDR_GAMETYPE_SHOGI:      return new Shogi::ShogiGame(m_size_x, m_size_y);
-      case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::TicTacToeGame(m_size_x, m_size_y);
-      case IDR_GAMETYPE_TEMPLATE:   return new Template::TemplateGame(m_size_x, m_size_y);
-      case IDR_GAMETYPE_TEST:       Test::Test::TestAll();  return new Test::TestGame(m_size_x, m_size_y);
+      case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_SHOGI:      return new Shogi::ShogiGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::TicTacToeGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_TEMPLATE:   return new Template::TemplateGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_TEST:       Test::Test::TestAll();  return new Test::TestGame(p, m_size_x, m_size_y);
     }
   }
   return nullptr;

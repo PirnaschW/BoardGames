@@ -20,7 +20,7 @@ namespace Test
   class TestPosition : public MainPosition
   {
   public:
-    TestPosition(Coordinate x, Coordinate y);
+    TestPosition(const PieceMapP& m, Coordinate x, Coordinate y);
     ~TestPosition() override {}
     virtual MainPosition* Clone(void) const override { return new TestPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
@@ -54,10 +54,10 @@ namespace Test
   class TestGame : public Game
   {
   private:
-    TestGame(TestPosition* p, TakenPosition* t, StockPosition* s, TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl);
+    TestGame(const PieceMapP& m, TestPosition* p, TakenPosition* t, StockPosition* s, TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl);
 
   public:
-    TestGame(Coordinate x, Coordinate y);
+    TestGame(const PieceMapP& m, Coordinate x, Coordinate y);
     MainPosition* GetPosition(void) { return pos; }
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 2, 4, nullptr, 2, 20 } } }; return v; }
   };

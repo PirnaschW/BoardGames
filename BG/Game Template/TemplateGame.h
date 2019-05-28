@@ -43,7 +43,7 @@ namespace Template
   class TemplatePosition : public MainPosition
   {
   public:
-    inline TemplatePosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y) {}
+    inline TemplatePosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y) {}
     virtual inline MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
@@ -76,10 +76,10 @@ namespace Template
   {
   private:
     TemplateGame(void) = delete;
-    TemplateGame(TemplatePosition* p, TakenPosition* t, StockPosition* s, TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept;
+    TemplateGame(const PieceMapP& m, TemplatePosition* p, TakenPosition* t, StockPosition* s, TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept;
 
   public:
-    TemplateGame(Coordinate x, Coordinate y) noexcept;
+    TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
   };
 

@@ -75,7 +75,7 @@ namespace Checkers
   class CheckersPosition : public MainPosition
   {
   public:
-    CheckersPosition(Coordinate x, Coordinate y) noexcept;
+    CheckersPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new CheckersPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void GetAllMoves(void) override;
@@ -114,10 +114,10 @@ namespace Checkers
   {
   private:
     CheckersGame(void) = delete;
-    CheckersGame(CheckersPosition* p, TakenPosition* t, StockPosition* s, CheckersLayout* l, CheckersTakenLayout* tl, CheckersStockLayout* sl) noexcept;
+    CheckersGame(const PieceMapP& m, CheckersPosition* p, TakenPosition* t, StockPosition* s, CheckersLayout* l, CheckersTakenLayout* tl, CheckersStockLayout* sl) noexcept;
 
   public:
-    CheckersGame(Coordinate x, Coordinate y) noexcept;
+    CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
   };
 

@@ -33,7 +33,7 @@ namespace Hasami
   }
 
 
-  HasamiPosition::HasamiPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
+  HasamiPosition::HasamiPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
   {
     for (Coordinate i = 0; i < x; i++)
     {
@@ -153,12 +153,12 @@ namespace Hasami
     }
   }
 
-  HasamiGame::HasamiGame(Coordinate x, Coordinate y) noexcept : HasamiGame(
-    new HasamiPosition(x, y), new HasamiTakenPosition(x, y), new StockPosition(3, 1),
+  HasamiGame::HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : HasamiGame(m,
+    new HasamiPosition(m, x, y), new HasamiTakenPosition(m, x, y), new StockPosition(m, 3, 1),
     new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
 
-  HasamiGame::HasamiGame(HasamiPosition* p, TakenPosition* t, StockPosition* s,
-    HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept : Game{p,t,s,l,tl,sl}
+  HasamiGame::HasamiGame(const PieceMapP& m, HasamiPosition* p, TakenPosition* t, StockPosition* s,
+    HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept : Game{m,p,t,s,l,tl,sl}
   {
     AddToStock(Location(0U, 0U), &HasamiPiece::HasamiPieceW);
     AddToStock(Location(1U, 0U), &HasamiPiece::HasamiPieceB);

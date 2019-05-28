@@ -5,7 +5,7 @@
 
 namespace MassacreChess
 {
-  MCPosition::MCPosition(Coordinate x, Coordinate y) : MainPosition(x, y)
+  MCPosition::MCPosition(const PieceMapP& p, Coordinate x, Coordinate y) : MainPosition(p, x, y)
   {
     //srand((unsigned)time(NULL));
     std::srand(1);
@@ -54,12 +54,12 @@ namespace MassacreChess
   }
 
 
-  MCGame::MCGame(Coordinate x, Coordinate y) noexcept : MCGame(
-    new MCPosition(x, y), new TakenPosition(x*y / 2, 2), new StockPosition(5, 2),
+  MCGame::MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : MCGame(m,
+    new MCPosition(m, x, y), new TakenPosition(m, x*y / 2, 2), new StockPosition(m, 5, 2),
     new MCLayout(x, y), new MCTakenLayout(x, y), new MCStockLayout(x, y)) {}
 
-  MCGame::MCGame(MCPosition* p, TakenPosition* t, StockPosition* s,
-    MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+  MCGame::MCGame(const PieceMapP& m, MCPosition* p, TakenPosition* t, StockPosition* s,
+    MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
   {
     AddToStock(Location(0U, 0U), &ChessPiece::WQ);
     AddToStock(Location(1U, 0U), &ChessPiece::WR);

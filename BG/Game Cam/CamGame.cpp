@@ -8,7 +8,7 @@ namespace Cam
 
   inline const Pawn   Pawn  ::ThePawn  {};
   inline const Knight Knight::TheKnight{};
-  inline const CamPiece CamPiece::WP{ &Pawn::ThePawn, &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
+  inline const CamPiece CamPiece::WP{ &Pawn::ThePawn,     &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
   inline const CamPiece CamPiece::WN{ &Knight::TheKnight, &Color::White, IDB_WNL, IDB_WND, IDB_WNS };
   inline const CamPiece CamPiece::BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
   inline const CamPiece CamPiece::BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
@@ -51,7 +51,7 @@ namespace Cam
   }
 
 
-  CamPosition::CamPosition(Coordinate x, Coordinate y) noexcept : MainPosition(x, y)
+  CamPosition::CamPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
   {
     if (x == 12) // full Camelot
     {
@@ -300,13 +300,18 @@ namespace Cam
   //  return 0;
   //}
 
-  CamGame::CamGame(Coordinate x, Coordinate y) noexcept : CamGame(
-    new CamPosition(x, y), new CamTakenPosition(x, y), new StockPosition(3, 2),
+  CamGame::CamGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CamGame(m,
+    new CamPosition(m, x, y), new CamTakenPosition(m, x, y), new StockPosition(m, 3, 2),
     new CamLayout(x, y), new CamTakenLayout(x, y), new CamStockLayout(x, y)) {}
 
-  CamGame::CamGame(CamPosition* p, TakenPosition* t, StockPosition* s,
-    CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+  CamGame::CamGame(const PieceMapP& m,
+    CamPosition* p, TakenPosition* t, StockPosition* s,
+    CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
   {
+    m->Add(&CamPiece::WP);
+    m->Add(&CamPiece::WN);
+    m->Add(&CamPiece::BP);
+    m->Add(&CamPiece::BN);
     AddToStock(Location(0U, 0U), &CamPiece::WN);
     AddToStock(Location(1U, 0U), &CamPiece::WP);
     AddToStock(Location(0U, 1U), &CamPiece::BP);

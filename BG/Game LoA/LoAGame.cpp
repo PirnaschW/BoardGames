@@ -70,7 +70,7 @@ namespace LoA
   }
 
   
-  LoAPosition::LoAPosition(Coordinate x, Coordinate y) : MainPosition(x, y)
+  LoAPosition::LoAPosition(const PieceMapP& p, Coordinate x, Coordinate y) : MainPosition(p, x, y)
   {
     for (Coordinate i = 0; i < x; i++)
       for (Coordinate j = 0; j < y; j++)
@@ -223,15 +223,15 @@ namespace LoA
     StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
 
 
-  LoAGame::LoAGame(LoAPosition* p, TakenPosition* t, StockPosition* s,
-    LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+  LoAGame::LoAGame(const PieceMapP& m, LoAPosition* p, TakenPosition* t, StockPosition* s,
+    LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
   {
     AddToStock(Location(0U, 0U), &LoAPiece::LoAPieceW);
     AddToStock(Location(1U, 0U), &LoAPiece::LoAPieceB);
   }
 
-  LoAGame::LoAGame(Coordinate x, Coordinate y) noexcept : LoAGame(
-    new LoAPosition(x, y), new TakenPosition(2 * x, 2), new StockPosition(3, 1),
+  LoAGame::LoAGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : LoAGame(m,
+    new LoAPosition(m, x, y), new TakenPosition(m, 2 * x, 2), new StockPosition(m, 3, 1),
     new LoALayout(x, y), new LoATakenLayout(x, y), new LoAStockLayout(x, y)) {}
 
   const VariantList& LoAGame::GetVariants(void) noexcept

@@ -26,12 +26,12 @@ namespace Template
   }
 
 
-  TemplateGame::TemplateGame(Coordinate x, Coordinate y) noexcept : TemplateGame(
-    new TemplatePosition(x, y), new TakenPosition(x, 2), new StockPosition(3, 1),
+  TemplateGame::TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TemplateGame(m,
+    new TemplatePosition(m, x, y), new TakenPosition(m, x, 2), new StockPosition(m, 3, 1),
     new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
 
-  TemplateGame::TemplateGame(TemplatePosition* p, TakenPosition* t, StockPosition* s,
-    TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept : Game{ p,t,s,l,tl,sl }
+  TemplateGame::TemplateGame(const PieceMapP& m, TemplatePosition* p, TakenPosition* t, StockPosition* s,
+    TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
   {
     AddToStock(Location(0U, 0U), &TemplatePiece::TemplatePieceW);
     AddToStock(Location(1U, 0U), &TemplatePiece::TemplatePieceB);
