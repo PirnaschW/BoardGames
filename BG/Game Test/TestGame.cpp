@@ -78,6 +78,21 @@ namespace Test
     AddToStock(Location(3U, 1U), &ChessPiece::BN);
   }
 
+  const PieceMapP& TestGame::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Add(&ChessPiece::WQ);
+    p->Add(&ChessPiece::WR);
+    p->Add(&ChessPiece::WB);
+    p->Add(&ChessPiece::WN);
+    p->Add(&ChessPiece::BQ);
+    p->Add(&ChessPiece::BR);
+    p->Add(&ChessPiece::BB);
+    p->Add(&ChessPiece::BN);
+    return p;
+  }
+
+
 
   bool Test::TestOffset(void)
   {

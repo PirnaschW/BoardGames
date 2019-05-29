@@ -308,10 +308,6 @@ namespace Cam
     CamPosition* p, TakenPosition* t, StockPosition* s,
     CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
   {
-    m->Add(&CamPiece::WP);
-    m->Add(&CamPiece::WN);
-    m->Add(&CamPiece::BP);
-    m->Add(&CamPiece::BN);
     AddToStock(Location(0U, 0U), &CamPiece::WN);
     AddToStock(Location(1U, 0U), &CamPiece::WP);
     AddToStock(Location(0U, 1U), &CamPiece::BP);
@@ -322,6 +318,16 @@ namespace Cam
   {
     static VariantList v{ { Variant{ 12, 16, "Camelot" },{ Variant{ 7, 13, "Cam" } } } };
     return v;
+  }
+
+  const PieceMapP& CamGame::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Add(&CamPiece::WP);
+    p->Add(&CamPiece::WN);
+    p->Add(&CamPiece::BP);
+    p->Add(&CamPiece::BN);
+    return p;
   }
 
 }

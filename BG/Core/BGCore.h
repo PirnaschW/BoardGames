@@ -82,6 +82,12 @@ namespace BoardGamesCore
   class Variants {
   public:
     constexpr inline static const VariantList& GetVariants(void) noexcept { return TClass::GetVariants(); }
+    constexpr inline static const PieceMapP& GetPieces(void) noexcept {
+      const PieceMapP& p{ TClass::GetPieces() };
+      p->Add(&Piece::NoPiece);
+      p->Add(&Piece::NoTile);
+      return p;
+    }
   };
 
   

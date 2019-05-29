@@ -51,7 +51,7 @@ namespace BoardGamesCore
       {
         const Piece* p = GetPiece(Location(i, j));
         assert(p != nullptr);
-        if (!p->IsColor(&Color::NoColor))
+        if (!p->IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
         {
           p->CollectMoves(*this, Location(i, j), p->IsColor(&Color::White) ? movelistW : movelistB);
           //assert(Test::Test::TestTaken(this));

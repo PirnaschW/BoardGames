@@ -60,6 +60,7 @@ namespace Test
     TestGame(const PieceMapP& m, Coordinate x, Coordinate y);
     MainPosition* GetPosition(void) { return pos; }
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 2, 4, nullptr, 2, 20 } } }; return v; }
+    static const PieceMapP& GetPieces(void) noexcept;
   };
 
 

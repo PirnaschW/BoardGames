@@ -240,4 +240,12 @@ namespace LoA
     return v;
   }
 
+  const PieceMapP& LoAGame::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Add(&LoAPiece::LoAPieceW);
+    p->Add(&LoAPiece::LoAPieceB);
+    return p;
+  }
+
 }

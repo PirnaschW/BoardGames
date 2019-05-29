@@ -170,4 +170,12 @@ namespace Hasami
     return v;
   }
 
+  const PieceMapP& HasamiGame::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Add(&HasamiPiece::HasamiPieceW);
+    p->Add(&HasamiPiece::HasamiPieceB);
+    return p;
+  }
+
 }

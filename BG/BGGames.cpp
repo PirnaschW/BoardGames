@@ -52,21 +52,19 @@ BoardGamesCore::Game* BGSelect::CreateGame(void)
 {
   if (DoModal() == IDOK)
   {
-    const PieceMapP p = std::make_shared<PieceMap>();
-    p->Add(&Piece::NoPiece);
-    p->Add(&Piece::NoTile);
     switch (m_game_id)
     {
-      case IDR_GAMETYPE_CAMELOT:    return new Cam::CamGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_CHECKERS:   return new Checkers::CheckersGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_HASAMI:     return new Hasami::HasamiGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_LOA:        return new LoA::LoAGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_LOGIK:      return new Logik::LGame<Logik::PegColors, Logik::PegCount, Logik::MaxTries>();
-      case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_SHOGI:      return new Shogi::ShogiGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::TicTacToeGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_TEMPLATE:   return new Template::TemplateGame(p, m_size_x, m_size_y);
-      case IDR_GAMETYPE_TEST:       Test::Test::TestAll();  return new Test::TestGame(p, m_size_x, m_size_y);
+      case IDR_GAMETYPE_CAMELOT:    return new Cam::          CamGame      (Variants<Cam::          CamGame      >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_CHECKERS:   return new Checkers::     CheckersGame (Variants<Checkers::     CheckersGame >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_HASAMI:     return new Hasami::       HasamiGame   (Variants<Hasami::       HasamiGame   >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_LOA:        return new LoA::          LoAGame      (Variants<LoA::          LoAGame      >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_LOGIK:      return new Logik::        LGame         <Logik::PegColors, Logik::PegCount, Logik::MaxTries>();
+      case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame       (Variants<MassacreChess::MCGame       >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_SHOGI:      return new Shogi::        ShogiGame    (Variants<Shogi::        ShogiGame    >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::    TicTacToeGame(Variants<TicTacToe::    TicTacToeGame>::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_TEMPLATE:   return new Template::     TemplateGame (Variants<Template::     TemplateGame >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_TEST:
+        Test::Test::TestAll();      return new Test::         TestGame     (Variants<Test::         TestGame     >::GetPieces(), m_size_x, m_size_y);
     }
   }
   return nullptr;

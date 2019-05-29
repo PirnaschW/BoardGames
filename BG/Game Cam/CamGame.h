@@ -104,6 +104,7 @@ namespace Cam
   public:
     CamGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
+    static const PieceMapP& GetPieces(void) noexcept;
   };
 
 }

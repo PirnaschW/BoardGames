@@ -359,4 +359,41 @@ namespace Shogi
     return v;
   }
 
+  const PieceMapP& ShogiGame::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Add(&ShogiPiece::ShogiSKW);
+    p->Add(&ShogiPiece::ShogiSGW);
+    p->Add(&ShogiPiece::ShogiSSW);
+    p->Add(&ShogiPiece::ShogiSBW);
+    p->Add(&ShogiPiece::ShogiSRW);
+    p->Add(&ShogiPiece::ShogiSNW);
+    p->Add(&ShogiPiece::ShogiSLW);
+    p->Add(&ShogiPiece::ShogiSPW);
+
+    p->Add(&ShogiPiece::ShogiPSW);
+    p->Add(&ShogiPiece::ShogiPBW);
+    p->Add(&ShogiPiece::ShogiPRW);
+    p->Add(&ShogiPiece::ShogiPNW);
+    p->Add(&ShogiPiece::ShogiPLW);
+    p->Add(&ShogiPiece::ShogiPPW);
+
+    p->Add(&ShogiPiece::ShogiSKW);
+    p->Add(&ShogiPiece::ShogiSGW);
+    p->Add(&ShogiPiece::ShogiSSW);
+    p->Add(&ShogiPiece::ShogiSBW);
+    p->Add(&ShogiPiece::ShogiSRW);
+    p->Add(&ShogiPiece::ShogiSNW);
+    p->Add(&ShogiPiece::ShogiSLW);
+    p->Add(&ShogiPiece::ShogiSPW);
+
+    p->Add(&ShogiPiece::ShogiPSW);
+    p->Add(&ShogiPiece::ShogiPBW);
+    p->Add(&ShogiPiece::ShogiPRW);
+    p->Add(&ShogiPiece::ShogiPNW);
+    p->Add(&ShogiPiece::ShogiPLW);
+    p->Add(&ShogiPiece::ShogiPPW);
+    return p;
+  }
+
 }

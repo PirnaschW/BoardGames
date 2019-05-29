@@ -43,4 +43,12 @@ namespace Template
     return v;
   }
 
+  const PieceMapP& TemplateGame::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Add(&TemplatePiece::TemplatePieceW);
+    p->Add(&TemplatePiece::TemplatePieceB);
+    return p;
+  }
+
 }

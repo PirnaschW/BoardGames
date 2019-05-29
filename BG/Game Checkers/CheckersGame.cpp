@@ -181,4 +181,16 @@ namespace Checkers
     return v;
   }
 
+  const PieceMapP& CheckersGame::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Add(&CheckersPiece::CheckersPieceW);
+    p->Add(&CheckersPiece::CheckersKingW);
+    p->Add(&CheckersPiece::CheckersQueenW);
+    p->Add(&CheckersPiece::CheckersPieceB);
+    p->Add(&CheckersPiece::CheckersKingB);
+    p->Add(&CheckersPiece::CheckersQueenB);
+    return p;
+  }
+
 }
