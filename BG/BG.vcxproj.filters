@@ -219,9 +219,6 @@
     <ClInclude Include="Game Shogi\ShogiResource.h">
       <Filter>Game Shogi\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\BGCore.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\BGCoreResource.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
@@ -292,6 +289,15 @@
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\BGCorePosition.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreUI.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreVariant.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BGCoreGame.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

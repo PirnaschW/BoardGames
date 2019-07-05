@@ -538,6 +538,26 @@ namespace UnitTestCore
 
     }
 
+    TEST_METHOD(TestPlayer)
+    {
+      Player hw(&BoardGamesCore::PlayerType::Human, &BoardGamesCore::Color::White);
+      Player hb(&BoardGamesCore::PlayerType::Human, &BoardGamesCore::Color::Black);
+      Player cw(&BoardGamesCore::PlayerType::Computer, &BoardGamesCore::Color::White);
+      Player cb(&BoardGamesCore::PlayerType::Computer, &BoardGamesCore::Color::Black);
+
+      Assert::IsFalse(hw.IsAI());
+      Assert::IsFalse(hb.IsAI());
+      Assert::IsTrue (cw.IsAI());
+      Assert::IsTrue (cb.IsAI());
+
+      Assert::IsFalse(hw.GetColor() == hb.GetColor());
+      Assert::IsFalse(cw.GetColor() == cb.GetColor());
+      Assert::IsTrue (hw.GetColor() == cw.GetColor());
+      Assert::IsTrue (hb.GetColor() == cb.GetColor());
+      Assert::IsFalse(hw.GetColor() == cb.GetColor());
+      Assert::IsFalse(cw.GetColor() == hb.GetColor());
+
+    }
 
 
 

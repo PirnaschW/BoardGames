@@ -240,9 +240,9 @@
     <ClInclude Include="BGView.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="Core\BGChessPieces.h" />
-    <ClInclude Include="Core\BGCore.h" />
     <ClInclude Include="Core\BGCoreColor.h" />
     <ClInclude Include="Core\BGCoreField.h" />
+    <ClInclude Include="Core\BGCoreGame.h" />
     <ClInclude Include="Core\BGCoreKind.h" />
     <ClInclude Include="Core\BGCoreLayout.h" />
     <ClInclude Include="Core\BGCoreLocation.h" />
@@ -254,6 +254,8 @@
     <ClInclude Include="Core\BGCorePValue.h" />
     <ClInclude Include="Core\BGCoreResource.h" />
     <ClInclude Include="Core\BGCoreStep.h" />
+    <ClInclude Include="Core\BGCoreUI.h" />
+    <ClInclude Include="Core\BGCoreVariant.h" />
     <ClInclude Include="Game Cam\CamGame.h" />
     <ClInclude Include="Game Cam\CamResource.h" />
     <ClInclude Include="Game Checkers\CheckersGame.h" />

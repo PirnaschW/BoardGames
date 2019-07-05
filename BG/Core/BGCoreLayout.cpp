@@ -99,7 +99,7 @@ namespace BoardGamesCore
       static char buffer[2000];
       sprintf_s(buffer, "Depth = %d (value = %d) [PList size = %zd] free mem:%zd, sizeof(Position/MainPosition/vector<Move>/Move/SimpleMove/ComplexMove/SimpleStep) = %zd/%zd/%zd/%zd/%zd/%zd/%zd",
         pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)),
-        plist.size(), plist.freemem, sizeof(Position), sizeof(MainPosition),sizeof(Moves), sizeof(Move), sizeof(SimpleMove), sizeof(ComplexMove), sizeof(SimpleStep));
+        plist->size(), plist->freemem, sizeof(Position), sizeof(MainPosition),sizeof(Moves), sizeof(Move), sizeof(SimpleMove), sizeof(ComplexMove), sizeof(SimpleStep));
       s = buffer;
       pDC->TextOutW(500, 20, s);
     }
@@ -109,12 +109,12 @@ namespace BoardGamesCore
   {
     switch (pCmdUI->m_nID)
     {
-      case ID_EDIT_MOVE:   if (!IsAlive() || !CurrentPlayer()->Is(&PlayerType::Computer)) pCmdUI->Enable(FALSE);     break;
-      case ID_EDIT_BOARD:  if (editing) pCmdUI->SetCheck();                                                          break;
-      case ID_EDIT_PASTE:  if (!editing) pCmdUI->Enable(::IsClipboardFormatAvailable(CF_TEXT));                      break;
-      case ID_LEVEL_PLUS:  pCmdUI->Enable(FALSE);                                                                    break;
-      case ID_LEVEL_MINUS: pCmdUI->Enable(FALSE);                                                                    break;
-      default:             pCmdUI->Enable(FALSE);                                                                    break;
+      case ID_EDIT_MOVE:   if (!IsAlive() || !CurrentPlayer()->IsAI()) pCmdUI->Enable(FALSE);       break;
+      case ID_EDIT_BOARD:  if (editing) pCmdUI->SetCheck();                                         break;
+      case ID_EDIT_PASTE:  if (!editing) pCmdUI->Enable(::IsClipboardFormatAvailable(CF_TEXT));     break;
+      case ID_LEVEL_PLUS:  pCmdUI->Enable(FALSE);                                                   break;
+      case ID_LEVEL_MINUS: pCmdUI->Enable(FALSE);                                                   break;
+      default:             pCmdUI->Enable(FALSE);                                                   break;
     }
   }
 
@@ -196,7 +196,7 @@ namespace BoardGamesCore
 
   void Game::Select(const CPoint& point)
   {
-    if (!IsAlive() || CurrentPlayer()->Is(&PlayerType::Computer)) return;
+    if (!IsAlive() || CurrentPlayer()->IsAI()) return;
 
     Location l{0U,0U };
     if (!lay->GetLocation(point, l)) return;       // user clicked somewhere outside

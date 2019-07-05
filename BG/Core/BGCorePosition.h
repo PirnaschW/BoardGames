@@ -80,14 +80,14 @@ namespace BoardGamesCore
     inline Moves& GetMoveList(bool w) { return w ? movelistW : movelistB; }
     virtual bool AddIfLegal(Moves&, const Location, const Location) const { return false; };
     virtual void EvaluateStatically(void);       // calculate position value and save
-    virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
+    virtual PositionValue Evaluate(AIContext* plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
     virtual inline unsigned int GetMoveCountFactor(void) const noexcept { return 20; }
     inline Depth GetDepth(void) const noexcept { return depth; }
     inline Depth SetDepth(Depth d) noexcept { return depth = d; }
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value = v.Relative(w); }
     virtual inline MoveP GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
-    virtual MainPosition* GetPosition(AIContext& plist, MoveP m = nullptr) const;     // execute move, maintain in PList
+    virtual MainPosition* GetPosition(AIContext* plist, MoveP m = nullptr) const;     // execute move, maintain in PList
     virtual const std::vector<const Piece*> Execute(MoveP m);
     virtual void Undo(const MoveP m);
 

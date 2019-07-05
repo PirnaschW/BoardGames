@@ -8,12 +8,15 @@ namespace BoardGamesCore
   {
     AddPlayer(new Player(&PlayerType::Human, &Color::White));
     AddPlayer(new Player(&PlayerType::Computer, &Color::Black));
+    plist = new AIContext();
     // plist.reserve(16384);
   }
 
   Game::~Game(void)
   {
-    for (auto& p : plist) delete p;
+    for (auto& p : *plist) delete p;
+    delete plist;
+
     delete pos;
     if (tpos != nullptr) delete tpos;
     if (spos != nullptr) delete spos;
@@ -21,6 +24,7 @@ namespace BoardGamesCore
     if (tlay != nullptr) delete tlay;
     if (slay != nullptr) delete slay;
     for (auto& p : players) delete p;
+
   }
 
   void Game::ReadFromWWW(const std::string& gameno)

@@ -44,12 +44,12 @@ namespace BoardGamesCore
         throw;
       }
 
-      //if (plist.size() > 200000) break;
+      //if (plist->size() > 200000) break;
 
       auto t_now = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double> elapsed = t_now - t_start;
       if (elapsed.count() > limit) break;
-      plist.callback();
+      plist->callback();
     }
 
     Execute(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White));
@@ -57,15 +57,15 @@ namespace BoardGamesCore
   }
 
 
-  PositionValue MainPosition::Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
+  PositionValue MainPosition::Evaluate(AIContext* plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
   {
     if (plies == 0) return GetValue(w);
-    //if (plist.size() > 200000) return GetValue(w);
+    //if (plist->size() > 200000) return GetValue(w);
 
     auto& movelist = GetMoveList(w);
     if (movelist.empty()) return GetValue(w);
 
-    assert(plist.find(this) != plist.end());                              // the current position must have been checked before
+    assert(plist->find(this) != plist->end());                              // the current position must have been checked before
 
     const auto l = [](MoveP a, MoveP b) { return *b < *a; };    // define sort predicate
 
@@ -83,7 +83,7 @@ namespace BoardGamesCore
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
         SetValue(w, alpha);                                               // save top value in current position
         depth = plies;                                                    // save evaluation depth
-        if (plies == 2) plist.callback();
+        if (plies == 2) plist->callback();
         return beta;
       }
     }
@@ -91,7 +91,7 @@ namespace BoardGamesCore
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
     depth = plies;                                                        // save evaluation depth
-    if (plies == 2) plist.callback();
+    if (plies == 2) plist->callback();
     return alpha;                                                         // return best value
   }
 
@@ -126,20 +126,20 @@ namespace BoardGamesCore
   }
 
 
-  MainPosition* MainPosition::GetPosition(AIContext& plist, MoveP m) const // execute move, maintain in PList
+  MainPosition* MainPosition::GetPosition(AIContext* plist, MoveP m) const // execute move, maintain in PList
   {
     MainPosition* pos(Clone());                                           // create a copy of the board
     if (m != nullptr) pos->Execute(m);                                    // execute move if provided
 
-    auto pl0 = plist.find(pos);                                           // check if we evaluated this position before
-    if (pl0 != plist.end())
+    auto pl0 = plist->find(pos);                                           // check if we evaluated this position before
+    if (pl0 != plist->end())
     {
       delete pos;
       return *pl0;                                                        // found - return it
     }
 
     pos->EvaluateStatically();                                            // evaluate position statically
-    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist.insert(pos);                                         // and save it
+    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist->insert(pos);                                         // and save it
     assert(pl1.second);
     return *(pl1.first);                                                  // return the pointer to the new entry
   }
