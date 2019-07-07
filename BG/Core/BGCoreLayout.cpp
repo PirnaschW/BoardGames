@@ -24,7 +24,7 @@ namespace BoardGamesCore
           (int)(dim.tEdge + dim.yDim * j + dim.ySkip * j),
           (int)(dim.lEdge + dim.xDim * (i + 1U) + dim.xSkip * i),
           (int)(dim.tEdge + dim.yDim * (j + 1U) + dim.ySkip * j) };
-        (tiles)[z] = new Tile(Location(i, j), r, f);
+        (tiles)[z] = new Tile(Location(BoardPart::Main, i, j), r, f);
       }
   }
 
@@ -77,16 +77,25 @@ namespace BoardGamesCore
     // markup selectable tiles
     for (auto& m : moves)
     {
-      lay->DrawSelected(pDC, m->GetFr().GetLocation());
-      lay->DrawSelected(pDC, m->GetTo().GetLocation());
+      const Actions a = m->GetActions();
+      if (!a.empty())
+      {
+        lay->DrawSelected(pDC, m->GetFrL());
+        lay->DrawSelected(pDC, m->GetToL());
+      }
+      else
+      {
+        lay->DrawSelected(pDC, m->GetFr().GetLocation());
+        lay->DrawSelected(pDC, m->GetTo().GetLocation());
+      }
     }
 
     if (showStock || editing)
     {
-      if (slay != nullptr) slay->Draw(pDC, spos);
+//      if (slay != nullptr) slay->Draw(pDC, &(pos->_stock));
     }
 
-    if (tlay != nullptr) tlay->Draw(pDC, tpos);
+//    if (tlay != nullptr) tlay->Draw(pDC, &(pos->_taken));
 
     if (dragging)
     {
@@ -94,14 +103,26 @@ namespace BoardGamesCore
       dragPiece->Draw(pDC, r, &TileColor::Small);
     }
 
-    if (!true) {
+    if (true) {
       CString s;
-      static char buffer[2000];
-      sprintf_s(buffer, "Depth = %d (value = %d) [PList size = %zd] free mem:%zd, sizeof(Position/MainPosition/vector<Move>/Move/SimpleMove/ComplexMove/SimpleStep) = %zd/%zd/%zd/%zd/%zd/%zd/%zd",
-        pos->GetDepth(), static_cast<int>(pos->GetValue(pos->OnTurn() == &Color::White)),
-        plist->size(), plist->freemem, sizeof(Position), sizeof(MainPosition),sizeof(Moves), sizeof(Move), sizeof(SimpleMove), sizeof(ComplexMove), sizeof(SimpleStep));
-      s = buffer;
-      pDC->TextOutW(500, 20, s);
+      int h = 10;
+      const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == &Color::White));
+      s = "Depth";                pDC->TextOutW(500, h += 30, s);  s.Format(_T("%d"),  pos->GetDepth());       pDC->TextOutW(700, h, s);
+      s = "Value";                pDC->TextOutW(500, h += 30, s);  s = v;                                      pDC->TextOutW(700, h, s);
+      s = "PList size";           pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), plist->size());         pDC->TextOutW(700, h, s);
+      s = "free mem";             pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), plist->freemem);        pDC->TextOutW(700, h, s);
+      s = "sizeof(Position)";     pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Position));      pDC->TextOutW(700, h, s);
+      s = "sizeof(MainPosition)"; pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(MainPosition));  pDC->TextOutW(700, h, s);
+      s = "sizeof(vector<Move>)"; pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Moves));         pDC->TextOutW(700, h, s);
+      s = "sizeof(Move)";         pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Move));          pDC->TextOutW(700, h, s);
+      s = "sizeof(StepPlace)";    pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepPlace));     pDC->TextOutW(700, h, s);
+      s = "sizeof(Action)";       pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Action));        pDC->TextOutW(700, h, s);
+      s = "sizeof(ActionTake)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionTake));    pDC->TextOutW(700, h, s);
+      s = "sizeof(ActionPLace)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionPlace));   pDC->TextOutW(700, h, s);
+      s = "sizeof(StepSimple)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepSimple));    pDC->TextOutW(700, h, s);
+      s = "sizeof(StepComplex)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepComplex));   pDC->TextOutW(700, h, s);
+      s = "sizeof(SimpleMove)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(SimpleMove));    pDC->TextOutW(700, h, s);
+      s = "sizeof(ComplexMove)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ComplexMove));   pDC->TextOutW(700, h, s);
     }
   }
 
@@ -177,9 +198,9 @@ namespace BoardGamesCore
 
   void Game::DragStart(const CPoint& point)
   {
-    Location l{0U,0U};
-    if (slay->GetLocation(point, l)) { dragPiece = spos->GetPiece(l); }
-    else return; // clicked somewhere outside
+    Location l{ BoardPart::Main, 0U,0U};
+    //if (slay->GetLocation(point, l)) { dragPiece = pos->GetPiece(l); }
+    //else return; // clicked somewhere outside
 
     dragPoint = point;
     dragging = true;
@@ -187,7 +208,7 @@ namespace BoardGamesCore
 
   void Game::DragEnd(const CPoint& point)
   {
-    Location l{0U,0U};
+    Location l{ BoardPart::Main, 0U,0U};
     if (lay->GetLocation(point, l)) pos->SetPiece(l, dragPiece); // dropped on a valid target
     dragging = false;
     dragPoint = {};
@@ -198,26 +219,36 @@ namespace BoardGamesCore
   {
     if (!IsAlive() || CurrentPlayer()->IsAI()) return;
 
-    Location l{0U,0U };
+    Location l{ BoardPart::Main, 0U,0U };
     if (!lay->GetLocation(point, l)) return;       // user clicked somewhere outside
 
     if (moves.empty())  // new selection starts
     {
       MainPosition* p{ pos->GetPosition(plist) };  // need to get ALL legal moves (this piece might not be allowed to move because another one has a mandatory jump)
       for (const auto& m : p->GetMoveList(pos->OnTurn() == &Color::White))   // filter moves of the selected piece into 'moves'
-      {
-        if (m->GetFr().GetLocation() == l) moves.push_back(m);
-      }
+        if (m->GetFrL() == l) moves.push_back(m);
     }
     else  // starting point was already defined
     {
       for (const auto& m : moves)                  // check through allowed moves
-        if (m->GetTo().GetLocation() == l)
+      {
+        const Actions& a = m->GetActions();
+        if (a.size() > 0) // temporary check, to allow old style Moves
+        {
+          if (m->GetToL() == l)
+          {
+            Execute(*m);
+            moves.clear();
+            return;
+          }
+        }
+        else if (m->GetTo().GetLocation() == l)
         {
           Execute(m);
           moves.clear();
           return;
         }
+      }
     }
   }
 

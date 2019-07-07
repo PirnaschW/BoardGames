@@ -33,13 +33,13 @@ namespace Microsoft
       template<> inline std::wstring ToString<>(const Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
       template<> inline std::wstring ToString<>(      Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
 
-      template<> inline std::wstring ToString<>(const SimpleStep& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
-      template<> inline std::wstring ToString<>(const SimpleStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
-      template<> inline std::wstring ToString<>(      SimpleStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const StepSimple& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const StepSimple* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(      StepSimple* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
 
-      template<> inline std::wstring ToString<>(const ComplexStep& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
-      template<> inline std::wstring ToString<>(const ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
-      template<> inline std::wstring ToString<>(      ComplexStep* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const StepComplex& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(const StepComplex* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+      template<> inline std::wstring ToString<>(      StepComplex* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
 
       template<> inline std::wstring ToString<>(const PositionValue& p) { std::wstringstream _s; _s << static_cast<int>( p); return _s.str(); }
       template<> inline std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
@@ -77,11 +77,11 @@ namespace UnitTestCore
     {
       Offset o1{ 3, 5 };
       Offset o2 = o1 * 3;
-      Location l1(2U, 3U);
+      Location l1(BoardPart::Main, 2U, 3U);
       Location l2 = l1 + o1;
-      Location l3(5U, 8U);
+      Location l3(BoardPart::Main, 5U, 8U);
       Location l4 = l1 + o2;
-      Location l5(11U, 18U);
+      Location l5(BoardPart::Main, 11U, 18U);
       Location l6 = l1 + o1 * 3;
       Assert::IsTrue(l1.Valid(16, 16));
       Assert::IsTrue(l2.Valid(16, 16));
@@ -92,18 +92,18 @@ namespace UnitTestCore
       Assert::AreEqual(l4, l5);
       Assert::AreEqual(l6, l5);
       Assert::AreNotEqual(l3, l5);
-      Assert::AreEqual(l1.Index(16, 16), 3U * 16U + 2U);
-      Assert::AreEqual(l2.Index(16, 16), 8U * 16U + 5U);
-      Assert::AreEqual(l3.Index(16, 16), 8U * 16U + 5U);
-      Assert::AreEqual(l4.Index(16, 16), 18U * 16U + 11U);
-      Assert::AreEqual(l5.Index(16, 16), 18U * 16U + 11U);
-      Assert::AreEqual(l6.Index(16, 16), 18U * 16U + 11U);
+      Assert::AreEqual(static_cast<unsigned int>(l1.Index(16, 16)), 3U * 16U + 2U);
+      Assert::AreEqual(static_cast<unsigned int>(l2.Index(16, 16)), 8U * 16U + 5U);
+      Assert::AreEqual(static_cast<unsigned int>(l3.Index(16, 16)), 8U * 16U + 5U);
+      Assert::AreEqual(static_cast<unsigned int>(l4.Index(16, 16)), 18U * 16U + 11U);
+      Assert::AreEqual(static_cast<unsigned int>(l5.Index(16, 16)), 18U * 16U + 11U);
+      Assert::AreEqual(static_cast<unsigned int>(l6.Index(16, 16)), 18U * 16U + 11U);
     }
 
     TEST_METHOD(TestField)
     {
-      Location l1(2U, 3U);
-      Location l2(3U, 2U);
+      Location l1(BoardPart::Main, 2U, 3U);
+      Location l2(BoardPart::Main, 3U, 2U);
       const Piece* p0{ nullptr };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
@@ -115,13 +115,13 @@ namespace UnitTestCore
 
     TEST_METHOD(TestSimpleStep)
     {
-      Location l1(2U, 3U);
-      Location l2(3U, 2U);
+      Location l1(BoardPart::Main, 2U, 3U);
+      Location l2(BoardPart::Main, 3U, 2U);
       const Piece* p0{ nullptr };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
       Assert::AreNotEqual(f1, f2);
-      SimpleStep s1{ f1,f2 };
+      StepSimple s1{ f1,f2 };
       Assert::AreEqual(f1, s1.GetFr());
       Assert::AreEqual(f2, s1.GetTo());
       Assert::AreNotEqual(f2, s1.GetFr());
@@ -130,7 +130,7 @@ namespace UnitTestCore
       Assert::IsFalse(s1.IsTake());
 
       Step::StepType st1 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
-      SimpleStep s2{ f2,f1, st1 };
+      StepSimple s2{ f2,f1, st1 };
       Assert::AreNotEqual(s1, s2);
       Assert::AreEqual(st1, s2.GetType());
       Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
@@ -143,13 +143,13 @@ namespace UnitTestCore
 
     TEST_METHOD(TestComplexStep)
     {
-      Location l1(2U, 3U);
-      Location l2(3U, 2U);
+      Location l1(BoardPart::Main, 2U, 3U);
+      Location l2(BoardPart::Main, 3U, 2U);
       const Piece* p0{ nullptr };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
       Assert::AreNotEqual(f1, f2);
-      ComplexStep s1{ f1,f2 };
+      StepComplex s1{ f1,f2 };
       Assert::AreEqual(f1, s1.GetFr());
       Assert::AreEqual(f2, s1.GetTo());
       Assert::AreNotEqual(f2, s1.GetFr());
@@ -158,25 +158,25 @@ namespace UnitTestCore
       Assert::IsFalse(s1.IsTake());
 
       Step::StepType st1 = static_cast<Step::StepType>(BoardGamesCore::Step::StepType::Take | BoardGamesCore::Step::StepType::Jump);
-      ComplexStep s2{ f2,f1, st1 };  // Takes defaults to empty, not like in SimpleStep!
+      StepComplex s2{ f2,f1, st1 };  // Takes defaults to empty, not like in StepSimple!
       Assert::AreNotEqual(s1, s2);
       Assert::AreEqual(st1, s2.GetType());
       Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
       Assert::IsTrue(s2.IsTake());
-      Assert::AreNotEqual(Fields{ f1 }, s2.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
+      Assert::AreNotEqual(Fields{ f1 }, s2.GetTakes());  // Takes defaults to empty, not like in StepSimple!
       Assert::AreEqual(s2.GetTakes().size(), 0U);
 
       //std::function<const Field&(void)>_l1 = [&s2] { return s2.GetTake(); };
       //Assert::ExpectException<std::exception>(_l1);
 
       Fields f{ f1,f2 };
-      ComplexStep s3{ f2,f1, st1, f};
+      StepComplex s3{ f2,f1, st1, f};
       Assert::AreNotEqual(s3, s1);
       Assert::AreNotEqual(s3, s2);
       Assert::AreEqual(st1, s3.GetType());
       Assert::AreNotEqual(Step::StepType::Normal, s3.GetType());
       Assert::IsTrue(s3.IsTake());
-      Assert::AreNotEqual(Fields{ f1 }, s3.GetTakes());  // Takes defaults to empty, not like in SimpleStep!
+      Assert::AreNotEqual(Fields{ f1 }, s3.GetTakes());  // Takes defaults to empty, not like in StepSimple!
       Assert::AreEqual(s3.GetTakes().size(), 2U);
       Assert::AreEqual(s3.GetTake(0),f1);
       Assert::AreEqual(s3.GetTake(1),f2);
@@ -283,12 +283,13 @@ namespace UnitTestCore
 
     TEST_METHOD(TestSimpleMove)
     {
-      Location l1(2U, 3U);
-      Location l2(3U, 2U);
-      const Piece* p0{ nullptr };
+      Location l1(BoardPart::Main, 2U, 3U);
+      Location l2(BoardPart::Main, 3U, 2U);
+      const Piece* p0{ &Piece::NoPiece };
+      const Piece* p1{ &Piece::NoTile };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
-      std::shared_ptr<Step> s0 = std::make_shared<SimpleStep>(f1, f2);
+      std::shared_ptr<Step> s0 = std::make_shared<StepSimple>(f1, f2);
       SimpleMove m1(s0);
       Assert::IsTrue(m1.GetValue() == PositionValue(PositionValue::Undefined));
 
@@ -303,16 +304,16 @@ namespace UnitTestCore
       m1.SetValue(pt);
       Assert::IsTrue(m1.GetValue() == pt);
 
-      std::shared_ptr<Step> s1 = std::make_shared<SimpleStep>(f1, f2);
-      Assert::IsTrue(dynamic_cast<const SimpleStep&>(*s1) == dynamic_cast<const SimpleStep&>(*s0));
+      std::shared_ptr<Step> s1 = std::make_shared<StepSimple>(f1, f2);
+      Assert::IsTrue(dynamic_cast<const StepSimple&>(*s1) == dynamic_cast<const StepSimple&>(*s0));
 
-      std::shared_ptr<Step> s2 = std::make_shared<SimpleStep>(f2, f1);
-      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s2) == dynamic_cast<const SimpleStep&>(*s0));
+      std::shared_ptr<Step> s2 = std::make_shared<StepSimple>(f2, f1);
+      Assert::IsFalse(dynamic_cast<const StepSimple&>(*s2) == dynamic_cast<const StepSimple&>(*s0));
 
       Step::StepType st0 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
-      std::shared_ptr<Step> s3 = std::make_shared<SimpleStep>(f2,f1, st0);
-      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s3) == dynamic_cast<const SimpleStep&>(*s0));
-      Assert::IsFalse(dynamic_cast<const SimpleStep&>(*s3) == dynamic_cast<const SimpleStep&>(*s2));
+      std::shared_ptr<Step> s3 = std::make_shared<StepSimple>(f2,f1, st0);
+      Assert::IsFalse(dynamic_cast<const StepSimple&>(*s3) == dynamic_cast<const StepSimple&>(*s0));
+      Assert::IsFalse(dynamic_cast<const StepSimple&>(*s3) == dynamic_cast<const StepSimple&>(*s2));
 
       SimpleMove m3(s3);
       Assert::IsFalse(m1 == m3);
@@ -357,12 +358,12 @@ namespace UnitTestCore
 
     TEST_METHOD(TestComplexMove)
     {
-      Location l1(2U, 3U);
-      Location l2(3U, 2U);
+      Location l1(BoardPart::Main, 2U, 3U);
+      Location l2(BoardPart::Main, 3U, 2U);
       const Piece* p0{ nullptr };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
-      std::shared_ptr<Step> s0 = std::make_shared<ComplexStep>(f1, f2);
+      std::shared_ptr<Step> s0 = std::make_shared<StepComplex>(f1, f2);
       Steps ss1{ s0 };
       ComplexMove m1(ss1);
       Assert::IsTrue(m1.GetValue() == PositionValue(PositionValue::Undefined));
@@ -378,16 +379,16 @@ namespace UnitTestCore
       m1.SetValue(pt);
       Assert::IsTrue(m1.GetValue() == pt);
 
-      std::shared_ptr<Step> s1 = std::make_shared<ComplexStep>(f1, f2);
-      Assert::IsTrue(dynamic_cast<const ComplexStep&>(*s1) == dynamic_cast<const ComplexStep&>(*s0));
+      std::shared_ptr<Step> s1 = std::make_shared<StepComplex>(f1, f2);
+      Assert::IsTrue(dynamic_cast<const StepComplex&>(*s1) == dynamic_cast<const StepComplex&>(*s0));
 
-      std::shared_ptr<Step> s2 = std::make_shared<ComplexStep>(f2, f1);
-      Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s2) == dynamic_cast<const ComplexStep&>(*s0));
+      std::shared_ptr<Step> s2 = std::make_shared<StepComplex>(f2, f1);
+      Assert::IsFalse(dynamic_cast<const StepComplex&>(*s2) == dynamic_cast<const StepComplex&>(*s0));
 
       Step::StepType st0 = static_cast<Step::StepType>(Step::StepType::Take | Step::StepType::Jump);
-      std::shared_ptr<Step> s3 = std::make_shared<ComplexStep>(f2, f1, st0);
-      Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s3) == dynamic_cast<const ComplexStep&>(*s0));
-      Assert::IsFalse(dynamic_cast<const ComplexStep&>(*s3) == dynamic_cast<const ComplexStep&>(*s2));
+      std::shared_ptr<Step> s3 = std::make_shared<StepComplex>(f2, f1, st0);
+      Assert::IsFalse(dynamic_cast<const StepComplex&>(*s3) == dynamic_cast<const StepComplex&>(*s0));
+      Assert::IsFalse(dynamic_cast<const StepComplex&>(*s3) == dynamic_cast<const StepComplex&>(*s2));
 
       Steps ss3{ s3, s0 };
       ComplexMove m3(ss3);
@@ -500,7 +501,7 @@ namespace UnitTestCore
       size_t hp = BoardGamesCore::Piece::NoPiece.GetHash();
       Assert::IsFalse(BoardGamesCore::Piece::NoTile.GetHash() == BoardGamesCore::Piece::NoPiece.GetHash());
 
-      Location l1(2U, 3U);
+      Location l1(BoardPart::Main, 2U, 3U);
       Moves m{};
       MainPosition* p{};
       BoardGamesCore::Piece::NoTile.CollectMoves(*p, l1, m);

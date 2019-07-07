@@ -37,10 +37,10 @@ namespace Hasami
   {
     for (Coordinate i = 0; i < x; i++)
     {
-      SetPiece(Location(i, 0U), &HasamiPiece::HasamiPieceB);
-      SetPiece(Location(i, 1U), &HasamiPiece::HasamiPieceB);
-      SetPiece(Location(i, y - 1), &HasamiPiece::HasamiPieceW);
-      SetPiece(Location(i, y - 2), &HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, 0U), &HasamiPiece::HasamiPieceB);
+      SetPiece(Location(BoardPart::Main, i, 1U), &HasamiPiece::HasamiPieceB);
+      SetPiece(Location(BoardPart::Main, i, y - 1), &HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, y - 2), &HasamiPiece::HasamiPieceW);
     }
   }
 
@@ -49,7 +49,7 @@ namespace Hasami
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;          // out of board
     if (!p->IsBlank()) return false;         // occupied
-    SimpleStep::StepType st{ SimpleStep::StepType::Normal };
+    StepSimple::StepType st{ StepSimple::StepType::Normal };
 
     Fields taken{};
     for (auto& d : Offset::Rdirection)
@@ -63,7 +63,7 @@ namespace Hasami
         if (l == fr)                        // was this going backwards?
         {
           if (t.size() == 1)                // if something was inbetween, it was a jump
-            st = SimpleStep::StepType::Jump;
+            st = StepSimple::StepType::Jump;
           break;                            // either way, stop looking into this direction
         }
         if (pp->IsColor(OnTurn()))          // own piece; this 'takes' all intermediate pieces
@@ -74,7 +74,7 @@ namespace Hasami
         else t.push_back(Field(l, pp));     // opponents piece, add to potential taken list
       }
     }
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared<StepSimple>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
     return true;
   }
 
@@ -95,7 +95,7 @@ namespace Hasami
         const bool b2{ OnTurn() == &Color::White ? j > 1 : j < sizeY - 2 };  // limits for the player not on turn
         for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
         {
-          const Location l{ i,j };
+          const Location l{ BoardPart::Main, i,j };
           const Piece* p = GetPiece(l);
           if (p->IsColor(&Color::NoColor)) continue;  // nothing here, so no chain can start
           const bool w = p->IsColor(&Color::White);
@@ -107,7 +107,7 @@ namespace Hasami
             const Offset& d = Offset::Qdirection[k];
             const Piece* pp{ GetPiece(l + d * -1) };
             if (pp != nullptr && pp->IsColor(p->GetColor())) continue;    // if same color is that direction, we counted it already, so move on
-            Location ll{ i,j };
+            Location ll{ BoardPart::Main,  i,j };
             unsigned int z{ 0 };
             if (p->IsColor(OnTurn()) ? b1 : b2) z++;  // count the starting checker only if it is in the valid range
 
@@ -153,15 +153,15 @@ namespace Hasami
     }
   }
 
-  HasamiGame::HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : HasamiGame(m,
-    new HasamiPosition(m, x, y), new HasamiTakenPosition(m, x, y), new StockPosition(m, 3, 1),
-    new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
+  //HasamiGame::HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : HasamiGame(m,
+  //  new HasamiPosition(m, x, y), new HasamiTakenPosition(m, x, y), new StockPosition(m, 3, 1),
+  //  new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
+  HasamiGame::HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : HasamiGame(m, new HasamiPosition(m, x, y), new HasamiLayout(x, y)) {}
 
-  HasamiGame::HasamiGame(const PieceMapP& m, HasamiPosition* p, TakenPosition* t, StockPosition* s,
-    HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept : Game{m,p,t,s,l,tl,sl}
+  HasamiGame::HasamiGame(const PieceMapP& m, HasamiPosition* p, HasamiLayout* l) noexcept : Game{ m,p,l }
   {
-    AddToStock(Location(0U, 0U), &HasamiPiece::HasamiPieceW);
-    AddToStock(Location(1U, 0U), &HasamiPiece::HasamiPieceB);
+    AddToStock(Location(BoardPart::Stock, 0U, 0U), &HasamiPiece::HasamiPieceW);
+    AddToStock(Location(BoardPart::Stock, 1U, 0U), &HasamiPiece::HasamiPieceB);
   }
 
   const VariantList& HasamiGame::GetVariants(void) noexcept

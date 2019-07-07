@@ -51,11 +51,11 @@ namespace Hasami
     inline unsigned int GetChainValue(unsigned int z) const noexcept;
   };
 
-  class HasamiTakenPosition : public TakenPosition
-  {
-  public:
-    inline HasamiTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, 2 * x, 2) {}
-  };
+  //class HasamiTakenPosition : public TakenPosition
+  //{
+  //public:
+  //  inline HasamiTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, 2 * x, 2) {}
+  //};
 
 
   class HasamiLayout : public MainLayout
@@ -65,26 +65,26 @@ namespace Hasami
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
   };
 
-  class HasamiTakenLayout : public TakenLayout
-  {
-  public:
-    HasamiTakenLayout(Coordinate x, Coordinate y) noexcept :
-      TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-  };
+  //class HasamiTakenLayout : public TakenLayout
+  //{
+  //public:
+  //  HasamiTakenLayout(Coordinate x, Coordinate y) noexcept :
+  //    TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
+  //};
 
-  class HasamiStockLayout : public StockLayout
-  {
-  public:
-    HasamiStockLayout(Coordinate x, Coordinate y) noexcept :
-      StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-  };
+  //class HasamiStockLayout : public StockLayout
+  //{
+  //public:
+  //  HasamiStockLayout(Coordinate x, Coordinate y) noexcept :
+  //    StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
+  //};
 
 
   class HasamiGame : public Game
   {
   private:
     HasamiGame(void) = delete;
-    HasamiGame(const PieceMapP& m, HasamiPosition* p, TakenPosition* t, StockPosition* s, HasamiLayout* l, HasamiTakenLayout* tl, HasamiStockLayout* sl) noexcept;
+    HasamiGame(const PieceMapP& m, HasamiPosition* p, HasamiLayout* l) noexcept;
   public:
     HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;

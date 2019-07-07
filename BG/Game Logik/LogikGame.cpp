@@ -28,12 +28,12 @@ namespace Logik
                  (int)(BoardStartY + FieldSizeY * (j + 0)),
                  (int)(BoardStartX + FieldSizeX * (3 + 1 + i + 1) + (i < y ? 0 : BoardFrameX) + (i < 2 * y ? 0 : 1) + (i < 3 * y ? 0 : BoardFrameX)),
                  (int)(BoardStartY + FieldSizeY * (j + 1))};
-        tiles[z] = new Tile(Location(i, j), r, FC(i, j));
+        tiles[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
       }
   }
 
 
-  LStockLayout::LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept :
-    StockLayout(Dimension(x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * y - x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * z + 1) / 2, FieldSizeX, FieldSizeY)) {}
+  //LStockLayout::LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept :
+  //  StockLayout(Dimension(x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * y - x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * z + 1) / 2, FieldSizeX, FieldSizeY)) {}
 
 }

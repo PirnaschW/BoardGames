@@ -10,41 +10,41 @@ namespace Test
   {
     if (x == 4 and y == 4)
     {
-      SetPiece(Location(0U, 0U), &ChessPiece::WQ);
-      SetPiece(Location(0U, 1U), &ChessPiece::BQ);
-      SetPiece(Location(0U, 2U), &ChessPiece::WR);
-      SetPiece(Location(0U, 3U), &ChessPiece::BR);
-      SetPiece(Location(1U, 0U), &ChessPiece::WB);
-      SetPiece(Location(1U, 1U), &ChessPiece::BB);
-      SetPiece(Location(1U, 2U), &ChessPiece::WN);
-      SetPiece(Location(1U, 3U), &ChessPiece::BN);
-      SetPiece(Location(2U, 0U), &ChessPiece::WQ);
-      SetPiece(Location(2U, 1U), &ChessPiece::BQ);
-      SetPiece(Location(2U, 2U), &ChessPiece::WR);
-      SetPiece(Location(2U, 3U), &ChessPiece::BR);
-      SetPiece(Location(3U, 0U), &ChessPiece::WB);
-      SetPiece(Location(3U, 1U), &ChessPiece::BB);
-      SetPiece(Location(3U, 2U), &ChessPiece::WN);
-      SetPiece(Location(3U, 3U), &ChessPiece::BN);
+      SetPiece(Location(BoardPart::Main, 0U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(BoardPart::Main, 0U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(BoardPart::Main, 0U, 2U), &ChessPiece::WR);
+      SetPiece(Location(BoardPart::Main, 0U, 3U), &ChessPiece::BR);
+      SetPiece(Location(BoardPart::Main, 1U, 0U), &ChessPiece::WB);
+      SetPiece(Location(BoardPart::Main, 1U, 1U), &ChessPiece::BB);
+      SetPiece(Location(BoardPart::Main, 1U, 2U), &ChessPiece::WN);
+      SetPiece(Location(BoardPart::Main, 1U, 3U), &ChessPiece::BN);
+      SetPiece(Location(BoardPart::Main, 2U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(BoardPart::Main, 2U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(BoardPart::Main, 2U, 2U), &ChessPiece::WR);
+      SetPiece(Location(BoardPart::Main, 2U, 3U), &ChessPiece::BR);
+      SetPiece(Location(BoardPart::Main, 3U, 0U), &ChessPiece::WB);
+      SetPiece(Location(BoardPart::Main, 3U, 1U), &ChessPiece::BB);
+      SetPiece(Location(BoardPart::Main, 3U, 2U), &ChessPiece::WN);
+      SetPiece(Location(BoardPart::Main, 3U, 3U), &ChessPiece::BN);
     }
     else if (x == 3 and y == 3)
     {
-      SetPiece(Location(0U, 0U), &ChessPiece::WQ);
-      SetPiece(Location(0U, 1U), &ChessPiece::BQ);
-      SetPiece(Location(0U, 2U), &ChessPiece::WR);
-      SetPiece(Location(1U, 0U), &ChessPiece::BR);
-      SetPiece(Location(1U, 1U), &ChessPiece::WB);
-      SetPiece(Location(1U, 2U), &ChessPiece::BB);
-      SetPiece(Location(2U, 0U), &ChessPiece::WN);
-      SetPiece(Location(2U, 1U), &ChessPiece::BN);
-      SetPiece(Location(2U, 2U), &ChessPiece::WQ);
+      SetPiece(Location(BoardPart::Main, 0U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(BoardPart::Main, 0U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(BoardPart::Main, 0U, 2U), &ChessPiece::WR);
+      SetPiece(Location(BoardPart::Main, 1U, 0U), &ChessPiece::BR);
+      SetPiece(Location(BoardPart::Main, 1U, 1U), &ChessPiece::WB);
+      SetPiece(Location(BoardPart::Main, 1U, 2U), &ChessPiece::BB);
+      SetPiece(Location(BoardPart::Main, 2U, 0U), &ChessPiece::WN);
+      SetPiece(Location(BoardPart::Main, 2U, 1U), &ChessPiece::BN);
+      SetPiece(Location(BoardPart::Main, 2U, 2U), &ChessPiece::WQ);
     }
     else if (x == 2 and y == 2)
     {
-      SetPiece(Location(0U, 0U), &ChessPiece::WQ);
-      SetPiece(Location(0U, 1U), &ChessPiece::BQ);
-      SetPiece(Location(1U, 0U), &ChessPiece::BB);
-      SetPiece(Location(1U, 1U), &ChessPiece::WR);
+      SetPiece(Location(BoardPart::Main, 0U, 0U), &ChessPiece::WQ);
+      SetPiece(Location(BoardPart::Main, 0U, 1U), &ChessPiece::BQ);
+      SetPiece(Location(BoardPart::Main, 1U, 0U), &ChessPiece::BB);
+      SetPiece(Location(BoardPart::Main, 1U, 1U), &ChessPiece::WR);
     }
 
   }
@@ -56,26 +56,26 @@ namespace Test
     if (p->IsBlank()) return true;   // not a move, but keep trying this direction
     if (p->IsColor(OnTurn())) return false;  // own piece
 
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,p }, SimpleStep::StepType::Take)));
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared<StepSimple>(Field{ fr,GetPiece(fr) }, Field{ to,p }, StepSimple::StepType::Take)));
     return false;
   };
 
 
-  TestGame::TestGame(const PieceMapP& m, Coordinate x, Coordinate y) : TestGame(m,
-    new TestPosition(m, x, y), new TakenPosition(m, x*y / 2, 2), new StockPosition(m, 5, 2),
-    new TestLayout(x, y), new TestTakenLayout(x, y), new TestStockLayout(x, y)) {}
+  //TestGame::TestGame(const PieceMapP& m, Coordinate x, Coordinate y) : TestGame(m,
+  //  new TestPosition(m, x, y), new TakenPosition(m, x* y / 2, 2), new StockPosition(m, 5, 2),
+  //  new TestLayout(x, y), new TestTakenLayout(x, y), new TestStockLayout(x, y)) {}
+  TestGame::TestGame(const PieceMapP& m, Coordinate x, Coordinate y) : TestGame(m, new TestPosition(m, x, y), new TestLayout(x, y)) {}
 
-  TestGame::TestGame(const PieceMapP& m, TestPosition* p, TakenPosition* t, StockPosition* s,
-    TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl) : Game{ m,p,t,s,l,tl,sl }
+  TestGame::TestGame(const PieceMapP& m, TestPosition* p, TestLayout* l) : Game{ m,p,l }
   {
-    AddToStock(Location(0U, 0U), &ChessPiece::WQ);
-    AddToStock(Location(1U, 0U), &ChessPiece::WR);
-    AddToStock(Location(2U, 0U), &ChessPiece::WB);
-    AddToStock(Location(3U, 0U), &ChessPiece::WN);
-    AddToStock(Location(0U, 1U), &ChessPiece::BQ);
-    AddToStock(Location(1U, 1U), &ChessPiece::BR);
-    AddToStock(Location(2U, 1U), &ChessPiece::BB);
-    AddToStock(Location(3U, 1U), &ChessPiece::BN);
+    AddToStock(Location(BoardPart::Main, 0U, 0U), &ChessPiece::WQ);
+    AddToStock(Location(BoardPart::Main, 1U, 0U), &ChessPiece::WR);
+    AddToStock(Location(BoardPart::Main, 2U, 0U), &ChessPiece::WB);
+    AddToStock(Location(BoardPart::Main, 3U, 0U), &ChessPiece::WN);
+    AddToStock(Location(BoardPart::Main, 0U, 1U), &ChessPiece::BQ);
+    AddToStock(Location(BoardPart::Main, 1U, 1U), &ChessPiece::BR);
+    AddToStock(Location(BoardPart::Main, 2U, 1U), &ChessPiece::BB);
+    AddToStock(Location(BoardPart::Main, 3U, 1U), &ChessPiece::BN);
   }
 
   const PieceMapP& TestGame::GetPieces(void) noexcept
@@ -96,12 +96,12 @@ namespace Test
 
   bool Test::TestOffset(void)
   {
-    Location l{ 2U,2U };
-    assert((l == Location{ 2U,2U }));
+    Location l{ BoardPart::Main,2U,2U };
+    assert((l == Location{ BoardPart::Main, 2U,2U }));
 
     for (auto& d : Offset::Rdirection)
     {
-      Location l1{ 2U,2U };
+      Location l1{ BoardPart::Main,2U,2U };
       Location l2 = l1 + d;
       l1 += d;
       assert((l1 == l2));
@@ -154,7 +154,7 @@ namespace Test
       //pos->EvaluateStatically();
       //plist.insert(pos);
 
-      //Move Best{std::vector<SimpleStep>{}};
+      //Move Best{std::vector<StepSimple>{}};
       //PositionValue max = PositionValue::PValueType::Lost;
       //for (auto& mi : m)                                      // for all possible opponent's moves
       //{
@@ -186,22 +186,22 @@ namespace Test
       //}
 
       //assert(m.size() == 16);
-      //assert(m[ 0].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 1].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 2].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 3].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 4].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 5].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 6].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 7].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 8].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[ 9].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[10].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[11].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[12].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[13].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[14].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
-      //assert(m[15].GetSteps()[0].GetType() == SimpleStep::StepType::Take);
+      //assert(m[ 0].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 1].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 2].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 3].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 4].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 5].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 6].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 7].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 8].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[ 9].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[10].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[11].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[12].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[13].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[14].GetSteps()[0].GetType() == StepSimple::StepType::Take);
+      //assert(m[15].GetSteps()[0].GetType() == StepSimple::StepType::Take);
 
       //assert(m[ 0].GetValue() ==  -40);
       //assert(m[ 1].GetValue() ==  580);
@@ -220,11 +220,11 @@ namespace Test
       //assert(m[14].GetValue() == -100);
       //assert(m[15].GetValue() ==  -20);
 
-      AIContext plist{};
+      AIContextP plist = std::make_shared<AIContext>();
       TestGame game(std::make_shared<PieceMap>(), 3, 3);
       MainPosition* pos = game.GetPosition()->Clone();
       pos->EvaluateStatically();
-      plist.insert(pos);
+      plist->insert(pos);
 
       TestMoveUndo(pos);
       TestTaken(pos);
@@ -296,28 +296,28 @@ namespace Test
       }
 
       PositionValue Best{ 0 };
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 2);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 3);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 4);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 5);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 6);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 7);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 8);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 9);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 10);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 11);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 12);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 13);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 14);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 15);
-      Best = pos->Evaluate(&plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 16);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 2);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 3);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 4);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 5);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 6);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 7);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 8);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 9);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 10);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 11);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 12);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 13);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 14);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 15);
+      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 16);
 
       bool ok{ true };
       //    ok = game.AIMove();
       assert(ok);
 
-      for (auto& p : plist) delete p;
+      for (auto& p : *plist) delete p;
     }
     catch (...)
     {

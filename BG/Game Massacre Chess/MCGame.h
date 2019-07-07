@@ -38,27 +38,27 @@ namespace MassacreChess
   };
 
 
-  class MCTakenLayout : public TakenLayout
-  {
-  public:
-    inline MCTakenLayout(Coordinate x, Coordinate y)  noexcept :
-      TakenLayout(Dimension(x*y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-  };
+  //class MCTakenLayout : public TakenLayout
+  //{
+  //public:
+  //  inline MCTakenLayout(Coordinate x, Coordinate y)  noexcept :
+  //    TakenLayout(Dimension(x*y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
+  //};
 
 
-  class MCStockLayout : public StockLayout
-  {
-  public:
-    inline MCStockLayout(Coordinate /*x*/, Coordinate y)  noexcept :
-      StockLayout(Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY)) {}
-  };
+  //class MCStockLayout : public StockLayout
+  //{
+  //public:
+  //  inline MCStockLayout(Coordinate /*x*/, Coordinate y)  noexcept :
+  //    StockLayout(Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY)) {}
+  //};
 
 
   class MCGame : public Game
   {
   private:
     MCGame(void) = delete;
-    MCGame(const PieceMapP& m, MCPosition* p, TakenPosition* t, StockPosition* s, MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept;
+    MCGame(const PieceMapP& m, MCPosition* p, MCLayout* l) noexcept;
 
   public:
     MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;

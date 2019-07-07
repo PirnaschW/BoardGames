@@ -61,7 +61,7 @@ namespace Shogi
     if (!((pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1))) return false;   // drop anywhere except last row
     for (Coordinate j = 0; j < pos->GetSizeY(); j++)
     {
-      const Piece* p = pos->GetPiece(Location{ l._x,j });
+      const Piece* p = pos->GetPiece(Location{ BoardPart::Main, l._x,j });
       if (p == ((pos->OnTurn() == &Color::White) ? &ShogiPiece::ShogiSPW : &ShogiPiece::ShogiSPB)) return false;
     }
     return true;
@@ -76,6 +76,10 @@ namespace Shogi
   {
     return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1);   // drop anywhere except last row
   }
+  bool Lance::CanMove(const MainPosition* pos, const Location& l) const noexcept
+  {
+    return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1);   // move anywhere except last row
+  }
 
   void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
@@ -86,6 +90,10 @@ namespace Shogi
   bool Knight::CanDrop(const MainPosition* pos, const Location& l) const noexcept
   {
     return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 2) : (l._y > 2);   // drop anywhere except last two rows
+  }
+  bool Knight::CanMove(const MainPosition* pos, const Location& l) const noexcept
+  {
+    return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 2) : (l._y > 2);   // move anywhere except last two rows
   }
 
   void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
@@ -173,112 +181,126 @@ namespace Shogi
     assert((x == 9 && y == 9) || (x == 5 && y == 5));
     if (ShogiGame::IsFull(x, y))
     {
-      SetPiece(Location(0U, 0U), &ShogiPiece::ShogiSLB);
-      SetPiece(Location(1U, 0U), &ShogiPiece::ShogiSNB);
-      SetPiece(Location(2U, 0U), &ShogiPiece::ShogiSSB);
-      SetPiece(Location(3U, 0U), &ShogiPiece::ShogiSGB);
-      SetPiece(Location(4U, 0U), &ShogiPiece::ShogiSKB);
-      SetPiece(Location(5U, 0U), &ShogiPiece::ShogiSGB);
-      SetPiece(Location(6U, 0U), &ShogiPiece::ShogiSSB);
-      SetPiece(Location(7U, 0U), &ShogiPiece::ShogiSNB);
-      SetPiece(Location(8U, 0U), &ShogiPiece::ShogiSLB);
-
-      SetPiece(Location(1U, 1U), &ShogiPiece::ShogiSRB);
-      SetPiece(Location(7U, 1U), &ShogiPiece::ShogiSBB);
-
-      SetPiece(Location(0U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(1U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(2U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(3U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(4U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(5U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(6U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(7U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location(8U, 2U), &ShogiPiece::ShogiSPB);
-
-
-      SetPiece(Location(0U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(1U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(2U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(3U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(4U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(5U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(6U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(7U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location(8U, 6U), &ShogiPiece::ShogiSPW);
-
-      SetPiece(Location(1U, 7U), &ShogiPiece::ShogiSBW);
-      SetPiece(Location(7U, 7U), &ShogiPiece::ShogiSRW);
-
-      SetPiece(Location(0U, 8U), &ShogiPiece::ShogiSLW);
-      SetPiece(Location(1U, 8U), &ShogiPiece::ShogiSNW);
-      SetPiece(Location(2U, 8U), &ShogiPiece::ShogiSSW);
-      SetPiece(Location(3U, 8U), &ShogiPiece::ShogiSGW);
-      SetPiece(Location(4U, 8U), &ShogiPiece::ShogiSKW);
-      SetPiece(Location(5U, 8U), &ShogiPiece::ShogiSGW);
-      SetPiece(Location(6U, 8U), &ShogiPiece::ShogiSSW);
-      SetPiece(Location(7U, 8U), &ShogiPiece::ShogiSNW);
-      SetPiece(Location(8U, 8U), &ShogiPiece::ShogiSLW);
+      SetPiece(Location( BoardPart::Main, 0U, 0U), &ShogiPiece::ShogiSLB);
+      SetPiece(Location( BoardPart::Main, 1U, 0U), &ShogiPiece::ShogiSNB);
+      SetPiece(Location( BoardPart::Main, 2U, 0U), &ShogiPiece::ShogiSSB);
+      SetPiece(Location( BoardPart::Main, 3U, 0U), &ShogiPiece::ShogiSGB);
+      SetPiece(Location( BoardPart::Main, 4U, 0U), &ShogiPiece::ShogiSKB);
+      SetPiece(Location( BoardPart::Main, 5U, 0U), &ShogiPiece::ShogiSGB);
+      SetPiece(Location( BoardPart::Main, 6U, 0U), &ShogiPiece::ShogiSSB);
+      SetPiece(Location( BoardPart::Main, 7U, 0U), &ShogiPiece::ShogiSNB);
+      SetPiece(Location( BoardPart::Main, 8U, 0U), &ShogiPiece::ShogiSLB);
+                         
+      SetPiece(Location( BoardPart::Main, 1U, 1U), &ShogiPiece::ShogiSRB);
+      SetPiece(Location( BoardPart::Main, 7U, 1U), &ShogiPiece::ShogiSBB);
+                        
+      SetPiece(Location( BoardPart::Main, 0U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 1U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 2U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 3U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 4U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 5U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 6U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 7U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 8U, 2U), &ShogiPiece::ShogiSPB);
+                         
+                         
+      SetPiece(Location( BoardPart::Main, 0U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 1U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 2U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 3U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 4U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 5U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 6U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 7U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 8U, 6U), &ShogiPiece::ShogiSPW);
+                         
+      SetPiece(Location( BoardPart::Main, 1U, 7U), &ShogiPiece::ShogiSBW);
+      SetPiece(Location( BoardPart::Main, 7U, 7U), &ShogiPiece::ShogiSRW);
+                         
+      SetPiece(Location( BoardPart::Main, 0U, 8U), &ShogiPiece::ShogiSLW);
+      SetPiece(Location( BoardPart::Main, 1U, 8U), &ShogiPiece::ShogiSNW);
+      SetPiece(Location( BoardPart::Main, 2U, 8U), &ShogiPiece::ShogiSSW);
+      SetPiece(Location( BoardPart::Main, 3U, 8U), &ShogiPiece::ShogiSGW);
+      SetPiece(Location( BoardPart::Main, 4U, 8U), &ShogiPiece::ShogiSKW);
+      SetPiece(Location( BoardPart::Main, 5U, 8U), &ShogiPiece::ShogiSGW);
+      SetPiece(Location( BoardPart::Main, 6U, 8U), &ShogiPiece::ShogiSSW);
+      SetPiece(Location( BoardPart::Main, 7U, 8U), &ShogiPiece::ShogiSNW);
+      SetPiece(Location( BoardPart::Main, 8U, 8U), &ShogiPiece::ShogiSLW);
     }
     else
     {
-      SetPiece(Location(0U, 0U), &ShogiPiece::ShogiSRB);
-      SetPiece(Location(1U, 0U), &ShogiPiece::ShogiSBB);
-      SetPiece(Location(2U, 0U), &ShogiPiece::ShogiSSB);
-      SetPiece(Location(3U, 0U), &ShogiPiece::ShogiSGB);
-      SetPiece(Location(4U, 0U), &ShogiPiece::ShogiSKB);
-      SetPiece(Location(4U, 1U), &ShogiPiece::ShogiSPB);
-
-      SetPiece(Location(4U, 4U), &ShogiPiece::ShogiSRW);
-      SetPiece(Location(3U, 4U), &ShogiPiece::ShogiSBW);
-      SetPiece(Location(2U, 4U), &ShogiPiece::ShogiSSW);
-      SetPiece(Location(1U, 4U), &ShogiPiece::ShogiSGW);
-      SetPiece(Location(0U, 4U), &ShogiPiece::ShogiSKW);
-      SetPiece(Location(0U, 3U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 0U, 0U), &ShogiPiece::ShogiSRB);
+      SetPiece(Location( BoardPart::Main, 1U, 0U), &ShogiPiece::ShogiSBB);
+      SetPiece(Location( BoardPart::Main, 2U, 0U), &ShogiPiece::ShogiSSB);
+      SetPiece(Location( BoardPart::Main, 3U, 0U), &ShogiPiece::ShogiSGB);
+      SetPiece(Location( BoardPart::Main, 4U, 0U), &ShogiPiece::ShogiSKB);
+      SetPiece(Location( BoardPart::Main, 4U, 1U), &ShogiPiece::ShogiSPB);
+                         
+      SetPiece(Location( BoardPart::Main, 4U, 4U), &ShogiPiece::ShogiSRW);
+      SetPiece(Location( BoardPart::Main, 3U, 4U), &ShogiPiece::ShogiSBW);
+      SetPiece(Location( BoardPart::Main, 2U, 4U), &ShogiPiece::ShogiSSW);
+      SetPiece(Location( BoardPart::Main, 1U, 4U), &ShogiPiece::ShogiSGW);
+      SetPiece(Location( BoardPart::Main, 0U, 4U), &ShogiPiece::ShogiSKW);
+      SetPiece(Location( BoardPart::Main, 0U, 3U), &ShogiPiece::ShogiSPW);
     }
   }
 
-  void ShogiPosition::GetAllMoves(void)              // generate all moves and save list
+  void ShogiPosition::GetAllMoves(void)                                   // generate all moves and save list
   {
-    MainPosition::GetAllMoves();    // standard: get moves for all pieces on the board
+    MainPosition::GetAllMoves();                                          // standard: get moves for all pieces on the board
 
-    // add all potential placement moves
-    for (Coordinate i = 0; i < sizeX; i++)
-      for (Coordinate j = 0; j < sizeY; j++)
-      {
-        const Location l{ i,j };
-        if (GetPiece(l)->IsBlank())
+    // add all potential drop moves
+    for (Coordinate y = 0; true; y++)
+    {
+      const Location l(BoardPart::Taken, 0U, y);
+      const Piece* p = _taken.GetPiece(Location(BoardPart::Taken, 0U, y));
+      if (p == nullptr) break;                                            // end of Taken reached
+      if (p->IsBlank()) continue;                                         // no piece here to drop, try next Location
+      const ShogiPiece* pp = dynamic_cast<const ShogiPiece*>(p);          // must be a shogipiece,
+      assert(pp != nullptr);                                              // verify it
+
+      Actions a{ std::make_shared<ActionTake>(l,pp) };
+      for (Coordinate i = 0; i < sizeX; i++)
+        for (Coordinate j = 0; j < sizeY; j++)
         {
-          const Piece* p{ nullptr };
-          for (unsigned int z = 0; (p = tpos->GetPiece(Location(z, 0U))) != &Piece::NoTile; z++)
+          const Location ll{ BoardPart::Main, i, j };
+          if (GetPiece(ll)->IsBlank() && pp->CanDrop(this, ll))
           {
-            const ShogiPiece* pp = dynamic_cast<const ShogiPiece*>(p); // must be a shogipiece, verify it
-            if (pp->CanDrop(this, l))
-            {
-              movelistB.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ Location(z, 0U),nullptr }, Field{ l,p }, SimpleStep::StepType::Drop)));
-            }
+            Actions aa{ a };
+            aa.push_back(std::make_shared<ActionPlace>(ll, pp));
+            movelistB.push_back(std::make_shared<Move>(aa));
           }
         }
-      }
+    }
   }
   
-  bool ShogiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
+  bool ShogiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const // returns true if further tries in this direction are allowed
   {
-    const Piece* pt = GetPiece(to);
-    if (pt == nullptr) return false;  // out of board
-    if (pt->IsColor(OnTurn())) return false;  // own piece
+    const Piece* pt = GetPiece(to);                                       // what is on the target field
+    if (pt == nullptr) return false;                                      // out of board
+    if (pt->IsColor(OnTurn())) return false;                              // own piece
+    if (IsTaken(fr) && !pt->IsBlank()) return false;                      // can't drop onto existing piece
 
     const ShogiPiece* pf = dynamic_cast<const ShogiPiece*>(GetPiece(fr));
 
-    SimpleStep::StepType st = pt->IsBlank() ? SimpleStep::StepType::Normal : SimpleStep::StepType::Take;
-//    if (pf->CanDrop(this, to))  // 'can drop' is also 'can move there'
-//    {
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,pf }, Field{ to,pf }, st)));
-//    }
-    if ((CanPromote(fr) || CanPromote(to)) && GetPiece(fr)->IsPromotable())
+
+    if (fr._b == BoardPart::Taken ? pf->CanDrop(this, to) : pf->CanMove(this, to))  // checks for legal drop / move
     {
-      st = static_cast<SimpleStep::StepType>(st | SimpleStep::StepType::Promote);
-      m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,pf->Promote(true) }, st)));
+      Actions a{ std::make_shared<ActionTake>(fr, pf) };
+      if (!pt->IsBlank()) // if something is there, take it and place in Taken
+      {
+        a.push_back(std::make_shared<ActionTake>(to, pt));
+        a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt), pt));
+      }
+      if (!IsTaken(fr) && (CanPromote(fr) || CanPromote(to)) && pf->IsPromotable())
+      {
+        Actions aa{ a }; // promote is optional, so we make a copy and add as second move
+        aa.push_back(std::make_shared<ActionPlace>(to, pf->Promote(true)));
+        m.push_back(std::make_shared<Move>(aa));
+      }
+      a.push_back(std::make_shared<ActionPlace>(to, pf));  // unpromoted placement
+      m.push_back(std::make_shared<Move>(a));
     }
     return pt->IsBlank();   // if free tile, keep trying this direction
   }
@@ -311,46 +333,47 @@ namespace Shogi
   }
     
 
-  ShogiGame::ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : ShogiGame(m,
-    new ShogiPosition(m, x, y), new ShogiTakenPosition(m, x, y), new StockPosition(m, 15, 2),
-    new ShogiLayout(x, y), new ShogiTakenLayout(x, y), new ShogiStockLayout(x, y)) {}
+  //ShogiGame::ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : ShogiGame(m,
+  //  new ShogiPosition(m, x, y), new ShogiTakenPosition(m, x, y), new StockPosition(m, 15, 2),
+  //  new ShogiLayout(x, y), new ShogiTakenLayout(x, y), new ShogiStockLayout(x, y)) {}
+  ShogiGame::ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : ShogiGame(m, new ShogiPosition(m, x, y), new ShogiLayout(x, y)) {}
 
-  ShogiGame::ShogiGame(const PieceMapP& m,
-    ShogiPosition* p, TakenPosition* t, StockPosition* s,
-    ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
+  ShogiGame::ShogiGame(const PieceMapP& m, ShogiPosition* p, ShogiLayout* l) noexcept : Game{ m,p,l }
   {
-    p->SetTPos(t);  // stores the Taken position inide the board position, so the move generator can access it for drops
-    AddToStock(Location(0U, 0U), &ShogiPiece::ShogiSKW);
-    AddToStock(Location(1U, 0U), &ShogiPiece::ShogiSGW);
-    AddToStock(Location(2U, 0U), &ShogiPiece::ShogiSSW);
-    AddToStock(Location(3U, 0U), &ShogiPiece::ShogiSBW);
-    AddToStock(Location(4U, 0U), &ShogiPiece::ShogiSRW);
-    AddToStock(Location(5U, 0U), &ShogiPiece::ShogiSNW);
-    AddToStock(Location(6U, 0U), &ShogiPiece::ShogiSLW);
-    AddToStock(Location(7U, 0U), &ShogiPiece::ShogiSPW);
-                         
-    AddToStock(Location(8U, 0U), &ShogiPiece::ShogiPSW);
-    AddToStock(Location(9U, 0U), &ShogiPiece::ShogiPBW);
-    AddToStock(Location(10U, 0U), &ShogiPiece::ShogiPRW);
-    AddToStock(Location(11U, 0U), &ShogiPiece::ShogiPNW);
-    AddToStock(Location(12U, 0U), &ShogiPiece::ShogiPLW);
-    AddToStock(Location(13U, 0U), &ShogiPiece::ShogiPPW);
+//    p->SetTPos(t);  // stores the Taken position inside the board position, so the move generator can access it for drops
+    //AddToStock(Location(BoardPart::Main, 0U, 0U), &ShogiPiece::ShogiSKW);
+    //AddToStock(Location(BoardPart::Main, 1U, 0U), &ShogiPiece::ShogiSGW);
+    //AddToStock(Location(BoardPart::Main, 2U, 0U), &ShogiPiece::ShogiSSW);
+    //AddToStock(Location(BoardPart::Main, 3U, 0U), &ShogiPiece::ShogiSBW);
+    //AddToStock(Location(BoardPart::Main, 4U, 0U), &ShogiPiece::ShogiSRW);
+    //AddToStock(Location(BoardPart::Main, 5U, 0U), &ShogiPiece::ShogiSNW);
+    //AddToStock(Location(BoardPart::Main, 6U, 0U), &ShogiPiece::ShogiSLW);
+    //AddToStock(Location(BoardPart::Main, 7U, 0U), &ShogiPiece::ShogiSPW);
+    //                    
+    //AddToStock(Location(BoardPart::Main, 8U, 0U), &ShogiPiece::ShogiPSW);
+    //AddToStock(Location(BoardPart::Main, 9U, 0U), &ShogiPiece::ShogiPBW);
+    //AddToStock(Location(BoardPart::Main, 10U, 0U), &ShogiPiece::ShogiPRW);
+    //AddToStock(Location(BoardPart::Main, 11U, 0U), &ShogiPiece::ShogiPNW);
+    //AddToStock(Location(BoardPart::Main, 12U, 0U), &ShogiPiece::ShogiPLW);
+    //AddToStock(Location(BoardPart::Main, 13U, 0U), &ShogiPiece::ShogiPPW);
 
-    AddToStock(Location(0U, 1U), &ShogiPiece::ShogiSKW);
-    AddToStock(Location(1U, 1U), &ShogiPiece::ShogiSGW);
-    AddToStock(Location(2U, 1U), &ShogiPiece::ShogiSSW);
-    AddToStock(Location(3U, 1U), &ShogiPiece::ShogiSBW);
-    AddToStock(Location(4U, 1U), &ShogiPiece::ShogiSRW);
-    AddToStock(Location(5U, 1U), &ShogiPiece::ShogiSNW);
-    AddToStock(Location(6U, 1U), &ShogiPiece::ShogiSLW);
-    AddToStock(Location(7U, 1U), &ShogiPiece::ShogiSPW);
-                             
-    AddToStock(Location(8U, 1U), &ShogiPiece::ShogiPSW);
-    AddToStock(Location(9U, 1U), &ShogiPiece::ShogiPBW);
-    AddToStock(Location(10U, 1U), &ShogiPiece::ShogiPRW);
-    AddToStock(Location(11U, 1U), &ShogiPiece::ShogiPNW);
-    AddToStock(Location(12U, 1U), &ShogiPiece::ShogiPLW);
-    AddToStock(Location(13U, 1U), &ShogiPiece::ShogiPPW);
+    //AddToStock(Location(BoardPart::Main, 0U, 1U), &ShogiPiece::ShogiSKW);
+    //AddToStock(Location(BoardPart::Main, 1U, 1U), &ShogiPiece::ShogiSGW);
+    //AddToStock(Location(BoardPart::Main, 2U, 1U), &ShogiPiece::ShogiSSW);
+    //AddToStock(Location(BoardPart::Main, 3U, 1U), &ShogiPiece::ShogiSBW);
+    //AddToStock(Location(BoardPart::Main, 4U, 1U), &ShogiPiece::ShogiSRW);
+    //AddToStock(Location(BoardPart::Main, 5U, 1U), &ShogiPiece::ShogiSNW);
+    //AddToStock(Location(BoardPart::Main, 6U, 1U), &ShogiPiece::ShogiSLW);
+    //AddToStock(Location(BoardPart::Main, 7U, 1U), &ShogiPiece::ShogiSPW);
+    //                         
+    //AddToStock(Location(BoardPart::Main, 8U, 1U), &ShogiPiece::ShogiPSW);
+    //AddToStock(Location(BoardPart::Main, 9U, 1U), &ShogiPiece::ShogiPBW);
+    //AddToStock(Location(BoardPart::Main, 10U, 1U), &ShogiPiece::ShogiPRW);
+    //AddToStock(Location(BoardPart::Main, 11U, 1U), &ShogiPiece::ShogiPNW);
+    //AddToStock(Location(BoardPart::Main, 12U, 1U), &ShogiPiece::ShogiPLW);
+    //AddToStock(Location(BoardPart::Main, 13U, 1U), &ShogiPiece::ShogiPPW);
+    for (PieceIndex i = 0; i < m->GetCount(); i++)
+      p->SetPiece(Location(BoardPart::Stock, i / 2U, i % 2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
   }
 
   const VariantList& ShogiGame::GetVariants(void) noexcept
@@ -378,21 +401,21 @@ namespace Shogi
     p->Add(&ShogiPiece::ShogiPLW);
     p->Add(&ShogiPiece::ShogiPPW);
 
-    p->Add(&ShogiPiece::ShogiSKW);
-    p->Add(&ShogiPiece::ShogiSGW);
-    p->Add(&ShogiPiece::ShogiSSW);
-    p->Add(&ShogiPiece::ShogiSBW);
-    p->Add(&ShogiPiece::ShogiSRW);
-    p->Add(&ShogiPiece::ShogiSNW);
-    p->Add(&ShogiPiece::ShogiSLW);
-    p->Add(&ShogiPiece::ShogiSPW);
+    p->Add(&ShogiPiece::ShogiSKB);
+    p->Add(&ShogiPiece::ShogiSGB);
+    p->Add(&ShogiPiece::ShogiSSB);
+    p->Add(&ShogiPiece::ShogiSBB);
+    p->Add(&ShogiPiece::ShogiSRB);
+    p->Add(&ShogiPiece::ShogiSNB);
+    p->Add(&ShogiPiece::ShogiSLB);
+    p->Add(&ShogiPiece::ShogiSPB);
 
-    p->Add(&ShogiPiece::ShogiPSW);
-    p->Add(&ShogiPiece::ShogiPBW);
-    p->Add(&ShogiPiece::ShogiPRW);
-    p->Add(&ShogiPiece::ShogiPNW);
-    p->Add(&ShogiPiece::ShogiPLW);
-    p->Add(&ShogiPiece::ShogiPPW);
+    p->Add(&ShogiPiece::ShogiPSB);
+    p->Add(&ShogiPiece::ShogiPBB);
+    p->Add(&ShogiPiece::ShogiPRB);
+    p->Add(&ShogiPiece::ShogiPNB);
+    p->Add(&ShogiPiece::ShogiPLB);
+    p->Add(&ShogiPiece::ShogiPPB);
     return p;
   }
 

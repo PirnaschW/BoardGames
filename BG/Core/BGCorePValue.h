@@ -66,6 +66,12 @@ namespace BoardGamesCore
     constexpr inline PositionValue Relative(bool w) const noexcept { return (w ? *this : -*this); }
 
     constexpr inline operator int(void) const { if (_type != Normal) throw std::exception("undefined PValue"); return _value; }
+    inline operator const char*(void) const {
+      static std::string s; 
+      if (_type == Normal) s = std::to_string(_value);
+      else s = "undefined";
+      return s.c_str();
+    }
 
   private:
     PValueType _type{ PValueType::Undefined };

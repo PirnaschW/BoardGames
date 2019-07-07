@@ -176,7 +176,7 @@ namespace Logik
   class LMove : public SimpleMove
   {
   public:
-    LMove(PositionValue mm) noexcept : SimpleMove(std::make_shared<SimpleStep>( Field{Location(0U, 0U),nullptr}, Field{Location(0U, 0U),nullptr} )), m((unsigned int)mm) {}
+    LMove(PositionValue mm) noexcept : SimpleMove(std::make_shared<StepSimple>( Field{Location(BoardPart::Main,0U, 0U),nullptr}, Field{Location(BoardPart::Main,0U, 0U),nullptr} )), m((unsigned int)mm) {}
     unsigned int GetIndex(void) const  noexcept { return m; }
     ~LMove(void) {}
 
@@ -194,7 +194,7 @@ namespace Logik
       for (unsigned int i = 0; i < 4 * BY; i++)
         for (unsigned int j = 0; j < BZ; j++)
         {
-          SetPiece(Location(i, j), &Piece::NoPiece);
+          SetPiece(Location(BoardPart::Main, i, j), &Piece::NoPiece);
         }
     }
     ~LPosition<BX, BY, BZ>() {}
@@ -204,9 +204,9 @@ namespace Logik
     {
       for (unsigned int j = 0; j < BZ; j++)
         for (unsigned int i = BY; i < 2 * BY; i++)
-          if (GetPiece(Location(i, j)) == &Piece::NoPiece)
+          if (GetPiece(Location(BoardPart::Main, i, j)) == &Piece::NoPiece)
           {
-            SetPiece(Location(i, j), p);
+            SetPiece(Location(BoardPart::Main, i, j), p);
             return true;
           }
       return false;
@@ -215,14 +215,14 @@ namespace Logik
     {
       for (unsigned int j = 0; j < BZ; j++)
         for (unsigned int i = BY; i < 2 * BY; i++)
-          if (GetPiece(Location(i, j)) == &Piece::NoPiece)
+          if (GetPiece(Location(BoardPart::Main, i, j)) == &Piece::NoPiece)
           {
             if (i == BY && j > 0) j--; // use last full line, except if nothing is set at all
             for (unsigned int z = 0; z < BY; z++)
             {
-              if (GetPiece(Location(z, j)) == &Piece::NoPiece)
+              if (GetPiece(Location(BoardPart::Main, z, j)) == &Piece::NoPiece)
               {
-                SetPiece(Location(z, j), p);
+                SetPiece(Location(BoardPart::Main, z, j), p);
                 return true;
               }
             }
@@ -238,7 +238,7 @@ namespace Logik
       const Play<BX, BY, BZ>& p = previ[prevc];
       for (unsigned int i = 0; i < BY; ++i)
       {
-        SetPiece(Location(BY + i, prevc), &LogikPiece::GetPiece(p[i]));
+        SetPiece(Location(BoardPart::Main, BY + i, prevc), &LogikPiece::GetPiece(p[i]));
       }
       prevc++;
 
@@ -261,7 +261,7 @@ namespace Logik
       std::array<unsigned int, BY> peg{};
       for (unsigned int i = 0; i < BY; ++i)
       {
-        const Piece* p = GetPiece(Location(BY + i, k));
+        const Piece* p = GetPiece(Location(BoardPart::Main, BY + i, k));
         if      (p->IsKind(Peg<'1'>::ThePeg)) peg[i] = 0;
         else if (p->IsKind(Peg<'2'>::ThePeg)) peg[i] = 1;
         else if (p->IsKind(Peg<'3'>::ThePeg)) peg[i] = 2;
@@ -278,7 +278,7 @@ namespace Logik
       unsigned int w{};
       for (unsigned int i = 0; i < BY; ++i)
       {
-        const Piece* p = GetPiece(Location(i, k));
+        const Piece* p = GetPiece(Location(BoardPart::Main, i, k));
         if (p->IsKind(Peg<'B'>::ThePeg)) b++;
         if (p->IsKind(Peg<'W'>::ThePeg)) w++;
       }
@@ -370,15 +370,15 @@ namespace Logik
   }
 
 
-  class LMarkerStockPosition : public StockPosition
-  {
-  public:
-    LMarkerStockPosition(void) noexcept : StockPosition(nullptr, 2 + 1, 1)
-    {
-      SetPiece(Location(0U, 0U), &LogikPiece::LPieceB);
-      SetPiece(Location(1U, 0U), &LogikPiece::LPieceW);
-    }
-  };
+  //class LMarkerStockPosition : public StockPosition
+  //{
+  //public:
+  //  LMarkerStockPosition(void) noexcept : StockPosition(nullptr, 2 + 1, 1)
+  //  {
+  //    SetPiece(Location(BoardPart::Main, 0U, 0U), &LogikPiece::LPieceB);
+  //    SetPiece(Location(BoardPart::Main, 1U, 0U), &LogikPiece::LPieceW);
+  //  }
+  //};
 
 
   class LLayout : public MainLayout
@@ -396,35 +396,35 @@ namespace Logik
   };
 
 
-  class LStockLayout : public StockLayout
-  {
-  public:
-    LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept;
-  };
+  //class LStockLayout : public StockLayout
+  //{
+  //public:
+  //  LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept;
+  //};
 
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
   class LGame : public Game
   {
   private:
-    LGame<BX, BY, BZ>(LPosition<BX, BY, BZ>* p, TakenPosition* t, StockPosition* s,
-      LLayout* l, TakenLayout* tl, LStockLayout* sl) noexcept : Game{nullptr,p,t,s,l,tl,sl}
+    LGame<BX, BY, BZ>(LPosition<BX, BY, BZ>* p, LLayout* l) noexcept : Game{nullptr,p,l}
     {
-      AddToStock(Location(0U, 0U), &LogikPiece::LPieceB);
-      AddToStock(Location(1U, 0U), &LogikPiece::LPieceW);
-      if (BX > 0) AddToStock(Location(2U, 0U), &LogikPiece::LPiece1);
-      if (BX > 1) AddToStock(Location(3U, 0U), &LogikPiece::LPiece2);
-      if (BX > 2) AddToStock(Location(4U, 0U), &LogikPiece::LPiece3);
-      if (BX > 3) AddToStock(Location(5U, 0U), &LogikPiece::LPiece4);
-      if (BX > 4) AddToStock(Location(6U, 0U), &LogikPiece::LPiece5);
-      if (BX > 5) AddToStock(Location(7U, 0U), &LogikPiece::LPiece6);
-      if (BX > 6) AddToStock(Location(8U, 0U), &LogikPiece::LPiece7);
-      if (BX > 7) AddToStock(Location(9U, 0U), &LogikPiece::LPiece8);
+      AddToStock(Location(BoardPart::Main, 0U, 0U), &LogikPiece::LPieceB);
+      AddToStock(Location(BoardPart::Main, 1U, 0U), &LogikPiece::LPieceW);
+      if (BX > 0) AddToStock(Location(BoardPart::Main, 2U, 0U), &LogikPiece::LPiece1);
+      if (BX > 1) AddToStock(Location(BoardPart::Main, 3U, 0U), &LogikPiece::LPiece2);
+      if (BX > 2) AddToStock(Location(BoardPart::Main, 4U, 0U), &LogikPiece::LPiece3);
+      if (BX > 3) AddToStock(Location(BoardPart::Main, 5U, 0U), &LogikPiece::LPiece4);
+      if (BX > 4) AddToStock(Location(BoardPart::Main, 6U, 0U), &LogikPiece::LPiece5);
+      if (BX > 5) AddToStock(Location(BoardPart::Main, 7U, 0U), &LogikPiece::LPiece6);
+      if (BX > 6) AddToStock(Location(BoardPart::Main, 8U, 0U), &LogikPiece::LPiece7);
+      if (BX > 7) AddToStock(Location(BoardPart::Main, 9U, 0U), &LogikPiece::LPiece8);
       ShowStock(true);
     }
   public:
-    LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(nullptr, BX + 3, 1),
-      new LLayout(4 * BY, BZ), nullptr, new LStockLayout(BX, BY, BZ)) {}
+    //LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(nullptr, BX + 3, 1),
+    //  new LLayout(4 * BY, BZ), nullptr, new LStockLayout(BX, BY, BZ)) {}
+    LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), new LLayout(4 * BY, BZ)) {}
     inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 5 } } }; return v; }
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;

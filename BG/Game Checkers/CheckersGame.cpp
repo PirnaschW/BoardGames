@@ -57,8 +57,8 @@ namespace Checkers
     {
       for (Coordinate i = 0; i < x; i++)
       {
-        if ((i + j) % 2) SetPiece(Location(i, j), &CheckersPiece::CheckersPieceB);
-        else SetPiece(Location(i, y - 1 - j), &CheckersPiece::CheckersPieceW);
+        if ((i + j) % 2) SetPiece(Location(BoardPart::Main, i, j), &CheckersPiece::CheckersPieceB);
+        else SetPiece(Location(BoardPart::Main, i, y - 1 - j), &CheckersPiece::CheckersPieceW);
       }
     }
   }
@@ -70,7 +70,7 @@ namespace Checkers
     if (!p->IsBlank()) return false;                                      // field is not empty
 
     const Piece * p2 = CanPromote(to) ? GetPiece(fr)->Promote(true) : GetPiece(fr);
-    m.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<ComplexStep>(Field{ fr,GetPiece(fr) }, Field{ to,p2 }, Step::StepType::Normal, Fields{Field{ to,GetPiece(to) }}))));
+    m.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<StepComplex>(Field{ fr,GetPiece(fr) }, Field{ to,p2 }, Step::StepType::Normal, Fields{Field{ to,GetPiece(to) }}))));
     return true;
   }
 
@@ -129,11 +129,11 @@ namespace Checkers
           Fields f{};
           f.push_back(Field{ l1,p1 });
           Steps s1{ s };                                      // copy the previous jump sequence, so we can extend it
-          // add the jump to the SimpleStep list
-          s1.push_back(std::make_shared<ComplexStep>(Field{ fr, p0 }, Field{ l2,p0 }, (Step::StepType) (Step::StepType::Jump | Step::StepType::Take), f));
+          // add the jump to the StepSimple list
+          s1.push_back(std::make_shared<StepComplex>(Field{ fr, p0 }, Field{ l2,p0 }, (Step::StepType) (Step::StepType::Jump | Step::StepType::Take), f));
 
           if (!AddIfLegalJump(m, longjumps, s1, l2))                      // collect potential further jumps
-            m.push_back(std::make_shared<ComplexMove>(s1));                      // if it could not be extended, or was a jump over an own piece, add the SimpleStep list as a move
+            m.push_back(std::make_shared<ComplexMove>(s1));                      // if it could not be extended, or was a jump over an own piece, add the StepSimple list as a move
         }
         break;
       }
@@ -160,19 +160,19 @@ namespace Checkers
   }
 
 
-  CheckersGame::CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CheckersGame(m,
-    new CheckersPosition(m, x, y), new TakenPosition(m, 3*x/2, 2), new StockPosition(m, 4, 2),
-    new CheckersLayout(x, y), new CheckersTakenLayout(x, y), new CheckersStockLayout(x, y)) {}
+  //CheckersGame::CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CheckersGame(m,
+  //  new CheckersPosition(m, x, y), new TakenPosition(m, 3 * x / 2, 2), new StockPosition(m, 4, 2),
+  //  new CheckersLayout(x, y), new CheckersTakenLayout(x, y), new CheckersStockLayout(x, y)) {}
+  CheckersGame::CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CheckersGame(m, new CheckersPosition(m, x, y), new CheckersLayout(x, y)) {}
 
-  CheckersGame::CheckersGame(const PieceMapP& m, CheckersPosition* p, TakenPosition* t, StockPosition* s,
-    CheckersLayout* l, CheckersTakenLayout* tl, CheckersStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
+  CheckersGame::CheckersGame(const PieceMapP& m, CheckersPosition* p, CheckersLayout* l) noexcept : Game{ m,p,l }
   {
-    AddToStock(Location(0U, 0U), &CheckersPiece::CheckersPieceW);
-    AddToStock(Location(1U, 0U), &CheckersPiece::CheckersKingW);
-    AddToStock(Location(2U, 0U), &CheckersPiece::CheckersQueenW);
-    AddToStock(Location(0U, 1U), &CheckersPiece::CheckersPieceB);
-    AddToStock(Location(1U, 1U), &CheckersPiece::CheckersKingB);
-    AddToStock(Location(2U, 1U), &CheckersPiece::CheckersQueenB);
+    AddToStock(Location(BoardPart::Stock, 0U, 0U), &CheckersPiece::CheckersPieceW);
+    AddToStock(Location(BoardPart::Stock, 1U, 0U), &CheckersPiece::CheckersKingW);
+    AddToStock(Location(BoardPart::Stock, 2U, 0U), &CheckersPiece::CheckersQueenW);
+    AddToStock(Location(BoardPart::Stock, 0U, 1U), &CheckersPiece::CheckersPieceB);
+    AddToStock(Location(BoardPart::Stock, 1U, 1U), &CheckersPiece::CheckersKingB);
+    AddToStock(Location(BoardPart::Stock, 2U, 1U), &CheckersPiece::CheckersQueenB);
   }
 
   const VariantList& CheckersGame::GetVariants(void) noexcept

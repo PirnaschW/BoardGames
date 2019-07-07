@@ -14,8 +14,8 @@ namespace Template
     if (p == nullptr) return false;  // out of board
     if (p->IsColor(OnTurn())) return false;  // own piece
 
-    const SimpleStep::StepType st = p->IsBlank() ? SimpleStep::StepType::Normal : SimpleStep::StepType::Take;
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
+    const StepSimple::StepType st = p->IsBlank() ? StepSimple::StepType::Normal : StepSimple::StepType::Take;
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared<StepSimple>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
     return false;
   };
 
@@ -26,15 +26,15 @@ namespace Template
   }
 
 
-  TemplateGame::TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TemplateGame(m,
-    new TemplatePosition(m, x, y), new TakenPosition(m, x, 2), new StockPosition(m, 3, 1),
-    new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
+  //TemplateGame::TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TemplateGame(m,
+  //  new TemplatePosition(m, x, y), new TakenPosition(m, x, 2), new StockPosition(m, 3, 1),
+  //  new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
+  TemplateGame::TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TemplateGame(m, new TemplatePosition(m, x, y), new TemplateLayout(x, y)) {}
 
-  TemplateGame::TemplateGame(const PieceMapP& m, TemplatePosition* p, TakenPosition* t, StockPosition* s,
-    TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
+  TemplateGame::TemplateGame(const PieceMapP& m, TemplatePosition* p, TemplateLayout* l) noexcept : Game{ m,p,l }
   {
-    AddToStock(Location(0U, 0U), &TemplatePiece::TemplatePieceW);
-    AddToStock(Location(1U, 0U), &TemplatePiece::TemplatePieceB);
+    AddToStock(Location(BoardPart::Main, 0U, 0U), &TemplatePiece::TemplatePieceW);
+    AddToStock(Location(BoardPart::Main, 1U, 0U), &TemplatePiece::TemplatePieceB);
   }
 
   const VariantList& TemplateGame::GetVariants(void) noexcept

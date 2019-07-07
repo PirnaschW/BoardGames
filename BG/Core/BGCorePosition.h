@@ -2,7 +2,7 @@
 namespace BoardGamesCore
 {
 
-  class Position abstract
+  class Position
   {
   private:
     //class PieceMap final  // local helper class, collects all the existing pieces for the game.
@@ -26,20 +26,22 @@ namespace BoardGamesCore
   private:
     constexpr inline Position(void) noexcept = delete;
 
-  public:
+  protected:
     inline Position(const PieceMapP& p, Coordinate x, Coordinate y, const Piece* init = &Piece::NoPiece) noexcept
       : pMap{ p }, sizeX(x), sizeY(y), pieces(1ULL * x * y, pMap->GetIndex(init)) {}
-    inline Position(const Position& p) noexcept : pMap{p.pMap}, sizeX(p.sizeX), sizeY(p.sizeY), pieces{ p.pieces } {}
+    inline Position(const Position& p) noexcept : pMap{ p.pMap }, sizeX(p.sizeX), sizeY(p.sizeY), pieces{ p.pieces } {}
+  public:
     inline virtual ~Position(void) noexcept {}
 
     constexpr inline Coordinate GetSizeX(void) const noexcept { return sizeX; }  // potentially needed for positional value calculations
     constexpr inline Coordinate GetSizeY(void) const noexcept { return sizeY; }  // only needed for positional value calculations
     constexpr inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pMap->GetPiece(pieces[l.Index(sizeX, sizeY)]) : nullptr; }
+    inline bool operator ==(const Position* p) const noexcept { return p->sizeX == sizeX && p->sizeY == sizeY && p->pieces == pieces; }
+    inline bool operator !=(const Position* p) const noexcept { return !(*this == p); }
 
-    virtual bool operator ==(const Position* p) const noexcept;
     virtual std::size_t GetHash(void) const noexcept;
     virtual void Serialize(CArchive* ar) const { for (auto& p : pieces) pMap->GetPiece(p)->Serialize(ar); }
-    virtual inline const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; pieces[l.Index(sizeX, sizeY)] = pMap->GetIndex(p); return p; }
+    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash = 0; pieces[l.Index(sizeX, sizeY)] = pMap->GetIndex(p); return p; }
     virtual void SetPosition(std::vector<const Piece*> list);
 
   protected:
@@ -47,23 +49,41 @@ namespace BoardGamesCore
     const Coordinate sizeX;
     const Coordinate sizeY;
   private:
-//    std::shared_ptr<PieceMap> pm;
     std::vector<PieceIndex> pieces;
     mutable std::size_t hash{};
   };
 
 
-  class AIContext;   // forward declaration needed for class MainPosition
+  class AIContext;
+  using AIContextP = std::shared_ptr<AIContext>;
+
+  //class AIContextP;   // forward declaration needed for class MainPosition
   class MainPosition : public Position
   {
   public:
     using Depth = unsigned int;
 
+//    class TakenPosition : public Position
+//    {
+//    public:
+//      inline TakenPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
+//      inline TakenPosition(const TakenPosition& m) noexcept = default;
+////      void Push(unsigned int player, const std::vector<const Piece*>& p) noexcept;
+//    };
+//
+//
+//    class StockPosition : public Position
+//    {
+//    public:
+//      inline StockPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
+//      inline StockPosition(const StockPosition& m) noexcept = default;
+//    };
+
   protected:
-    inline MainPosition(const MainPosition& m) noexcept : Position(m), sequence(m.sequence), onTurn(m.onTurn) {}
+    inline MainPosition(const MainPosition& m) noexcept : Position(m), _taken(m._taken), _stock(m._stock) {}
 
   public:
-    inline MainPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
+    inline MainPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y), _taken(p, x * y / 2, 2), _stock(p, x * y, 2) {}
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
@@ -80,19 +100,28 @@ namespace BoardGamesCore
     inline Moves& GetMoveList(bool w) { return w ? movelistW : movelistB; }
     virtual bool AddIfLegal(Moves&, const Location, const Location) const { return false; };
     virtual void EvaluateStatically(void);       // calculate position value and save
-    virtual PositionValue Evaluate(AIContext* plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
+    virtual PositionValue Evaluate(AIContextP& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
     virtual inline unsigned int GetMoveCountFactor(void) const noexcept { return 20; }
     inline Depth GetDepth(void) const noexcept { return depth; }
     inline Depth SetDepth(Depth d) noexcept { return depth = d; }
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value = v.Relative(w); }
+    virtual const Piece* GetPiece(const Location& l) const noexcept;
+    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept;
+    const Location GetNextTakenL(const Piece* p) const noexcept;
+    inline bool IsTaken(const Location& l) const noexcept { return l._b == BoardPart::Taken; }
     virtual inline MoveP GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
-    virtual MainPosition* GetPosition(AIContext* plist, MoveP m = nullptr) const;     // execute move, maintain in PList
+    virtual MainPosition* GetPosition(AIContextP& plist, MoveP m = nullptr) const;     // execute move, maintain in PList
     virtual const std::vector<const Piece*> Execute(MoveP m);
+    virtual void Execute(const Move& m) noexcept;
     virtual void Undo(const MoveP m);
 
   public:
     Moves sequence{};
+    //Taken
+      Position _taken;
+    //Stock
+      Position _stock;
 
   protected:
     const Color* onTurn{ &Color::White };
@@ -100,19 +129,6 @@ namespace BoardGamesCore
     PositionValue value{ PositionValue::Undefined };                 // position value for White
     Moves movelistW{};
     Moves movelistB{};
-  };
-
-  class TakenPosition : public Position
-  {
-  public:
-    inline TakenPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y, &Piece::NoTile) {}
-    void Push(unsigned int player, const std::vector<const Piece*>& p) noexcept;
-  };
-
-  class StockPosition : public Position
-  {
-  public:
-    inline StockPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
   };
 
 }

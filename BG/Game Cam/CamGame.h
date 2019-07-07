@@ -68,11 +68,11 @@ namespace Cam
     bool CollectJumps(const Location& fr, const Steps& s, bool charge, const Color* c, Moves& m) const;
   };
 
-  class CamTakenPosition : public TakenPosition
-  {
-  public:
-    inline CamTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, x == 12 ? 24 : 14, 2) {};
-  };
+  //class CamTakenPosition : public TakenPosition
+  //{
+  //public:
+  //  inline CamTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, x == 12 ? 24 : 14, 2) {};
+  //};
 
   class CamLayout : public MainLayout
   {
@@ -81,26 +81,26 @@ namespace Cam
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
   };
 
-  class CamTakenLayout : public TakenLayout
-  {
-  public:
-    inline CamTakenLayout(Coordinate x, Coordinate y) noexcept :
-      TakenLayout(Dimension(2 * x, 2, FieldSizeX* (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY* y - FieldSizeSY * 4)) {}
-  };
+  //class CamTakenLayout : public TakenLayout
+  //{
+  //public:
+  //  inline CamTakenLayout(Coordinate x, Coordinate y) noexcept :
+  //    TakenLayout(Dimension(2 * x, 2, FieldSizeX* (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY* y - FieldSizeSY * 4)) {}
+  //};
 
-  class CamStockLayout : public StockLayout
-  {
-  public:
-    inline CamStockLayout(Coordinate /*x*/, Coordinate y) noexcept :
-      StockLayout(Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-  };
+  //class CamStockLayout : public StockLayout
+  //{
+  //public:
+  //  inline CamStockLayout(Coordinate /*x*/, Coordinate y) noexcept :
+  //    StockLayout(Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
+  //};
 
 
   class CamGame : public Game
   {
   private:
     CamGame(void) = delete;
-    CamGame(const PieceMapP& m, CamPosition* p, TakenPosition* t, StockPosition* s, CamLayout* l, CamTakenLayout* tl, CamStockLayout* sl) noexcept;
+    CamGame(const PieceMapP& m, CamPosition* p, CamLayout* l) noexcept;
   public:
     CamGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;

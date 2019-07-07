@@ -3,19 +3,6 @@
 namespace BoardGamesCore
 {
 
-  bool Position::operator ==(const Position* p) const noexcept
-  {
-    if (p->sizeX != sizeX || p->sizeY != sizeY) return false;
-    for (Coordinate i = 0; i < sizeX; i++)
-    {
-      for (Coordinate j = 0; j < sizeY; j++)
-      {
-        if (*(p->GetPiece(Location(i, j))) == *GetPiece(Location(i, j))) return false;
-      }
-    }
-    return true;
-  }
-
   std::size_t Position::GetHash(void) const noexcept
   {
     if (hash) return hash;
@@ -38,6 +25,37 @@ namespace BoardGamesCore
   }
 
 
+  const Piece* MainPosition::GetPiece(const Location& l) const noexcept
+  {
+    switch (l._b)
+    {
+      case BoardPart::Stock: return _stock.GetPiece(l);
+      case BoardPart::Taken: return _taken.GetPiece(l);
+      default:               return Position::GetPiece(l);
+    }
+  }
+
+  const Piece* MainPosition::SetPiece(const Location& l, const Piece* p) noexcept
+  {
+    switch (l._b)
+    {
+      case BoardPart::Stock: return _stock.SetPiece(l, p);
+      case BoardPart::Taken: return _taken.SetPiece(l, p);
+      default:               return Position::SetPiece(l, p);
+    }
+  }
+
+  const Location MainPosition::GetNextTakenL(const Piece* p) const noexcept
+  {
+    Coordinate y{ p->IsColor(&Color::White) ? 0U : 1U };
+    for (Coordinate x = 0; ; x++)
+    {
+      const Location l{ BoardPart::Taken, x, y };
+      if (_taken.GetPiece(l)->IsKind(noKind::NoKind)) return l;
+    }
+  }
+
+
   void MainPosition::GetAllMoves(void) // collect all moves for all pieces
   {
     assert(movelistW.empty());
@@ -49,17 +67,14 @@ namespace BoardGamesCore
     {
       for (Coordinate j = 0; j < sizeY; j++)
       {
-        const Piece* p = GetPiece(Location(i, j));
+        const Piece* p = GetPiece(Location(BoardPart::Main, i, j));
         assert(p != nullptr);
         if (!p->IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
         {
-          p->CollectMoves(*this, Location(i, j), p->IsColor(&Color::White) ? movelistW : movelistB);
-          //assert(Test::Test::TestTaken(this));
+          p->CollectMoves(*this, Location(BoardPart::Main, i, j), p->IsColor(&Color::White) ? movelistW : movelistB);
         }
       }
     }
-    //assert(Test::Test::TestTaken(this));
-    //assert(Test::Test::TestMoveUndo(this));
   }
 
   bool MainPosition::JumpsOnly(Moves& moves) const noexcept
@@ -101,50 +116,61 @@ namespace BoardGamesCore
       const Fields& take = s->GetTakes();
       for (auto& t : take)
       {
-        assert(t.GetPiece() == GetPiece(t.GetLocation()));                // verify that the piece we expect is really there
+        const Piece* pt = t.GetPiece();
+        if (pt->IsBlank()) continue;                                      // ignore blank fields - nothing was taken
+        assert(pt != &Piece::NoTile);                                     // cannot be NoTile, as this means you moved out-of-bounds
         taken.push_back(t.GetPiece());                                    // collect potential pieces taken (target tile or jumped over)
         SetPiece(t.GetLocation(), &Piece::NoPiece);                       // remove the taken piece from the board
       }
     }
 
-    SetPiece(m->GetFr().GetLocation(), &Piece::NoPiece);                   // empty the start tile
-    SetPiece(m->GetTo().GetLocation(), m->GetTo().GetPiece());              // place the piece at the target field
+    SetPiece(m->GetFr().GetLocation(), &Piece::NoPiece);                  // empty the start tile
+    SetPiece(m->GetTo().GetLocation(), m->GetTo().GetPiece());            // place the piece at the target field
 
     NextPlayer();                                                         // after the move, it's the next player's turn
     return taken;                                                         // return the collected taken pieces
   }
 
+
+  void MainPosition::Execute(const Move& m) noexcept
+  {
+    movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
+    movelistB.clear();                                                    // after the move is executed, the movelists will be outdated
+    for (const auto& aa : m.GetActions()) aa->Execute(this);                           // execute all Actions
+    NextPlayer();                                                         // after the move, it's the next player's turn
+  }
+
   void MainPosition::Undo(const MoveP m)
   {
     const Steps& steps = m->GetSteps();
-    SetPiece(m->GetTo().GetLocation(), &Piece::NoPiece);                   // empty the target field
-    for (auto& s : steps)                                                  // for all steps
+    SetPiece(m->GetTo().GetLocation(), &Piece::NoPiece);                  // empty the target field
+    for (auto& s : steps)                                                 // for all steps
     {
       const Fields& takes = s->GetTakes();
-      for (auto& t : takes) SetPiece(t.GetLocation(), t.GetPiece());       // Put the taken piece(s) back on the board
+      for (auto& t : takes) SetPiece(t.GetLocation(), t.GetPiece());      // Put the taken piece(s) back on the board
     }
-    SetPiece(m->GetFr().GetLocation(), m->GetFr().GetPiece());              // put the piece back on the starting field
+    SetPiece(m->GetFr().GetLocation(), m->GetFr().GetPiece());            // put the piece back on the starting field
     PreviousPlayer();                                                     // after the undo, it's the previous player's turn
   }
 
 
-  void TakenPosition::Push(unsigned int player, const std::vector<const Piece*>& p) noexcept
-  {
-    for (auto& pp : p)
-    {
-      if (pp == nullptr) continue;
-      if (pp->IsBlank()) continue;
-      for (Coordinate i = 0; ; i++)
-      {
-        assert(i < sizeX);
-        const Location l{ i, player };
-        if (GetPiece(l) == &Piece::NoTile)
-        {
-          SetPiece(l, pp);
-          break;
-        }
-      }
-    }
-  }
+  //void TakenPosition::Push(unsigned int player, const std::vector<const Piece*>& p) noexcept
+  //{
+  //  for (auto& pp : p)
+  //  {
+  //    if (pp == nullptr) continue;
+  //    if (pp->IsBlank()) continue;
+  //    for (Coordinate i = 0; ; i++)
+  //    {
+  //      assert(i < sizeX);
+  //      const Location l{ BoardPart::Taken, i, static_cast<unsigned char>(player) };
+  //      if (GetPiece(l) == &Piece::NoTile)
+  //      {
+  //        SetPiece(l, pp);
+  //        break;
+  //      }
+  //    }
+  //  }
+  //}
 
 }

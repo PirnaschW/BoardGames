@@ -15,6 +15,7 @@ namespace BoardGamesCore
     virtual inline ~Piece(void) noexcept {}
 
     constexpr inline bool operator ==(const Piece& p) const noexcept { return p.IsKind(*kind) && p.IsColor(color); }
+    constexpr inline bool operator !=(const Piece& p) const noexcept { return !(*this == p); }
     constexpr inline bool IsBlank(void) const noexcept { return color == &Color::NoColor && kind == &noKind::NoKind; }
     inline size_t GetHash(void) const noexcept { return kind->GetHash() + color->GetHash(); }
     inline void CollectMoves(const MainPosition& p, const Location l, Moves& m) const { kind->CollectMoves(p, l, m); }
@@ -63,6 +64,7 @@ namespace BoardGamesCore
     constexpr inline PieceMap(const PieceMap& p) noexcept : used{ p.used }, map{ p.map } {}
     constexpr inline PieceIndex GetIndex(const Piece* p) const { for (PieceIndex z = 0; z < used; z++) if (map[z] == p) return z; throw; }
     constexpr inline void Add(const Piece* p) noexcept { map[used++] = p; }
+    constexpr inline PieceIndex GetCount(void) const noexcept { return used; }
     constexpr inline const Piece* GetPiece(PieceIndex i) const noexcept { return map[i]; }
 
   private:

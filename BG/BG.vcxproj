@@ -290,7 +290,7 @@
     <ClCompile Include="BGView.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="Core\BGChessPieces.cpp" />
-    <ClCompile Include="Core\BGCore.cpp" />
+    <ClCompile Include="Core\BGCoreGame.cpp" />
     <ClCompile Include="Core\BGCoreAI.cpp" />
     <ClCompile Include="Core\BGCoreColor.cpp" />
     <ClCompile Include="Core\BGCoreKind.cpp" />
@@ -300,6 +300,7 @@
     <ClCompile Include="Core\BGCorePiece.cpp" />
     <ClCompile Include="Core\BGCorePlayer.cpp" />
     <ClCompile Include="Core\BGCorePosition.cpp" />
+    <ClCompile Include="Core\BGCoreStep.cpp" />
     <ClCompile Include="Game Cam\CamGame.cpp" />
     <ClCompile Include="Game Checkers\CheckersGame.cpp" />
     <ClCompile Include="Game Hasami\HasamiGame.cpp" />

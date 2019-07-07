@@ -82,24 +82,24 @@ namespace LoA
     LoALayout(Coordinate x, Coordinate y) noexcept;
   };
 
-  class LoATakenLayout : public TakenLayout
-  {
-  public:
-    LoATakenLayout(Coordinate x, Coordinate y) noexcept;
-  };
+  //class LoATakenLayout : public TakenLayout
+  //{
+  //public:
+  //  LoATakenLayout(Coordinate x, Coordinate y) noexcept;
+  //};
 
-  class LoAStockLayout : public StockLayout
-  {
-  public:
-    LoAStockLayout(Coordinate x, Coordinate y) noexcept;
-  };
+  //class LoAStockLayout : public StockLayout
+  //{
+  //public:
+  //  LoAStockLayout(Coordinate x, Coordinate y) noexcept;
+  //};
 
 
   class LoAGame : public Game
   {
   private:
     LoAGame(void) = delete;
-    LoAGame(const PieceMapP& m, LoAPosition* p, TakenPosition* t, StockPosition* s, LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept;
+    LoAGame(const PieceMapP& m, LoAPosition* p, LoALayout* l) noexcept;
 
   public:
     LoAGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;

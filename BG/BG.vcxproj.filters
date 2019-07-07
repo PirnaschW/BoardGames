@@ -338,9 +338,6 @@
     <ClCompile Include="Game Shogi\ShogiGame.cpp">
       <Filter>Game Shogi\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\BGCore.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Core\BGCoreLayout.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
@@ -393,6 +390,12 @@
       <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\BGCorePosition.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\BGCoreGame.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\BGCoreStep.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,17 +12,26 @@ namespace TicTacToe
   {
     assert(movelistW.empty());
     assert(movelistB.empty());
+
+    Actions aw0{};
+    Actions ab0{};
+    aw0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 0U, 0U }, &TicTacToePiece::TicTacToePieceW));
+    ab0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 1U, 0U }, &TicTacToePiece::TicTacToePieceB));
     for (Coordinate i = 0; i < sizeX; i++)
     {
       for (Coordinate j = 0; j < sizeY; j++)
       {
-        const Location l{ i,j };
+        const Location l{ BoardPart::Main, i, j };
         const Piece* p = GetPiece(l);
         assert(p != nullptr);
         if (p->IsBlank())
         {
-          movelistW.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ l,&Piece::NoPiece }, Field{ l,&TicTacToePiece::TicTacToePieceW }, SimpleStep::StepType::Place)));
-          movelistB.push_back(std::make_shared<SimpleMove>(std::make_shared<SimpleStep>(Field{ l,&Piece::NoPiece }, Field{ l,&TicTacToePiece::TicTacToePieceB }, SimpleStep::StepType::Place)));
+          Actions aw{ aw0 };
+          Actions ab{ ab0 };
+          aw.push_back(std::make_shared<ActionPlace>(l, &TicTacToePiece::TicTacToePieceW));
+          ab.push_back(std::make_shared<ActionPlace>(l, &TicTacToePiece::TicTacToePieceB));
+          movelistW.push_back(std::make_shared<Move>(aw));
+          movelistB.push_back(std::make_shared<Move>(ab));
         }
       }
     }
@@ -34,7 +43,7 @@ namespace TicTacToe
   //  assert(fr == to);                   // this game allows only placements
   //  const Piece* p = GetPiece(fr);
   //  if (!p->IsBlank()) return false;    // field must be empty
-  //  m.push_back(SimpleStep{ Field{ fr,&Piece::NoPiece }, Field{ fr,&TicTacToePiece::TicTacToePieceW },SimpleStep::StepType::Place });
+  //  m.push_back(StepSimple{ Field{ fr,&Piece::NoPiece }, Field{ fr,&TicTacToePiece::TicTacToePieceW },StepSimple::StepType::Place });
   //  return false;
   //};
 
@@ -48,7 +57,7 @@ namespace TicTacToe
     {
       for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
       {
-        const Location l{ i,j };
+        const Location l{ BoardPart::Main,i,j };
         const Piece* p = GetPiece(l);
         char c = '-';
         if (p->IsColor(&Color::White)) c = 'W';
@@ -67,7 +76,7 @@ namespace TicTacToe
       {
         for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
         {
-          const Location l{ i,j };
+          const Location l{ BoardPart::Main,i,j };
           const Piece* p = GetPiece(l);
           if (p->IsColor(&Color::NoColor)) continue;  // nothing here, so no chain can start
           const bool w = p->IsColor(&Color::White);
@@ -78,7 +87,7 @@ namespace TicTacToe
             const Piece* pp{ GetPiece(l + d * -1) };
             if (pp != nullptr && pp->IsColor(p->GetColor())) continue;    // if same color is that direction, we counted it already, so move on
             if (pp != nullptr && pp->IsBlank()) (w ? v1 : v2) += 1;       // free field, give an extra point - much better than opponent's piece
-            Location ll{ i,j };
+            Location ll{ BoardPart::Main,i,j };
             unsigned int z{ 1 };
             while ((pp = GetPiece(ll += d)) != nullptr)
             {
@@ -94,7 +103,7 @@ namespace TicTacToe
               value = w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
               return;
             }
-            (w ? v1 : v2) += GetValue(z);
+            (w ? v1 : v2) += GetChainValue(z);
           }
         }
       }
@@ -115,15 +124,13 @@ namespace TicTacToe
   }
 
 
-  TicTacToeGame::TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TicTacToeGame(m,
-    new TicTacToePosition(m, x, y), new TakenPosition(m, x, 2), new StockPosition(m, 3, 1),
-    new TicTacToeLayout(x, y), new TicTacToeTakenLayout(x, y), new TicTacToeStockLayout(x, y)) {}
+  TicTacToeGame::TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TicTacToeGame(m, new TicTacToePosition(m, x, y),
+    new TicTacToeLayout(x, y)) {}
 
-  TicTacToeGame::TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TakenPosition* t, StockPosition* s,
-    TicTacToeLayout* l, TicTacToeTakenLayout* tl, TicTacToeStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl,true }
+  TicTacToeGame::TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TicTacToeLayout* l) noexcept : Game{ m,p,l,true }
   {
-    AddToStock(Location(0U, 0U), &TicTacToePiece::TicTacToePieceW);
-    AddToStock(Location(1U, 0U), &TicTacToePiece::TicTacToePieceB);
+    for (PieceIndex i=0; i<m->GetCount(); i++)
+      p->SetPiece(Location(BoardPart::Stock, i%2U, i/2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
   }
 
   const VariantList& TicTacToeGame::GetVariants(void) noexcept

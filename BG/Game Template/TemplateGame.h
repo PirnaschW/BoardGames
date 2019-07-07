@@ -57,26 +57,11 @@ namespace Template
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
   };
 
-  class TemplateTakenLayout : public TakenLayout
-  {
-  public:
-    inline TemplateTakenLayout(Coordinate x, Coordinate y) noexcept :
-      TakenLayout(Dimension(x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-  };
-
-  class TemplateStockLayout : public StockLayout
-  {
-  public:
-    inline TemplateStockLayout(Coordinate x, Coordinate y) noexcept :
-      StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-  };
-
-
   class TemplateGame : public Game
   {
   private:
     TemplateGame(void) = delete;
-    TemplateGame(const PieceMapP& m, TemplatePosition* p, TakenPosition* t, StockPosition* s, TemplateLayout* l, TemplateTakenLayout* tl, TemplateStockLayout* sl) noexcept;
+    TemplateGame(const PieceMapP& m, TemplatePosition* p, TemplateLayout* l) noexcept;
 
   public:
     TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;

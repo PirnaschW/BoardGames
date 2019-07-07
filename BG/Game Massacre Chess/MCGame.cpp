@@ -34,7 +34,7 @@ namespace MassacreChess
     if (pt->GetColor() == pf->GetColor()) return false;                   // own piece; don't keep trying this direction
 
     // valid move, save into collection
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared < SimpleStep>( Field{fr,pf},Field{to,pf},SimpleStep::StepType::Take/*,Fields{Field{to,pt}}*/ )));
+    m.push_back(std::make_shared<SimpleMove>(std::make_shared < StepSimple>( Field{fr,pf},Field{to,pf},StepSimple::StepType::Take/*,Fields{Field{to,pt}}*/ )));
     return false;                                                         // don't keep trying this direction
   };
 
@@ -44,7 +44,7 @@ namespace MassacreChess
     for (Coordinate i = 0; i < sizeX; i++)
       for (Coordinate j = 0; j < sizeY; j++)
       {
-        const Location l{ i,j };
+        const Location l{ BoardPart::Main,  i,j };
         if (GetPiece(l) == &Piece::NoPiece) ll.push_back(l);
       }
     if (ll.empty()) return false;
@@ -54,21 +54,21 @@ namespace MassacreChess
   }
 
 
-  MCGame::MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : MCGame(m,
-    new MCPosition(m, x, y), new TakenPosition(m, x*y / 2, 2), new StockPosition(m, 5, 2),
-    new MCLayout(x, y), new MCTakenLayout(x, y), new MCStockLayout(x, y)) {}
+  //MCGame::MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : MCGame(m,
+  //  new MCPosition(m, x, y), new TakenPosition(m, x* y / 2, 2), new StockPosition(m, 5, 2),
+  //  new MCLayout(x, y), new MCTakenLayout(x, y), new MCStockLayout(x, y)) {}
+  MCGame::MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : MCGame(m, new MCPosition(m, x, y), new MCLayout(x, y)) {}
 
-  MCGame::MCGame(const PieceMapP& m, MCPosition* p, TakenPosition* t, StockPosition* s,
-    MCLayout* l, MCTakenLayout* tl, MCStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
+  MCGame::MCGame(const PieceMapP& m, MCPosition* p, MCLayout* l) noexcept : Game{ m,p,l }
   {
-    AddToStock(Location(0U, 0U), &ChessPiece::WQ);
-    AddToStock(Location(1U, 0U), &ChessPiece::WR);
-    AddToStock(Location(2U, 0U), &ChessPiece::WB);
-    AddToStock(Location(3U, 0U), &ChessPiece::WN);
-    AddToStock(Location(0U, 1U), &ChessPiece::BQ);
-    AddToStock(Location(1U, 1U), &ChessPiece::BR);
-    AddToStock(Location(2U, 1U), &ChessPiece::BB);
-    AddToStock(Location(3U, 1U), &ChessPiece::BN);
+    AddToStock(Location(BoardPart::Main, 0U, 0U), &ChessPiece::WQ);
+    AddToStock(Location(BoardPart::Main, 1U, 0U), &ChessPiece::WR);
+    AddToStock(Location(BoardPart::Main, 2U, 0U), &ChessPiece::WB);
+    AddToStock(Location(BoardPart::Main, 3U, 0U), &ChessPiece::WN);
+    AddToStock(Location(BoardPart::Main, 0U, 1U), &ChessPiece::BQ);
+    AddToStock(Location(BoardPart::Main, 1U, 1U), &ChessPiece::BR);
+    AddToStock(Location(BoardPart::Main, 2U, 1U), &ChessPiece::BB);
+    AddToStock(Location(BoardPart::Main, 3U, 1U), &ChessPiece::BN);
   }
 
   const VariantList& MCGame::GetVariants(void) noexcept

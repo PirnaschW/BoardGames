@@ -12,12 +12,11 @@ namespace BoardGamesCore
    // Test::Test::TestPosition(p);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 5.0;  // run for 5 seconds
+    double limit = 5.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == &Color::White;
 
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
     {
-//      assert(Test::Test::TestPList(plist));
       try
       {
         PositionValue value = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
@@ -44,7 +43,8 @@ namespace BoardGamesCore
         throw;
       }
 
-      //if (plist->size() > 200000) break;
+      if (plist->size() > 150000)
+        break;
 
       auto t_now = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double> elapsed = t_now - t_start;
@@ -52,12 +52,12 @@ namespace BoardGamesCore
       plist->callback();
     }
 
-    Execute(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White));
+    Execute(*(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White)));
     return true;
   }
 
 
-  PositionValue MainPosition::Evaluate(AIContext* plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
+  PositionValue MainPosition::Evaluate(AIContextP& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
   {
     if (plies == 0) return GetValue(w);
     //if (plist->size() > 200000) return GetValue(w);
@@ -114,7 +114,7 @@ namespace BoardGamesCore
       {
         for (Coordinate i = 0; i < sizeX; i++)                          // loop through all locations
         {                                                                 
-          const Location l{ i,j };                                        
+          const Location l{ BoardPart::Main, i,j };
           const Piece* p = GetPiece(l);                                   
           if (p == nullptr) continue;                                     // field does not exist
           if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;  // nothing here
@@ -126,10 +126,10 @@ namespace BoardGamesCore
   }
 
 
-  MainPosition* MainPosition::GetPosition(AIContext* plist, MoveP m) const // execute move, maintain in PList
+  MainPosition* MainPosition::GetPosition(AIContextP& plist, MoveP m) const // execute move, maintain in PList
   {
     MainPosition* pos(Clone());                                           // create a copy of the board
-    if (m != nullptr) pos->Execute(m);                                    // execute move if provided
+    if (m != nullptr) pos->Execute(*m);                                    // execute move if provided
 
     auto pl0 = plist->find(pos);                                           // check if we evaluated this position before
     if (pl0 != plist->end())

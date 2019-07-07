@@ -34,27 +34,11 @@ namespace Test
     ~TestLayout() {}
   };
 
-  class TestTakenLayout : public TakenLayout
-  {
-  public:
-    TestTakenLayout(Coordinate x, Coordinate y) :
-      TakenLayout(Dimension(x*y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-    ~TestTakenLayout() {}
-  };
-
-  class TestStockLayout : public StockLayout
-  {
-  public:
-    TestStockLayout(Coordinate /*x*/, Coordinate y) :
-      StockLayout(Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY)) {}
-    ~TestStockLayout() {}
-  };
-
 
   class TestGame : public Game
   {
   private:
-    TestGame(const PieceMapP& m, TestPosition* p, TakenPosition* t, StockPosition* s, TestLayout* l, TestTakenLayout* tl, TestStockLayout* sl);
+    TestGame(const PieceMapP& m, TestPosition* p, TestLayout* l);
 
   public:
     TestGame(const PieceMapP& m, Coordinate x, Coordinate y);

@@ -34,6 +34,7 @@ namespace Shogi
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 4000; }
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     virtual bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
+    virtual bool CanMove(const MainPosition* pos, const Location& l) const noexcept override;
 
   public:
     static const Knight TheKnight;
@@ -73,6 +74,7 @@ namespace Shogi
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 3000; }
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     virtual bool CanDrop(const MainPosition* pos, const Location& l) const noexcept override;
+    virtual bool CanMove(const MainPosition* pos, const Location& l) const noexcept override;
 
   public:
     static const Lance TheLance;
@@ -200,7 +202,8 @@ namespace Shogi
   public:
     virtual inline bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
     virtual inline const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
-    inline bool CanDrop(const MainPosition* pos, const Location& l) const noexcept { return kind->CanDrop(pos,l); };
+    inline bool CanDrop(const MainPosition* pos, const Location& l) const noexcept { return kind->CanDrop(pos, l); };
+    inline bool CanMove(const MainPosition* pos, const Location& l) const noexcept { return kind->CanMove(pos, l); };
 
   private:
     const ShogiPiece* up;    // what this piece promotes up to
@@ -253,20 +256,20 @@ namespace Shogi
 
   // extensions to base class
   public:
-    inline void SetTPos(TakenPosition* t) noexcept { tpos = t; }
+//    inline void SetTPos(TakenPosition* t) noexcept { tpos = t; }
   private:
     inline bool CanPromote(const Location &l) const noexcept;
 
   private:
-    TakenPosition* tpos{ nullptr };
+ //   TakenPosition* tpos{ nullptr };
   };
 
 
-  class ShogiTakenPosition : public TakenPosition
-  {
-  public:
-    inline ShogiTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, x == 9 ? 27 : 15, 2) {}
-  };
+  //class ShogiTakenPosition : public TakenPosition
+  //{
+  //public:
+  //  inline ShogiTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, x == 9 ? 27 : 15, 2) {}
+  //};
 
 
   class ShogiLayout : public MainLayout
@@ -276,26 +279,26 @@ namespace Shogi
       MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
   };
 
-  class ShogiTakenLayout : public TakenLayout
-  {
-  public:
-    inline ShogiTakenLayout(Coordinate x, Coordinate /*y*/) noexcept :
-      TakenLayout(Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4)) { }
-  };
+  //class ShogiTakenLayout : public TakenLayout
+  //{
+  //public:
+  //  inline ShogiTakenLayout(Coordinate x, Coordinate /*y*/) noexcept :
+  //    TakenLayout(Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4)) { }
+  //};
 
-  class ShogiStockLayout : public StockLayout
-  {
-  public:
-    inline ShogiStockLayout(Coordinate x, Coordinate y) noexcept:
-      StockLayout(Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY)) {}
-  };
+  //class ShogiStockLayout : public StockLayout
+  //{
+  //public:
+  //  inline ShogiStockLayout(Coordinate x, Coordinate y) noexcept:
+  //    StockLayout(Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY)) {}
+  //};
 
 
   class ShogiGame : public Game
   {
   protected:
     ShogiGame(void) = delete;
-    ShogiGame(const PieceMapP& m, ShogiPosition* p, TakenPosition* t, StockPosition* s, ShogiLayout* l, ShogiTakenLayout* tl, ShogiStockLayout* sl) noexcept;
+    ShogiGame(const PieceMapP& m, ShogiPosition* p, ShogiLayout* l) noexcept;
   public:
     ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     inline constexpr static bool IsFull(Coordinate x, Coordinate /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
