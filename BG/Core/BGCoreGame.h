@@ -17,11 +17,39 @@ namespace BoardGamesCore
     size_t freemem{};
   };
 
-  class Layout;       // forward declaration, needed inside class Game
-  class TakenLayout;  // forward declaration, needed inside class Game
-  class StockLayout;  // forward declaration, needed inside class Game
+  class _Mode
+  {
+  public:
+    enum class __Mode : unsigned char {
+      SelectFr = 0x01,
+      SelectTo = 0x02,
+      Editing = 0x04,
+      Dragging = 0x08,
+      ShowStock = 0x10,
+      ShowTaken = 0x20,
+      GameOver = 0x80,
+    };
+    constexpr inline _Mode(__Mode a) noexcept : mode(a) {};               // allow to create an object from the enum
+    constexpr inline _Mode& Set(_Mode a) noexcept;                        // set a bit
+    constexpr inline _Mode& Del(_Mode a) noexcept;                        // remove a bit
+    constexpr inline bool IsSet(_Mode::__Mode a) const noexcept;          // test for a bit
+  public:
+    __Mode mode;
+  };
+  constexpr inline _Mode::__Mode operator|(_Mode::__Mode a, _Mode::__Mode b) noexcept { return static_cast<_Mode::__Mode>(static_cast<typename std::underlying_type<_Mode::__Mode>::type>(a) | static_cast<typename std::underlying_type<_Mode::__Mode>::type>(b)); }
+  constexpr inline _Mode::__Mode operator&(_Mode::__Mode a, _Mode::__Mode b) noexcept { return static_cast<_Mode::__Mode>(static_cast<typename std::underlying_type<_Mode::__Mode>::type>(a) & static_cast<typename std::underlying_type<_Mode::__Mode>::type>(b)); }
+  constexpr inline _Mode::__Mode operator~(_Mode::__Mode a) noexcept { return static_cast<_Mode::__Mode>(~static_cast<typename std::underlying_type<_Mode::__Mode>::type>(a)); }
+  constexpr inline bool operator!(_Mode::__Mode a) noexcept { return !(static_cast<typename std::underlying_type<_Mode::__Mode>::type>(a)); }
+
+  constexpr inline _Mode& _Mode::Set(_Mode a) noexcept { mode = mode | a.mode;  return *this; }
+  constexpr inline _Mode& _Mode::Del(_Mode a) noexcept { mode = mode & ~a.mode; return *this; }
+  constexpr inline bool _Mode::IsSet(_Mode::__Mode a) const noexcept { return !!(mode & a); }
+  using Mode = _Mode::__Mode;
+
+  class MainLayout;   // forward declaration, needed inside class Game
   class Game abstract : public IUI
   {
+ 
   private:
     // don't allow trivial construction, copying, and moving
     Game(void) = delete;                    // trivial construction
@@ -30,17 +58,15 @@ namespace BoardGamesCore
     Game(Game&&) = delete;                  // move constructor
     Game& operator=(Game&&) = delete;       // move assignment
   public:
-    Game(const PieceMapP& m, MainPosition* p, Layout* l, bool pl = false) noexcept;
+    Game(const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept;
     virtual ~Game(void) noexcept;
 
     virtual inline void Serialize(CArchive* ar) { pos->Serialize(ar); }
     virtual void ReadFromWWW(const std::string& gameno);
     virtual inline const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
     virtual inline void AddToStock(const Location& l, const Piece* p) noexcept { pos->SetPiece(l, p); }
-    virtual inline void ShowStock(bool show) noexcept { showStock = show; }
-    virtual inline void AIAction(void) { while (IsAlive() && CurrentPlayer()->IsAI()) SetAlive(AIMove()); }  // execute computer moves while it is its turn
-    virtual inline bool IsAlive(void) const noexcept { return !gameover; }
-    virtual inline void SetAlive(bool a) noexcept { gameover = !a; }
+    virtual inline void AIAction(void) { while (!(_mode.IsSet(Mode::GameOver)) && CurrentPlayer()->IsAI()) if (!AIMove()) _mode = Mode::GameOver; }  // execute computer moves while it is its turn
+
     virtual inline void AddPlayer(Player* p) noexcept { players.push_back(p); }
     virtual inline void SetCurrentPlayer(unsigned int p) noexcept { current = p; }
     virtual inline Player* CurrentPlayer(void) const noexcept { return players[current]; }
@@ -60,31 +86,22 @@ namespace BoardGamesCore
     virtual void DragStart(const CPoint&) override;
     virtual void DragEnd(const CPoint&) override;
     virtual void Select(const CPoint& point) override;
-    virtual inline void Unselect(void) override { moves.clear(); }
+    virtual inline void Unselect(void) override { moves.clear(); _mode.Del(Mode::SelectTo); _mode.Set(Mode::SelectFr); }
     virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist->callback = cb; }
 
   protected:
     const PieceMapP& pMap;                       // map of all pieces used in the game
     MainPosition* pos;                           // logical position on the main playing board
-//    TakenPosition* tpos;                         // taken pieces
-//    StockPosition* spos;                         // piece list for editing
-
-    Layout* lay;                                 // physical layout of the main playing board
-//    TakenLayout* tlay;                           // physical layout of the taken pieces
-//    StockLayout* slay;                           // physical layout of the piece list
-
-    bool placing;                                // game allows to place new Piece
+    MainLayout* lay;                             // physical layout of the main playing board
 
     AIContextP plist{};                          // collected positions with their evaluations
-    bool showStock{ false };                     // flag to show/hide the stock
-    bool moveTaken{ false };                     // flag to allow moves from taken pieces
 
   private:
-    bool editing{ false };                       // edit mode allows to change the main playing board
+    _Mode _mode{ Mode::SelectFr };               // current game mode
+    Moves moves{};                               // will contain all allowed moves once a start piece is selected
+
     std::vector<Player*> players{};              // list of players
     unsigned int current{ 0 };                   // current player
-    Moves moves{};                               // will contain all allowed moves once a start piece is selected
-    bool gameover{ false };                      // once game is over, moves are disallowed
   };
 
   static_assert(std::is_abstract<Game>::value, "is abstract");

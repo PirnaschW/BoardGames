@@ -25,7 +25,7 @@ namespace BoardGamesCore
         if (value == PositionValue::PValueType::Lost)
         {
           ::AfxMessageBox(L"Computer resigns - Player wins!");
-          SetAlive(false);
+          _mode.Set(Mode::GameOver);
           return false;
         }
         if (value == PositionValue::PValueType::Won) {

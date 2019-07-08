@@ -16,7 +16,6 @@ namespace BoardGamesCore
     virtual inline void Unselect(void) = 0;
     virtual void SetUpdateCallBack(std::function<void(void)> cb) = 0;
   protected:
-    bool dragging{ false };         // currently dragging a piece
     const Piece* dragPiece{};       // currently dragged piece
     CPoint dragPoint{};             // point the piece is dragged to
   };

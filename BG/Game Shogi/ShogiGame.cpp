@@ -340,38 +340,6 @@ namespace Shogi
 
   ShogiGame::ShogiGame(const PieceMapP& m, ShogiPosition* p, ShogiLayout* l) noexcept : Game{ m,p,l }
   {
-//    p->SetTPos(t);  // stores the Taken position inside the board position, so the move generator can access it for drops
-    //AddToStock(Location(BoardPart::Main, 0U, 0U), &ShogiPiece::ShogiSKW);
-    //AddToStock(Location(BoardPart::Main, 1U, 0U), &ShogiPiece::ShogiSGW);
-    //AddToStock(Location(BoardPart::Main, 2U, 0U), &ShogiPiece::ShogiSSW);
-    //AddToStock(Location(BoardPart::Main, 3U, 0U), &ShogiPiece::ShogiSBW);
-    //AddToStock(Location(BoardPart::Main, 4U, 0U), &ShogiPiece::ShogiSRW);
-    //AddToStock(Location(BoardPart::Main, 5U, 0U), &ShogiPiece::ShogiSNW);
-    //AddToStock(Location(BoardPart::Main, 6U, 0U), &ShogiPiece::ShogiSLW);
-    //AddToStock(Location(BoardPart::Main, 7U, 0U), &ShogiPiece::ShogiSPW);
-    //                    
-    //AddToStock(Location(BoardPart::Main, 8U, 0U), &ShogiPiece::ShogiPSW);
-    //AddToStock(Location(BoardPart::Main, 9U, 0U), &ShogiPiece::ShogiPBW);
-    //AddToStock(Location(BoardPart::Main, 10U, 0U), &ShogiPiece::ShogiPRW);
-    //AddToStock(Location(BoardPart::Main, 11U, 0U), &ShogiPiece::ShogiPNW);
-    //AddToStock(Location(BoardPart::Main, 12U, 0U), &ShogiPiece::ShogiPLW);
-    //AddToStock(Location(BoardPart::Main, 13U, 0U), &ShogiPiece::ShogiPPW);
-
-    //AddToStock(Location(BoardPart::Main, 0U, 1U), &ShogiPiece::ShogiSKW);
-    //AddToStock(Location(BoardPart::Main, 1U, 1U), &ShogiPiece::ShogiSGW);
-    //AddToStock(Location(BoardPart::Main, 2U, 1U), &ShogiPiece::ShogiSSW);
-    //AddToStock(Location(BoardPart::Main, 3U, 1U), &ShogiPiece::ShogiSBW);
-    //AddToStock(Location(BoardPart::Main, 4U, 1U), &ShogiPiece::ShogiSRW);
-    //AddToStock(Location(BoardPart::Main, 5U, 1U), &ShogiPiece::ShogiSNW);
-    //AddToStock(Location(BoardPart::Main, 6U, 1U), &ShogiPiece::ShogiSLW);
-    //AddToStock(Location(BoardPart::Main, 7U, 1U), &ShogiPiece::ShogiSPW);
-    //                         
-    //AddToStock(Location(BoardPart::Main, 8U, 1U), &ShogiPiece::ShogiPSW);
-    //AddToStock(Location(BoardPart::Main, 9U, 1U), &ShogiPiece::ShogiPBW);
-    //AddToStock(Location(BoardPart::Main, 10U, 1U), &ShogiPiece::ShogiPRW);
-    //AddToStock(Location(BoardPart::Main, 11U, 1U), &ShogiPiece::ShogiPNW);
-    //AddToStock(Location(BoardPart::Main, 12U, 1U), &ShogiPiece::ShogiPLW);
-    //AddToStock(Location(BoardPart::Main, 13U, 1U), &ShogiPiece::ShogiPPW);
     for (PieceIndex i = 0; i < m->GetCount(); i++)
       p->SetPiece(Location(BoardPart::Stock, i / 2U, i % 2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
   }

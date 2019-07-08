@@ -419,7 +419,6 @@ namespace Logik
       if (BX > 5) AddToStock(Location(BoardPart::Main, 7U, 0U), &LogikPiece::LPiece6);
       if (BX > 6) AddToStock(Location(BoardPart::Main, 8U, 0U), &LogikPiece::LPiece7);
       if (BX > 7) AddToStock(Location(BoardPart::Main, 9U, 0U), &LogikPiece::LPiece8);
-      ShowStock(true);
     }
   public:
     //LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(nullptr, BX + 3, 1),

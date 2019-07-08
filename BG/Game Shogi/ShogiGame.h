@@ -256,20 +256,11 @@ namespace Shogi
 
   // extensions to base class
   public:
-//    inline void SetTPos(TakenPosition* t) noexcept { tpos = t; }
   private:
     inline bool CanPromote(const Location &l) const noexcept;
 
   private:
- //   TakenPosition* tpos{ nullptr };
   };
-
-
-  //class ShogiTakenPosition : public TakenPosition
-  //{
-  //public:
-  //  inline ShogiTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, x == 9 ? 27 : 15, 2) {}
-  //};
 
 
   class ShogiLayout : public MainLayout

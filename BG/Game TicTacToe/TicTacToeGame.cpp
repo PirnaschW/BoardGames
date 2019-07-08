@@ -127,10 +127,10 @@ namespace TicTacToe
   TicTacToeGame::TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TicTacToeGame(m, new TicTacToePosition(m, x, y),
     new TicTacToeLayout(x, y)) {}
 
-  TicTacToeGame::TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TicTacToeLayout* l) noexcept : Game{ m,p,l,true }
+  TicTacToeGame::TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TicTacToeLayout* l) noexcept : Game{ m,p,l }
   {
-    for (PieceIndex i=0; i<m->GetCount(); i++)
-      p->SetPiece(Location(BoardPart::Stock, i%2U, i/2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
+    for (PieceIndex i = 0; i < m->GetCount(); i++)
+      p->SetPiece(Location(BoardPart::Stock, i % 2U, i / 2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
   }
 
   const VariantList& TicTacToeGame::GetVariants(void) noexcept

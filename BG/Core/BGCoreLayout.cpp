@@ -4,7 +4,7 @@ namespace BoardGamesCore
 {
 
 
-  Layout::Layout(const Dimension& d, LayoutType lt) : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
+  Layout::Layout(const Dimension& d, LayoutType lt) noexcept : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
   {
     unsigned int z = 0;
     for (Coordinate i = 0; i < dim.xCount; i++)
@@ -28,7 +28,7 @@ namespace BoardGamesCore
       }
   }
 
-  void Layout::Draw(CDC* pDC, const Position* pos) const
+  void Layout::Draw(CDC* pDC, const Position* pos, _Mode mode) const
   {
     for (auto& t : tiles)
       t->Draw(pDC, pos->GetPiece(t->GetLocation()));
@@ -49,7 +49,7 @@ namespace BoardGamesCore
       }
   }
 
-  bool Layout::GetLocation(const CPoint& p, Location& l) const
+  bool Layout::GetLocation(const CPoint& p, Location& l) const noexcept
   {
     for (auto& t : tiles)
       if (t->InRect(p)) {
@@ -59,7 +59,7 @@ namespace BoardGamesCore
     return false;
   }
 
-  void MainLayout::Draw(CDC* pDC, const Position* pos) const
+  void MainLayout::Draw(CDC* pDC, const Position* pos, _Mode mode) const
   {
     // frame around the board (needs to be drawn first)
     for (unsigned int z = 4; z > 0; z--)
@@ -67,37 +67,32 @@ namespace BoardGamesCore
       if (z != 2)
         pDC->Rectangle((int)(dim.lEdge - z), (int)(dim.tEdge - z), (int)(dim.lEdge + dim.xCount * dim.xDim + z), (int)(dim.tEdge + dim.yCount * dim.yDim + z));
     }
-    Layout::Draw(pDC, pos);
+    Layout::Draw(pDC, pos, mode);
+
+    if (mode.IsSet(Mode::Editing))
+    {
+      _stock.Draw(pDC, pos, mode);
+    }
+    _taken.Draw(pDC, pos, mode);
   }
 
 
   void Game::Draw(CDC* pDC) const
   {
-    lay->Draw(pDC, pos);
+    lay->Draw(pDC, pos, _mode);
+
     // markup selectable tiles
-    for (auto& m : moves)
+    
+    if (_mode.IsSet(Mode::SelectTo))
     {
-      const Actions a = m->GetActions();
-      if (!a.empty())
+      for (auto& m : moves)
       {
         lay->DrawSelected(pDC, m->GetFrL());
         lay->DrawSelected(pDC, m->GetToL());
       }
-      else
-      {
-        lay->DrawSelected(pDC, m->GetFr().GetLocation());
-        lay->DrawSelected(pDC, m->GetTo().GetLocation());
-      }
     }
 
-    if (showStock || editing)
-    {
-//      if (slay != nullptr) slay->Draw(pDC, &(pos->_stock));
-    }
-
-//    if (tlay != nullptr) tlay->Draw(pDC, &(pos->_taken));
-
-    if (dragging)
+    if (_mode.IsSet(Mode::Dragging))
     {
       const CRect r(dragPoint, SIZE{32,32});  // doesn't work for all games! - some have 18x20
       dragPiece->Draw(pDC, r, &TileColor::Small);
@@ -115,14 +110,15 @@ namespace BoardGamesCore
       s = "sizeof(MainPosition)"; pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(MainPosition));  pDC->TextOutW(700, h, s);
       s = "sizeof(vector<Move>)"; pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Moves));         pDC->TextOutW(700, h, s);
       s = "sizeof(Move)";         pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Move));          pDC->TextOutW(700, h, s);
-      s = "sizeof(StepPlace)";    pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepPlace));     pDC->TextOutW(700, h, s);
       s = "sizeof(Action)";       pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Action));        pDC->TextOutW(700, h, s);
       s = "sizeof(ActionTake)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionTake));    pDC->TextOutW(700, h, s);
-      s = "sizeof(ActionPLace)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionPlace));   pDC->TextOutW(700, h, s);
-      s = "sizeof(StepSimple)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepSimple));    pDC->TextOutW(700, h, s);
-      s = "sizeof(StepComplex)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepComplex));   pDC->TextOutW(700, h, s);
-      s = "sizeof(SimpleMove)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(SimpleMove));    pDC->TextOutW(700, h, s);
-      s = "sizeof(ComplexMove)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ComplexMove));   pDC->TextOutW(700, h, s);
+      s = "sizeof(ActionJump)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionJump));    pDC->TextOutW(700, h, s);
+      s = "sizeof(ActionPlace)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionPlace));   pDC->TextOutW(700, h, s);
+      //s = "sizeof(StepPlace)";    pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepPlace));     pDC->TextOutW(700, h, s);
+      //s = "sizeof(StepSimple)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepSimple));    pDC->TextOutW(700, h, s);
+      //s = "sizeof(StepComplex)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepComplex));   pDC->TextOutW(700, h, s);
+      //s = "sizeof(SimpleMove)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(SimpleMove));    pDC->TextOutW(700, h, s);
+      //s = "sizeof(ComplexMove)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ComplexMove));   pDC->TextOutW(700, h, s);
     }
   }
 
@@ -130,12 +126,12 @@ namespace BoardGamesCore
   {
     switch (pCmdUI->m_nID)
     {
-      case ID_EDIT_MOVE:   if (!IsAlive() || !CurrentPlayer()->IsAI()) pCmdUI->Enable(FALSE);       break;
-      case ID_EDIT_BOARD:  if (editing) pCmdUI->SetCheck();                                         break;
-      case ID_EDIT_PASTE:  if (!editing) pCmdUI->Enable(::IsClipboardFormatAvailable(CF_TEXT));     break;
-      case ID_LEVEL_PLUS:  pCmdUI->Enable(FALSE);                                                   break;
-      case ID_LEVEL_MINUS: pCmdUI->Enable(FALSE);                                                   break;
-      default:             pCmdUI->Enable(FALSE);                                                   break;
+      case ID_EDIT_MOVE:   if (_mode.IsSet(Mode::GameOver) || !CurrentPlayer()->IsAI()) pCmdUI->Enable(FALSE);     break;
+      case ID_EDIT_BOARD:  if (_mode.IsSet(Mode::Editing)) pCmdUI->SetCheck();                                     break;
+      case ID_EDIT_PASTE:  if (!_mode.IsSet(Mode::Editing)) pCmdUI->Enable(::IsClipboardFormatAvailable(CF_TEXT)); break;
+      case ID_LEVEL_PLUS:  pCmdUI->Enable(FALSE);                                                                  break;
+      case ID_LEVEL_MINUS: pCmdUI->Enable(FALSE);                                                                  break;
+      default:             pCmdUI->Enable(FALSE);                                                                  break;
     }
   }
 
@@ -145,14 +141,14 @@ namespace BoardGamesCore
     switch (command)
     {
       case ID_EDIT_MOVE:
-        if (IsAlive())
+        if (!_mode.IsSet(Mode::GameOver))
         {
           AIAction();  // execute computer move if it is its turn
           return true; // update all views
         }
         break;
       case ID_EDIT_BOARD:
-        editing ^= true;
+        _mode = _mode.IsSet(Mode::Editing) ? Mode::SelectFr : Mode::Editing;
         return true;
       case ID_EDIT_PASTE:
         pos->SetPosition(Piece::ListFromHTML(ClipBoard::GetClipboardText(),GetHTMLPieceMap()));
@@ -175,10 +171,10 @@ namespace BoardGamesCore
     switch (event)
     {
       case WM_LBUTTONDOWN:
-        if (editing) DragStart(p);
+        if (_mode.IsSet(Mode::Editing)) DragStart(p);
         break;
       case WM_LBUTTONUP:
-        if (dragging) DragEnd(p);
+        if (_mode.IsSet(Mode::Dragging)) DragEnd(p);
         else Select(p);
         break;
       case WM_LBUTTONDBLCLK: return false;    // that will skip updating all views
@@ -188,7 +184,7 @@ namespace BoardGamesCore
         break;
       case WM_RBUTTONDBLCLK: return false;    // that will skip updating all views
       case WM_MOUSEMOVE:
-        if (dragging) DragTo(p);
+        if (_mode.IsSet(Mode::Dragging)) DragTo(p);
         else return false;                    // that will skip updating all views
         break;                               
       default: return false;                  // that will skip updating all views
@@ -203,49 +199,47 @@ namespace BoardGamesCore
     //else return; // clicked somewhere outside
 
     dragPoint = point;
-    dragging = true;
+    _mode = Mode::Dragging;
   }
 
   void Game::DragEnd(const CPoint& point)
   {
     Location l{ BoardPart::Main, 0U,0U};
     if (lay->GetLocation(point, l)) pos->SetPiece(l, dragPiece); // dropped on a valid target
-    dragging = false;
+    _mode = Mode::Editing;
     dragPoint = {};
     dragPiece = nullptr;
   }
 
   void Game::Select(const CPoint& point)
   {
-    if (!IsAlive() || CurrentPlayer()->IsAI()) return;
+    if (_mode.IsSet(Mode::GameOver) || CurrentPlayer()->IsAI()) return;
 
     Location l{ BoardPart::Main, 0U,0U };
     if (!lay->GetLocation(point, l)) return;       // user clicked somewhere outside
 
-    if (moves.empty())  // new selection starts
+    if (_mode.IsSet(Mode::SelectFr))  // new selection starts
     {
+      assert(moves.empty());
       MainPosition* p{ pos->GetPosition(plist) };  // need to get ALL legal moves (this piece might not be allowed to move because another one has a mandatory jump)
       for (const auto& m : p->GetMoveList(pos->OnTurn() == &Color::White))   // filter moves of the selected piece into 'moves'
         if (m->GetFrL() == l) moves.push_back(m);
+      if (!moves.empty())
+      {
+        _mode.Del(Mode::SelectFr);
+        _mode.Set(Mode::SelectTo);
+      }
     }
     else  // starting point was already defined
     {
       for (const auto& m : moves)                  // check through allowed moves
       {
-        const Actions& a = m->GetActions();
-        if (a.size() > 0) // temporary check, to allow old style Moves
+        if (m->GetToL() == l)
         {
-          if (m->GetToL() == l)
-          {
-            Execute(*m);
-            moves.clear();
-            return;
-          }
-        }
-        else if (m->GetTo().GetLocation() == l)
-        {
-          Execute(m);
+          Execute(*m);
           moves.clear();
+          _mode.Del(Mode::SelectTo);
+          _mode.Set(Mode::SelectFr);
           return;
         }
       }
