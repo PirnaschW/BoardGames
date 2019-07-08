@@ -10,7 +10,7 @@ namespace MassacreChess
     //srand((unsigned)time(NULL));
     std::srand(1);
 
-    for (unsigned int z = 0; z < x*y / 8; z++)
+    for (Coordinate z = 0; z < x*y / 8; z++)
     {
       PlaceRandomly(&ChessPiece::WQ);
       PlaceRandomly(&ChessPiece::BQ);

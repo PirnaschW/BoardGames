@@ -387,21 +387,13 @@ namespace Logik
     LLayout(Coordinate x, Coordinate y) noexcept;
 
   private:
-    inline const TileColor* FC(unsigned int i, unsigned int j) noexcept
+    inline const TileColor* FC(Coordinate i, Coordinate j) const noexcept
     {
       if ((i < dim.xCount / 4) || (i >= 3 * dim.xCount / 4)) return &TileColor::Light;
       if ((j < dim.yCount - 1) || (i < 2 * dim.xCount / 4)) return &TileColor::Dark;
       return &TileColor::Light;
     }
   };
-
-
-  //class LStockLayout : public StockLayout
-  //{
-  //public:
-  //  LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept;
-  //};
-
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
   class LGame : public Game

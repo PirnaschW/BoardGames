@@ -21,8 +21,8 @@ namespace Logik
   LLayout::LLayout(Coordinate x, Coordinate y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY))
   {
     unsigned int z = 0;
-    for (unsigned int i = 0; i < x; i++)
-      for (unsigned int j = 0; j < y; j++, z++)
+    for (Coordinate i = 0; i < x; i++)
+      for (Coordinate j = 0; j < y; j++, z++)
       {
         const CRect r{(int)(BoardStartX + FieldSizeX * (3 + 1 + i + 0) + (i < y ? 0 : BoardFrameX) + (i < 2 * y ? 0 : 1) + (i < 3 * y ? 0 : BoardFrameX)),
                  (int)(BoardStartY + FieldSizeY * (j + 0)),

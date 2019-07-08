@@ -189,7 +189,7 @@ namespace LoA
           const Piece* p = GetPiece(Location{BoardPart::Main, i,j });
           if (p->IsColor(&Color::NoColor)) continue;
           int d{ 0 };
-          for (unsigned int z = 0; z < (sizeX - 1) / 2; z++)
+          for (Coordinate z = 0; z < (sizeX - 1) / 2; z++)
           {
             if (i > z && i < sizeX - 1 - z) d++;
             if (j > z && j < sizeY - 1 - z) d++;
