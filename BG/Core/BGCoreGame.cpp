@@ -5,12 +5,16 @@ namespace BoardGamesCore
 
   Game::Game(const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept : pMap{ m }, pos {p}, lay{ l }, plist(std::make_shared<AIContext>())
   {
+    // create the standard two players
     AddPlayer(new Player(&PlayerType::Human, &Color::White));
     AddPlayer(new Player(&PlayerType::Computer, &Color::Black));
 
+    // automatically put the content of the PieceMap in the Stock
     for (PieceIndex i = 0; i < m->GetCount()-1; i++) // skip the last piece, it is NoTile, and cannot be drawn
       pos->SetPiece(Location(BoardPart::Stock, i / 2U, i % 2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
 
+    // for testing:
+    _mode.Set(Mode::ShowStock);
   }
 
   Game::~Game(void)

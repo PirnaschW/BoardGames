@@ -64,11 +64,11 @@ namespace BoardGamesCore
     for (unsigned int z = 4; z > 0; z--)
     {
       if (z != 2)
-        pDC->Rectangle((int)(dim.lEdge - z), (int)(dim.tEdge - z), (int)(dim.lEdge + dim.xCount * dim.xDim + z), (int)(dim.tEdge + dim.yCount * dim.yDim + z));
+        pDC->Rectangle((int)(dim.lEdge - z), (int)(dim.tEdge - z), (int)(dim.lEdge + dim.xCount * (dim.xDim + dim.xSkip) + z), (int)(dim.tEdge + dim.yCount * (dim.yDim + dim.ySkip) + z));
     }
     Layout::Draw(pDC, pos, mode);
 
-    if (mode.IsSet(Mode::Editing))
+    if (mode.IsSet(Mode::ShowStock) || mode.IsSet(Mode::Editing))
     {
       _stock.Draw(pDC, &(pos->_stock), mode);
     }
@@ -101,23 +101,23 @@ namespace BoardGamesCore
       CString s;
       int h = 10;
       const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == &Color::White));
-      s = "Depth";                pDC->TextOutW(500, h += 30, s);  s.Format(_T("%d"),  pos->GetDepth());       pDC->TextOutW(700, h, s);
-      s = "Value";                pDC->TextOutW(500, h += 30, s);  s = v;                                      pDC->TextOutW(700, h, s);
-      s = "PList size";           pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), plist->size());         pDC->TextOutW(700, h, s);
-      s = "free mem";             pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), plist->freemem);        pDC->TextOutW(700, h, s);
-      s = "sizeof(Position)";     pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Position));      pDC->TextOutW(700, h, s);
-      s = "sizeof(MainPosition)"; pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(MainPosition));  pDC->TextOutW(700, h, s);
-      s = "sizeof(vector<Move>)"; pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Moves));         pDC->TextOutW(700, h, s);
-      s = "sizeof(Move)";         pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Move));          pDC->TextOutW(700, h, s);
-      s = "sizeof(Action)";       pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(Action));        pDC->TextOutW(700, h, s);
-      s = "sizeof(ActionTake)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionTake));    pDC->TextOutW(700, h, s);
-      s = "sizeof(ActionJump)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionJump));    pDC->TextOutW(700, h, s);
-      s = "sizeof(ActionPlace)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionPlace));   pDC->TextOutW(700, h, s);
-      //s = "sizeof(StepPlace)";    pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepPlace));     pDC->TextOutW(700, h, s);
-      //s = "sizeof(StepSimple)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepSimple));    pDC->TextOutW(700, h, s);
-      //s = "sizeof(StepComplex)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(StepComplex));   pDC->TextOutW(700, h, s);
-      //s = "sizeof(SimpleMove)";   pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(SimpleMove));    pDC->TextOutW(700, h, s);
-      //s = "sizeof(ComplexMove)";  pDC->TextOutW(500, h += 30, s);  s.Format(_T("%lu"), sizeof(ComplexMove));   pDC->TextOutW(700, h, s);
+      s = "Depth";                pDC->TextOutW(800, h += 30, s);  s.Format(_T("%d"),  pos->GetDepth());       pDC->TextOutW(1000, h, s);
+      s = "Value";                pDC->TextOutW(800, h += 30, s);  s = v;                                      pDC->TextOutW(1000, h, s);
+      s = "PList size";           pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), plist->size());         pDC->TextOutW(1000, h, s);
+      s = "free mem";             pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), plist->freemem);        pDC->TextOutW(1000, h, s);
+      s = "sizeof(Position)";     pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(Position));      pDC->TextOutW(1000, h, s);
+      s = "sizeof(MainPosition)"; pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(MainPosition));  pDC->TextOutW(1000, h, s);
+      s = "sizeof(vector<Move>)"; pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(Moves));         pDC->TextOutW(1000, h, s);
+      s = "sizeof(Move)";         pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(Move));          pDC->TextOutW(1000, h, s);
+      s = "sizeof(Action)";       pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(Action));        pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionTake)";   pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionTake));    pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionJump)";   pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionJump));    pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionPlace)";  pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(ActionPlace));   pDC->TextOutW(1000, h, s);
+      //s = "sizeof(StepPlace)";    pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(StepPlace));     pDC->TextOutW(1000, h, s);
+      //s = "sizeof(StepSimple)";   pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(StepSimple));    pDC->TextOutW(1000, h, s);
+      //s = "sizeof(StepComplex)";  pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(StepComplex));   pDC->TextOutW(1000, h, s);
+      //s = "sizeof(SimpleMove)";   pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(SimpleMove));    pDC->TextOutW(1000, h, s);
+      //s = "sizeof(ComplexMove)";  pDC->TextOutW(800, h += 30, s);  s.Format(_T("%lu"), sizeof(ComplexMove));   pDC->TextOutW(1000, h, s);
     }
   }
 
@@ -147,7 +147,18 @@ namespace BoardGamesCore
         }
         break;
       case ID_EDIT_BOARD:
-        _mode = _mode.IsSet(Mode::Editing) ? Mode::SelectFr : Mode::Editing;
+        // toggle Editing
+        if (_mode.IsSet(Mode::Editing))
+        {
+          _mode.Del(Mode::Editing);
+          _mode.Set(Mode::SelectFr);
+        }
+        else
+        {
+          _mode.Del(Mode::SelectFr);
+          _mode.Del(Mode::SelectTo);
+          _mode.Set(Mode::Editing);
+        }        
         return true;
       case ID_EDIT_PASTE:
         pos->SetPosition(Piece::ListFromHTML(ClipBoard::GetClipboardText(),GetHTMLPieceMap()));

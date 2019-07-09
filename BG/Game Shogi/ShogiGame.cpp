@@ -341,37 +341,36 @@ namespace Shogi
   const PieceMapP& ShogiGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
-    p->Add(&ShogiPiece::ShogiSKW);
+    p->Add(&ShogiPiece::ShogiSKW);   // Standard King White
+    p->Add(&ShogiPiece::ShogiSKB);   // Standard King Black
     p->Add(&ShogiPiece::ShogiSGW);
-    p->Add(&ShogiPiece::ShogiSSW);
-    p->Add(&ShogiPiece::ShogiSBW);
-    p->Add(&ShogiPiece::ShogiSRW);
-    p->Add(&ShogiPiece::ShogiSNW);
-    p->Add(&ShogiPiece::ShogiSLW);
-    p->Add(&ShogiPiece::ShogiSPW);
-
-    p->Add(&ShogiPiece::ShogiPSW);
-    p->Add(&ShogiPiece::ShogiPBW);
-    p->Add(&ShogiPiece::ShogiPRW);
-    p->Add(&ShogiPiece::ShogiPNW);
-    p->Add(&ShogiPiece::ShogiPLW);
-    p->Add(&ShogiPiece::ShogiPPW);
-
-    p->Add(&ShogiPiece::ShogiSKB);
     p->Add(&ShogiPiece::ShogiSGB);
+    p->Add(&ShogiPiece::ShogiSSW);
     p->Add(&ShogiPiece::ShogiSSB);
+    p->Add(&ShogiPiece::ShogiSBW);
     p->Add(&ShogiPiece::ShogiSBB);
+    p->Add(&ShogiPiece::ShogiSRW);
     p->Add(&ShogiPiece::ShogiSRB);
+    p->Add(&ShogiPiece::ShogiSNW);
     p->Add(&ShogiPiece::ShogiSNB);
+    p->Add(&ShogiPiece::ShogiSLW);
     p->Add(&ShogiPiece::ShogiSLB);
+    p->Add(&ShogiPiece::ShogiSPW);
     p->Add(&ShogiPiece::ShogiSPB);
 
-    p->Add(&ShogiPiece::ShogiPSB);
+    p->Add(&ShogiPiece::ShogiPSW);   // Promoted Silver White
+    p->Add(&ShogiPiece::ShogiPSB);   // Promoted Silver Black
+    p->Add(&ShogiPiece::ShogiPBW);
     p->Add(&ShogiPiece::ShogiPBB);
+    p->Add(&ShogiPiece::ShogiPRW);
     p->Add(&ShogiPiece::ShogiPRB);
+    p->Add(&ShogiPiece::ShogiPNW);
     p->Add(&ShogiPiece::ShogiPNB);
+    p->Add(&ShogiPiece::ShogiPLW);
     p->Add(&ShogiPiece::ShogiPLB);
+    p->Add(&ShogiPiece::ShogiPPW);
     p->Add(&ShogiPiece::ShogiPPB);
+
     return p;
   }
 
