@@ -40,9 +40,9 @@ const BoardGamesCore::VariantList& BGSelect::GetVariants(int id) const
     case IDR_GAMETYPE_MCHESS:     return Variants<MassacreChess::MCGame>::GetVariants();
     case IDR_GAMETYPE_SHOGI:      return Variants<Shogi::ShogiGame>::GetVariants();
     case IDR_GAMETYPE_TICTACTOE:  return Variants<TicTacToe::TicTacToeGame>::GetVariants();
-    case IDR_GAMETYPE_TEMPLATE:   return Variants<Template::TemplateGame>::GetVariants();
-    case IDR_GAMETYPE_TEST:       return Variants<Test::TestGame>::GetVariants();
-    default:                      return Variants<Test::TestGame>::GetVariants();
+    case IDR_GAMETYPE_TEMPLATE:   
+//    case IDR_GAMETYPE_TEST:       return Variants<Test::TestGame>::GetVariants();
+    default:                      return Variants<Template::TemplateGame>::GetVariants();
   }
 }
 
@@ -54,17 +54,18 @@ BoardGamesCore::Game* BGSelect::CreateGame(void)
   {
     switch (m_game_id)
     {
-      case IDR_GAMETYPE_CAMELOT:    return new Cam::          CamGame      (Variants<Cam::          CamGame      >::GetPieces(), m_size_x, m_size_y);
-      case IDR_GAMETYPE_CHECKERS:   return new Checkers::     CheckersGame (Variants<Checkers::     CheckersGame >::GetPieces(), m_size_x, m_size_y);
-      case IDR_GAMETYPE_HASAMI:     return new Hasami::       HasamiGame   (Variants<Hasami::       HasamiGame   >::GetPieces(), m_size_x, m_size_y);
-      case IDR_GAMETYPE_LOA:        return new LoA::          LoAGame      (Variants<LoA::          LoAGame      >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_CAMELOT:    return new Cam::          CamGame      (Variants<Cam::          CamGame      >::GetPieces(), Cam::          CamGame::      GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_CHECKERS:   return new Checkers::     CheckersGame (Variants<Checkers::     CheckersGame >::GetPieces(), Checkers::     CheckersGame:: GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_HASAMI:     return new Hasami::       HasamiGame   (Variants<Hasami::       HasamiGame   >::GetPieces(), Hasami::       HasamiGame::   GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_LOA:        return new LoA::          LoAGame      (Variants<LoA::          LoAGame      >::GetPieces(), LoA::          LoAGame::      GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_LOGIK:      return new Logik::        LGame         <Logik::PegColors, Logik::PegCount, Logik::MaxTries>();
-      case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame       (Variants<MassacreChess::MCGame       >::GetPieces(), m_size_x, m_size_y);
-      case IDR_GAMETYPE_SHOGI:      return new Shogi::        ShogiGame    (Variants<Shogi::        ShogiGame    >::GetPieces(), m_size_x, m_size_y);
-      case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::    TicTacToeGame(Variants<TicTacToe::    TicTacToeGame>::GetPieces(), m_size_x, m_size_y);
-      case IDR_GAMETYPE_TEMPLATE:   return new Template::     TemplateGame (Variants<Template::     TemplateGame >::GetPieces(), m_size_x, m_size_y);
-      case IDR_GAMETYPE_TEST:
-        Test::Test::TestAll();      return new Test::         TestGame     (Variants<Test::         TestGame     >::GetPieces(), m_size_x, m_size_y);
+      case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame       (Variants<MassacreChess::MCGame       >::GetPieces(), MassacreChess::MCGame::       GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_SHOGI:      return new Shogi::        ShogiGame    (Variants<Shogi::        ShogiGame    >::GetPieces(), Shogi::        ShogiGame::    GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::    TicTacToeGame(Variants<TicTacToe::    TicTacToeGame>::GetPieces(), TicTacToe::    TicTacToeGame::GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_TEMPLATE:   return new Template::     TemplateGame (Variants<Template::     TemplateGame >::GetPieces(), Template::     TemplateGame:: GetDimensions(m_size_x, m_size_y));
+      default:                      return new Template::     TemplateGame (Variants<Template::     TemplateGame >::GetPieces(), Template::     TemplateGame:: GetDimensions(m_size_x, m_size_y));
+        //      case IDR_GAMETYPE_TEST:
+//        Test::Test::TestAll();      return new Test::         TestGame     (Variants<Test::         TestGame     >::GetPieces(), m_size_x, m_size_y);
     }
   }
   return nullptr;

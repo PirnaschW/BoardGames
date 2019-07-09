@@ -5,12 +5,12 @@
 
 namespace MassacreChess
 {
-  MCPosition::MCPosition(const PieceMapP& p, Coordinate x, Coordinate y) : MainPosition(p, x, y)
+  MCPosition::MCPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
     //srand((unsigned)time(NULL));
     std::srand(1);
 
-    for (Coordinate z = 0; z < x*y / 8; z++)
+    for (Coordinate z = 0; z < d[0].xCount*d[0].yCount / 8; z++)
     {
       PlaceRandomly(&ChessPiece::WQ);
       PlaceRandomly(&ChessPiece::BQ);
@@ -54,23 +54,6 @@ namespace MassacreChess
   }
 
 
-  //MCGame::MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : MCGame(m,
-  //  new MCPosition(m, x, y), new TakenPosition(m, x* y / 2, 2), new StockPosition(m, 5, 2),
-  //  new MCLayout(x, y), new MCTakenLayout(x, y), new MCStockLayout(x, y)) {}
-  MCGame::MCGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : MCGame(m, new MCPosition(m, x, y), new MCLayout(x, y)) {}
-
-  MCGame::MCGame(const PieceMapP& m, MCPosition* p, MCLayout* l) noexcept : Game{ m,p,l }
-  {
-    AddToStock(Location(BoardPart::Main, 0U, 0U), &ChessPiece::WQ);
-    AddToStock(Location(BoardPart::Main, 1U, 0U), &ChessPiece::WR);
-    AddToStock(Location(BoardPart::Main, 2U, 0U), &ChessPiece::WB);
-    AddToStock(Location(BoardPart::Main, 3U, 0U), &ChessPiece::WN);
-    AddToStock(Location(BoardPart::Main, 0U, 1U), &ChessPiece::BQ);
-    AddToStock(Location(BoardPart::Main, 1U, 1U), &ChessPiece::BR);
-    AddToStock(Location(BoardPart::Main, 2U, 1U), &ChessPiece::BB);
-    AddToStock(Location(BoardPart::Main, 3U, 1U), &ChessPiece::BN);
-  }
-
   const VariantList& MCGame::GetVariants(void) noexcept
   {
     static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } };
@@ -89,6 +72,17 @@ namespace MassacreChess
     p->Add(&ChessPiece::BB);
     p->Add(&ChessPiece::BN);
     return p;
+  }
+
+
+  const Dimensions& MCGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(5, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY * (y + 1), FieldSizeX, FieldSizeY),
+       Dimension(x * y / 2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
+    };
+    return d;
   }
 
 }

@@ -3,8 +3,7 @@
 namespace BoardGamesCore
 {
 
-
-  Layout::Layout(const Dimension& d, LayoutType lt) noexcept : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
+  Layout::Layout(const Dimension& d, const BoardPart b, const LayoutType lt) noexcept : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
   {
     unsigned int z = 0;
     for (Coordinate i = 0; i < dim.xCount; i++)
@@ -24,7 +23,7 @@ namespace BoardGamesCore
           (int)(dim.tEdge + dim.yDim * j + dim.ySkip * j),
           (int)(dim.lEdge + dim.xDim * (i + 1U) + dim.xSkip * i),
           (int)(dim.tEdge + dim.yDim * (j + 1U) + dim.ySkip * j) };
-        (tiles)[z] = new Tile(Location(BoardPart::Main, i, j), r, f);
+        (tiles)[z] = new Tile(Location(b, i, j), r, f);
       }
   }
 
@@ -59,7 +58,7 @@ namespace BoardGamesCore
     return false;
   }
 
-  void MainLayout::Draw(CDC* pDC, const Position* pos, _Mode mode) const
+  void MainLayout::Draw(CDC* pDC, const MainPosition* pos, _Mode mode) const
   {
     // frame around the board (needs to be drawn first)
     for (unsigned int z = 4; z > 0; z--)
@@ -71,9 +70,9 @@ namespace BoardGamesCore
 
     if (mode.IsSet(Mode::Editing))
     {
-      _stock.Draw(pDC, pos, mode);
+      _stock.Draw(pDC, &(pos->_stock), mode);
     }
-    _taken.Draw(pDC, pos, mode);
+    _taken.Draw(pDC, &(pos->_taken), mode);
   }
 
 

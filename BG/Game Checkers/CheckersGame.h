@@ -75,7 +75,7 @@ namespace Checkers
   class CheckersPosition : public MainPosition
   {
   public:
-    CheckersPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept;
+    CheckersPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new CheckersPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void GetAllMoves(void) override;
@@ -88,38 +88,16 @@ namespace Checkers
   };
 
 
-  class CheckersLayout : public MainLayout
-  {
-  public:
-    inline CheckersLayout(Coordinate x, Coordinate y) noexcept : 
-      MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-  };
-
-  //class CheckersTakenLayout : public TakenLayout
-  //{
-  //public:
-  //  inline CheckersTakenLayout(Coordinate x, Coordinate y) noexcept :
-  //    TakenLayout(Dimension(x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-  //};
-
-  //class CheckersStockLayout : public StockLayout
-  //{
-  //public:
-  //  inline CheckersStockLayout(Coordinate x, Coordinate y) noexcept :
-  //    StockLayout(Dimension(4, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-  //};
-
-
   class CheckersGame : public Game
   {
   private:
     CheckersGame(void) = delete;
-    CheckersGame(const PieceMapP& m, CheckersPosition* p, CheckersLayout* l) noexcept;
 
   public:
-    CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
+    inline CheckersGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new CheckersPosition(m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
   };
 
 }

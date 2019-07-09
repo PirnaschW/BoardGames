@@ -70,16 +70,16 @@ namespace LoA
   }
 
   
-  LoAPosition::LoAPosition(const PieceMapP& p, Coordinate x, Coordinate y) : MainPosition(p, x, y)
+  LoAPosition::LoAPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    for (Coordinate i = 0; i < x; i++)
-      for (Coordinate j = 0; j < y; j++)
+    for (Coordinate i = 0; i < d[0].xCount; i++)
+      for (Coordinate j = 0; j < d[0].yCount; j++)
       {
-        if (((i == 0) || (i == x - 1)) && (j != 0) && (j != y - 1))  // left or right border, but not top or bottom corner
+        if (((i == 0) || (i == d[0].xCount - 1)) && (j != 0) && (j != d[0].yCount - 1))  // left or right border, but not top or bottom corner
         {
           SetPiece(Location(BoardPart::Main, i, j), &LoAPiece::LoAPieceW);
         }
-        else if (((j == 0) || (j == y - 1)) && (i != 0) && (i != x - 1))  // top or bottom border, but not left or right corner
+        else if (((j == 0) || (j == d[0].yCount - 1)) && (i != 0) && (i != d[0].xCount - 1))  // top or bottom border, but not left or right corner
         {
           SetPiece(Location(BoardPart::Main, i, j), &LoAPiece::LoAPieceB);
         }
@@ -213,29 +213,6 @@ namespace LoA
   }
 
 
-  LoALayout::LoALayout(Coordinate x, Coordinate y) noexcept :
-    MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-
-  //LoATakenLayout::LoATakenLayout(Coordinate x, Coordinate y) noexcept :
-  //  TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-
-  //LoAStockLayout::LoAStockLayout(Coordinate x, Coordinate y) noexcept :
-  //  StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-
-
-  //LoAGame::LoAGame(const PieceMapP& m, LoAPosition* p, TakenPosition* t, StockPosition* s,
-  //  LoALayout* l, LoATakenLayout* tl, LoAStockLayout* sl) noexcept : Game{ m,p,t,s,l,tl,sl }
-  LoAGame::LoAGame(const PieceMapP& m, LoAPosition* p, LoALayout* l) noexcept : Game{ m,p,l }
-  {
-    AddToStock(Location(BoardPart::Stock, 0U, 0U), &LoAPiece::LoAPieceW);
-    AddToStock(Location(BoardPart::Stock, 1U, 0U), &LoAPiece::LoAPieceB);
-  }
-
-  //LoAGame::LoAGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : LoAGame(m,
-  //  new LoAPosition(m, x, y), new TakenPosition(m, 2 * x, 2), new StockPosition(m, 3, 1),
-  //  new LoALayout(x, y), new LoATakenLayout(x, y), new LoAStockLayout(x, y)) {}
-  LoAGame::LoAGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : LoAGame(m, new LoAPosition(m, x, y), new LoALayout(x, y)) {}
-
   const VariantList& LoAGame::GetVariants(void) noexcept
   {
     static VariantList v{ { Variant{ 8, 8, nullptr, 3, 20 } } };
@@ -248,6 +225,16 @@ namespace LoA
     p->Add(&LoAPiece::LoAPieceW);
     p->Add(&LoAPiece::LoAPieceB);
     return p;
+  }
+
+  const Dimensions& LoAGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+       Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
+    };
+    return d;
   }
 
 }

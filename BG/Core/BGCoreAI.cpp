@@ -12,7 +12,7 @@ namespace BoardGamesCore
    // Test::Test::TestPosition(p);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 5.0;  // run for n seconds
+    double limit = 3.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == &Color::White;
 
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening

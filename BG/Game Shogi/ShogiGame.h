@@ -249,7 +249,7 @@ namespace Shogi
   class ShogiPosition : public MainPosition
   {
   public:
-    ShogiPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept;
+    ShogiPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new ShogiPosition(*this); };
     virtual void GetAllMoves(void);              // generate all moves and save list
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
@@ -263,38 +263,17 @@ namespace Shogi
   };
 
 
-  class ShogiLayout : public MainLayout
-  {
-  public:
-    inline ShogiLayout(Coordinate x, Coordinate y) noexcept :
-      MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-  };
-
-  //class ShogiTakenLayout : public TakenLayout
-  //{
-  //public:
-  //  inline ShogiTakenLayout(Coordinate x, Coordinate /*y*/) noexcept :
-  //    TakenLayout(Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4)) { }
-  //};
-
-  //class ShogiStockLayout : public StockLayout
-  //{
-  //public:
-  //  inline ShogiStockLayout(Coordinate x, Coordinate y) noexcept:
-  //    StockLayout(Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY)) {}
-  //};
-
-
   class ShogiGame : public Game
   {
   protected:
     ShogiGame(void) = delete;
-    ShogiGame(const PieceMapP& m, ShogiPosition* p, ShogiLayout* l) noexcept;
+
   public:
-    ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
+    inline ShogiGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new ShogiPosition(m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
     inline constexpr static bool IsFull(Coordinate x, Coordinate /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
   };
 
 }

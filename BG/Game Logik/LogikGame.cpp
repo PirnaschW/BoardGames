@@ -18,7 +18,7 @@ namespace Logik
   LogikPiece const LogikPiece::LPiece8{&Peg<'8'>::ThePeg, &Color::NoColor, IDB_PEG8, IDB_PEG8F};
 
 
-  LLayout::LLayout(Coordinate x, Coordinate y) noexcept : MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY))
+  LLayout::LLayout(Coordinate x, Coordinate y) noexcept : MainLayout(LGame<8,5,7>::GetDimensions(x, y))
   {
     unsigned int z = 0;
     for (Coordinate i = 0; i < x; i++)
@@ -31,9 +31,5 @@ namespace Logik
         tiles[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
       }
   }
-
-
-  //LStockLayout::LStockLayout(Coordinate x, Coordinate y, unsigned int z) noexcept :
-  //  StockLayout(Dimension(x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * y - x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * z + 1) / 2, FieldSizeX, FieldSizeY)) {}
 
 }

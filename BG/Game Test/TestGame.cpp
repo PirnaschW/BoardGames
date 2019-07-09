@@ -3,6 +3,7 @@
 #include "TestResource.h"
 #include "TestGame.h"
 
+#ifdef TESTING
 
 namespace Test
 {
@@ -453,3 +454,4 @@ namespace Test
   }
 
 }
+#endif

@@ -26,17 +26,6 @@ namespace Template
   }
 
 
-  //TemplateGame::TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TemplateGame(m,
-  //  new TemplatePosition(m, x, y), new TakenPosition(m, x, 2), new StockPosition(m, 3, 1),
-  //  new TemplateLayout(x, y), new TemplateTakenLayout(x, y), new TemplateStockLayout(x, y)) {}
-  TemplateGame::TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TemplateGame(m, new TemplatePosition(m, x, y), new TemplateLayout(x, y)) {}
-
-  TemplateGame::TemplateGame(const PieceMapP& m, TemplatePosition* p, TemplateLayout* l) noexcept : Game{ m,p,l }
-  {
-    AddToStock(Location(BoardPart::Main, 0U, 0U), &TemplatePiece::TemplatePieceW);
-    AddToStock(Location(BoardPart::Main, 1U, 0U), &TemplatePiece::TemplatePieceB);
-  }
-
   const VariantList& TemplateGame::GetVariants(void) noexcept
   {
     static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } };
@@ -51,4 +40,13 @@ namespace Template
     return p;
   }
 
+  const Dimensions& TemplateGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
+       Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4),
+    };
+    return d;
+  }
 }

@@ -42,7 +42,7 @@ namespace Hasami
   class HasamiPosition : public MainPosition
   {
   public:
-    HasamiPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept;
+    HasamiPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
@@ -51,44 +51,15 @@ namespace Hasami
     inline unsigned int GetChainValue(unsigned int z) const noexcept;
   };
 
-  //class HasamiTakenPosition : public TakenPosition
-  //{
-  //public:
-  //  inline HasamiTakenPosition(const PieceMapP& p, Coordinate x, Coordinate /*y*/) noexcept : TakenPosition(p, 2 * x, 2) {}
-  //};
-
-
-  class HasamiLayout : public MainLayout
-  {
-  public:
-    HasamiLayout(Coordinate x, Coordinate y) noexcept :
-      MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY), LayoutType::Light) {}
-  };
-
-  //class HasamiTakenLayout : public TakenLayout
-  //{
-  //public:
-  //  HasamiTakenLayout(Coordinate x, Coordinate y) noexcept :
-  //    TakenLayout(Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-  //};
-
-  //class HasamiStockLayout : public StockLayout
-  //{
-  //public:
-  //  HasamiStockLayout(Coordinate x, Coordinate y) noexcept :
-  //    StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-  //};
-
-
   class HasamiGame : public Game
   {
   private:
     HasamiGame(void) = delete;
-    HasamiGame(const PieceMapP& m, HasamiPosition* p, HasamiLayout* l) noexcept;
   public:
-    HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
+    inline HasamiGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new HasamiPosition(m,d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
   };
 
 }

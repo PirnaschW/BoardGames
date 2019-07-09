@@ -1,7 +1,7 @@
 
 using namespace BoardGamesCore;
 
-
+#ifdef TESTING
 namespace Test
 {
   // Display Dimensions
@@ -64,3 +64,4 @@ namespace Test
 
 
 }
+#endif

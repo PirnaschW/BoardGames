@@ -49,7 +49,7 @@ namespace LoA
   class LoAPosition : public MainPosition
   {
   public:
-    LoAPosition(const PieceMapP& p, Coordinate x, Coordinate y);
+    LoAPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new LoAPosition(*this); }
     virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
@@ -76,35 +76,16 @@ namespace LoA
   };
 
 
-  class LoALayout : public MainLayout
-  {
-  public:
-    LoALayout(Coordinate x, Coordinate y) noexcept;
-  };
-
-  //class LoATakenLayout : public TakenLayout
-  //{
-  //public:
-  //  LoATakenLayout(Coordinate x, Coordinate y) noexcept;
-  //};
-
-  //class LoAStockLayout : public StockLayout
-  //{
-  //public:
-  //  LoAStockLayout(Coordinate x, Coordinate y) noexcept;
-  //};
-
-
   class LoAGame : public Game
   {
   private:
     LoAGame(void) = delete;
-    LoAGame(const PieceMapP& m, LoAPosition* p, LoALayout* l) noexcept;
 
   public:
-    LoAGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
+    inline LoAGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new LoAPosition(m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
   };
 
 }

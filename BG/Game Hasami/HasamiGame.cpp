@@ -33,14 +33,14 @@ namespace Hasami
   }
 
 
-  HasamiPosition::HasamiPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
+  HasamiPosition::HasamiPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    for (Coordinate i = 0; i < x; i++)
+    for (Coordinate i = 0; i < d[0].xCount; i++)
     {
       SetPiece(Location(BoardPart::Main, i, 0U), &HasamiPiece::HasamiPieceB);
       SetPiece(Location(BoardPart::Main, i, 1U), &HasamiPiece::HasamiPieceB);
-      SetPiece(Location(BoardPart::Main, i, y - 1), &HasamiPiece::HasamiPieceW);
-      SetPiece(Location(BoardPart::Main, i, y - 2), &HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, d[0].yCount - 1), &HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, d[0].yCount - 2), &HasamiPiece::HasamiPieceW);
     }
   }
 
@@ -153,17 +153,6 @@ namespace Hasami
     }
   }
 
-  //HasamiGame::HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : HasamiGame(m,
-  //  new HasamiPosition(m, x, y), new HasamiTakenPosition(m, x, y), new StockPosition(m, 3, 1),
-  //  new HasamiLayout(x, y), new HasamiTakenLayout(x, y), new HasamiStockLayout(x, y)) {}
-  HasamiGame::HasamiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : HasamiGame(m, new HasamiPosition(m, x, y), new HasamiLayout(x, y)) {}
-
-  HasamiGame::HasamiGame(const PieceMapP& m, HasamiPosition* p, HasamiLayout* l) noexcept : Game{ m,p,l }
-  {
-    AddToStock(Location(BoardPart::Stock, 0U, 0U), &HasamiPiece::HasamiPieceW);
-    AddToStock(Location(BoardPart::Stock, 1U, 0U), &HasamiPiece::HasamiPieceB);
-  }
-
   const VariantList& HasamiGame::GetVariants(void) noexcept
   {
     static VariantList v{ { Variant{ 9, 9, nullptr, 2, 20, 5, 20 } } };
@@ -176,6 +165,16 @@ namespace Hasami
     p->Add(&HasamiPiece::HasamiPieceW);
     p->Add(&HasamiPiece::HasamiPieceB);
     return p;
+  }
+
+  const Dimensions& HasamiGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+       Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
+    };
+    return d;
   }
 
 }

@@ -26,9 +26,9 @@ namespace BoardGamesCore
   protected:
     Layout(void) = delete;
   public:
-    Layout(const Dimension& d, LayoutType lt) noexcept;
+    Layout(const Dimension& d, const BoardPart b, const LayoutType lt) noexcept;
     virtual inline ~Layout() noexcept { for (auto& t : tiles) delete t; }
-    virtual void Draw(CDC* pDC, const Position* pos, _Mode mode) const;
+    void Draw(CDC* pDC, const Position* pos, _Mode mode) const;
     virtual void DrawSelected(CDC* pDC, const Location& l) const;
     virtual bool GetLocation(const CPoint& p, Location& l) const noexcept;
 
@@ -43,13 +43,13 @@ namespace BoardGamesCore
   {
   public:
     inline MainLayout(const Dimensions& d, LayoutType lt = LayoutType::Alternating) noexcept :
-      Layout(d[0], lt), _taken(d[1], LayoutType::Small), _stock(d[3], LayoutType::Light) {}
+      Layout(d[0], BoardPart::Main, lt), _stock(d[1], BoardPart::Stock, LayoutType::Light), _taken(d[2], BoardPart::Taken, LayoutType::Small) {}
     virtual inline ~MainLayout() noexcept {}
-    virtual void Draw(CDC* pDC, const Position* pos, _Mode mode) const override;
+    virtual void Draw(CDC* pDC, const MainPosition* pos, _Mode mode) const;
 
   protected:
-    Layout _taken;
     Layout _stock;
+    Layout _taken;
   };
 
 }

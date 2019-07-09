@@ -51,9 +51,9 @@ namespace Cam
   }
 
 
-  CamPosition::CamPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
+  CamPosition::CamPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    if (x == 12) // full Camelot
+    if (d[0].xCount == 12) // full Camelot
     {
       // Black Knights
       SetPiece(Location( BoardPart::Main,  2U,  5U), &CamPiece::BN);
@@ -300,18 +300,6 @@ namespace Cam
   //  return 0;
   //}
 
-  //CamGame::CamGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CamGame(m,
-  //  new CamPosition(m, x, y), new CamTakenPosition(m, x, y), new StockPosition(m, 3, 2),
-  //  new CamLayout(x, y), new CamTakenLayout(x, y), new CamStockLayout(x, y)) {}
-  CamGame::CamGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CamGame(m, new CamPosition(m, x, y), new CamLayout(x, y)) {}
-
-  CamGame::CamGame(const PieceMapP& m, CamPosition* p, CamLayout* l) noexcept : Game{ m,p,l }
-  {
-    AddToStock(Location(BoardPart::Main, 0U, 0U), &CamPiece::WN);
-    AddToStock(Location(BoardPart::Main, 1U, 0U), &CamPiece::WP);
-    AddToStock(Location(BoardPart::Main, 0U, 1U), &CamPiece::BP);
-    AddToStock(Location(BoardPart::Main, 1U, 1U), &CamPiece::BN);
-  }
 
   const VariantList& CamGame::GetVariants(void) noexcept
   {
@@ -327,6 +315,17 @@ namespace Cam
     p->Add(&CamPiece::BP);
     p->Add(&CamPiece::BN);
     return p;
+  }
+
+
+  const Dimensions& CamGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+       Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
+    };
+    return d;
   }
 
 }

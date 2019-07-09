@@ -176,10 +176,10 @@ namespace Shogi
   }
 
 
-  ShogiPosition::ShogiPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
+  ShogiPosition::ShogiPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    assert((x == 9 && y == 9) || (x == 5 && y == 5));
-    if (ShogiGame::IsFull(x, y))
+    assert((d[0].xCount == 9 && d[0].yCount == 9) || (d[0].xCount == 5 && d[0].yCount == 5));
+    if (ShogiGame::IsFull(d[0].xCount, d[0].yCount))
     {
       SetPiece(Location( BoardPart::Main, 0U, 0U), &ShogiPiece::ShogiSLB);
       SetPiece(Location( BoardPart::Main, 1U, 0U), &ShogiPiece::ShogiSNB);
@@ -332,18 +332,6 @@ namespace Shogi
     return (OnTurn() == &Color::White && (l._y < (f?3U:1U))) || (OnTurn() != &Color::White && (l._y > (f?8U:3U)));
   }
     
-
-  //ShogiGame::ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : ShogiGame(m,
-  //  new ShogiPosition(m, x, y), new ShogiTakenPosition(m, x, y), new StockPosition(m, 15, 2),
-  //  new ShogiLayout(x, y), new ShogiTakenLayout(x, y), new ShogiStockLayout(x, y)) {}
-  ShogiGame::ShogiGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : ShogiGame(m, new ShogiPosition(m, x, y), new ShogiLayout(x, y)) {}
-
-  ShogiGame::ShogiGame(const PieceMapP& m, ShogiPosition* p, ShogiLayout* l) noexcept : Game{ m,p,l }
-  {
-    for (PieceIndex i = 0; i < m->GetCount(); i++)
-      p->SetPiece(Location(BoardPart::Stock, i / 2U, i % 2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
-  }
-
   const VariantList& ShogiGame::GetVariants(void) noexcept
   {
     static VariantList v{ { Variant{ 9, 9, "Shogi" },{ Variant{ 5, 5, "Mini Shogi" } } } };
@@ -385,6 +373,17 @@ namespace Shogi
     p->Add(&ShogiPiece::ShogiPLB);
     p->Add(&ShogiPiece::ShogiPPB);
     return p;
+  }
+
+
+  const Dimensions& ShogiGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
+       Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4),
+    };
+    return d;
   }
 
 }

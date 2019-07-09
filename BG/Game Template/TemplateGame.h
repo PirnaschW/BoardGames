@@ -43,30 +43,23 @@ namespace Template
   class TemplatePosition : public MainPosition
   {
   public:
-    inline TemplatePosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y) {}
+    inline TemplatePosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
     virtual inline MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void EvaluateStatically(void) override;
   };
 
 
-  class TemplateLayout : public MainLayout
-  {
-  public:
-    inline TemplateLayout(Coordinate x, Coordinate y) noexcept : 
-      MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY)) {}
-  };
-
   class TemplateGame : public Game
   {
   private:
     TemplateGame(void) = delete;
-    TemplateGame(const PieceMapP& m, TemplatePosition* p, TemplateLayout* l) noexcept;
 
   public:
-    TemplateGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
+    inline TemplateGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new TemplatePosition(m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
   };
 
 }

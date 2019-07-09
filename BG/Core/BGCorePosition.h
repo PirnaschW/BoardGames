@@ -5,25 +5,6 @@ namespace BoardGamesCore
   class Position
   {
   private:
-    //class PieceMap final  // local helper class, collects all the existing pieces for the game.
-    //                      // Intention is to be able to save inside Positions a 'PieceIndex' (= unsigned char = 1 byte)
-    //                      // instead of a 'Piece*' (= 4 or 8 byte)
-    //{
-    //public:
-    //  using PieceIndex = unsigned char;
-    //public:
-    //  constexpr inline PieceMap(void) noexcept {}
-    //  constexpr inline PieceMap(const PieceMap& p) noexcept : used{ p.used }, map{ p.map } {}
-    //  constexpr inline PieceIndex GetIndex(const Piece* p) noexcept { for (PieceIndex z = 0; z < used; z++) if (map[z] == p) return z; map[used] = p; return used++; }
-    //  constexpr inline const Piece* GetPiece(PieceIndex i) noexcept { return map[i]; }
-
-    //private:
-    //  constexpr static const PieceIndex max{ 32 };
-    //  PieceIndex used{ 0 };
-    //  std::array<const Piece*, max> map{};
-    //};
-
-  private:
     constexpr inline Position(void) noexcept = delete;
 
   protected:
@@ -54,6 +35,32 @@ namespace BoardGamesCore
   };
 
 
+  struct Dimension final  /// PoD structure to collect a game's layout dimensions
+  {
+  public:
+    constexpr Dimension(
+      Coordinate xc, Coordinate yc,                         // tile count in x and y directions
+      unsigned int le, unsigned int te,                     // starting edge in x and y directions
+      unsigned int xd, unsigned int yd,                     // tile size in x and y directions
+      unsigned int xs = 0, unsigned int ys = 0) noexcept :  // extra distance between tiles in x and y directions
+      xCount(xc), yCount(yc),
+      xDim(xd), yDim(yd),
+      xSkip(xs), ySkip(ys),
+      lEdge(le), tEdge(te) {}
+
+  public:
+    const Coordinate xCount;
+    const Coordinate yCount;
+    const unsigned int xDim;
+    const unsigned int yDim;
+    const unsigned int xSkip;
+    const unsigned int ySkip;
+    const unsigned int lEdge;
+    const unsigned int tEdge;
+  };
+  using Dimensions = std::array<Dimension, 3>;  // Main, Stock, Taken
+
+
   class AIContext;
   using AIContextP = std::shared_ptr<AIContext>;
 
@@ -63,27 +70,11 @@ namespace BoardGamesCore
   public:
     using Depth = unsigned int;
 
-//    class TakenPosition : public Position
-//    {
-//    public:
-//      inline TakenPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
-//      inline TakenPosition(const TakenPosition& m) noexcept = default;
-////      void Push(unsigned int player, const std::vector<const Piece*>& p) noexcept;
-//    };
-//
-//
-//    class StockPosition : public Position
-//    {
-//    public:
-//      inline StockPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y) {}
-//      inline StockPosition(const StockPosition& m) noexcept = default;
-//    };
-
   protected:
     inline MainPosition(const MainPosition& m) noexcept : Position(m), _taken(m._taken), _stock(m._stock) {}
 
   public:
-    inline MainPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : Position(p, x, y), _taken(p, x * y / 2, 2), _stock(p, x * y, 2) {}
+    inline MainPosition(const PieceMapP& p, const Dimensions& d) noexcept : Position(p, d[0].xCount, d[0].yCount), _stock(p, d[1].xCount, d[1].yCount), _taken(p, d[2].xCount, d[2].yCount) {}
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
@@ -118,10 +109,8 @@ namespace BoardGamesCore
 
   public:
     Moves sequence{};
-    //Taken
-      Position _taken;
-    //Stock
-      Position _stock;
+    Position _stock;
+    Position _taken;
 
   protected:
     const Color* onTurn{ &Color::White };

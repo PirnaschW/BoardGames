@@ -44,7 +44,7 @@ namespace Checkers
   }
 
 
-  CheckersPosition::CheckersPosition(const PieceMapP& p, Coordinate x, Coordinate y) noexcept : MainPosition(p, x, y)
+  CheckersPosition::CheckersPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
     //SetPiece(Location(1, 2), &CheckersPiece::CheckersPieceB);
     //SetPiece(Location(3, 2), &CheckersPiece::CheckersPieceB);
@@ -53,12 +53,12 @@ namespace Checkers
     //SetPiece(Location(2, 5), &CheckersPiece::CheckersPieceB);
     //SetPiece(Location(4, 7), &CheckersPiece::CheckersQueenW);
     //return;
-    for (Coordinate j = 0; j < y / 2 - 1; j++)
+    for (Coordinate j = 0; j < d[0].yCount / 2 - 1; j++)
     {
-      for (Coordinate i = 0; i < x; i++)
+      for (Coordinate i = 0; i < d[0].xCount; i++)
       {
         if ((i + j) % 2) SetPiece(Location(BoardPart::Main, i, j), &CheckersPiece::CheckersPieceB);
-        else SetPiece(Location(BoardPart::Main, i, y - 1 - j), &CheckersPiece::CheckersPieceW);
+        else SetPiece(Location(BoardPart::Main, i, d[0].yCount - 1 - j), &CheckersPiece::CheckersPieceW);
       }
     }
   }
@@ -160,21 +160,6 @@ namespace Checkers
   }
 
 
-  //CheckersGame::CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CheckersGame(m,
-  //  new CheckersPosition(m, x, y), new TakenPosition(m, 3 * x / 2, 2), new StockPosition(m, 4, 2),
-  //  new CheckersLayout(x, y), new CheckersTakenLayout(x, y), new CheckersStockLayout(x, y)) {}
-  CheckersGame::CheckersGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : CheckersGame(m, new CheckersPosition(m, x, y), new CheckersLayout(x, y)) {}
-
-  CheckersGame::CheckersGame(const PieceMapP& m, CheckersPosition* p, CheckersLayout* l) noexcept : Game{ m,p,l }
-  {
-    AddToStock(Location(BoardPart::Stock, 0U, 0U), &CheckersPiece::CheckersPieceW);
-    AddToStock(Location(BoardPart::Stock, 1U, 0U), &CheckersPiece::CheckersKingW);
-    AddToStock(Location(BoardPart::Stock, 2U, 0U), &CheckersPiece::CheckersQueenW);
-    AddToStock(Location(BoardPart::Stock, 0U, 1U), &CheckersPiece::CheckersPieceB);
-    AddToStock(Location(BoardPart::Stock, 1U, 1U), &CheckersPiece::CheckersKingB);
-    AddToStock(Location(BoardPart::Stock, 2U, 1U), &CheckersPiece::CheckersQueenB);
-  }
-
   const VariantList& CheckersGame::GetVariants(void) noexcept
   {
     static VariantList v{ { Variant{ 8, 8, nullptr, 2, 20 } } };
@@ -191,6 +176,16 @@ namespace Checkers
     p->Add(&CheckersPiece::CheckersKingB);
     p->Add(&CheckersPiece::CheckersQueenB);
     return p;
+  }
+
+  const Dimensions& CheckersGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(4, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+       Dimension(x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
+    };
+    return d;
   }
 
 }

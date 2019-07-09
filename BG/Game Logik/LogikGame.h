@@ -14,6 +14,9 @@ namespace Logik
   constexpr unsigned int FieldSizeX = 50;   // pixels per tile
   constexpr unsigned int FieldSizeY = 50;   // pixels per tile
 
+  constexpr unsigned int FieldSizeSX = 27;  // pixels per small tile
+  constexpr unsigned int FieldSizeSY = 27;  // pixels per small tile
+
   constexpr unsigned int BoardStartX = 30;  // offset for drawing the board
   constexpr unsigned int BoardStartY = 30;  // offset for drawing the board
 
@@ -184,12 +187,14 @@ namespace Logik
     unsigned int m{};
   };
 
+  template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
+  class LGame;
 
   template <unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
   class LPosition : public MainPosition
   {
   public:
-    LPosition<BX, BY, BZ>(void) noexcept : MainPosition(nullptr, 4 * BY, BZ)
+    LPosition<BX, BY, BZ>(void) noexcept : MainPosition(nullptr, LGame<BX,BY,BZ>::GetDimensions(4 * BY, BZ))
     {
       for (unsigned int i = 0; i < 4 * BY; i++)
         for (unsigned int j = 0; j < BZ; j++)
@@ -416,7 +421,6 @@ namespace Logik
     //LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), nullptr, new StockPosition(nullptr, BX + 3, 1),
     //  new LLayout(4 * BY, BZ), nullptr, new LStockLayout(BX, BY, BZ)) {}
     LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), new LLayout(4 * BY, BZ)) {}
-    inline static const VariantList& GetVariants(void) noexcept { static VariantList v{ { Variant{ 8, 5 } } }; return v; }
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;
     void Execute(MoveP m) override
@@ -428,8 +432,11 @@ namespace Logik
     virtual void SwitchColors(void) {}
     virtual void EditPlayers(void) {}
     virtual void Draw(CDC* pDC) const override;
-  };
 
+    static const VariantList& GetVariants(void) noexcept;
+    static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
+  };
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
   bool LGame<BX, BY, BZ>::React(UINT nChar, UINT, UINT)  // react to keyboard input (not menu shortcuts, but typing)
@@ -511,5 +518,32 @@ namespace Logik
     }
     Game::Draw(pDC);       // let the (generic) parent draw the board itself
   };
+
+
+  template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
+  const VariantList& LGame<BX, BY, BZ>::GetVariants(void) noexcept
+  { 
+    static VariantList v{ { Variant{ 8, 5 } } };
+    return v;
+  }
+
+  template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
+  const PieceMapP& LGame<BX, BY, BZ>::GetPieces(void) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    return p;
+  }
+
+
+  template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
+  const Dimensions& LGame<BX, BY, BZ>::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
+       Dimension(x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * y - x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * BZ + 1) / 2, FieldSizeX, FieldSizeY),
+    };
+    return d;
+  }
 
 }
