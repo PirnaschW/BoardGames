@@ -17,34 +17,6 @@ namespace BoardGamesCore
     const TileColor* tilecolor;
     CRect rect;
   };
-
-
-  struct Dimension final  /// PoD structure to collect a game's layout dimensions
-  {
-  public:
-    constexpr Dimension(
-      Coordinate xc, Coordinate yc,                         // tile count in x and y directions
-      unsigned int le, unsigned int te,                     // starting edge in x and y directions
-      unsigned int xd, unsigned int yd,                     // tile size in x and y directions
-      unsigned int xs = 0, unsigned int ys = 0) noexcept :  // extra distance between tiles in x and y directions
-      xCount(xc), yCount(yc),
-      xDim(xd), yDim(yd),
-      xSkip(xs), ySkip(ys),
-      lEdge(le), tEdge(te),
-      rEdge(lEdge + xCount * xDim), bEdge(tEdge + yCount * yDim) {}
-
-  public:
-    const Coordinate xCount;
-    const Coordinate yCount;
-    const unsigned int xDim;
-    const unsigned int yDim;
-    const unsigned int xSkip;
-    const unsigned int ySkip;
-    const unsigned int lEdge;
-    const unsigned int tEdge;
-    const unsigned int rEdge;
-    const unsigned int bEdge;
-  };
   
 
   class Layout  // a layout contains the physical layout of the tiles of the playing board
@@ -70,7 +42,8 @@ namespace BoardGamesCore
   class MainLayout : public Layout
   {
   public:
-    inline MainLayout(const Dimension& d, LayoutType lt = LayoutType::Alternating) noexcept : Layout(d, lt), _taken(d, LayoutType::Small), _stock(d, LayoutType::Light) {}
+    inline MainLayout(const Dimensions& d, LayoutType lt = LayoutType::Alternating) noexcept :
+      Layout(d[0], lt), _taken(d[1], LayoutType::Small), _stock(d[3], LayoutType::Light) {}
     virtual inline ~MainLayout() noexcept {}
     virtual void Draw(CDC* pDC, const Position* pos, _Mode mode) const override;
 

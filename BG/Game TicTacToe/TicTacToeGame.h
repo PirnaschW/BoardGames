@@ -53,38 +53,16 @@ namespace TicTacToe
   };
 
 
-  class TicTacToeLayout : public MainLayout
-  {
-  public:
-    inline TicTacToeLayout(Coordinate x, Coordinate y) noexcept :
-      MainLayout(Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1), Layout::LayoutType::Light) {}
-  };
-
-  //class TicTacToeTakenLayout : public TakenLayout
-  //{
-  //public:
-  //  inline TicTacToeTakenLayout(Coordinate x, Coordinate y) noexcept :
-  //    TakenLayout(Dimension(0, 0, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4)) {}
-  //};
-
-  //class TicTacToeStockLayout : public StockLayout
-  //{
-  //public:
-  //  inline TicTacToeStockLayout(Coordinate x, Coordinate y) noexcept :
-  //    StockLayout(Dimension(3, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY)) {}
-  //};
-
-
   class TicTacToeGame : public Game
   {
   private:
     TicTacToeGame(void) = delete;
-    TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TicTacToeLayout* l) noexcept;
 
   public:
     TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept;
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
   };
 
 }

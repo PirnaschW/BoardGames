@@ -124,13 +124,10 @@ namespace TicTacToe
   }
 
 
-  TicTacToeGame::TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : TicTacToeGame(m, new TicTacToePosition(m, x, y),
-    new TicTacToeLayout(x, y)) {}
-
-  TicTacToeGame::TicTacToeGame(const PieceMapP& m, TicTacToePosition* p, TicTacToeLayout* l) noexcept : Game{ m,p,l }
+  TicTacToeGame::TicTacToeGame(const PieceMapP& m, Coordinate x, Coordinate y) noexcept : Game(m, new TicTacToePosition(m, x, y), new MainLayout(GetDimensions(x, y)))
   {
     for (PieceIndex i = 0; i < m->GetCount(); i++)
-      p->SetPiece(Location(BoardPart::Stock, i % 2U, i / 2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
+      pos->SetPiece(Location(BoardPart::Stock, i % 2U, i / 2U), m->GetPiece(i));  // expects respective Pieces with alternating colors
   }
 
   const VariantList& TicTacToeGame::GetVariants(void) noexcept
@@ -145,6 +142,16 @@ namespace TicTacToe
     p->Add(&TicTacToePiece::TicTacToePieceW);
     p->Add(&TicTacToePiece::TicTacToePieceB);
     return p;
+  }
+
+  const Dimensions& TicTacToeGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  {
+    static Dimensions d{
+       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(0, 0, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
+       Dimension(x, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+    };
+    return d;
   }
 
 }
