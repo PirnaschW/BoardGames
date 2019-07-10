@@ -16,7 +16,7 @@ namespace TicTacToe
     Actions aw0{};
     Actions ab0{};
     aw0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 0U, 0U }, &TicTacToePiece::TicTacToePieceW));
-    ab0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 1U, 0U }, &TicTacToePiece::TicTacToePieceB));
+    ab0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 0U, 1U }, &TicTacToePiece::TicTacToePieceB));
     for (Coordinate i = 0; i < sizeX; i++)
     {
       for (Coordinate j = 0; j < sizeY; j++)
@@ -142,8 +142,8 @@ namespace TicTacToe
   {
     static Dimensions d{
        Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(2, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
-       Dimension(x, 1, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+       Dimension(2, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+       Dimension(1, 1, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
     };
     return d;
   }

@@ -233,7 +233,10 @@ namespace BoardGamesCore
       assert(moves.empty());
       MainPosition* p{ pos->GetPosition(plist) };  // need to get ALL legal moves (this piece might not be allowed to move because another one has a mandatory jump)
       for (const auto& m : p->GetMoveList(pos->OnTurn() == &Color::White))   // filter moves of the selected piece into 'moves'
-        if (m->GetFrL() == l) moves.push_back(m);
+      {
+        const Location& lf = m->GetFrL();
+        if (lf == l || (lf._b == BoardPart::Stock && m->GetToL() == l)) moves.push_back(m);
+      }
       if (!moves.empty())
       {
         _mode.Del(Mode::SelectFr);
