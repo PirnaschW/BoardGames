@@ -19,37 +19,37 @@ namespace Shogi
   inline const PLance  PLance ::ThePLance {};
   inline const PSilver PSilver::ThePSilver{};
   // S = Standard pieces, White
-  inline const ShogiPiece ShogiPiece::ShogiSKW{ &King::TheKing,       &Color::White, &ShogiPiece::ShogiSKW, &ShogiPiece::ShogiSKW, IDB_SHOGI_SK_W, IDB_SHOGI_SK_S };
-  inline const ShogiPiece ShogiPiece::ShogiSGW{ &Gold::TheGold,       &Color::White, &ShogiPiece::ShogiSGW, &ShogiPiece::ShogiSGW, IDB_SHOGI_SG_W, IDB_SHOGI_SG_S };
-  inline const ShogiPiece ShogiPiece::ShogiSSW{ &Silver::TheSilver,   &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSW, IDB_SHOGI_SS_W, IDB_SHOGI_SS_S };
-  inline const ShogiPiece ShogiPiece::ShogiSBW{ &Bishop::TheBishop,   &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBW, IDB_SHOGI_SB_W, IDB_SHOGI_SB_S };
-  inline const ShogiPiece ShogiPiece::ShogiSRW{ &Rook::TheRook,       &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRW, IDB_SHOGI_SR_W, IDB_SHOGI_SR_S };
-  inline const ShogiPiece ShogiPiece::ShogiSNW{ &Knight::TheKnight,   &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNW, IDB_SHOGI_SN_W, IDB_SHOGI_SN_S };
-  inline const ShogiPiece ShogiPiece::ShogiSLW{ &Lance::TheLance,     &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLW, IDB_SHOGI_SL_W, IDB_SHOGI_SL_S };
-  inline const ShogiPiece ShogiPiece::ShogiSPW{ &Pawn::ThePawn,       &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiSPW, IDB_SHOGI_SP_W, IDB_SHOGI_SP_S };
+  inline const ShogiPiece ShogiPiece::ShogiSKW{ &King::TheKing,       &Color::White, &ShogiPiece::ShogiSKW, &ShogiPiece::ShogiSKB, IDB_SHOGI_SK_W, IDB_SHOGI_SK_S };
+  inline const ShogiPiece ShogiPiece::ShogiSGW{ &Gold::TheGold,       &Color::White, &ShogiPiece::ShogiSGW, &ShogiPiece::ShogiSGB, IDB_SHOGI_SG_W, IDB_SHOGI_SG_S };
+  inline const ShogiPiece ShogiPiece::ShogiSSW{ &Silver::TheSilver,   &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSB, IDB_SHOGI_SS_W, IDB_SHOGI_SS_S };
+  inline const ShogiPiece ShogiPiece::ShogiSBW{ &Bishop::TheBishop,   &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBB, IDB_SHOGI_SB_W, IDB_SHOGI_SB_S };
+  inline const ShogiPiece ShogiPiece::ShogiSRW{ &Rook::TheRook,       &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRB, IDB_SHOGI_SR_W, IDB_SHOGI_SR_S };
+  inline const ShogiPiece ShogiPiece::ShogiSNW{ &Knight::TheKnight,   &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNB, IDB_SHOGI_SN_W, IDB_SHOGI_SN_S };
+  inline const ShogiPiece ShogiPiece::ShogiSLW{ &Lance::TheLance,     &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLB, IDB_SHOGI_SL_W, IDB_SHOGI_SL_S };
+  inline const ShogiPiece ShogiPiece::ShogiPWS{ &Pawn::ThePawn,       &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiPBS, IDB_SHOGI_PWS_L, IDB_SHOGI_PWS_S };
   // P = Promoted Pieces, White   
-  inline const ShogiPiece ShogiPiece::ShogiPSW{ &PSilver::ThePSilver, &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSW, IDB_SHOGI_PS_W, IDB_SHOGI_PS_S };
-  inline const ShogiPiece ShogiPiece::ShogiPBW{ &PBishop::ThePBishop, &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBW, IDB_SHOGI_PB_W, IDB_SHOGI_PB_S };
-  inline const ShogiPiece ShogiPiece::ShogiPRW{ &PRook::ThePRook,     &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRW, IDB_SHOGI_PR_W, IDB_SHOGI_PR_S };
-  inline const ShogiPiece ShogiPiece::ShogiPNW{ &PKnight::ThePKnight, &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNW, IDB_SHOGI_PN_W, IDB_SHOGI_PN_S };
-  inline const ShogiPiece ShogiPiece::ShogiPLW{ &PLance::ThePLance,   &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLW, IDB_SHOGI_PL_W, IDB_SHOGI_PL_S };
-  inline const ShogiPiece ShogiPiece::ShogiPPW{ &PPawn::ThePPawn,     &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiSPW, IDB_SHOGI_PP_W, IDB_SHOGI_PP_S };
+  inline const ShogiPiece ShogiPiece::ShogiPSW{ &PSilver::ThePSilver, &Color::White, &ShogiPiece::ShogiPSW, &ShogiPiece::ShogiSSB, IDB_SHOGI_PS_W, IDB_SHOGI_PS_S };
+  inline const ShogiPiece ShogiPiece::ShogiPBW{ &PBishop::ThePBishop, &Color::White, &ShogiPiece::ShogiPBW, &ShogiPiece::ShogiSBB, IDB_SHOGI_PB_W, IDB_SHOGI_PB_S };
+  inline const ShogiPiece ShogiPiece::ShogiPRW{ &PRook::ThePRook,     &Color::White, &ShogiPiece::ShogiPRW, &ShogiPiece::ShogiSRB, IDB_SHOGI_PR_W, IDB_SHOGI_PR_S };
+  inline const ShogiPiece ShogiPiece::ShogiPNW{ &PKnight::ThePKnight, &Color::White, &ShogiPiece::ShogiPNW, &ShogiPiece::ShogiSNB, IDB_SHOGI_PN_W, IDB_SHOGI_PN_S };
+  inline const ShogiPiece ShogiPiece::ShogiPLW{ &PLance::ThePLance,   &Color::White, &ShogiPiece::ShogiPLW, &ShogiPiece::ShogiSLB, IDB_SHOGI_PL_W, IDB_SHOGI_PL_S };
+  inline const ShogiPiece ShogiPiece::ShogiPPW{ &PPawn::ThePPawn,     &Color::White, &ShogiPiece::ShogiPPW, &ShogiPiece::ShogiPBS, IDB_SHOGI_PP_W, IDB_SHOGI_PP_S };
   // S = Standard pieces, Black
-  inline const ShogiPiece ShogiPiece::ShogiSKB{ &King::TheKing,       &Color::Black, &ShogiPiece::ShogiSKB, &ShogiPiece::ShogiSKB, IDB_SHOGI_SK_B, IDB_SHOGI_SK_S };
-  inline const ShogiPiece ShogiPiece::ShogiSGB{ &Gold::TheGold,       &Color::Black, &ShogiPiece::ShogiSGB, &ShogiPiece::ShogiSGB, IDB_SHOGI_SG_B, IDB_SHOGI_SG_S };
-  inline const ShogiPiece ShogiPiece::ShogiSSB{ &Silver::TheSilver,   &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSB, IDB_SHOGI_SS_B, IDB_SHOGI_SS_S };
-  inline const ShogiPiece ShogiPiece::ShogiSBB{ &Bishop::TheBishop,   &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBB, IDB_SHOGI_SB_B, IDB_SHOGI_SB_S };
-  inline const ShogiPiece ShogiPiece::ShogiSRB{ &Rook::TheRook,       &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRB, IDB_SHOGI_SR_B, IDB_SHOGI_SR_S };
-  inline const ShogiPiece ShogiPiece::ShogiSNB{ &Knight::TheKnight,   &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNB, IDB_SHOGI_SN_B, IDB_SHOGI_SN_S };
-  inline const ShogiPiece ShogiPiece::ShogiSLB{ &Lance::TheLance,     &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_SL_B, IDB_SHOGI_SL_S };
-  inline const ShogiPiece ShogiPiece::ShogiSPB{ &Pawn::ThePawn,       &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_SP_B, IDB_SHOGI_SP_S };
+  inline const ShogiPiece ShogiPiece::ShogiSKB{ &King::TheKing,       &Color::Black, &ShogiPiece::ShogiSKB, &ShogiPiece::ShogiSKW, IDB_SHOGI_SK_B, IDB_SHOGI_SK_S };
+  inline const ShogiPiece ShogiPiece::ShogiSGB{ &Gold::TheGold,       &Color::Black, &ShogiPiece::ShogiSGB, &ShogiPiece::ShogiSGW, IDB_SHOGI_SG_B, IDB_SHOGI_SG_S };
+  inline const ShogiPiece ShogiPiece::ShogiSSB{ &Silver::TheSilver,   &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSW, IDB_SHOGI_SS_B, IDB_SHOGI_SS_S };
+  inline const ShogiPiece ShogiPiece::ShogiSBB{ &Bishop::TheBishop,   &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBW, IDB_SHOGI_SB_B, IDB_SHOGI_SB_S };
+  inline const ShogiPiece ShogiPiece::ShogiSRB{ &Rook::TheRook,       &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRW, IDB_SHOGI_SR_B, IDB_SHOGI_SR_S };
+  inline const ShogiPiece ShogiPiece::ShogiSNB{ &Knight::TheKnight,   &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNW, IDB_SHOGI_SN_B, IDB_SHOGI_SN_S };
+  inline const ShogiPiece ShogiPiece::ShogiSLB{ &Lance::TheLance,     &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLW, IDB_SHOGI_SL_B, IDB_SHOGI_SL_S };
+  inline const ShogiPiece ShogiPiece::ShogiPBS{ &Pawn::ThePawn,       &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiPWS, IDB_SHOGI_PBS_L, IDB_SHOGI_PBS_S };
   // P = Promoted pieces, Black   
-  inline const ShogiPiece ShogiPiece::ShogiPSB{ &PSilver::ThePSilver, &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSB, IDB_SHOGI_PS_B, IDB_SHOGI_PS_S };
-  inline const ShogiPiece ShogiPiece::ShogiPBB{ &PBishop::ThePBishop, &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBB, IDB_SHOGI_PB_B, IDB_SHOGI_PB_S };
-  inline const ShogiPiece ShogiPiece::ShogiPRB{ &PRook::ThePRook,     &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRB, IDB_SHOGI_PR_B, IDB_SHOGI_PR_S };
-  inline const ShogiPiece ShogiPiece::ShogiPNB{ &PKnight::ThePKnight, &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNB, IDB_SHOGI_PN_B, IDB_SHOGI_PN_S };
-  inline const ShogiPiece ShogiPiece::ShogiPLB{ &PLance::ThePLance,   &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLB, IDB_SHOGI_PL_B, IDB_SHOGI_PL_S };
-  const ShogiPiece ShogiPiece::ShogiPPB{ &PPawn::ThePPawn,     &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiSPB, IDB_SHOGI_PP_B, IDB_SHOGI_PP_S };
+  inline const ShogiPiece ShogiPiece::ShogiPSB{ &PSilver::ThePSilver, &Color::Black, &ShogiPiece::ShogiPSB, &ShogiPiece::ShogiSSW, IDB_SHOGI_PS_B, IDB_SHOGI_PS_S };
+  inline const ShogiPiece ShogiPiece::ShogiPBB{ &PBishop::ThePBishop, &Color::Black, &ShogiPiece::ShogiPBB, &ShogiPiece::ShogiSBW, IDB_SHOGI_PB_B, IDB_SHOGI_PB_S };
+  inline const ShogiPiece ShogiPiece::ShogiPRB{ &PRook::ThePRook,     &Color::Black, &ShogiPiece::ShogiPRB, &ShogiPiece::ShogiSRW, IDB_SHOGI_PR_B, IDB_SHOGI_PR_S };
+  inline const ShogiPiece ShogiPiece::ShogiPNB{ &PKnight::ThePKnight, &Color::Black, &ShogiPiece::ShogiPNB, &ShogiPiece::ShogiSNW, IDB_SHOGI_PN_B, IDB_SHOGI_PN_S };
+  inline const ShogiPiece ShogiPiece::ShogiPLB{ &PLance::ThePLance,   &Color::Black, &ShogiPiece::ShogiPLB, &ShogiPiece::ShogiSLW, IDB_SHOGI_PL_B, IDB_SHOGI_PL_S };
+         const ShogiPiece ShogiPiece::ShogiPPB{ &PPawn::ThePPawn,     &Color::Black, &ShogiPiece::ShogiPPB, &ShogiPiece::ShogiPWS, IDB_SHOGI_PP_B, IDB_SHOGI_PP_S };
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
@@ -62,7 +62,7 @@ namespace Shogi
     for (Coordinate j = 0; j < pos->GetSizeY(); j++)
     {
       const Piece* p = pos->GetPiece(Location{ BoardPart::Main, l._x,j });
-      if (p == ((pos->OnTurn() == &Color::White) ? &ShogiPiece::ShogiSPW : &ShogiPiece::ShogiSPB)) return false;
+      if (p == ((pos->OnTurn() == &Color::White) ? &ShogiPiece::ShogiPWS : &ShogiPiece::ShogiPBS)) return false;
     }
     return true;
   }
@@ -194,26 +194,26 @@ namespace Shogi
       SetPiece(Location( BoardPart::Main, 1U, 1U), &ShogiPiece::ShogiSRB);
       SetPiece(Location( BoardPart::Main, 7U, 1U), &ShogiPiece::ShogiSBB);
                         
-      SetPiece(Location( BoardPart::Main, 0U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 1U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 2U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 3U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 4U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 5U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 6U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 7U, 2U), &ShogiPiece::ShogiSPB);
-      SetPiece(Location( BoardPart::Main, 8U, 2U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 0U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 1U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 2U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 3U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 4U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 5U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 6U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 7U, 2U), &ShogiPiece::ShogiPBS);
+      SetPiece(Location( BoardPart::Main, 8U, 2U), &ShogiPiece::ShogiPBS);
                          
                          
-      SetPiece(Location( BoardPart::Main, 0U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 1U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 2U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 3U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 4U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 5U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 6U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 7U, 6U), &ShogiPiece::ShogiSPW);
-      SetPiece(Location( BoardPart::Main, 8U, 6U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 0U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 1U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 2U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 3U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 4U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 5U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 6U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 7U, 6U), &ShogiPiece::ShogiPWS);
+      SetPiece(Location( BoardPart::Main, 8U, 6U), &ShogiPiece::ShogiPWS);
                          
       SetPiece(Location( BoardPart::Main, 1U, 7U), &ShogiPiece::ShogiSBW);
       SetPiece(Location( BoardPart::Main, 7U, 7U), &ShogiPiece::ShogiSRW);
@@ -235,14 +235,14 @@ namespace Shogi
       SetPiece(Location( BoardPart::Main, 2U, 0U), &ShogiPiece::ShogiSSB);
       SetPiece(Location( BoardPart::Main, 3U, 0U), &ShogiPiece::ShogiSGB);
       SetPiece(Location( BoardPart::Main, 4U, 0U), &ShogiPiece::ShogiSKB);
-      SetPiece(Location( BoardPart::Main, 4U, 1U), &ShogiPiece::ShogiSPB);
+      SetPiece(Location( BoardPart::Main, 4U, 1U), &ShogiPiece::ShogiPBS);
                          
       SetPiece(Location( BoardPart::Main, 4U, 4U), &ShogiPiece::ShogiSRW);
       SetPiece(Location( BoardPart::Main, 3U, 4U), &ShogiPiece::ShogiSBW);
       SetPiece(Location( BoardPart::Main, 2U, 4U), &ShogiPiece::ShogiSSW);
       SetPiece(Location( BoardPart::Main, 1U, 4U), &ShogiPiece::ShogiSGW);
       SetPiece(Location( BoardPart::Main, 0U, 4U), &ShogiPiece::ShogiSKW);
-      SetPiece(Location( BoardPart::Main, 0U, 3U), &ShogiPiece::ShogiSPW);
+      SetPiece(Location( BoardPart::Main, 0U, 3U), &ShogiPiece::ShogiPWS);
     }
   }
 
@@ -279,26 +279,29 @@ namespace Shogi
   {
     const Piece* pt = GetPiece(to);                                       // what is on the target field
     if (pt == nullptr) return false;                                      // out of board
-    if (pt->IsColor(OnTurn())) return false;                              // own piece
     if (IsTaken(fr) && !pt->IsBlank()) return false;                      // can't drop onto existing piece
 
     const ShogiPiece* pf = dynamic_cast<const ShogiPiece*>(GetPiece(fr));
+    if (pt->IsColor(pf->GetColor())) return false;                        // own piece
 
+    if (IsTaken(fr) && !pf->CanDrop(this, to)) return false;
 
-    if (fr._b == BoardPart::Taken ? pf->CanDrop(this, to) : pf->CanMove(this, to))  // checks for legal drop / move
+    Actions a{ std::make_shared<ActionTake>(fr, pf) };
+    if (!pt->IsBlank()) // if something is there, take it and place in Taken
     {
-      Actions a{ std::make_shared<ActionTake>(fr, pf) };
-      if (!pt->IsBlank()) // if something is there, take it and place in Taken
-      {
-        a.push_back(std::make_shared<ActionTake>(to, pt));
-        a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt), pt));
-      }
-      if (!IsTaken(fr) && (CanPromote(fr) || CanPromote(to)) && pf->IsPromotable())
-      {
-        Actions aa{ a }; // promote is optional, so we make a copy and add as second move
-        aa.push_back(std::make_shared<ActionPlace>(to, pf->Promote(true)));
-        m.push_back(std::make_shared<Move>(aa));
-      }
+      a.push_back(std::make_shared<ActionTake>(to, pt));
+      const Piece* pt0 = pt->Promote(false);  // demote and change color/owner
+      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt->GetColor()), pt0));
+    }
+    // if this is not a drop, check if promotion is possible
+    if (!IsTaken(fr) && (CanPromote(pf->GetColor(), fr) || CanPromote(pf->GetColor(), to)) && pf->IsPromotable())
+    {
+      Actions aa{ a }; // promote is optional, so we make a copy and add as second move
+      aa.push_back(std::make_shared<ActionPlace>(to, pf->Promote(true)));
+      m.push_back(std::make_shared<Move>(aa));
+    }
+    if (pf->CanMove(this, to)) // if no promotion, verify if this piece can ever move/drop there
+    {
       a.push_back(std::make_shared<ActionPlace>(to, pf));  // unpromoted placement
       m.push_back(std::make_shared<Move>(a));
     }
@@ -326,10 +329,10 @@ namespace Shogi
   //  return 0;
   //}
 
-  inline bool ShogiPosition::CanPromote(const Location& l) const noexcept
+  inline bool ShogiPosition::CanPromote(const Color* c, const Location& l) const noexcept
   {
-    bool f = ShogiGame::IsFull(sizeX, sizeY);
-    return (OnTurn() == &Color::White && (l._y < (f?3U:1U))) || (OnTurn() != &Color::White && (l._y > (f?8U:3U)));
+    const bool f = ShogiGame::IsFull(sizeX, sizeY);
+    return c == &Color::White ? (l._y < (f ? 3U : 1U)) : (l._y > (f ? 8U : 3U));
   }
     
   const VariantList& ShogiGame::GetVariants(void) noexcept
@@ -355,8 +358,8 @@ namespace Shogi
     p->Add(&ShogiPiece::ShogiSNB);
     p->Add(&ShogiPiece::ShogiSLW);
     p->Add(&ShogiPiece::ShogiSLB);
-    p->Add(&ShogiPiece::ShogiSPW);
-    p->Add(&ShogiPiece::ShogiSPB);
+    p->Add(&ShogiPiece::ShogiPWS);   // Pawn White Standard
+    p->Add(&ShogiPiece::ShogiPBS);   // Pawn Black Standard
 
     p->Add(&ShogiPiece::ShogiPSW);   // Promoted Silver White
     p->Add(&ShogiPiece::ShogiPSB);   // Promoted Silver Black

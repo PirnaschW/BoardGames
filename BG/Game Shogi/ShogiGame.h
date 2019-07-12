@@ -207,7 +207,7 @@ namespace Shogi
 
   private:
     const ShogiPiece* up;    // what this piece promotes up to
-    const ShogiPiece* down;  // what this piece promotes down to
+    const ShogiPiece* down;  // what this piece becomes when taken
 
   public:  // the pieces
     // S = Standard pieces, White
@@ -218,7 +218,7 @@ namespace Shogi
     static const ShogiPiece ShogiSRW;
     static const ShogiPiece ShogiSNW;
     static const ShogiPiece ShogiSLW;
-    static const ShogiPiece ShogiSPW;
+    static const ShogiPiece ShogiPWS;
     // P = Promoted pieces, White   
     static const ShogiPiece ShogiPSW;
     static const ShogiPiece ShogiPBW;
@@ -235,7 +235,7 @@ namespace Shogi
     static const ShogiPiece ShogiSRB;
     static const ShogiPiece ShogiSNB;
     static const ShogiPiece ShogiSLB;
-    static const ShogiPiece ShogiSPB;
+    static const ShogiPiece ShogiPBS;
     // P = Promoted pieces, Black   
     static const ShogiPiece ShogiPSB;
     static const ShogiPiece ShogiPBB;
@@ -257,7 +257,7 @@ namespace Shogi
   // extensions to base class
   public:
   private:
-    inline bool CanPromote(const Location &l) const noexcept;
+    inline bool CanPromote(const Color* c, const Location &l) const noexcept;
 
   private:
   };

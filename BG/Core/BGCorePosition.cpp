@@ -45,9 +45,9 @@ namespace BoardGamesCore
     }
   }
 
-  const Location MainPosition::GetNextTakenL(const Piece* p) const noexcept
+  const Location MainPosition::GetNextTakenL(const Color* c) const noexcept
   {
-    Coordinate y{ p->IsColor(&Color::White) ? 0U : 1U };
+    Coordinate y{ c == &Color::White ? 0U : 1U };
     for (Coordinate x = 0; ; x++)
     {
       const Location l{ BoardPart::Taken, x, y };

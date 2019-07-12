@@ -99,7 +99,7 @@ namespace BoardGamesCore
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value = v.Relative(w); }
     virtual const Piece* GetPiece(const Location& l) const noexcept;
     virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept;
-    const Location GetNextTakenL(const Piece* p) const noexcept;
+    const Location GetNextTakenL(const Color* c) const noexcept;
     inline bool IsTaken(const Location& l) const noexcept { return l._b == BoardPart::Taken; }
     virtual inline MoveP GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
     virtual MainPosition* GetPosition(AIContextP& plist, MoveP m = nullptr) const;     // execute move, maintain in PList
