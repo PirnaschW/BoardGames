@@ -45,6 +45,7 @@ namespace BoardGamesCore
     inline MainLayout(const Dimensions& d, LayoutType lt = LayoutType::Alternating) noexcept :
       Layout(d[0], BoardPart::Main, lt), _stock(d[1], BoardPart::Stock, LayoutType::Light), _taken(d[2], BoardPart::Taken, LayoutType::Small) {}
     virtual inline ~MainLayout() noexcept {}
+    virtual inline bool GetLocation(const CPoint& p, Location& l) const noexcept override { return Layout::GetLocation(p, l) || _taken.GetLocation(p, l) || _stock.GetLocation(p, l); }
     virtual void Draw(CDC* pDC, const MainPosition* pos, _Mode mode) const;
 
   protected:

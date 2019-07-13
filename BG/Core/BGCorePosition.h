@@ -78,7 +78,7 @@ namespace BoardGamesCore
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
-    virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + std::hash<const Color*>()(OnTurn()); }
+    virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + _taken.GetHash() + std::hash<const Color*>()(OnTurn()); }
 
     inline void SetOnTurn(const Color* c) noexcept { onTurn = c; }
     inline const Color* OnTurn(void) const noexcept { return onTurn; }

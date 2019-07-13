@@ -211,38 +211,38 @@ namespace Shogi
 
   public:  // the pieces
     // S = Standard pieces, White
-    static const ShogiPiece ShogiSKW;
-    static const ShogiPiece ShogiSGW;
-    static const ShogiPiece ShogiSSW;
-    static const ShogiPiece ShogiSBW;
-    static const ShogiPiece ShogiSRW;
-    static const ShogiPiece ShogiSNW;
-    static const ShogiPiece ShogiSLW;
-    static const ShogiPiece ShogiPWS;
-    // P = Promoted pieces, White   
-    static const ShogiPiece ShogiPSW;
-    static const ShogiPiece ShogiPBW;
-    static const ShogiPiece ShogiPRW;
-    static const ShogiPiece ShogiPNW;
-    static const ShogiPiece ShogiPLW;
-    static const ShogiPiece ShogiPPW;
-                                    
-    // S = Standard pieces, Black
-    static const ShogiPiece ShogiSKB;
-    static const ShogiPiece ShogiSGB;
-    static const ShogiPiece ShogiSSB;
-    static const ShogiPiece ShogiSBB;
-    static const ShogiPiece ShogiSRB;
-    static const ShogiPiece ShogiSNB;
-    static const ShogiPiece ShogiSLB;
-    static const ShogiPiece ShogiPBS;
-    // P = Promoted pieces, Black   
-    static const ShogiPiece ShogiPSB;
-    static const ShogiPiece ShogiPBB;
-    static const ShogiPiece ShogiPRB;
-    static const ShogiPiece ShogiPNB;
-    static const ShogiPiece ShogiPLB;
-    static const ShogiPiece ShogiPPB;
+    static const ShogiPiece ShogiWK;   // White King 
+    static const ShogiPiece ShogiWG;   // White Gold 
+    static const ShogiPiece ShogiWS;   // White Silver 
+    static const ShogiPiece ShogiWB;   // White Bishop 
+    static const ShogiPiece ShogiWR;   // White Rook 
+    static const ShogiPiece ShogiWN;   // White Knight 
+    static const ShogiPiece ShogiWL;   // White Lance 
+    static const ShogiPiece ShogiWP;   // White Pawn 
+    // P = Promoted pieces, White      
+    static const ShogiPiece ShogiWSP;  // White Silver (Promoted)
+    static const ShogiPiece ShogiWBP;  // White Bishop (Promoted)
+    static const ShogiPiece ShogiWRP;  // White Rook   (Promoted)
+    static const ShogiPiece ShogiWNP;  // White Knight (Promoted)
+    static const ShogiPiece ShogiWLP;  // White Lance  (Promoted)
+    static const ShogiPiece ShogiWPP;  // White Pawn   (Promoted)
+                                       
+    // S = Standard pieces, Black 
+    static const ShogiPiece ShogiBK;   // Black King  
+    static const ShogiPiece ShogiBG;   // Black Gold  
+    static const ShogiPiece ShogiBS;   // Black Silver 
+    static const ShogiPiece ShogiBB;   // Black Bishop 
+    static const ShogiPiece ShogiBR;   // Black Rook  
+    static const ShogiPiece ShogiBN;   // Black Knight 
+    static const ShogiPiece ShogiBL;   // Black Lance  
+    static const ShogiPiece ShogiBP;   // Black Pawn  
+    // P = Promoted pieces, Black
+    static const ShogiPiece ShogiBSP;  // Black Silver (Promoted)
+    static const ShogiPiece ShogiBBP;  // Black Bishop (Promoted)
+    static const ShogiPiece ShogiBRP;  // Black Rook   (Promoted)
+    static const ShogiPiece ShogiBNP;  // Black Knight (Promoted)
+    static const ShogiPiece ShogiBLP;  // Black Lance  (Promoted)
+    static const ShogiPiece ShogiBPP;  // Black Pawn   (Promoted)
   };
 
 
