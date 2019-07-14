@@ -163,7 +163,7 @@ namespace LoA
     return false;
   }
 
-  void LoAPosition::EvaluateStatically(void)
+  void LoAPosition::EvaluateStatically(void) noexcept
   {
     if (IsConnected(false))
     {

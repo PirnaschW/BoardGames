@@ -56,13 +56,13 @@ namespace Shogi
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(0, dy));
   }
-  bool Pawn::CanDrop(const MainPosition* pos, const Location& l) const noexcept
+  bool Pawn::CanDrop(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    if (!((pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1))) return false;   // drop anywhere except last row
+    if (p->IsColor(&Color::White) ? (l._y < 1) : (l._y > pos->GetSizeY() - 2)) return false;       // drop anywhere except last row
     for (Coordinate j = 0; j < pos->GetSizeY(); j++)
     {
-      const Piece* p = pos->GetPiece(Location{ BoardPart::Main, l._x,j });
-      if (p == ((pos->OnTurn() == &Color::White) ? &ShogiPiece::ShogiWP : &ShogiPiece::ShogiBP)) return false;
+      const Piece* pp = pos->GetPiece(Location{ BoardPart::Main, l._x,j });
+      if (pp == p) return false;                                                                   // no two pawns are allowed in the same row
     }
     return true;
   }
@@ -72,13 +72,9 @@ namespace Shogi
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(0, z*dy)); z++);
   }
-  bool Lance::CanDrop(const MainPosition* pos, const Location& l) const noexcept
+  bool Lance::CanMove(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1);   // drop anywhere except last row
-  }
-  bool Lance::CanMove(const MainPosition* pos, const Location& l) const noexcept
-  {
-    return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1);   // move anywhere except last row
+    return p->IsColor(&Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1);           // move (or drop) anywhere except last row
   }
 
   void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
@@ -87,13 +83,9 @@ namespace Shogi
     p.AddIfLegal(moves, l, l + Offset(+1, 2 * dy));
     p.AddIfLegal(moves, l, l + Offset(-1, 2 * dy));
   }
-  bool Knight::CanDrop(const MainPosition* pos, const Location& l) const noexcept
+  bool Knight::CanMove(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 2) : (l._y > 2);   // drop anywhere except last two rows
-  }
-  bool Knight::CanMove(const MainPosition* pos, const Location& l) const noexcept
-  {
-    return (pos->OnTurn() == &Color::White) ? (l._y < pos->GetSizeY() - 2) : (l._y > 2);   // move anywhere except last two rows
+    return p->IsColor(&Color::White) ? (l._y < pos->GetSizeY() - 2) : (l._y > 2);   // move anywhere except last two rows
   }
 
   void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
@@ -251,28 +243,30 @@ namespace Shogi
     MainPosition::GetAllMoves();                                          // standard: get moves for all pieces on the board
 
     // add all potential drop moves
-    for (Coordinate y = 0; true; y++)
-    {
-      const Location l(BoardPart::Taken, 0U, y);
-      const Piece* p = _taken.GetPiece(Location(BoardPart::Taken, 0U, y));
-      if (p == nullptr) break;                                            // end of Taken reached
-      if (p->IsBlank()) continue;                                         // no piece here to drop, try next Location
-      const ShogiPiece* pp = dynamic_cast<const ShogiPiece*>(p);          // must be a shogipiece,
-      assert(pp != nullptr);                                              // verify it
+    for (Coordinate y = 0U; y < 2; y++)
+      for (Coordinate x = 0U; true; x++)
+      {
+        const Location l(BoardPart::Taken, x, y);
+        const Piece* p = _taken.GetPiece(l);
+        if (p == nullptr) break;                                          // end of Taken reached
+        if (p->IsBlank()) continue;                                       // no piece here to drop, try next Location
+        const ShogiPiece* pp = dynamic_cast<const ShogiPiece*>(p);        // must be a shogipiece,
+        assert(pp != nullptr);                                            // verify it
+        Moves& m = pp->IsColor(&Color::White) ? movelistW : movelistB;
 
-      Actions a{ std::make_shared<ActionTake>(l,pp) };
-      for (Coordinate i = 0; i < sizeX; i++)
-        for (Coordinate j = 0; j < sizeY; j++)
-        {
-          const Location ll{ BoardPart::Main, i, j };
-          if (GetPiece(ll)->IsBlank() && pp->CanDrop(this, ll))
+        Actions a{ std::make_shared<ActionTake>(l,pp) };
+        for (Coordinate i = 0; i < sizeX; i++)
+          for (Coordinate j = 0; j < sizeY; j++)
           {
-            Actions aa{ a };
-            aa.push_back(std::make_shared<ActionPlace>(ll, pp));
-            movelistB.push_back(std::make_shared<Move>(aa));
+            const Location ll{ BoardPart::Main, i, j };
+            if (GetPiece(ll)->IsBlank() && pp->CanDrop(this, ll))
+            {
+              Actions aa{ a };
+              aa.push_back(std::make_shared<ActionPlace>(ll, pp));
+              m.push_back(std::make_shared<Move>(aa));
+            }
           }
-        }
-    }
+      }
   }
   
   bool ShogiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const // returns true if further tries in this direction are allowed
@@ -308,26 +302,28 @@ namespace Shogi
     return pt->IsBlank();   // if free tile, keep trying this direction
   }
 
-  //PositionValue ShogiPosition::EvaluateWin(void) const
-  //{
-  //  bool kw{false};
-  //  bool kb{false};
+  void ShogiPosition::EvaluateStatically(void) noexcept
+  {
+    //bool kw{false};
+    //bool kb{false};
 
-  //  for (Coordinate i = 0; i < sizeX; i++)
-  //  {
-  //    for (Coordinate j = 0; j < sizeY; j++)
-  //    {
-  //      const Piece* p = GetPiece(Location{i,j});
-  //      if ((p == &ShogiPiece::ShogiSKW)) kw = true;
-  //      if ((p == &ShogiPiece::ShogiSKB)) kb = true;
-  //    }
-  //  }
+    //for (Coordinate i = 0; i < sizeX; i++)
+    //{
+    //  for (Coordinate j = 0; j < sizeY; j++)
+    //  {
+    //    const Piece* p = GetPiece(Location{ BoardPart::Main,i,j });
+    //    if ((p == &ShogiPiece::ShogiWK)) kw = true;
+    //    if ((p == &ShogiPiece::ShogiBK)) kb = true;
+    //  }
+    //}
 
-  //  int dy = OnTurn() == &Color::White ? 1 : -1;
-  //  if (!kw) return PositionValue::PValueType::Lost * dy;  // no white king - opponent wins
-  //  if (!kb) return PositionValue::PValueType::Won * dy;  // no black king - player wins
-  //  return 0;
-  //}
+    //if (!kw) { value = PositionValue::PValueType::Lost; return; }
+    //if (!kb) { value = PositionValue::PValueType::Won;  return; }
+
+    if (!HasPiece(&ShogiPiece::ShogiWK)) { value = PositionValue::PValueType::Lost; return; }
+    if (!HasPiece(&ShogiPiece::ShogiBK)) { value = PositionValue::PValueType::Won;  return; }
+    MainPosition::EvaluateStatically();
+  }
 
   inline bool ShogiPosition::CanPromote(const Color* c, const Location& l) const noexcept
   {

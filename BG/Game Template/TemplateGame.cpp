@@ -19,7 +19,7 @@ namespace Template
     return false;
   };
 
-  void TemplatePosition::EvaluateStatically(void)
+  void TemplatePosition::EvaluateStatically(void) noexcept
   {
     MainPosition::EvaluateStatically();
     // ...

@@ -141,7 +141,7 @@ namespace Checkers
     return any;
   }
 
-  void CheckersPosition::EvaluateStatically(void)
+  void CheckersPosition::EvaluateStatically(void) noexcept
   {
     MainPosition::EvaluateStatically();
     // ...

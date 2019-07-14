@@ -47,7 +47,7 @@ namespace TicTacToe
   //  return false;
   //};
 
-  void TicTacToePosition::EvaluateStatically(void)
+  void TicTacToePosition::EvaluateStatically(void) noexcept
   {
     int v1{ 0 };
     int v2{ 0 };

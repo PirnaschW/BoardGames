@@ -17,6 +17,7 @@ namespace BoardGamesCore
     constexpr inline Coordinate GetSizeX(void) const noexcept { return sizeX; }  // potentially needed for positional value calculations
     constexpr inline Coordinate GetSizeY(void) const noexcept { return sizeY; }  // only needed for positional value calculations
     constexpr inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX, sizeY) ? pMap->GetPiece(pieces[l.Index(sizeX, sizeY)]) : nullptr; }
+    inline bool HasPiece(const Piece* p) const noexcept { const PieceIndex z = pMap->GetIndex(p); for (const auto& pp : pieces) if (pp == z) return true; return false; }
     inline bool operator ==(const Position* p) const noexcept { return p->sizeX == sizeX && p->sizeY == sizeY && p->pieces == pieces; }
     inline bool operator !=(const Position* p) const noexcept { return !(*this == p); }
 
@@ -90,7 +91,7 @@ namespace BoardGamesCore
     bool JumpsOnly(Moves& moves) const noexcept;
     inline Moves& GetMoveList(bool w) { return w ? movelistW : movelistB; }
     virtual bool AddIfLegal(Moves&, const Location, const Location) const { return false; };
-    virtual void EvaluateStatically(void);       // calculate position value and save
+    virtual void EvaluateStatically(void) noexcept;       // calculate position value and save
     virtual PositionValue Evaluate(AIContextP& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
     virtual inline unsigned int GetMoveCountFactor(void) const noexcept { return 20; }

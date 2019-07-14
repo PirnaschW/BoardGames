@@ -46,7 +46,7 @@ namespace TicTacToe
     virtual inline MainPosition* Clone(void) const override { return new TicTacToePosition(*this); }
     virtual void GetAllMoves(void) override;
 //    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
-    virtual void EvaluateStatically(void) override;
+    virtual void EvaluateStatically(void) noexcept override;
 
   protected:
     inline unsigned int GetChainValue(unsigned int z) const noexcept;

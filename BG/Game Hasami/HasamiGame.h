@@ -45,7 +45,7 @@ namespace Hasami
     HasamiPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
-    virtual void EvaluateStatically(void) override;
+    virtual void EvaluateStatically(void) noexcept override;
 
   protected:
     inline unsigned int GetChainValue(unsigned int z) const noexcept;

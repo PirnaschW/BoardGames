@@ -78,7 +78,7 @@ namespace Hasami
     return true;
   }
 
-  void HasamiPosition::EvaluateStatically(void)
+  void HasamiPosition::EvaluateStatically(void) noexcept
   {
     GetAllMoves();                                                        // fill the move lists
     if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Tie;        // if no more moves, game over

@@ -53,7 +53,7 @@ namespace LoA
     virtual inline MainPosition* Clone(void) const override { return new LoAPosition(*this); }
     virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
-    virtual void EvaluateStatically(void) override;
+    virtual void EvaluateStatically(void) noexcept override;
 
     // extensions
   protected:

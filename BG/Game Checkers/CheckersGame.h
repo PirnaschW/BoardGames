@@ -79,7 +79,7 @@ namespace Checkers
     virtual inline MainPosition* Clone(void) const override { return new CheckersPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
     virtual void GetAllMoves(void) override;
-    virtual void EvaluateStatically(void) override;
+    virtual void EvaluateStatically(void) noexcept override;
 // extensions
   public:
     bool AddIfLegalJump(Moves& m, bool longjumps, const Steps& s, const Location fr) const;

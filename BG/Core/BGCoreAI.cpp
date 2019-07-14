@@ -96,7 +96,7 @@ namespace BoardGamesCore
   }
 
 
-  void MainPosition::EvaluateStatically(void)   // as seen from White
+  void MainPosition::EvaluateStatically(void) noexcept   // as seen from White
   {
     assert(movelistW.empty());
     assert(movelistB.empty());
@@ -122,7 +122,6 @@ namespace BoardGamesCore
         }
       }
     }
-    //assert(Test::Test::TestValue(this));
   }
 
 
