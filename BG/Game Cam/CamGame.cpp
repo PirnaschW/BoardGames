@@ -245,7 +245,7 @@ namespace Cam
       if (c1 != c0)                                                       // jump was over an enemy piece, take it
       {
         a1.push_back(std::make_shared<ActionTake>(l1, p1));
-        a1.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p1->GetColor()), p1));
+        a1.push_back(std::make_shared<ActionPlace>(Location(BoardPart::Taken,0,p1->GetColor() == &Color::White ? 0U : 1U), p1));
       }
       a1.push_back(std::make_shared<ActionPlace>(l2, p0));
 
@@ -260,6 +260,7 @@ namespace Cam
   {
     bool first{ true };            // flag: we are looking for the first part of a move
     Location l1{ fr };             // starting point of the move
+    Location lj{ fr._b,(fr._x + to._x) / 2U,(fr._y + to._y) / 2U };
 
     // loop through the actions, first find a Take of p, then a Place of p, then compare to given move
     for (const auto& aa : a)
@@ -276,6 +277,9 @@ namespace Cam
       }
       else        // looking for second
       {
+        // check for a previous Jump over same location
+        if (aa->IsTake() && aa->GetLocation() == lj) return true;
+
         // check for a Place of p
         if (!aa->IsTake() && aa->GetPiece() == p)
         {

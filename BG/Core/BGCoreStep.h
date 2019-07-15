@@ -34,7 +34,7 @@ namespace BoardGamesCore
   public:
     inline ActionTake(const Location& l, const Piece* p) noexcept : Action(l, p) {}
     inline virtual bool IsTake(void) const noexcept { return true; }
-    void Execute(MainPosition* p) const noexcept;
+    void Execute(MainPosition* p) const noexcept override;
     inline bool operator == (const ActionTake& a) const noexcept { return _l == a._l && _p == a._p; }
     inline bool operator != (const ActionTake& a) const noexcept { return !(*this == a); }
   };
@@ -44,7 +44,7 @@ namespace BoardGamesCore
   {
   public:
     inline ActionJump(const Location& l, const Piece* p) noexcept : Action(l, p) {}
-    void Execute(MainPosition* p) const noexcept;
+    void Execute(MainPosition* p) const noexcept override;
     inline bool operator == (const ActionJump& a) const noexcept { return _l == a._l && _p == a._p; }
     inline bool operator != (const ActionJump& a) const noexcept { return !(*this == a); }
   };
@@ -54,7 +54,7 @@ namespace BoardGamesCore
   public:
     inline ActionPlace(const Location& l, const Piece* p) noexcept : Action(l, p) {}
     inline virtual bool IsTake(void) const noexcept { return false; }
-    void Execute(MainPosition* p) const noexcept;
+    void Execute(MainPosition* p) const noexcept override;
     inline bool operator == (const ActionPlace& a) const noexcept { return _l == a._l && _p == a._p; }
     inline bool operator != (const ActionPlace& a) const noexcept { return !(*this == a); }
   };
