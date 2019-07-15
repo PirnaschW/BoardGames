@@ -64,6 +64,7 @@ namespace BoardGamesCore
     constexpr inline PieceMap(const PieceMap& p) noexcept : used{ p.used }, map{ p.map } {}
     constexpr inline PieceIndex GetIndex(const Piece* p) const { for (PieceIndex z = 0; z < used; z++) if (map[z] == p) return z; throw; }
     constexpr inline void Add(const Piece* p) noexcept { map[used++] = p; }
+    constexpr inline void Empty(void) noexcept { used = 0; }
     constexpr inline PieceIndex GetCount(void) const noexcept { return used; }
     constexpr inline const Piece* GetPiece(PieceIndex i) const noexcept { return map[i]; }
 

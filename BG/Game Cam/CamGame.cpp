@@ -13,35 +13,43 @@ namespace Cam
   inline const CamPiece CamPiece::BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
   inline const CamPiece CamPiece::BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
 
-  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const
   {
-    Steps s{};
-    const CamPosition& pos = dynamic_cast<const CamPosition&>(p);
-    pos.CollectJumps(l, s, false, &Color::NoColor, moves);
+    const CamPosition& pos = dynamic_cast<const CamPosition&>(p);         // position must be a Cam position
     const Piece* p0 = pos.GetPiece(l);                                    // piece that is moving
+    pos.CollectJumps(l, Actions{}, false, &Color::NoColor, m);            // collect all jumps
+
     for (auto& d : Offset::Qdirection)                                    // try slides all eight directions
     {
-      const Piece* p1 = pos.GetPiece(l + d);                              // what is on the tile to move to?
+      const Location to{ l + d };                                         // location to move to
+      const Piece* p1 = pos.GetPiece(to);                                 // what is on the target location?
       if (p1 == nullptr) continue;                                        // out of board
       if (p1 == &Piece::NoTile) continue;                                 // out of board
       if (!p1->IsBlank()) continue;                                       // tile occupied
-      moves.push_back(std::make_shared<ComplexMove>(Steps(1,std::make_shared<StepComplex>( Field{ l,p0 }, Field{ l + d,p0 } )))); // ok, so add move to move list
+
+      Actions a{ std::make_shared<ActionTake>(l, p0) };                   // pick piece up
+      a.push_back(std::make_shared<ActionPlace>(to, p0));                 // and place it on target
+      m.push_back(std::make_shared<Move>(a));                             // add move to move list
     }
   }
 
-  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const
   {
-    Steps s{};
-    const CamPosition& pos = dynamic_cast<const CamPosition&>(p);
-    pos.CollectJumps(l, s, true, &Color::NoColor, moves);
+    const CamPosition& pos = dynamic_cast<const CamPosition&>(p);         // position must be a Cam position
+    pos.CollectJumps(l, Actions{}, true, &Color::NoColor, m);             // collect all jumps
+
     const Piece* p0 = pos.GetPiece(l);                                    // piece that is moving
     for (auto& d : Offset::Qdirection)                                    // try slides all eight directions
     {
-      const Piece* p1 = pos.GetPiece(l + d);                              // what is on the tile to move to?
+      const Location to{ l + d };                                         // location to move to
+      const Piece* p1 = pos.GetPiece(to);                                 // what is on the target location?
       if (p1 == nullptr) continue;                                        // out of board
       if (p1 == &Piece::NoTile) continue;                                 // out of board
       if (!p1->IsBlank()) continue;                                       // tile occupied
-      moves.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<StepComplex>(Field{ l,p0 }, Field{ l + d,p0 }))));  // ok, so add move to move list
+
+      Actions a{ std::make_shared<ActionTake>(l, p0) };                   // pick piece up
+      a.push_back(std::make_shared<ActionPlace>(to, p0));                 // and place it on target
+      m.push_back(std::make_shared<Move>(a));                             // add move to move list
     }
   }
 
@@ -190,9 +198,9 @@ namespace Cam
     }
   }
 
-  bool CamPosition::CollectJumps(const Location& fr, const Steps& s, bool charge, const Color* c, Moves& m) const
+  bool CamPosition::CollectJumps(const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const
   {
-    const Piece* p0 = s.empty() ? GetPiece(fr) : s.front()->GetFr().GetPiece(); // the piece that is moving
+    const Piece* p0 = a.empty() ? GetPiece(fr) : a[0]->GetPiece();        // the piece that is moving
     assert(p0 != nullptr);
     assert(p0 != &Piece::NoTile);
     assert(!p0->IsBlank());
@@ -202,10 +210,10 @@ namespace Cam
 
     for (auto& d : Offset::Qdirection)                                    // try all eight directions
     {
-      Steps s1{ s };                                            // copy the previous jump sequence, so we can extend it
-      const Color* cc{ c };                                                 // color last jumped over (can switch once if charge)
-      const Location l1{ fr + d };                                          // location to jump over
-      const Location l2{ l1 + d };                                          // location to jump to
+      Actions a1{ a };                                                    // copy the previous jump sequence, so we can extend it
+      const Color* cc{ c };                                               // color last jumped over (can switch once if charge)
+      const Location l1{ fr + d };                                        // location to jump over
+      const Location l2{ l1 + d };                                        // location to jump to
 
       // check the jumped-over tile                                         
       const Piece* p1 = GetPiece(l1);                                     // what is on the tile to jump over?
@@ -229,50 +237,59 @@ namespace Cam
       }
 
       // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
-      bool repeat{ false };
-      for (auto& ss : s)
-      {
-        if (ss->GetFr().GetLocation() == fr && ss->GetTo().GetLocation() == l2)
-        {
-          repeat = true;  // same jump was done before
-          break;
-        }
-        if (ss->GetFr().GetLocation() == l2 && ss->GetTo().GetLocation() == fr)
-        {
-          repeat = true;  // reverse jump was done before
-          break;
-        }
-        for (const auto& t : ss->GetTakes())
-        {
-          if (t.GetLocation() == l1)
-          {
-            repeat = true;  // this piece was taken before
-            break;
-          }
-        }
-      }
-      if (repeat) continue;                                               // don't allow the same move again
+      if (IsRepeat(a,p0,fr,l2)) continue;                                 // don't allow the same move again
 
       // a legal jump was found
       any = true;
-      Step::StepType st{ Step::StepType::Jump };
-      Fields f{};
-      if (c1 != c0)                                                       // jump was over an enemy piece
+      a1.push_back(std::make_shared<ActionTake>(fr, p0));
+      if (c1 != c0)                                                       // jump was over an enemy piece, take it
       {
-        st = (Step::StepType) (Step::StepType::Jump | StepSimple::StepType::Take);
-        f.push_back(Field{ l1,p1 });
+        a1.push_back(std::make_shared<ActionTake>(l1, p1));
+        a1.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p1->GetColor()), p1));
       }
+      a1.push_back(std::make_shared<ActionPlace>(l2, p0));
 
-      s1.push_back(std::make_shared<StepComplex>(Field{ fr, p0 }, Field{ l2,p0 }, st, f));         // add the jump to the StepSimple list
-
-      if (!CollectJumps(l2, s1, charge, cc, m) ||                         // collect potential further jumps
-        st == Step::StepType::Jump)
-      {
-        m.push_back(std::make_shared<ComplexMove>(s1));                          // if it could not be extended, or was a jump over an own piece, add the StepSimple list as a move
-      }
+      if (!CollectJumps(l2, a1, charge, cc, m)  || (c0 == c1))            // collect potential further jumps
+        m.push_back(std::make_shared<Move>(a1));                          // if it could NOT be extended, or was a jump over an own piece, add as move
     }
     return any;
   }
+
+
+  bool CamPosition::IsRepeat(const Actions& a, const Piece* p, const Location fr, const Location to) const noexcept
+  {
+    bool first{ true };            // flag: we are looking for the first part of a move
+    Location l1{ fr };             // starting point of the move
+
+    // loop through the actions, first find a Take of p, then a Place of p, then compare to given move
+    for (const auto& aa : a)
+    {
+      if (first)  // looking for first?
+      {
+        // check for a Take of p
+        if (aa->IsTake() && aa->GetPiece() == p)
+        {
+          // save it
+          l1 = aa->GetLocation();
+          first = false;
+        }
+      }
+      else        // looking for second
+      {
+        // check for a Place of p
+        if (!aa->IsTake() && aa->GetPiece() == p)
+        {
+          const Location l2 = aa->GetLocation();
+          // compare forward and backward
+          if ((l1 == fr && l2 == to) || (l2 == fr && l1 == to)) return true;
+
+          first = true; // go on and look for another first
+        }
+      }
+    }
+    return false;
+  }
+
 
   void CamPosition::GetAllMoves(void)  // collect all moves for all pieces
   {
@@ -310,10 +327,11 @@ namespace Cam
   const PieceMapP& CamGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
-    p->Add(&CamPiece::WP);
+    p->Empty();
     p->Add(&CamPiece::WN);
-    p->Add(&CamPiece::BP);
     p->Add(&CamPiece::BN);
+    p->Add(&CamPiece::WP);
+    p->Add(&CamPiece::BP);
     return p;
   }
 
@@ -322,7 +340,7 @@ namespace Cam
   {
     static Dimensions d{
        Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(3, 2, BoardStartX + FieldSizeX, BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
+       Dimension(3, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
        Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
     };
     return d;

@@ -74,7 +74,7 @@ namespace Shogi
   }
   bool Lance::CanMove(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    return p->IsColor(&Color::White) ? (l._y < pos->GetSizeY() - 1) : (l._y > 1);           // move (or drop) anywhere except last row
+    return p->IsColor(&Color::White) ? (l._y > 0) : (l._y < pos->GetSizeY() - 1);                  // move (or drop) anywhere except last row
   }
 
   void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
@@ -85,7 +85,7 @@ namespace Shogi
   }
   bool Knight::CanMove(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    return p->IsColor(&Color::White) ? (l._y < pos->GetSizeY() - 2) : (l._y > 2);   // move anywhere except last two rows
+    return p->IsColor(&Color::White) ? (l._y > 1) : (l._y < pos->GetSizeY() - 2);                  // move (or drop) anywhere except last two rows
   }
 
   void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
@@ -340,6 +340,7 @@ namespace Shogi
   const PieceMapP& ShogiGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(&ShogiPiece::ShogiWK);
     p->Add(&ShogiPiece::ShogiBK);
     p->Add(&ShogiPiece::ShogiWG);

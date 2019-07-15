@@ -133,6 +133,7 @@ namespace TicTacToe
   const PieceMapP& TicTacToeGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(&TicTacToePiece::TicTacToePieceW);
     p->Add(&TicTacToePiece::TicTacToePieceB);
     return p;

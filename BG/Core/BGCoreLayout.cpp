@@ -205,20 +205,23 @@ namespace BoardGamesCore
   void Game::DragStart(const CPoint& point)
   {
     Location l{ BoardPart::Main, 0U,0U};
-    //if (slay->GetLocation(point, l)) { dragPiece = pos->GetPiece(l); }
-    //else return; // clicked somewhere outside
-
+    if (!lay->GetLocation(point, l)) return; // clicked somewhere invalid
     dragPoint = point;
-    _mode = Mode::Dragging;
+    dragPiece = pos->GetPiece(l);
+    _mode.Set(Mode::Dragging);
   }
 
   void Game::DragEnd(const CPoint& point)
   {
     Location l{ BoardPart::Main, 0U,0U};
-    if (lay->GetLocation(point, l)) pos->SetPiece(l, dragPiece); // dropped on a valid target
-    _mode = Mode::Editing;
+    if (lay->GetLocation(point, l))
+    {
+      if (l._b != BoardPart::Stock)
+        pos->SetPiece(l, dragPiece); // dropped on a valid target
+    }
     dragPoint = {};
     dragPiece = nullptr;
+    _mode.Del(Mode::Dragging);
   }
 
   void Game::Select(const CPoint& point)

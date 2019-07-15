@@ -80,9 +80,10 @@ namespace BoardGamesCore
   bool MainPosition::JumpsOnly(Moves& moves) const noexcept
   {
     // if there are any takes (catching opponent pieces) possible, remove all non-takes
-    if (std::find_if(moves.begin(), moves.end(), [](const MoveP m) {return m->GetSteps().front()->IsTake(); }) == moves.end()) return false;
-    moves.erase(std::remove_if(moves.begin(), moves.end(), [](const MoveP m) {return !m->GetSteps().front()->IsTake(); }), moves.end());
-    return true;
+    //if (std::find_if(moves.begin(), moves.end(), [](const MoveP m) {return m->GetSteps().front()->IsTake(); }) == moves.end()) return false;
+    //moves.erase(std::remove_if(moves.begin(), moves.end(), [](const MoveP m) {return !m->GetSteps().front()->IsTake(); }), moves.end());
+    return false;
+//    return true;
   }
 
   void MainPosition::NextPlayer(void) noexcept
@@ -136,7 +137,7 @@ namespace BoardGamesCore
   {
     movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
     movelistB.clear();                                                    // after the move is executed, the movelists will be outdated
-    for (const auto& aa : m.GetActions()) aa->Execute(this);                           // execute all Actions
+    for (const auto& aa : m.GetActions()) aa->Execute(this);              // execute all Actions
     NextPlayer();                                                         // after the move, it's the next player's turn
   }
 

@@ -128,9 +128,9 @@ namespace BoardGamesCore
   MainPosition* MainPosition::GetPosition(AIContextP& plist, MoveP m) const // execute move, maintain in PList
   {
     MainPosition* pos(Clone());                                           // create a copy of the board
-    if (m != nullptr) pos->Execute(*m);                                    // execute move if provided
+    if (m != nullptr) pos->Execute(*m);                                   // execute move if provided
 
-    auto pl0 = plist->find(pos);                                           // check if we evaluated this position before
+    auto pl0 = plist->find(pos);                                          // check if we evaluated this position before
     if (pl0 != plist->end())
     {
       delete pos;
@@ -138,7 +138,7 @@ namespace BoardGamesCore
     }
 
     pos->EvaluateStatically();                                            // evaluate position statically
-    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist->insert(pos);                                         // and save it
+    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist->insert(pos);    // and save it
     assert(pl1.second);
     return *(pl1.first);                                                  // return the pointer to the new entry
   }
