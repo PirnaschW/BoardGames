@@ -72,7 +72,9 @@ namespace BoardGamesCore
     using Depth = unsigned int;
 
   protected:
-    inline MainPosition(const MainPosition& m) noexcept : Position(m), _taken(m._taken), _stock(m._stock) {}
+    inline MainPosition(const MainPosition& m) noexcept : Position(m),
+      sequence(m.sequence), _stock(m._stock), _taken(m._taken), onTurn(m.onTurn), depth(m.depth),
+      value(m.value), movelistW(m.movelistW), movelistB(m.movelistB) {}
 
   public:
     inline MainPosition(const PieceMapP& p, const Dimensions& d) noexcept : Position(p, d[0].xCount, d[0].yCount), _stock(p, d[1].xCount, d[1].yCount), _taken(p, d[2].xCount, d[2].yCount) {}

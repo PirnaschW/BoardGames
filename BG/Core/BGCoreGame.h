@@ -15,6 +15,14 @@ namespace BoardGamesCore
     std::function<void(void)> callback;          // pointer to CDocument's callback function (to update window)
 //    int additionalData{};
     size_t freemem{};
+    void Purge(size_t z) noexcept
+    {
+      for (auto it = begin(); it != end();)
+      {
+        if ((*it)->sequence.size() < z) it = erase(it);
+        else it++;
+      }
+    }
   };
 
   class _Mode

@@ -9,7 +9,8 @@ namespace BoardGamesCore
     std::size_t z{};
     for (auto& p : pieces)
     {
-      z ^= pMap->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
+      z ^= p + 0x9e3779b9 + (z << 6) + (z >> 2);
+//      z ^= pMap->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
     }
     return hash = z;
   }
@@ -137,6 +138,9 @@ namespace BoardGamesCore
   {
     movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
     movelistB.clear();                                                    // after the move is executed, the movelists will be outdated
+    depth = 0;
+
+    sequence.push_back(std::make_shared<Move>(m));                                                // save the move in the sequence
     for (const auto& aa : m.GetActions()) aa->Execute(this);              // execute all Actions
     NextPlayer();                                                         // after the move, it's the next player's turn
   }
