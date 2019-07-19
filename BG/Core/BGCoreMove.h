@@ -13,17 +13,18 @@ namespace BoardGamesCore
     constexpr inline void SetValue(const PositionValue& v) noexcept { _value = v; }
     constexpr inline PositionValue GetValue(void) const noexcept { return _value; }
     constexpr inline bool operator <(const Move& rhs) const noexcept { return _value < rhs._value; }
-    inline bool operator==(const Move& m) const noexcept { return _a == m._a; };
+    inline bool operator==(const Move& m) const noexcept { return _a == m._a; }
+    inline bool operator!=(const Move& m) const noexcept { return !(*this == m); }
     inline const Actions& GetActions(void) const noexcept { return _a; }
-    inline const Location& GetFrL(void) const noexcept { return _a.front()->GetLocation(); };
-    inline const Location& GetToL(void) const noexcept { return _a.back()->GetLocation(); };
+    inline const Location& GetFrL(void) const noexcept { return _a.front()->GetLocation(); }
+    inline const Location& GetToL(void) const noexcept { return _a.back()->GetLocation(); }
 
 //    virtual inline bool operator==(const Move& m) const = 0;
-    virtual inline const Steps GetSteps(void) const { static Steps s{}; return s; };
-    virtual inline const StepP GetStep(unsigned int i = 0) const noexcept { static StepP s{}; return s; };
-    virtual inline bool IsTake(void) const noexcept { return false; };
-    virtual inline const Field& GetFr(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; };
-    virtual inline const Field& GetTo(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; };
+    virtual inline const Steps GetSteps(void) const { static Steps s{}; return s; }
+    virtual inline const StepP GetStep(unsigned int i = 0) const noexcept { static StepP s{}; return s; }
+    virtual inline bool IsTake(void) const noexcept { return false; }
+    virtual inline const Field& GetFr(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; }
+    virtual inline const Field& GetTo(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; }
 
   private:
     PositionValue _value{ PositionValue::Undefined };

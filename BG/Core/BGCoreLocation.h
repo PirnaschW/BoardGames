@@ -25,7 +25,7 @@ namespace BoardGamesCore
     constexpr inline Location& operator+=(const Offset & o) noexcept { _x += o._dx, _y += o._dy; return *this; }
 
     constexpr inline bool Valid(Coordinate sizeX, Coordinate sizeY) const noexcept { return _x >= 0 && _x < sizeX && _y >= 0 && _y < sizeY; }
-    constexpr inline Coordinate Index(Coordinate sizeX, Coordinate /*sizeY*/) const noexcept { return _y * sizeX + _x; }
+    constexpr inline unsigned int Index(Coordinate sizeX, Coordinate /*sizeY*/) const noexcept { return _y * sizeX + _x; }
 
   public:
     // can't be protected, as the values need to be used in many places

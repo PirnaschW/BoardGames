@@ -92,12 +92,12 @@ namespace UnitTestCore
       Assert::AreEqual(l4, l5);
       Assert::AreEqual(l6, l5);
       Assert::AreNotEqual(l3, l5);
-      Assert::AreEqual(static_cast<unsigned int>(l1.Index(16, 16)), 3U * 16U + 2U);
-      Assert::AreEqual(static_cast<unsigned int>(l2.Index(16, 16)), 8U * 16U + 5U);
-      Assert::AreEqual(static_cast<unsigned int>(l3.Index(16, 16)), 8U * 16U + 5U);
-      Assert::AreEqual(static_cast<unsigned int>(l4.Index(16, 16)), 18U * 16U + 11U);
-      Assert::AreEqual(static_cast<unsigned int>(l5.Index(16, 16)), 18U * 16U + 11U);
-      Assert::AreEqual(static_cast<unsigned int>(l6.Index(16, 16)), 18U * 16U + 11U);
+      Assert::AreEqual(l1.Index(16, 16), 3U * 16U + 2U);
+      Assert::AreEqual(l2.Index(16, 16), 8U * 16U + 5U);
+      Assert::AreEqual(l3.Index(16, 16), 8U * 16U + 5U);
+      Assert::AreEqual(l4.Index(16, 16), 18U * 16U + 11U);
+      Assert::AreEqual(l5.Index(16, 16), 18U * 16U + 11U);
+      Assert::AreEqual(l6.Index(16, 16), 18U * 16U + 11U);
     }
 
     TEST_METHOD(TestField)
@@ -137,7 +137,7 @@ namespace UnitTestCore
       Assert::IsTrue(s2.IsTake());
       Assert::IsTrue(s1 != s2);
       Assert::AreEqual(Fields{ f1 }, s2.GetTakes());
-      Assert::AreEqual(s2.GetTakes().size(), 1U);
+      Assert::AreEqual(s2.GetTakes().size(), static_cast<size_t>(1U));
       Assert::AreEqual(s2.GetTakes()[0], f1);
     }
 
@@ -164,7 +164,7 @@ namespace UnitTestCore
       Assert::AreNotEqual(Step::StepType::Normal, s2.GetType());
       Assert::IsTrue(s2.IsTake());
       Assert::AreNotEqual(Fields{ f1 }, s2.GetTakes());  // Takes defaults to empty, not like in StepSimple!
-      Assert::AreEqual(s2.GetTakes().size(), 0U);
+      Assert::AreEqual(s2.GetTakes().size(), static_cast<size_t>(0U));
 
       //std::function<const Field&(void)>_l1 = [&s2] { return s2.GetTake(); };
       //Assert::ExpectException<std::exception>(_l1);
@@ -177,7 +177,7 @@ namespace UnitTestCore
       Assert::AreNotEqual(Step::StepType::Normal, s3.GetType());
       Assert::IsTrue(s3.IsTake());
       Assert::AreNotEqual(Fields{ f1 }, s3.GetTakes());  // Takes defaults to empty, not like in StepSimple!
-      Assert::AreEqual(s3.GetTakes().size(), 2U);
+      Assert::AreEqual(s3.GetTakes().size(), static_cast<size_t>(2U));
       Assert::AreEqual(s3.GetTake(0),f1);
       Assert::AreEqual(s3.GetTake(1),f2);
     }

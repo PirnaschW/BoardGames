@@ -7,13 +7,13 @@ namespace BoardGamesCore
   bool Game::AIMove(void)
   {
     // cleanup position buffer
-    plist->Purge(pos->sequence.size());  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
+    plist->Purge(pos->sequence);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
 
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
     assert(p != nullptr);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 10.0;  // run for n seconds
+    double limit = 20.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == &Color::White;
 
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening

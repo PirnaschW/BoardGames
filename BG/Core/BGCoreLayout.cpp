@@ -103,21 +103,21 @@ namespace BoardGamesCore
       const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == &Color::White));
       s = "Depth";                pDC->TextOutW(800, h += 20, s);  s.Format(_T("%d"),  pos->GetDepth());       pDC->TextOutW(1000, h, s);
       s = "Value";                pDC->TextOutW(800, h += 20, s);  s = v;                                      pDC->TextOutW(1000, h, s);
-      s = "PList size";           pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), plist->size());         pDC->TextOutW(1000, h, s);
-      s = "free mem";             pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), plist->freemem);        pDC->TextOutW(1000, h, s);
-      s = "sizeof(Position)";     pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(Position));      pDC->TextOutW(1000, h, s);
-      s = "sizeof(MainPosition)"; pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(MainPosition));  pDC->TextOutW(1000, h, s);
-      s = "sizeof(vector<Move>)"; pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(Moves));         pDC->TextOutW(1000, h, s);
-      s = "sizeof(Move)";         pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(Move));          pDC->TextOutW(1000, h, s);
-      s = "sizeof(Action)";       pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(Action));        pDC->TextOutW(1000, h, s);
-      s = "sizeof(ActionTake)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(ActionTake));    pDC->TextOutW(1000, h, s);
-      s = "sizeof(ActionJump)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(ActionJump));    pDC->TextOutW(1000, h, s);
-      s = "sizeof(ActionPlace)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(ActionPlace));   pDC->TextOutW(1000, h, s);
-      //s = "sizeof(StepPlace)";    pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(StepPlace));     pDC->TextOutW(1000, h, s);
-      //s = "sizeof(StepSimple)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(StepSimple));    pDC->TextOutW(1000, h, s);
-      //s = "sizeof(StepComplex)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(StepComplex));   pDC->TextOutW(1000, h, s);
-      //s = "sizeof(SimpleMove)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(SimpleMove));    pDC->TextOutW(1000, h, s);
-      //s = "sizeof(ComplexMove)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%lu"), sizeof(ComplexMove));   pDC->TextOutW(1000, h, s);
+      s = "PList size";           pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), plist->size());         pDC->TextOutW(1000, h, s);
+      s = "free mem";             pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), plist->freemem);        pDC->TextOutW(1000, h, s);
+      s = "sizeof(Position)";     pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Position));      pDC->TextOutW(1000, h, s);
+      s = "sizeof(MainPosition)"; pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(MainPosition));  pDC->TextOutW(1000, h, s);
+      s = "sizeof(vector<Move>)"; pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Moves));         pDC->TextOutW(1000, h, s);
+      s = "sizeof(Move)";         pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Move));          pDC->TextOutW(1000, h, s);
+      s = "sizeof(Action)";       pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Action));        pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionTake)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionTake));    pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionJump)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionJump));    pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionPlace)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionPlace));   pDC->TextOutW(1000, h, s);
+    //s = "sizeof(StepPlace)";    pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(StepPlace));     pDC->TextOutW(1000, h, s);
+    //s = "sizeof(StepSimple)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(StepSimple));    pDC->TextOutW(1000, h, s);
+    //s = "sizeof(StepComplex)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(StepComplex));   pDC->TextOutW(1000, h, s);
+    //s = "sizeof(SimpleMove)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(SimpleMove));    pDC->TextOutW(1000, h, s);
+    //s = "sizeof(ComplexMove)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ComplexMove));   pDC->TextOutW(1000, h, s);
     }
   }
 

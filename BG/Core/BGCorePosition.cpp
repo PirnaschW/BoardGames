@@ -9,7 +9,7 @@ namespace BoardGamesCore
     std::size_t z{};
     for (auto& p : pieces)
     {
-      z ^= p + 0x9e3779b9 + (z << 6) + (z >> 2);
+      z ^= static_cast<size_t>(p) + 0x9e3779b9 + (z << 6) + (z >> 2);
 //      z ^= pMap->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
     }
     return hash = z;
