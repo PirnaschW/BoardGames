@@ -16,21 +16,23 @@ namespace Cam
 
   class Pawn : public Kind
   {
-  private:
-    constexpr inline Pawn(void) noexcept : Kind('P') {}
+  protected:
+    constexpr inline Pawn(const char& k = 'P') noexcept : Kind(k) {}
 
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; };
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
+    bool CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const;
+    bool IsRepeat(const Actions& a, const Piece* p, const Location fr, const Location to) const noexcept;
 
   public:
     static const Pawn ThePawn;
   };
 
-  class Knight : public Kind
+  class Knight : public Pawn
   {
   private:
-    constexpr inline Knight(void) noexcept : Kind('N') {}
+    constexpr inline Knight(void) noexcept : Pawn('N') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 400; }
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
@@ -65,9 +67,9 @@ namespace Cam
 
     // extensions:
   public:
-    bool CollectJumps(const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const;
+//    bool CollectJumps(const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const;
   private:
-    bool IsRepeat(const Actions& a, const Piece* p, const Location fr, const Location to) const noexcept;
+//    bool IsRepeat(const Actions& a, const Piece* p, const Location fr, const Location to) const noexcept;
   };
 
   class CamGame : public Game
