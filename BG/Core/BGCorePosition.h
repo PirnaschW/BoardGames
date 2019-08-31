@@ -106,9 +106,12 @@ namespace BoardGamesCore
     inline bool IsTaken(const Location& l) const noexcept { return l._b == BoardPart::Taken; }
     virtual inline MoveP GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
     virtual MainPosition* GetPosition(AIContextP& plist, MoveP m = nullptr) const;     // execute move, maintain in PList
+#ifdef STILL_STEPS
     virtual const std::vector<const Piece*> Execute(MoveP m);
-    virtual void Execute(const Move& m) noexcept;
     virtual void Undo(const MoveP m);
+#endif STILL_STEPS
+    virtual void Execute(const Move& m) noexcept;
+    virtual void Undo(const Move& m) noexcept;
 
   public:
     Moves sequence{};

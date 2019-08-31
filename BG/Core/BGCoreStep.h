@@ -27,7 +27,12 @@ namespace BoardGamesCore
     const Piece* _p;
   };
   using ActionP = std::shared_ptr<Action>;
-  using Actions = std::vector<ActionP>;
+
+  class Actions : public std::vector<ActionP>
+  {
+  public:
+    bool IsRepeat(const Piece* p, const Location fr, const Location to) const noexcept;
+  };
 
   class ActionTake : public Action  // Take-Action: Take one piece from the board (into 'hand')
   {
@@ -59,8 +64,7 @@ namespace BoardGamesCore
     inline bool operator != (const ActionPlace& a) const noexcept { return !(*this == a); }
   };
 
-
-
+#ifdef STILL_STEPS
 
   class Step abstract  // define one hop in a complete move
   {
@@ -149,5 +153,7 @@ namespace BoardGamesCore
   static_assert(std::is_constructible < StepComplex, const Field&, const Field&>::value, "is not constructible");
   static_assert(std::is_constructible<StepComplex, const Field&, const Field&, Step::StepType>::value, "is not constructible");
   static_assert(std::is_nothrow_constructible<StepComplex, const Field&, const Field&, Step::StepType>::value, "is not nothrow constructible");
+
+#endif STILL_STEPS
 
 }

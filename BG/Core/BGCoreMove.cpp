@@ -3,6 +3,7 @@
 namespace BoardGamesCore
 {
 
+#ifdef STILL_STEPS
   const std::vector<Location> ComplexMove::GetJumped(void) const  // return list of jumped-over locations
   {
     std::vector<Location> jumped{};
@@ -12,7 +13,7 @@ namespace BoardGamesCore
     }
     return jumped;
   }
-
+#endif STILL_STEPS
 
   //Move&& Move::operator =(Move&& m) noexcept
   //{

@@ -73,7 +73,9 @@ namespace BoardGamesCore
     virtual inline Player* CurrentPlayer(void) const noexcept { return players[current]; }
     virtual inline Player* NextPlayer(void) noexcept { current = ++current % players.size(); return players[current]; }
     virtual bool AIMove(void);
+#ifdef STILL_STEPS
     virtual void Execute(MoveP m);
+#endif STILL_STEPS
     virtual void Execute(const Move& m);
 
 

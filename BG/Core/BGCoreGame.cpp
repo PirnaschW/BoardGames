@@ -64,6 +64,7 @@ namespace BoardGamesCore
     pos->SetPosition(Piece::ListFromHTML(html, Piece::GetHTMLPieceMap()));
   }
 
+#ifdef STILL_STEPS
   void Game::Execute(MoveP m)
   {
     const unsigned int z{ pos->OnTurn() == &Color::White ? 1U : 0U };     // need to buffer the index, as Execute changes who's on turn
@@ -71,6 +72,7 @@ namespace BoardGamesCore
     //if (t.size() > 0) pos->_taken.Push(z, t);                                   // append taken pieces
     NextPlayer();                                                         // the game has also a pointer to the current player
   }
+#endif STILL_STEPS
 
   void Game::Execute(const Move& m)
   {

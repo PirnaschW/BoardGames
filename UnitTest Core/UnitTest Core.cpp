@@ -29,6 +29,7 @@ namespace Microsoft
       template<> inline std::wstring ToString<>(const Piece* p) { std::wstringstream _s; _s << static_cast<const void*>( p); return _s.str(); }
       template<> inline std::wstring ToString<>(      Piece* p) { std::wstringstream _s; _s << static_cast<const void*>( p); return _s.str(); }
 
+#ifdef STILL_STEPS
       template<> inline std::wstring ToString<>(const Step::StepType& s) { std::wstringstream _s; _s << s; return _s.str(); }
       template<> inline std::wstring ToString<>(const Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
       template<> inline std::wstring ToString<>(      Step::StepType* s) { std::wstringstream _s; _s << s; return _s.str(); }
@@ -40,11 +41,13 @@ namespace Microsoft
       template<> inline std::wstring ToString<>(const StepComplex& s) { std::wstringstream _s; _s << ToString(s. GetFr()) << ToString(s. GetTo()) << s. GetType(); return _s.str(); }
       template<> inline std::wstring ToString<>(const StepComplex* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
       template<> inline std::wstring ToString<>(      StepComplex* s) { std::wstringstream _s; _s << ToString(s->GetFr()) << ToString(s->GetTo()) << s->GetType(); return _s.str(); }
+#endif STILL_STEPS
 
       template<> inline std::wstring ToString<>(const PositionValue& p) { std::wstringstream _s; _s << static_cast<int>( p); return _s.str(); }
       template<> inline std::wstring ToString<>(const PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
       template<> inline std::wstring ToString<>(      PositionValue* p) { std::wstringstream _s; _s << static_cast<int>(*p); return _s.str(); }
 
+#ifdef STILL_STEPS
       template<> inline std::wstring ToString<>(const SimpleMove& s) { std::wstringstream _s; _s << ToString(s. GetStep()->GetFr()) << ToString(s. GetStep()->GetTo()) << s. GetStep()->GetType(); return _s.str(); }
       template<> inline std::wstring ToString<>(const SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
       template<> inline std::wstring ToString<>(      SimpleMove* s) { std::wstringstream _s; _s << ToString(s->GetStep()->GetFr()) << ToString(s->GetStep()->GetTo()) << s->GetStep()->GetType(); return _s.str(); }
@@ -52,7 +55,7 @@ namespace Microsoft
       template<> inline std::wstring ToString<>(const ComplexMove& c) { std::wstringstream _c; _c << ToString(c. GetSteps()[0]->GetFr()) << ToString(c. GetSteps()[0]->GetTo()) << c. GetSteps()[0]->GetType(); return _c.str(); }
       template<> inline std::wstring ToString<>(const ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
       template<> inline std::wstring ToString<>(      ComplexMove* c) { std::wstringstream _c; _c << ToString(c->GetSteps()[0]->GetFr()) << ToString(c->GetSteps()[0]->GetTo()) << c->GetSteps()[0]->GetType(); return _c.str(); }
-
+#endif STILL_STEPS
 
     }
   }
@@ -113,6 +116,7 @@ namespace UnitTestCore
       Assert::AreEqual(l2, f2.GetLocation());
     }
 
+#ifdef STILL_STEPS
     TEST_METHOD(TestSimpleStep)
     {
       Location l1(BoardPart::Main, 2U, 3U);
@@ -181,6 +185,7 @@ namespace UnitTestCore
       Assert::AreEqual(s3.GetTake(0),f1);
       Assert::AreEqual(s3.GetTake(1),f2);
     }
+#endif STILL_STEPS
 
     TEST_METHOD(TestPValue)
     {
@@ -281,6 +286,7 @@ namespace UnitTestCore
       Assert::IsFalse(pw > pw);
     }
 
+#ifdef STILL_STEPS
     TEST_METHOD(TestSimpleMove)
     {
       Location l1(BoardPart::Main, 2U, 3U);
@@ -440,6 +446,7 @@ namespace UnitTestCore
       //std::function<Steps(void)>_l1 = [&m1] { return m1.GetSteps(); };
       //Assert::ExpectException<std::exception>(_l1);
     }
+#endif STILL_STEPS
 
     TEST_METHOD(TestColor)
     {

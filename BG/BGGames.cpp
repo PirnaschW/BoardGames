@@ -36,7 +36,7 @@ const BoardGamesCore::VariantList& BGSelect::GetVariants(int id) const
     case IDR_GAMETYPE_CHECKERS:   return Variants<Checkers::CheckersGame>::GetVariants();
     case IDR_GAMETYPE_HASAMI:     return Variants<Hasami::HasamiGame>::GetVariants();
     case IDR_GAMETYPE_LOA:        return Variants<LoA::LoAGame>::GetVariants();
-    case IDR_GAMETYPE_LOGIK:      return Variants<Logik::LGame<8, 5, 7>>::GetVariants();
+    case IDR_GAMETYPE_LOGIK:      return Variants<Logik::LogikGame>::GetVariants();
     case IDR_GAMETYPE_MCHESS:     return Variants<MassacreChess::MCGame>::GetVariants();
     case IDR_GAMETYPE_SHOGI:      return Variants<Shogi::ShogiGame>::GetVariants();
     case IDR_GAMETYPE_TICTACTOE:  return Variants<TicTacToe::TicTacToeGame>::GetVariants();
@@ -58,7 +58,7 @@ BoardGamesCore::Game* BGSelect::CreateGame(void)
       case IDR_GAMETYPE_CHECKERS:   return new Checkers::     CheckersGame (Variants<Checkers::     CheckersGame >::GetPieces(), Checkers::     CheckersGame:: GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_HASAMI:     return new Hasami::       HasamiGame   (Variants<Hasami::       HasamiGame   >::GetPieces(), Hasami::       HasamiGame::   GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_LOA:        return new LoA::          LoAGame      (Variants<LoA::          LoAGame      >::GetPieces(), LoA::          LoAGame::      GetDimensions(m_size_x, m_size_y));
-      case IDR_GAMETYPE_LOGIK:      return new Logik::        LGame         <Logik::PegColors, Logik::PegCount, Logik::MaxTries>();
+      case IDR_GAMETYPE_LOGIK:      return new Logik::        LogikGame    (Variants<Logik::        LogikGame    >::GetPieces(), Logik::        LogikGame::    GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame       (Variants<MassacreChess::MCGame       >::GetPieces(), MassacreChess::MCGame::       GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_SHOGI:      return new Shogi::        ShogiGame    (Variants<Shogi::        ShogiGame    >::GetPieces(), Shogi::        ShogiGame::    GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::    TicTacToeGame(Variants<TicTacToe::    TicTacToeGame>::GetPieces(), TicTacToe::    TicTacToeGame::GetDimensions(m_size_x, m_size_y));

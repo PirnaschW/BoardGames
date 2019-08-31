@@ -5,26 +5,29 @@ namespace BoardGamesCore
 
   Layout::Layout(const Dimension& d, const BoardPart b, const LayoutType lt) noexcept : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
   {
-    unsigned int z = 0;
-    for (Coordinate i = 0; i < dim.xCount; i++)
-      for (Coordinate j = 0; j < dim.yCount; j++, z++)
-      {
-        const TileColor* f{};
-        switch (ltype)
+    if (ltype != LayoutType::None)  // None means the Game is handling its own tile creation
+    {
+      unsigned int z = 0;
+      for (Coordinate i = 0; i < dim.xCount; i++)
+        for (Coordinate j = 0; j < dim.yCount; j++, z++)
         {
-          case LayoutType::Light:       f = &TileColor::Light;                                     break;
-          case LayoutType::Dark:        f = &TileColor::Dark;                                      break;
-          case LayoutType::Small:       f = &TileColor::Small;                                     break;
-          case LayoutType::Alternating: f = ((i + j) % 2) ? &TileColor::Dark : &TileColor::Light;  break;
-        }
+          const TileColor* f{};
+          switch (ltype)
+          {
+            case LayoutType::Light:       f = &TileColor::Light;                                     break;
+            case LayoutType::Dark:        f = &TileColor::Dark;                                      break;
+            case LayoutType::Small:       f = &TileColor::Small;                                     break;
+            case LayoutType::Alternating: f = ((i + j) % 2) ? &TileColor::Dark : &TileColor::Light;  break;
+          }
 
-        const CRect r{
-          (int)(dim.lEdge + dim.xDim * i + dim.xSkip * i),
-          (int)(dim.tEdge + dim.yDim * j + dim.ySkip * j),
-          (int)(dim.lEdge + dim.xDim * (i + 1U) + dim.xSkip * i),
-          (int)(dim.tEdge + dim.yDim * (j + 1U) + dim.ySkip * j) };
-        (tiles)[z] = new Tile(Location(b, i, j), r, f);
-      }
+          const CRect r{
+            (int)(dim.lEdge + dim.xSkip * i + dim.xDim * i),
+            (int)(dim.tEdge + dim.ySkip * j + dim.yDim * j),
+            (int)(dim.lEdge + dim.xSkip * i + dim.xDim * (i + 1U)),
+            (int)(dim.tEdge + dim.ySkip * j + dim.yDim * (j + 1U)) };
+          (tiles)[z] = new Tile(Location(b, i, j), r, f);
+        }
+    }
   }
 
   void Layout::Draw(CDC* pDC, const Position* pos, _Mode mode) const

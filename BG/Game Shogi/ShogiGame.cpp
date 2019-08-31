@@ -254,7 +254,8 @@ namespace Shogi
         assert(pp != nullptr);                                            // verify it
         Moves& m = pp->IsColor(&Color::White) ? movelistW : movelistB;
 
-        Actions a{ std::make_shared<ActionTake>(l,pp) };
+        Actions a{};
+        a.push_back(std::make_shared<ActionTake>(l, pp));
         for (Coordinate i = 0; i < sizeX; i++)
           for (Coordinate j = 0; j < sizeY; j++)
           {
@@ -280,7 +281,8 @@ namespace Shogi
 
     if (IsTaken(fr) && !pf->CanDrop(this, to)) return false;
 
-    Actions a{ std::make_shared<ActionTake>(fr, pf) };
+    Actions a{};
+    a.push_back(std::make_shared<ActionTake>(fr, pf));
     if (!pt->IsBlank()) // if something is there, take it and place in Taken
     {
       a.push_back(std::make_shared<ActionTake>(to, pt));

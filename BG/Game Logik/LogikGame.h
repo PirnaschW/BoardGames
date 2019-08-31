@@ -3,12 +3,19 @@ namespace Logik
 {
 
   // Game Dimensions
-  constexpr unsigned int PegColors = 8; //8;    // colors to choose from
-  constexpr unsigned int PegCount = 5;  //5;    // number of spaces to fill
-  constexpr unsigned int MaxTries = 7;  //7;    // number of tries per player
+  //constexpr unsigned int PegColors = 8; //8;    // colors to choose from
+  //constexpr unsigned int PegCount = 5;  //5;    // number of spaces to fill
+  //constexpr unsigned int MaxTries = 7;  //7;    // number of tries per player
+  using CountColors = unsigned char;   // colors to choose from
+  using CountPegs   = unsigned char;   // number of spaces to fill
+  using CountTries  = unsigned char;   // number of tries per player
 
-  constexpr unsigned int BoardSizeX = 2 * PegCount;  // tiles on the board
-  constexpr unsigned int BoardSizeY = MaxTries;      // tiles on the board
+  constexpr const inline static CountColors MaxColors{ 8 };
+  constexpr const inline static CountPegs   MaxPegs{ 5 };
+  constexpr const inline static CountTries  MaxTries{ 7 };
+
+  constexpr unsigned int BoardSizeX = 2 * MaxPegs; // tiles on the board
+  constexpr unsigned int BoardSizeY = MaxTries;    // tiles on the board
 
     // Display Dimensions
   constexpr unsigned int FieldSizeX = 50;   // pixels per tile
@@ -22,28 +29,31 @@ namespace Logik
 
   constexpr unsigned int BoardFrameX = 5;
 
+
   using namespace BoardGamesCore;
 
-  template <char k> class Peg : public Kind
+  
+  template <char k>
+  class Peg : public Kind
   {
   private:
-    constexpr Peg<k>(void) noexcept : Kind(k) {}
+    constexpr inline Peg<k>(void) noexcept : Kind(k) {}
 
   public:
-    void CollectMoves(const MainPosition&, const Location, Moves&) {};
-    unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1; }
+    constexpr virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1; }
 
   public:
     static const Peg<k> ThePeg;
   };
   
-  template <char k> inline const Peg<k> Peg<k>::ThePeg{};
+  template <char k>
+  const Peg<k> Peg<k>::ThePeg{};
 
 
   class LogikPiece : public Piece
   {
   private:
-    LogikPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline LogikPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     LogikPiece(const LogikPiece&) = delete;
     LogikPiece& operator=(const LogikPiece&) = delete;
 
@@ -60,7 +70,7 @@ namespace Logik
         case 5: return LogikPiece::LPiece6;
         case 6: return LogikPiece::LPiece7;
         case 7: return LogikPiece::LPiece8;
-        default:return LogikPiece::LPiece1;
+        default:assert(1 == 0); return LogikPiece::LPiece1;
       }
     }
 
@@ -76,25 +86,25 @@ namespace Logik
     static const LogikPiece LPiece8;
   };
 
+  using PlayCode = unsigned int; // code that contains a complete play (sequence of Pegs)
 
-  template<unsigned int BX, unsigned int BY, unsigned int BZ>   // PegColors, PegCount, MaxTries
-  class Play                                                    // holds a set of pegs = one potential 'move' or play
+  class Play  // holds a set of pegs = one potential 'move' or play
   {
   public:
-    Play(unsigned int z) noexcept : code(z) { for (unsigned int i = 0; i < BY; ++i) { peg[i] = z % BX; z /= BX; } };
-    Play(const std::array<unsigned int, BY>& p) noexcept : peg(p) { for (unsigned int i = 0; i < BY; ++i) { code *= BX; code += p[BY - 1 - i]; } }
-    bool operator==(const Play<BX, BY, BZ>& p) const noexcept { return p.code == code; }
-    bool operator!=(const Play<BX, BY, BZ>& p) const noexcept { return !(*this == p); }
-    operator unsigned int() const noexcept { return code; }
+    Play(PlayCode z) noexcept;
+    Play(const std::array<unsigned int, 8> & p) noexcept;
+    bool operator==(const Play& p) const noexcept { return p.code == code; }
+    bool operator!=(const Play& p) const noexcept { return !(*this == p); }
+    operator PlayCode() const noexcept { return code; }
     unsigned int operator[](unsigned int z) const noexcept { return peg[z]; }
   private:
-    unsigned int code{};
-    std::array<unsigned int, BY> peg{};
+    PlayCode code{};
+    std::array<unsigned int, 8> peg{};
 
   public:
     static void test(void)
     {
-      for (unsigned int i = 0; i < ipow(BX, BY); i++)
+      for (PlayCode i = 0; i < Math::ipow(8, 8); i++)
       {
         Play p = Play(i);
         Play q = Play(p.peg);
@@ -104,88 +114,84 @@ namespace Logik
   };
 
 
-  template<unsigned int BX, unsigned int BY, unsigned int BZ>   // PegColors, PegCount, MaxTries
-  class Result                                                  // holds a potential result (so many Black and so many White markers)
+  using ResultCode = unsigned int; // code that contains a Result
+
+  class Result  // holds a potential result (so many Black and so many White markers)
   {
   public:
     Result(void) noexcept {}
-    Result(unsigned int b, unsigned int w) noexcept             // get the result from marker counts
-    {
-      if (b == BY) code = Result<BX, BY, BZ>::RN() - 1;
-      else { code = w; for (unsigned int i = 0; i < b; i++) code += BY - i + 1; }
-    }
-    Result(const Play<BX, BY, BZ>& p1, const Play<BX, BY, BZ>& p2) noexcept  // get the result from comparing two plays
-    {
-      bool u1[BY]{};
-      bool u2[BY]{};
-      unsigned int b{};
-      unsigned int w{};
-      for (unsigned int i = 0; i < BY; ++i)
-      {
-        if (p1[i] == p2[i])
-        {
-          b++;
-          u1[i] = u2[i] = true;
-        }
-      }
-      if (b == BY)
-      {
-        code = Result<BX, BY, BZ>::RN() - 1;
-        return;
-      }
-
-      for (unsigned int i = 0; i < BY; ++i)
-      {
-        if (!u1[i])
-        {
-          for (unsigned int j = 0; j < BY; ++j)
-          {
-            if ((i != j) && (!u2[j]))
-            {
-              if (p1[i] == p2[j])
-              {
-                w++;
-                u1[i] = u2[j] = true;
-                break;
-              }
-            }
-          }
-        }
-      }
-      code = w;
-      for (unsigned int i = 0; i < b; i++) code += BY - i + 1;
-    }
-    constexpr static unsigned int RN(void) noexcept { return (BY + 1) * (BY + 2) / 2 - 1; }
-    bool operator==(const Result<BX, BY, BZ>& r) const noexcept { return r.code == this->code; }
-    bool operator!=(const Result<BX, BY, BZ>& r) const noexcept { return !(*this == r); }
+    Result(unsigned int b, unsigned int w) noexcept;     // get the result from marker counts
+    Result(const Play& p1, const Play& p2) noexcept;     // get the result from comparing two plays
+    constexpr static unsigned int RN(void) noexcept { return (8 + 1) * (8 + 2) / 2 - 1; }
+    bool operator==(const Result& r) const noexcept { return r.code == this->code; }
+    bool operator!=(const Result& r) const noexcept { return !(*this == r); }
     operator unsigned int() const noexcept { return code; }
-    unsigned int GetMarker(unsigned int m) const noexcept
-    {
-      unsigned int z{code};
-      if (z == Result<BX, BY, BZ>::RN() - 1) return m ? 0 : BY;
-      for (unsigned int i = 0; i < BY; i++)
-      {
-        if (z <= BY - i) return m ? z : i;
-        z -= BY - i + 1;
-      }
-    }
+    constexpr unsigned int GetMarker(bool m) const noexcept;  // number of black / white markers
 
   private:
     unsigned int code{};
   };
 
 
-  template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
-  class LMove : public SimpleMove
+  //class LMove : public Move
+  //{
+  //public:
+  //  inline LMove(PlayCode m) noexcept : Move(), _m(m) {}
+  //  inline PlayCode GetIndex(void) const noexcept { return _m; }
+
+  //private:
+  //  const PlayCode _m{};
+  //};
+
+
+  class LogikLayout : public MainLayout
   {
   public:
-    LMove(PositionValue mm) noexcept : SimpleMove(std::make_shared<StepSimple>( Field{Location(BoardPart::Main,0U, 0U),nullptr}, Field{Location(BoardPart::Main,0U, 0U),nullptr} )), m((unsigned int)mm) {}
-    unsigned int GetIndex(void) const  noexcept { return m; }
-    ~LMove(void) {}
+    LogikLayout(const Dimensions& d) noexcept;
+    virtual void Draw(CDC* pDC, const MainPosition* pos, _Mode mode) const override;
 
   private:
-    unsigned int m{};
+    inline const TileColor* FC(Coordinate i, Coordinate j) const noexcept;
   };
+
+
+  class LogikPosition : public MainPosition
+  {
+  public:
+    LogikPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
+    virtual inline MainPosition* Clone(void) const override { return new LogikPosition(*this); }
+
+    virtual bool SetFirstFreePeg(const Piece* p) noexcept;
+    virtual bool SetFirstFreeMarker(const Piece* p) noexcept;
+    virtual void ReadPosition(void) noexcept;
+    PlayCode GetBestMove(void) const;
+    void Execute(const PlayCode& p);
+
+  private:
+    unsigned int prevc{};                 // number of moves already made
+    unsigned int previ[MaxTries]{};             // indices of moves already made
+    Result prevR[MaxTries]{ {} };       // results of already made moves
+  };
+
+
+  class LogikGame : public Game
+  {
+  private:
+    LogikGame(void) = delete;
+  public:
+    inline LogikGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new LogikPosition(m, d), new LogikLayout(d)) {}
+
+    virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
+    virtual bool AIMove(void) override;
+
+    static const VariantList& GetVariants(void) noexcept;
+    static const PieceMapP& GetPieces(void) noexcept;
+    static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
+  };
+
+
+  // ########## OLD #############
+#ifdef OLD_LOGIK
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
   class LGame;
@@ -236,6 +242,7 @@ namespace Logik
     }
     virtual void ReadPosition(void) noexcept;
     virtual PositionValue Evaluate(unsigned int) const;
+#ifdef STILL_STEPS
     virtual const std::vector<const Piece*> Execute(MoveP m) override
     {
       std::vector<const Piece*> taken{};
@@ -249,6 +256,7 @@ namespace Logik
 
       return taken;
     }
+#endif STILL_STEPS
 
   private:
     unsigned int prevc{};                 // number of moves already made
@@ -291,12 +299,6 @@ namespace Logik
       previ[k] = Play<BX, BY, BZ>(peg);
       prevc++;                                    // log this line as valid play
     }
-  }
-
-
-  constexpr unsigned int ipow(unsigned int base, unsigned int exp, unsigned int result = 1)
-  {
-    return exp < 1 ? result : ipow(base*base, exp / 2, (exp % 2) ? result * base : result);
   }
 
 
@@ -400,6 +402,7 @@ namespace Logik
     }
   };
 
+
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
   class LGame : public Game
   {
@@ -423,7 +426,14 @@ namespace Logik
     LGame<BX, BY, BZ>(void) noexcept : LGame<BX, BY, BZ>(new LPosition<BX, BY, BZ>(), new LLayout(4 * BY, BZ)) {}
     virtual bool React(UINT nChar, UINT nRepCnt, UINT nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;
+#ifdef STILL_STEPS
     void Execute(MoveP m) override
+    {
+      pos->Execute(m);
+      pos->SetOnTurn(NextPlayer()->GetColor());
+    }
+#endif STILL_STEPS
+    void Execute(const Move& m) override
     {
       pos->Execute(m);
       pos->SetOnTurn(NextPlayer()->GetColor());
@@ -436,6 +446,11 @@ namespace Logik
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
     static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;
+
+  private:
+    constexpr const inline static CountColors _maxColors{ 8 };
+    constexpr const inline static CountPegs   _maxPegs  { 5 };
+    constexpr const inline static CountTries  _maxTries { 7 };
   };
 
   template<unsigned int BX, unsigned int BY, unsigned int BZ>  // PegColors, PegCount, MaxTries
@@ -499,7 +514,7 @@ namespace Logik
       ::AfxMessageBox(L"You might as well resign - Computer will win!");
     }
 
-    Execute(std::make_shared<LMove<BX, BY, BZ>>(e));
+    Execute(LMove(e));
     return true;
   }
 
@@ -545,5 +560,8 @@ namespace Logik
     };
     return d;
   }
+
+#endif // OLD_LOGIK
+
 
 }

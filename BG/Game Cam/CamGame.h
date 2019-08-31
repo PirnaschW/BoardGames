@@ -23,7 +23,6 @@ namespace Cam
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; };
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
     bool CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const;
-    bool IsRepeat(const Actions& a, const Piece* p, const Location fr, const Location to) const noexcept;
 
   public:
     static const Pawn ThePawn;

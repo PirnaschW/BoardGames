@@ -27,7 +27,8 @@ namespace Cam
       if (p1 == &Piece::NoTile) continue;                                 // out of board
       if (!p1->IsBlank()) continue;                                       // tile occupied
 
-      Actions a{ std::make_shared<ActionTake>(l, p0) };                   // pick piece up
+      Actions a{};
+      a.push_back(std::make_shared<ActionTake>(l, p0));                   // pick piece up
       a.push_back(std::make_shared<ActionPlace>(to, p0));                 // and place it on target
       m.push_back(std::make_shared<Move>(a));                             // add move to move list
     }
@@ -51,14 +52,14 @@ namespace Cam
       const Location l2{ l1 + d };                                        // location to jump to
 
       // check the jumped-over tile                                         
-      const Piece* p1 = p.GetPiece(l1);                                     // what is on the tile to jump over?
+      const Piece* p1 = p.GetPiece(l1);                                   // what is on the tile to jump over?
       if (p1 == nullptr) continue;                                        // tile is out of board, can't jump over it
       if (p1 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump over it
       if (p1->IsBlank()) continue;                                        // tile is not occupied, can't jump over it
       const Color* c1 = p1->GetColor();                                   // color of jumped-over piece
 
       // check the jump-to tile                                           
-      const Piece* p2 = p.GetPiece(l2);                                     // what is on the jump-to tile
+      const Piece* p2 = p.GetPiece(l2);                                   // what is on the jump-to tile
       if (p2 == nullptr) continue;                                        // tile is out of board, can't jump there
       if (p2 == &Piece::NoTile) continue;                                 // tile is not existing, can't jump there
       if (!p2->IsBlank()) continue;                                       // tile is occupied, can't jump there
@@ -72,7 +73,7 @@ namespace Cam
       }
 
       // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
-      if (IsRepeat(a, p0, fr, l2)) continue;                                 // don't allow the same move again
+      if (a.IsRepeat(p0, fr, l2)) continue;                               // don't allow the same move again
 
       // a legal jump was found
       any = true;
@@ -84,49 +85,10 @@ namespace Cam
       }
       a1.push_back(std::make_shared<ActionPlace>(l2, p0));
 
-      if (!CollectJumps(p, l2, a1, charge, cc, m) || (c0 == c1))            // collect potential further jumps
+      if (!CollectJumps(p, l2, a1, charge, cc, m) || (c0 == c1))          // collect potential further jumps
         m.push_back(std::make_shared<Move>(a1));                          // if it could NOT be extended, or was a jump over an own piece, add as move
     }
     return any;
-  }
-
-
-  bool Pawn::IsRepeat(const Actions& a, const Piece* p, const Location fr, const Location to) const noexcept
-  {
-    bool first{ true };            // flag: we are looking for the first part of a move
-    Location l1{ fr };             // starting point of the move
-    Location lj{ fr._b,(fr._x + to._x) / 2U,(fr._y + to._y) / 2U };
-
-    // loop through the actions, first find a Take of p, then a Place of p, then compare to given move
-    for (const auto& aa : a)
-    {
-      if (first)  // looking for first?
-      {
-        // check for a Take of p
-        if (aa->IsTake() && aa->GetPiece() == p)
-        {
-          // save it
-          l1 = aa->GetLocation();
-          first = false;
-        }
-      }
-      else        // looking for second
-      {
-        // check for a previous Jump over same location
-        if (aa->IsTake() && aa->GetLocation() == lj) return true;
-
-        // check for a Place of p
-        if (!aa->IsTake() && aa->GetPiece() == p)
-        {
-          const Location l2 = aa->GetLocation();
-          // compare forward and backward
-          if ((l1 == fr && l2 == to) || (l2 == fr && l1 == to)) return true;
-
-          first = true; // go on and look for another first
-        }
-      }
-    }
-    return false;
   }
 
 

@@ -20,9 +20,11 @@ namespace BoardGamesCore
     inline const Location& GetToL(void) const noexcept { return _a.back()->GetLocation(); }
 
 //    virtual inline bool operator==(const Move& m) const = 0;
+#ifdef STILL_STEPS
     virtual inline const Steps GetSteps(void) const { static Steps s{}; return s; }
     virtual inline const StepP GetStep(unsigned int i = 0) const noexcept { static StepP s{}; return s; }
     virtual inline bool IsTake(void) const noexcept { return false; }
+#endif STILL_STEPS
     virtual inline const Field& GetFr(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; }
     virtual inline const Field& GetTo(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; }
 
@@ -36,7 +38,7 @@ namespace BoardGamesCore
   using MoveP = std::shared_ptr<Move>;
   using Moves = std::vector<MoveP>;
 
-
+#ifdef STILL_STEPS
   class SimpleMove : public Move   //  one Piece moves one Step, optional takes one Piece from move target
   {
   public:
@@ -78,5 +80,7 @@ namespace BoardGamesCore
   static_assert(!std::is_trivially_constructible<ComplexMove>::value, "must not be trivially constructible");
   static_assert(std::is_constructible < ComplexMove, const Steps&>::value, "is not constructible");
   static_assert(std::is_nothrow_constructible<ComplexMove, const Steps&>::value, "is not nothrow constructible");
+
+#endif STILL_STEPS
 
 }

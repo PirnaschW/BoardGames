@@ -99,6 +99,7 @@ namespace BoardGamesCore
     else onTurn = &Color::White;
   };
 
+#ifdef STILL_STEPS
   const std::vector<const Piece*> MainPosition::Execute(MoveP m)
   {
     movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
@@ -132,7 +133,7 @@ namespace BoardGamesCore
     NextPlayer();                                                         // after the move, it's the next player's turn
     return taken;                                                         // return the collected taken pieces
   }
-
+#endif STILL_STEPS
 
   void MainPosition::Execute(const Move& m) noexcept
   {
@@ -145,6 +146,7 @@ namespace BoardGamesCore
     NextPlayer();                                                         // after the move, it's the next player's turn
   }
 
+#ifdef STILL_STEPS
   void MainPosition::Undo(const MoveP m)
   {
     const Steps& steps = m->GetSteps();
@@ -157,7 +159,11 @@ namespace BoardGamesCore
     SetPiece(m->GetFr().GetLocation(), m->GetFr().GetPiece());            // put the piece back on the starting field
     PreviousPlayer();                                                     // after the undo, it's the previous player's turn
   }
-
+#endif STILL_STEPS
+  void MainPosition::Undo(const Move& m) noexcept
+  {
+    assert(1 == 0);
+  }
 
   //void TakenPosition::Push(unsigned int player, const std::vector<const Piece*>& p) noexcept
   //{

@@ -10,12 +10,24 @@ namespace Template
 
   bool TemplatePosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
-    const Piece* p = GetPiece(to);
-    if (p == nullptr) return false;  // out of board
-    if (p->IsColor(OnTurn())) return false;  // own piece
+    const Piece* pf = GetPiece(fr);                                       // piece to move
+    if (pf == nullptr) return false;                                      // out of board
+    if (pf == &Piece::NoTile) return false;                               // out of board
+    if (pf->IsBlank()) return false;                                      // tile not occupied
 
-    const StepSimple::StepType st = p->IsBlank() ? StepSimple::StepType::Normal : StepSimple::StepType::Take;
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared<StepSimple>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
+    const Piece* pt = GetPiece(to);                                       // piece on target field
+    if (pt == nullptr) return false;                                      // out of board
+    if (pt == &Piece::NoTile) return false;                               // out of board
+
+    Actions a{};
+    a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
+    if (!pt->IsBlank())
+    {
+      a.push_back(std::make_shared<ActionTake>(to, pt));                    // pick opponent piece up
+      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pf->GetColor()), pt));                   // place it in Taken
+    }
+    a.push_back(std::make_shared<ActionPlace>(to, pf));                   // and place it on target
+    m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return false;
   };
 

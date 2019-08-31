@@ -104,17 +104,20 @@ namespace LoA
 
   bool LoAPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
-    const Piece* p = GetPiece(to);
-    if (p == nullptr) return false;  // out of board
-    if (p->IsColor(OnTurn())) return false;  // own piece
-    if (p->IsBlank())
+    const Piece* pf = GetPiece(fr);
+    const Piece* pt = GetPiece(to);
+    if (pt == nullptr) return false;  // out of board
+    if (pt->IsColor(OnTurn())) return false;  // own piece
+
+    Actions a{};
+    a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
+    if (!pt->IsBlank())
     {
-      m.push_back(std::make_shared<SimpleMove>(std::make_shared<StepSimple>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) })));
+      a.push_back(std::make_shared<ActionTake>(to, pt));                  // pick piece up
+      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt->GetColor()), pt));  // and place it on target
     }
-    else
-    {
-      m.push_back(std::make_shared<SimpleMove>(std::make_shared<StepSimple>( Field{ fr,GetPiece(fr) },Field{ to,GetPiece(fr) },StepSimple::StepType::Take/*,Fields{Field{ to,GetPiece(to) }}*/ )));
-    }
+    a.push_back(std::make_shared<ActionPlace>(to, pf));                   // and place it on target
+    m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return false;
   }
 

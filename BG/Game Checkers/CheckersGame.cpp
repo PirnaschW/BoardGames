@@ -19,10 +19,10 @@ namespace Checkers
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    const int dy = p.OnTurn() == &Color::White ? -1 : 1;
-    pos.AddIfLegal(moves, l, l + Offset(1, dy));
+    const int dy = pos.GetPiece(l)->IsColor(&Color::White) ? -1 : 1;
+    pos.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
     pos.AddIfLegal(moves, l, l + Offset(-1, dy));
-    pos.AddIfLegalJump(moves, false, Steps{}, l);  // check for jump moves
+    pos.AddIfLegalJump(moves, false, Actions{}, l);                       // check for jump moves
   }
 
 
@@ -30,8 +30,8 @@ namespace Checkers
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
-      pos.AddIfLegal(moves, l, l + d);  // check for slide moves
-    pos.AddIfLegalJump(moves, false, Steps{}, l);  // check for jump moves
+      pos.AddIfLegal(moves, l, l + d);                                    // check for slide moves
+    pos.AddIfLegalJump(moves, false, Actions{}, l);                       // check for jump moves
   }
 
 
@@ -40,19 +40,12 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
-    pos.AddIfLegalJump(moves, true, Steps{}, l);                    // check for jump moves
+    pos.AddIfLegalJump(moves, true, Actions{}, l);                        // check for jump moves
   }
 
 
   CheckersPosition::CheckersPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    //SetPiece(Location(1, 2), &CheckersPiece::CheckersPieceB);
-    //SetPiece(Location(3, 2), &CheckersPiece::CheckersPieceB);
-    //SetPiece(Location(5, 2), &CheckersPiece::CheckersPieceB);
-    //SetPiece(Location(5, 6), &CheckersPiece::CheckersPieceB);
-    //SetPiece(Location(2, 5), &CheckersPiece::CheckersPieceB);
-    //SetPiece(Location(4, 7), &CheckersPiece::CheckersQueenW);
-    //return;
     for (Coordinate j = 0; j < d[0].yCount / 2 - 1; j++)
     {
       for (Coordinate i = 0; i < d[0].xCount; i++)
@@ -70,14 +63,18 @@ namespace Checkers
     if (!p->IsBlank()) return false;                                      // field is not empty
 
     const Piece * p2 = CanPromote(to) ? GetPiece(fr)->Promote(true) : GetPiece(fr);
-    m.push_back(std::make_shared<ComplexMove>(Steps(1, std::make_shared<StepComplex>(Field{ fr,GetPiece(fr) }, Field{ to,p2 }, Step::StepType::Normal, Fields{Field{ to,GetPiece(to) }}))));
+
+    Actions a{};
+    a.push_back(std::make_shared<ActionTake>(fr, p));                     // pick piece up
+    a.push_back(std::make_shared<ActionPlace>(to, p2));                   // and place it on target
+    m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return true;
   }
 
 
-  bool CheckersPosition::AddIfLegalJump(Moves& m, bool longjumps, const Steps& s, const Location fr) const
+  bool CheckersPosition::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Location fr) const
   {
-    const Location l0{ s.empty() ? fr : s.front()->GetFr().GetLocation() };
+    const Location l0{ fr };
     const Piece* p0 = GetPiece(l0);                                       // the piece that is moving
     assert(p0 != nullptr);
     assert(p0 != &Piece::NoTile);
@@ -111,29 +108,18 @@ namespace Checkers
 
           // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
           bool repeat{ false };
-          for (auto& ss : s)
-          {
-            for (const auto& t : ss->GetTakes())
-            {
-              if (t.GetLocation() == l1)
-              {
-                repeat = true;  // this piece was taken before
-                break;
-              }
-            }
-          }
-          if (repeat) break;                                              // don't allow the same move again
+          if (a.IsRepeat(p0, l0, l2)) break;                              // don't allow the same move again
 
           // a legal jump was found
           any = true;
-          Fields f{};
-          f.push_back(Field{ l1,p1 });
-          Steps s1{ s };                                      // copy the previous jump sequence, so we can extend it
           // add the jump to the StepSimple list
-          s1.push_back(std::make_shared<StepComplex>(Field{ fr, p0 }, Field{ l2,p0 }, (Step::StepType) (Step::StepType::Jump | Step::StepType::Take), f));
-
-          if (!AddIfLegalJump(m, longjumps, s1, l2))                      // collect potential further jumps
-            m.push_back(std::make_shared<ComplexMove>(s1));                      // if it could not be extended, or was a jump over an own piece, add the StepSimple list as a move
+          Actions a0{ a };
+          a0.push_back(std::make_shared<ActionTake>(fr, p0));             // pick piece up
+          a0.push_back(std::make_shared<ActionTake>(l1, p1));             // pick jumped piece up
+          a0.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p1->GetColor()), p1)); // place it in taken
+          a0.push_back(std::make_shared<ActionPlace>(l2, p0));            // and place it on target
+          if (!AddIfLegalJump(m, longjumps, a0, l2))                      // collect potential further jumps
+            m.push_back(std::make_shared<Move>(a));                       // if it could not be extended, add the list as a move
         }
         break;
       }

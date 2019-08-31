@@ -47,34 +47,32 @@ namespace Hasami
   bool HasamiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* p = GetPiece(to);
-    if (p == nullptr) return false;          // out of board
-    if (!p->IsBlank()) return false;         // occupied
-    StepSimple::StepType st{ StepSimple::StepType::Normal };
+    if (p == nullptr) return false;                                       // out of board
+    if (!p->IsBlank()) return false;                                      // occupied
 
-    Fields taken{};
+    Actions a{};
+    a.push_back(std::make_shared<ActionTake>(fr, p));                     // pick piece up
+
     for (auto& d : Offset::Rdirection)
     {
-      Fields t{};
+      Actions ad{};
       Location l = to;
       const Piece* pp{};
       while ((pp = GetPiece(l += d)) != nullptr)
       {
-        if (pp->IsBlank()) break;           // nothing comes from this direction
-        if (l == fr)                        // was this going backwards?
+        if (pp->IsBlank()) break;                                         // nothing comes from this direction
+        if (l == fr) break;                                               // was this going backwards?
+        if (pp->GetColor() != p->GetColor())                              // opponent's piece? Take it tentatively
         {
-          if (t.size() == 1)                // if something was inbetween, it was a jump
-            st = StepSimple::StepType::Jump;
-          break;                            // either way, stop looking into this direction
+          ad.push_back(std::make_shared<ActionTake>(l, pp));              // pick opponents piece up
+          ad.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p->GetColor()), pp));            // and place it to Taken
         }
-        if (pp->IsColor(OnTurn()))          // own piece; this 'takes' all intermediate pieces
-        {
-          taken.insert(taken.end(), std::make_move_iterator(t.begin()), std::make_move_iterator(t.end()));
-          break;
-        }
-        else t.push_back(Field(l, pp));     // opponents piece, add to potential taken list
+        else a.insert(a.end(),ad.begin(),ad.end());                       // own piece; tentative takes become real
       }
     }
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared<StepSimple>(Field{ fr,GetPiece(fr) }, Field{ to,GetPiece(fr) }, st)));
+
+    a.push_back(std::make_shared<ActionPlace>(to, p));                    // and place it on target
+    m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return true;
   }
 

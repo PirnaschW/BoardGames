@@ -22,7 +22,7 @@ namespace BoardGamesCore
   class Layout  // a layout contains the physical layout of the tiles of the playing board
   {
   public:
-    enum class LayoutType { Light, Dark, Alternating, Small };
+    enum class LayoutType { Light, Dark, Alternating, Small, None };
   protected:
     Layout(void) = delete;
   public:

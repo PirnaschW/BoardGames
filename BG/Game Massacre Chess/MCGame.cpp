@@ -26,15 +26,22 @@ namespace MassacreChess
   bool MCPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
     const Piece* pf = GetPiece(fr);
-    const Piece* pt = GetPiece(to);
     assert(pf != nullptr);                                                // start field must exist
-    if (pt == nullptr) return false;                                      // out of board
     assert(!pf->IsBlank());                                               // start field must be a piece
+
+    const Piece* pt = GetPiece(to);
+    if (pt == nullptr) return false;                                      // out of board
     if (pt->IsBlank()) return true;                                       // not a move, but keep trying this direction
     if (pt->GetColor() == pf->GetColor()) return false;                   // own piece; don't keep trying this direction
 
     // valid move, save into collection
-    m.push_back(std::make_shared<SimpleMove>(std::make_shared < StepSimple>( Field{fr,pf},Field{to,pf},StepSimple::StepType::Take/*,Fields{Field{to,pt}}*/ )));
+    Actions a{};
+    a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
+    a.push_back(std::make_shared<ActionTake>(to, pt));                    // pick opponent piece up
+    a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pf->GetColor()), pt));                   // place it in Taken
+    a.push_back(std::make_shared<ActionPlace>(to, pf));                   // and place it on target
+    m.push_back(std::make_shared<Move>(a));                               // add move to move list
+
     return false;                                                         // don't keep trying this direction
   };
 

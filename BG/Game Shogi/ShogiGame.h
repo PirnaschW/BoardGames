@@ -199,6 +199,7 @@ namespace Shogi
       : Piece(k, c, l, l, s), up(u), down(d) {}
     ShogiPiece(const ShogiPiece&) = delete;
     ShogiPiece& operator=(const ShogiPiece&) = delete;
+
   public:
     virtual inline bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
     virtual inline const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
