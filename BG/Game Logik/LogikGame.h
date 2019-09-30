@@ -92,19 +92,19 @@ namespace Logik
   {
   public:
     Play(PlayCode z) noexcept;
-    Play(const std::array<unsigned int, 8> & p) noexcept;
+    Play(const std::array<unsigned int, MaxPegs> & p) noexcept;
     bool operator==(const Play& p) const noexcept { return p.code == code; }
     bool operator!=(const Play& p) const noexcept { return !(*this == p); }
     operator PlayCode() const noexcept { return code; }
     unsigned int operator[](unsigned int z) const noexcept { return peg[z]; }
   private:
     PlayCode code{};
-    std::array<unsigned int, 8> peg{};
+    std::array<unsigned int, MaxPegs> peg{};
 
   public:
     static void test(void)
     {
-      for (PlayCode i = 0; i < Math::ipow(8, 8); i++)
+      for (PlayCode i = 0; i < Math::ipow(MaxColors, MaxPegs); i++)
       {
         Play p = Play(i);
         Play q = Play(p.peg);
@@ -122,7 +122,7 @@ namespace Logik
     Result(void) noexcept {}
     Result(unsigned int b, unsigned int w) noexcept;     // get the result from marker counts
     Result(const Play& p1, const Play& p2) noexcept;     // get the result from comparing two plays
-    constexpr static unsigned int RN(void) noexcept { return (8 + 1) * (8 + 2) / 2 - 1; }
+    constexpr static unsigned int RN(void) noexcept { return (MaxPegs + 1) * (MaxPegs + 2) / 2 - 1; }
     bool operator==(const Result& r) const noexcept { return r.code == this->code; }
     bool operator!=(const Result& r) const noexcept { return !(*this == r); }
     operator unsigned int() const noexcept { return code; }

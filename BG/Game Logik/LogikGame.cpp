@@ -20,36 +20,36 @@ namespace Logik
 
   Play::Play(PlayCode z) noexcept : code(z)
   {
-    for (unsigned int i = 0; i < 8; ++i)
+    for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      peg[i] = z % 8;
-      z /= 8;
+      peg[i] = z % MaxPegs;
+      z /= MaxColors;
     }
   }
 
-  Play::Play(const std::array<PlayCode, 8> & p) noexcept : peg(p)
+  Play::Play(const std::array<PlayCode, MaxPegs> & p) noexcept : peg(p)
   {
-    for (unsigned int i = 0; i < 8; ++i)
+    for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      code *= 8;
-      code += p[8 - 1 - i];
+      code *= MaxColors;
+      code += p[MaxPegs - 1 - i];
     }
   }
 
 
   Result::Result(unsigned int b, unsigned int w) noexcept  // get the result from marker counts
   {
-    if (b == 8) code = Result::RN() - 1;
-    else { code = w; for (unsigned int i = 0; i < b; i++) code += 8 - i + 1; }
+    if (b == MaxPegs) code = Result::RN() - 1;
+    else { code = w; for (unsigned int i = 0; i < b; i++) code += MaxPegs - i + 1; }
   }
 
   Result::Result(const Play& p1, const Play& p2) noexcept  // get the result from comparing two plays
   {
-    bool u1[8]{};
-    bool u2[8]{};
+    bool u1[MaxPegs]{};
+    bool u2[MaxPegs]{};
     unsigned int b{};
     unsigned int w{};
-    for (unsigned int i = 0; i < 8; ++i)
+    for (unsigned int i = 0; i < MaxPegs; ++i)
     {
       if (p1[i] == p2[i])
       {
@@ -57,17 +57,17 @@ namespace Logik
         u1[i] = u2[i] = true;
       }
     }
-    if (b == 8)
+    if (b == MaxPegs)
     {
       code = Result::RN() - 1;
       return;
     }
 
-    for (unsigned int i = 0; i < 8; ++i)
+    for (unsigned int i = 0; i < MaxPegs; ++i)
     {
       if (!u1[i])
       {
-        for (unsigned int j = 0; j < 8; ++j)
+        for (unsigned int j = 0; j < MaxPegs; ++j)
         {
           if ((i != j) && (!u2[j]))
           {
@@ -82,17 +82,17 @@ namespace Logik
       }
     }
     code = w;
-    for (unsigned int i = 0; i < b; i++) code += 8 - i + 1;
+    for (unsigned int i = 0; i < b; i++) code += MaxPegs - i + 1;
   }
 
   constexpr unsigned int Result::GetMarker(bool m) const noexcept
   {
     unsigned int z{ code };
-    if (z == Result::RN() - 1) return m ? 0 : 8;
-    for (unsigned int i = 0; i < 8; i++)
+    if (z == Result::RN() - 1) return m ? 0 : MaxPegs;
+    for (unsigned int i = 0; i < MaxPegs; i++)
     {
-      if (z <= 8 - i) return m ? z : i;
-      z -= 8 - i + 1;
+      if (z <= MaxPegs - i) return m ? z : i;
+      z -= MaxPegs - i + 1;
     }
   }
 
@@ -133,7 +133,7 @@ namespace Logik
     prevc = 0; // number of moves already made
     for (unsigned int k = 0; k < MaxTries; ++k)
     {
-      std::array<unsigned int, 8> peg{};
+      std::array<unsigned int, MaxPegs> peg{};
       for (unsigned int i = 0; i < MaxPegs; ++i)
       {
         const Piece* p = GetPiece(Location(BoardPart::Main, MaxPegs + i, k));
@@ -240,9 +240,9 @@ namespace Logik
   void LogikPosition::Execute(const PlayCode& c)
   {
     const Play& p = previ[prevc] = c;
-    for (unsigned int i = 0; i < 8; ++i)
+    for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      SetPiece(Location(BoardPart::Main, 8 + i, prevc), &LogikPiece::GetPiece(p[i]));
+      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc), &LogikPiece::GetPiece(p[i]));
     }
     prevc++;
   }
@@ -367,6 +367,7 @@ namespace Logik
     }
 
     lpos->Execute(e);
+    NextPlayer();
 
     return true;
   }
