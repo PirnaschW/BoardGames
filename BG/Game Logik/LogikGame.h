@@ -93,24 +93,13 @@ namespace Logik
   public:
     Play(PlayCode z) noexcept;
     Play(const std::array<unsigned int, MaxPegs> & p) noexcept;
-    bool operator==(const Play& p) const noexcept { return p.code == code; }
-    bool operator!=(const Play& p) const noexcept { return !(*this == p); }
+    inline bool operator==(const Play& p) const noexcept { return p.code == code; }
+    inline bool operator!=(const Play& p) const noexcept { return !(*this == p); }
     operator PlayCode() const noexcept { return code; }
     unsigned int operator[](unsigned int z) const noexcept { return peg[z]; }
   private:
     PlayCode code{};
     std::array<unsigned int, MaxPegs> peg{};
-
-  public:
-    static void test(void)
-    {
-      for (PlayCode i = 0; i < Math::ipow(MaxColors, MaxPegs); i++)
-      {
-        Play p = Play(i);
-        Play q = Play(p.peg);
-        assert(i == q);
-      }
-    }
   };
 
 
@@ -126,7 +115,7 @@ namespace Logik
     bool operator==(const Result& r) const noexcept { return r.code == this->code; }
     bool operator!=(const Result& r) const noexcept { return !(*this == r); }
     operator unsigned int() const noexcept { return code; }
-    constexpr unsigned int GetMarker(bool m) const noexcept;  // number of black / white markers
+    unsigned int GetMarker(bool m) const noexcept;  // number of black / white markers
 
   private:
     unsigned int code{};

@@ -22,7 +22,7 @@ namespace Logik
   {
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      peg[i] = z % MaxPegs;
+      peg[i] = z % MaxColors;
       z /= MaxColors;
     }
   }
@@ -82,25 +82,27 @@ namespace Logik
       }
     }
     code = w;
-    for (unsigned int i = 0; i < b; i++) code += MaxPegs - i + 1;
+    for (unsigned int i = 0; i < b; ++i) code += MaxPegs - i + 1;
   }
 
-  constexpr unsigned int Result::GetMarker(bool m) const noexcept
+  unsigned int Result::GetMarker(bool m) const noexcept
   {
     unsigned int z{ code };
     if (z == Result::RN() - 1) return m ? 0 : MaxPegs;
-    for (unsigned int i = 0; i < MaxPegs; i++)
+    for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      if (z <= MaxPegs - i) return m ? z : i;
+      if (z <= MaxPegs - i) return m ? i : z;
       z -= MaxPegs - i + 1;
     }
+    assert(false);
+    return 0;
   }
 
 
   bool LogikPosition::SetFirstFreePeg(const Piece* p) noexcept
   {
-    for (unsigned int j = 0; j < MaxTries; j++)
-      for (unsigned int i = MaxPegs; i < 2 * MaxPegs; i++)
+    for (unsigned int j = 0; j < MaxTries; ++j)
+      for (unsigned int i = MaxPegs; i < 2 * MaxPegs; ++i)
         if (GetPiece(Location(BoardPart::Main, i, j)) == &Piece::NoPiece)
         {
           SetPiece(Location(BoardPart::Main, i, j), p);
