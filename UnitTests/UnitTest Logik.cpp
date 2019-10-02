@@ -17,16 +17,17 @@ namespace UnitTestLogik
     {
       for (PlayCode c = 0; c < Math::ipow(MaxColors, MaxPegs); ++c)
       {
-        Play p1{ c };                                                     // converts code to Peg list
+        const Play p1{ c };                                               // converts code to Play
         Assert::IsTrue(c == p1);                                          // code was stored correctly?
 
-        std::array<unsigned int, MaxPegs> pegs{};
+        PlayCfg pegs{};
         for (unsigned int z = 0; z < MaxPegs; ++z)
         {
           pegs[z] = p1[z];                                                // retrieve Peg list one by one
         }
 
-        Play p2{ pegs };                                                  // convert Peg list back into code
+        const Play p2{ pegs };                                            // convert Play back into code
+        Assert::IsTrue(p1 == p2);
         Assert::IsTrue(c == p2);
       }
     }
@@ -34,18 +35,18 @@ namespace UnitTestLogik
 
     TEST_METHOD(TestLogikResult)
     {
-      for (unsigned int b = 0; b < MaxPegs; ++b)
+      for (MarkerCount b = 0; b <= MaxPegs; ++b)
       {
-        for (unsigned int w = 0; w < MaxPegs-b; ++w)
+        for (MarkerCount w = 0; w <= MaxPegs - b; ++w)
         {
-          if (b == MaxPegs - 1 && w == 1) continue;                      // if all are black except one, can't have a white
+          if (b == MaxPegs - 1 && w == 1) continue;                       // if all are black except one, can't have a white
 
-          Result r1{ b, w };                                             // converts b, w to Result
-          Assert::IsTrue(r1.GetMarker(true) == b);                       // b was stored correctly?
-          Assert::IsTrue(r1.GetMarker(false) == w);                      // w was stored correctly?
+          Result r1{ b, w };                                              // converts b, w to Result
+          Assert::IsTrue(r1.GetMarker(true) == b);                        // b was stored correctly?
+          Assert::IsTrue(r1.GetMarker(false) == w);                       // w was stored correctly?
 
-          ResultCode c{ r1 };
-          Assert::IsTrue(c < Result::RN());                              // code is valid?
+          unsigned int c{ r1 };
+          Assert::IsTrue(c < Result::RMax());                             // code is valid?
         }
       }
     }

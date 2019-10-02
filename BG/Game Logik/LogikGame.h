@@ -86,53 +86,54 @@ namespace Logik
     static const LogikPiece LPiece8;
   };
 
-  using PlayCode = unsigned int; // code that contains a complete play (sequence of Pegs)
-
-  class Play  // holds a set of pegs = one potential 'move' or play
+  using PlayCode = unsigned int;                                          // code that contains a complete play (sequence of Pegs)
+  using PlayCfg = std::array<unsigned char, MaxPegs>;                     // array that contains a complete play (sequence of Pegs)
+  class Play                                                              // holds a Play / 'move' = a set of pegs
   {
   public:
-    Play(PlayCode z) noexcept;
-    Play(const std::array<unsigned int, MaxPegs> & p) noexcept;
-    inline bool operator==(const Play& p) const noexcept { return p.code == code; }
+    inline Play(const PlayCode& c) noexcept : code_(c), peg_(Convert(c)) {}
+    inline Play(const PlayCfg & p) noexcept : code_(Convert(p)), peg_(p) {}
+    inline bool operator==(const Play& p) const noexcept { return p.code_ == code_; }
     inline bool operator!=(const Play& p) const noexcept { return !(*this == p); }
-    operator PlayCode() const noexcept { return code; }
-    unsigned int operator[](unsigned int z) const noexcept { return peg[z]; }
+    inline operator PlayCode() const noexcept { return code_; }
+    inline operator PlayCfg() const noexcept { return peg_; }
+    inline unsigned int operator[](unsigned int z) const noexcept { return peg_[z]; }
+
   private:
-    PlayCode code{};
-    std::array<unsigned int, MaxPegs> peg{};
+    const PlayCode code_{};
+    const PlayCfg peg_{};
+
+  private:
+    static PlayCode Convert(const PlayCfg& p) noexcept;
+    static PlayCfg Convert(const PlayCode& p) noexcept;
   };
 
 
-  using ResultCode = unsigned int; // code that contains a Result
-
-  class Result  // holds a potential result (so many Black and so many White markers)
+  using ResultCode = unsigned char;                                       // code that contains a Result
+  using MarkerCount = unsigned char;                                      // marker count (for black and white markers)
+  class Result                                                            // holds a potential result (so many Black and so many White markers)
   {
   public:
-    Result(void) noexcept {}
-    Result(unsigned int b, unsigned int w) noexcept;     // get the result from marker counts
-    Result(const Play& p1, const Play& p2) noexcept;     // get the result from comparing two plays
-    constexpr static unsigned int RN(void) noexcept { return (MaxPegs + 1) * (MaxPegs + 2) / 2 - 1; }
-    bool operator==(const Result& r) const noexcept { return r.code == this->code; }
-    bool operator!=(const Result& r) const noexcept { return !(*this == r); }
-    operator unsigned int() const noexcept { return code; }
-    unsigned int GetMarker(bool m) const noexcept;  // number of black / white markers
+    inline Result(void) noexcept {}
+    inline Result(MarkerCount b, MarkerCount w) noexcept : code_(Convert(b, w)) {}     // get the result from marker counts
+    Result(const Play& p1, const Play& p2) noexcept;                      // get the result from comparing two plays
+    inline bool operator==(const Result& r) const noexcept { return r.code_ == this->code_; }
+    inline bool operator!=(const Result& r) const noexcept { return !(*this == r); }
+    inline operator unsigned int() const noexcept { return code_; }       // used as index in collection array
+    MarkerCount GetMarker(bool m) const noexcept;                         // number of black / white markers
+
+  public:
+    constexpr inline static ResultCode RMax(void) noexcept { return (MaxPegs + 1) * (MaxPegs + 2) / 2 - 1; }
 
   private:
-    unsigned int code{};
+    ResultCode code_{};
+
+  private:
+    static ResultCode Convert(MarkerCount b, MarkerCount w) noexcept;
   };
 
 
-  //class LMove : public Move
-  //{
-  //public:
-  //  inline LMove(PlayCode m) noexcept : Move(), _m(m) {}
-  //  inline PlayCode GetIndex(void) const noexcept { return _m; }
-
-  //private:
-  //  const PlayCode _m{};
-  //};
-
-
+ 
   class LogikLayout : public MainLayout
   {
   public:
@@ -316,7 +317,7 @@ namespace Logik
           if (p1 == pp0[k]) return;                                    // if we tried this before, don't try it again
           if (prevR[k] != Result<BX, BY, BZ>{p1, pp0[k]}) return;      // if the result doesn't match, that can't be the opponent's solutions, so don't even try it
         }
-        unsigned int RCCount[Result<BX, BY, BZ>::RN()]{};                // counter for how often each of the results happened
+        unsigned int RCCount[Result<BX, BY, BZ>::RMax()]{};                // counter for how often each of the results happened
         for (unsigned int j = 0; j < perms; ++j)                       // for all possible opponent's solutions
         {
           bool match{true};
@@ -334,7 +335,7 @@ namespace Logik
         }
 
         unsigned int lmax = 0;                                         // worst count found
-        for (unsigned int k = 0; k < Result<BX, BY, BZ>::RN(); ++k)
+        for (unsigned int k = 0; k < Result<BX, BY, BZ>::RMax(); ++k)
         {
           if (RCCount[k] > lmax)
           {

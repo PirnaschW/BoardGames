@@ -18,49 +18,52 @@ namespace Logik
   const LogikPiece LogikPiece::LPiece8{ &Peg<'8'>::ThePeg, &Color::NoColor, IDB_PEG8, IDB_PEG8F };
 
 
-  Play::Play(PlayCode z) noexcept : code(z)
+  PlayCfg Play::Convert(const PlayCode& c) noexcept
   {
+    PlayCfg p{};
+    PlayCode z{ c };
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      peg[i] = z % MaxColors;
+      p[i] = z % MaxColors;
       z /= MaxColors;
     }
+    return p;
   }
 
-  Play::Play(const std::array<PlayCode, MaxPegs> & p) noexcept : peg(p)
+  PlayCode Play::Convert(const PlayCfg & p) noexcept
   {
+    PlayCode c{};
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      code *= MaxColors;
-      code += p[MaxPegs - 1 - i];
+      c *= MaxColors;
+      c += p[MaxPegs - 1 - i];
     }
+    return c;
   }
 
 
-  Result::Result(unsigned int b, unsigned int w) noexcept  // get the result from marker counts
+  ResultCode Result::Convert(MarkerCount b, MarkerCount w) noexcept
   {
-    if (b == MaxPegs) code = Result::RN() - 1;
-    else { code = w; for (unsigned int i = 0; i < b; i++) code += MaxPegs - i + 1; }
+    ResultCode c{ w };
+    if (b == MaxPegs)
+      c = Result::RMax() - 1;
+    else for (unsigned int i = 0; i < b; ++i) c += MaxPegs - i + 1;
+    return c;
   }
-
-  Result::Result(const Play& p1, const Play& p2) noexcept  // get the result from comparing two plays
+  
+  Result::Result(const Play& p1, const Play& p2) noexcept                 // get the result code from comparing two plays
   {
-    bool u1[MaxPegs]{};
-    bool u2[MaxPegs]{};
-    unsigned int b{};
-    unsigned int w{};
+    bool u1[MaxPegs]{ false };
+    bool u2[MaxPegs]{ false };
+    MarkerCount b{};
+    MarkerCount w{};
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
       if (p1[i] == p2[i])
       {
         b++;
-        u1[i] = u2[i] = true;
+        u1[i] = u2[i] = true;  // mark them as 'handled'
       }
-    }
-    if (b == MaxPegs)
-    {
-      code = Result::RN() - 1;
-      return;
     }
 
     for (unsigned int i = 0; i < MaxPegs; ++i)
@@ -74,21 +77,20 @@ namespace Logik
             if (p1[i] == p2[j])
             {
               w++;
-              u1[i] = u2[j] = true;
-              break;
+              u1[i] = u2[j] = true;                                       // mark them as 'handled'
+              break;                                                      // end the inner (j) loop, as the Peg at i is now 'used'
             }
           }
         }
       }
     }
-    code = w;
-    for (unsigned int i = 0; i < b; ++i) code += MaxPegs - i + 1;
+    code_ = Convert(b, w);
   }
 
-  unsigned int Result::GetMarker(bool m) const noexcept
+  MarkerCount Result::GetMarker(bool m) const noexcept
   {
-    unsigned int z{ code };
-    if (z == Result::RN() - 1) return m ? 0 : MaxPegs;
+    ResultCode z{ code_ };
+    if (z == Result::RMax() - 1) return m ? MaxPegs : 0;
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
       if (z <= MaxPegs - i) return m ? i : z;
@@ -135,7 +137,7 @@ namespace Logik
     prevc = 0; // number of moves already made
     for (unsigned int k = 0; k < MaxTries; ++k)
     {
-      std::array<unsigned int, MaxPegs> peg{};
+      PlayCfg peg{};
       for (unsigned int i = 0; i < MaxPegs; ++i)
       {
         const Piece* p = GetPiece(Location(BoardPart::Main, MaxPegs + i, k));
@@ -189,7 +191,7 @@ namespace Logik
           if (p1 == pp0[k]) return;                                    // if we tried this before, don't try it again
           if (prevR[k] != Result{ p1, pp0[k] }) return;      // if the result doesn't match, that can't be the opponent's solutions, so don't even try it
         }
-        unsigned int RCCount[Result::RN()]{};              // counter for how often each of the results happened
+        unsigned int RCCount[Result::RMax()]{};              // counter for how often each of the results happened
         for (unsigned int j = 0; j < perms; ++j)                       // for all possible opponent's solutions
         {
           bool match{ true };
@@ -207,7 +209,7 @@ namespace Logik
         }
 
         unsigned int lmax = 0;                                         // worst count found
-        for (unsigned int k = 0; k < Result::RN(); ++k)
+        for (unsigned int k = 0; k < Result::RMax(); ++k)
         {
           if (RCCount[k] > lmax)
           {
