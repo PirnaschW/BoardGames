@@ -18,30 +18,6 @@ namespace Logik
   const LogikPiece LogikPiece::LPiece8{ &Peg<'8'>::ThePeg, &Color::NoColor, IDB_PEG8, IDB_PEG8F };
 
 
-  PlayCfg Play::Convert(const PlayCode& c) noexcept
-  {
-    PlayCfg p{};
-    PlayCode z{ c };
-    for (unsigned int i = 0; i < MaxPegs; ++i)
-    {
-      p[i] = z % MaxColors;
-      z /= MaxColors;
-    }
-    return p;
-  }
-
-  PlayCode Play::Convert(const PlayCfg & p) noexcept
-  {
-    PlayCode c{};
-    for (unsigned int i = 0; i < MaxPegs; ++i)
-    {
-      c *= MaxColors;
-      c += p[MaxPegs - 1 - i];
-    }
-    return c;
-  }
-
-
   ResultCode Result::Convert(MarkerCount b, MarkerCount w) noexcept
   {
     ResultCode c{ w };
@@ -162,19 +138,19 @@ namespace Logik
         if (p->IsKind(Peg<'W'>::ThePeg)) w++;
       }
       prevR[k] = Result(b, w);
-      previ[k] = Play(peg);
+      previ[k] = plays[peg];
       prevc++;                                    // log this line as valid play
     }
   }
 
   PlayCode LogikPosition::GetBestMove(void) const // Evaluate best next move
   {
-    // prepare array of previous plays
-    std::vector<Play> pp0;
-    for (unsigned int i = 0; i < prevc; ++i)
-    {
-      pp0.push_back(Play{ previ[i] });
-    }
+    //// prepare array of previous plays
+    //std::vector<Play> pp0;
+    //for (unsigned int i = 0; i < prevc; ++i)
+    //{
+    //  pp0.push_back(plays[previ[i]]);
+    //}
 
     constexpr const unsigned long perms = Math::ipow(MaxColors, MaxPegs);
 
@@ -183,27 +159,27 @@ namespace Logik
 
     for (unsigned int i = 0; i < perms; ++i)                           // for all possible plays we could try
     {
-      const Play p1{ i };                // create the play
+//      const Play p1{ i };                // create the play
       [&]
       {
         for (unsigned int k = 0; k < prevc; ++k)                       // compare play to all previous plays
         {
-          if (p1 == pp0[k]) return;                                    // if we tried this before, don't try it again
-          if (prevR[k] != Result{ p1, pp0[k] }) return;      // if the result doesn't match, that can't be the opponent's solutions, so don't even try it
+          if (i == previ[k]) return;                                    // if we tried this before, don't try it again
+          if (prevR[k] != Result{ plays[i], plays[previ[k]] }) return;      // if the result doesn't match, that can't be the opponent's solutions, so don't even try it
         }
         unsigned int RCCount[Result::RMax()]{};              // counter for how often each of the results happened
         for (unsigned int j = 0; j < perms; ++j)                       // for all possible opponent's solutions
         {
           bool match{ true };
-          const Play p2{ j };            // create assumed opponent play
+//          const Play p2{ j };            // create assumed opponent play
           for (unsigned int k = 0; match && (k < prevc); ++k)          // compare play to all previous plays
           {
-            match = (prevR[k] == Result{ p2, pp0[k] });      // if the result doesn't match, that can't be the opponent's solutions
+            match = (prevR[k] == Result{ plays[j], plays[previ[k]] });      // if the result doesn't match, that can't be the opponent's solutions
           }
 
           if (match)
           {
-            const Result r(p1, p2);      // create result for the current play
+            const Result r(plays[i], plays[j]);      // create result for the current play
             RCCount[r]++;                                              // increment counter for this result
           }
         }
@@ -243,10 +219,10 @@ namespace Logik
 
   void LogikPosition::Execute(const PlayCode& c)
   {
-    const Play& p = previ[prevc] = c;
+    previ[prevc] = c;
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc), &LogikPiece::GetPiece(p[i]));
+      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc), &LogikPiece::GetPiece(plays[c][i]));
     }
     prevc++;
   }

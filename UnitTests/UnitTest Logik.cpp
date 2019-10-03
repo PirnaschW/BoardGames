@@ -12,26 +12,26 @@ namespace UnitTestLogik
   TEST_CLASS(UnitTestLogik)
   {
   public:
+    Plays plays;
 
     TEST_METHOD(TestLogikPlay)
     {
       for (PlayCode c = 0; c < Math::ipow(MaxColors, MaxPegs); ++c)
       {
-        const Play p1{ c };                                               // converts code to Play
-        Assert::IsTrue(c == p1);                                          // code was stored correctly?
+//        const Play p1{ c };                                               // converts code to Play
+        Assert::IsTrue(c == plays[c]);                                      // code was stored correctly?
 
         PlayCfg pegs{};
         for (unsigned int z = 0; z < MaxPegs; ++z)
         {
-          pegs[z] = p1[z];                                                // retrieve Peg list one by one
+          pegs[z] = plays[c][z];                                                // retrieve Peg list one by one
         }
 
-        const Play p2{ pegs };                                            // convert Play back into code
-        Assert::IsTrue(p1 == p2);
-        Assert::IsTrue(c == p2);
+//        const Play p2{ pegs };                                            // convert Play back into code
+        Assert::IsTrue(plays[c] == plays[pegs]);
+        Assert::IsTrue(c == plays[pegs]);
       }
     }
-
 
     TEST_METHOD(TestLogikResult)
     {
@@ -49,6 +49,17 @@ namespace UnitTestLogik
           Assert::IsTrue(c < Result::RMax());                             // code is valid?
         }
       }
+
+      constexpr const static PlayCode max = Math::ipow(MaxColors, MaxPegs);
+
+      for (PlayCode c1 = 0; c1 < max/64; ++c1)
+      {
+        for (PlayCode c2 = 0; c2 < max/64; ++c2)
+        {
+          Result r{ plays[c1], plays[c2] };
+        }
+      }
+
     }
 
 

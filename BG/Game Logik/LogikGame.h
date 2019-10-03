@@ -88,26 +88,55 @@ namespace Logik
 
   using PlayCode = unsigned int;                                          // code that contains a complete play (sequence of Pegs)
   using PlayCfg = std::array<unsigned char, MaxPegs>;                     // array that contains a complete play (sequence of Pegs)
-  class Play                                                              // holds a Play / 'move' = a set of pegs
+  class Play final                                                        // holds a Play / 'move' = a set of pegs
   {
+    friend class Plays;                                                   // Plays are now only created from within class Plays
+  private:
+    constexpr inline Play(const PlayCode& c) noexcept : code_(c), peg_(Convert(c)) {}
   public:
-    inline Play(const PlayCode& c) noexcept : code_(c), peg_(Convert(c)) {}
-    inline Play(const PlayCfg & p) noexcept : code_(Convert(p)), peg_(p) {}
-    inline bool operator==(const Play& p) const noexcept { return p.code_ == code_; }
-    inline bool operator!=(const Play& p) const noexcept { return !(*this == p); }
-    inline operator PlayCode() const noexcept { return code_; }
-    inline operator PlayCfg() const noexcept { return peg_; }
-    inline unsigned int operator[](unsigned int z) const noexcept { return peg_[z]; }
+    constexpr inline operator PlayCode() const noexcept { return code_; }
+    constexpr inline unsigned int operator[](unsigned int z) const noexcept { return peg_[z]; }
 
   private:
     const PlayCode code_{};
     const PlayCfg peg_{};
 
   private:
-    static PlayCode Convert(const PlayCfg& p) noexcept;
-    static PlayCfg Convert(const PlayCode& p) noexcept;
+    constexpr inline static PlayCode Convert(const PlayCfg& p) noexcept
+    {
+      PlayCode c{};
+      for (unsigned int i = 0; i < MaxPegs; ++i)
+      {
+        c *= MaxColors;
+        c += p[MaxPegs - 1 - i];
+      }
+      return c;
+    }
+    constexpr inline static PlayCfg Convert(const PlayCode& c) noexcept
+    {
+      PlayCfg p{};
+      PlayCode z{ c };
+      for (unsigned int i = 0; i < MaxPegs; ++i)
+      {
+        p[i] = z % MaxColors;
+        z /= MaxColors;
+      }
+      return p;
+    }
   };
 
+  class Plays final
+  {
+  public:
+    inline Plays(void) noexcept { for (PlayCode c = 0; c < max_; ++c) plays_[c] = new Play(c); }
+    inline ~Plays(void) noexcept { for (PlayCode c = 0; c < max_; ++c) delete plays_[c]; }
+    constexpr inline const Play& operator[](const PlayCode& c) const noexcept { return *plays_[c]; }
+    constexpr inline const Play& operator[](const PlayCfg& p) const noexcept { return *plays_[Play::Convert(p)]; }
+
+  private:
+    constexpr const static PlayCode max_ = Math::ipow(MaxColors, MaxPegs);
+    std::array<Play*, max_> plays_{ nullptr };
+  };
 
   using ResultCode = unsigned char;                                       // code that contains a Result
   using MarkerCount = unsigned char;                                      // marker count (for black and white markers)
@@ -158,9 +187,10 @@ namespace Logik
     void Execute(const PlayCode& p);
 
   private:
-    unsigned int prevc{};                 // number of moves already made
-    unsigned int previ[MaxTries]{};             // indices of moves already made
-    Result prevR[MaxTries]{ {} };       // results of already made moves
+    unsigned int prevc{};              // number of moves already made
+    unsigned int previ[MaxTries]{};    // indices of moves already made
+    Result prevR[MaxTries]{ {} };      // results of already made moves
+    Plays plays;                       // all possible plays
   };
 
 
