@@ -4,6 +4,34 @@
 namespace BoardGamesCore
 {
 
+  void AIContext::Purge(const Moves& sequence) noexcept
+  {
+    for (auto it = begin(); it != end();)
+    {
+      bool trash{ false };
+      if ((*it)->sequence.size() < sequence.size()) trash = true;
+      else
+      {
+        for (size_t i = 0; i < sequence.size(); i++)
+        {
+          if (*(*it)->sequence[i] != *sequence[i])
+          {
+            trash = true;
+            break;
+          }
+        }
+      }
+
+      if (trash)
+      {
+        const MainPosition* p{ *it };
+        it = erase(it);
+        delete p;
+      }
+      else it++;
+    }
+  }
+
   bool Game::AIMove(void)
   {
     // cleanup position buffer

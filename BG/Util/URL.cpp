@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include<wininet.h>
+#pragma comment(lib, "Wininet")
 
 namespace URL
 {

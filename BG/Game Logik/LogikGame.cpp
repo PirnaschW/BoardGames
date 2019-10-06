@@ -17,17 +17,8 @@ namespace Logik
   const LogikPiece LogikPiece::LPiece7{ &Peg<'7'>::ThePeg, &Color::NoColor, IDB_PEG7, IDB_PEG7F };
   const LogikPiece LogikPiece::LPiece8{ &Peg<'8'>::ThePeg, &Color::NoColor, IDB_PEG8, IDB_PEG8F };
 
-
-  ResultCode Result::Convert(MarkerCount b, MarkerCount w) noexcept
-  {
-    ResultCode c{ w };
-    if (b == MaxPegs)
-      c = Result::RMax() - 1;
-    else for (unsigned int i = 0; i < b; ++i) c += MaxPegs - i + 1;
-    return c;
-  }
-  
-  Result::Result(const Play& p1, const Play& p2) noexcept                 // get the result code from comparing two plays
+ 
+  Result::Result(const Play& p1, const Play& p2) noexcept                 // get the result code from comparing two plays_
   {
     bool u1[MaxPegs]{ false };
     bool u2[MaxPegs]{ false };
@@ -38,7 +29,7 @@ namespace Logik
       if (p1[i] == p2[i])
       {
         b++;
-        u1[i] = u2[i] = true;  // mark them as 'handled'
+        u1[i] = u2[i] = true;                                             // mark them as 'handled'
       }
     }
 
@@ -63,20 +54,7 @@ namespace Logik
     code_ = Convert(b, w);
   }
 
-  MarkerCount Result::GetMarker(bool m) const noexcept
-  {
-    ResultCode z{ code_ };
-    if (z == Result::RMax() - 1) return m ? MaxPegs : 0;
-    for (unsigned int i = 0; i < MaxPegs; ++i)
-    {
-      if (z <= MaxPegs - i) return m ? i : z;
-      z -= MaxPegs - i + 1;
-    }
-    assert(false);
-    return 0;
-  }
-
-
+ 
   bool LogikPosition::SetFirstFreePeg(const Piece* p) noexcept
   {
     for (unsigned int j = 0; j < MaxTries; ++j)
@@ -91,26 +69,38 @@ namespace Logik
 
   bool LogikPosition::SetFirstFreeMarker(const Piece* p) noexcept
   {
-    for (unsigned int j = 0; j < MaxTries; j++)
-      for (unsigned int i = MaxPegs; i < 2 * MaxPegs; i++)
-        if (GetPiece(Location(BoardPart::Main, i, j)) == &Piece::NoPiece)
+    // define and execute a Lambda to find the Marker target row (= the last row containing any Pegs)
+    unsigned char row = [this]() -> unsigned char
+    {
+      for (unsigned char j = MaxTries - 1; j >= 0; --j)                   // start with last row, check backwards
+        for (unsigned char i = MaxPegs; i < 2 * MaxPegs; ++i)
+          if (GetPiece(Location(BoardPart::Main, i, j)) != &Piece::NoPiece) return j;  // if any Peg found, that's the target row
+      return 0U;                                                          // if no Pegs were found at all, the first row is the target
+    } ();
+
+    // define a Lambda to find a free Marker slot in a given row
+    auto Find = [this, p](unsigned char j) -> bool
+    {
+      for (unsigned char i = 0; i < MaxPegs; ++i)                         // check all Marker slots in the given row
+      {
+        const Location l{ BoardPart::Main, i, j };
+        if (GetPiece(l) == &Piece::NoPiece)                               // found a free slot, set the Marker
         {
-          if (i == MaxPegs && j > 0) j--; // use last full line, except if nothing is set at all
-          for (unsigned int z = 0; z < MaxPegs; z++)
-          {
-            if (GetPiece(Location(BoardPart::Main, z, j)) == &Piece::NoPiece)
-            {
-              SetPiece(Location(BoardPart::Main, z, j), p);
-              return true;
-            }
-          }
+          SetPiece(l, p);
+          return true;
         }
-    return false;
+      }
+      return false;
+    };
+
+    if (Find(row)) return true;                                           // if a slot was found, fine
+    if (row < MaxTries - 1) return Find(++row);                           // else (if there are more rows) try the next row
+    return false;                                                         // no good slot found
   }
 
   void LogikPosition::ReadPosition(void) noexcept
   {
-    prevc = 0; // number of moves already made
+    prevc_ = 0;                                                           // number of moves already made
     for (unsigned int k = 0; k < MaxTries; ++k)
     {
       PlayCfg peg{};
@@ -125,66 +115,55 @@ namespace Logik
         else if (p->IsKind(Peg<'6'>::ThePeg)) peg[i] = 5;
         else if (p->IsKind(Peg<'7'>::ThePeg)) peg[i] = 6;
         else if (p->IsKind(Peg<'8'>::ThePeg)) peg[i] = 7;
-        else return;   // ignore incomplete lines and stop reading
+        else return;                                                      // ignore incomplete lines and stop reading
       }
 
       // read Markers
-      unsigned int b{};
-      unsigned int w{};
-      for (unsigned int i = 0; i < MaxPegs; ++i)
+      MarkerCount b{};
+      MarkerCount w{};
+      for (unsigned char i = 0; i < MaxPegs; ++i)
       {
         const Piece* p = GetPiece(Location(BoardPart::Main, i, k));
         if (p->IsKind(Peg<'B'>::ThePeg)) b++;
         if (p->IsKind(Peg<'W'>::ThePeg)) w++;
       }
-      prevR[k] = Result(b, w);
-      previ[k] = plays[peg];
-      prevc++;                                    // log this line as valid play
+      prevR_[k] = Result(b, w);
+      previ_[k] = plays_[peg];
+      prevc_++;                                                           // log this line as valid play
     }
   }
 
-  PlayCode LogikPosition::GetBestMove(void) const // Evaluate best next move
+  PlayCode LogikPosition::GetBestMove(void) const                         // Evaluate best next move
   {
-    //// prepare array of previous plays
-    //std::vector<Play> pp0;
-    //for (unsigned int i = 0; i < prevc; ++i)
-    //{
-    //  pp0.push_back(plays[previ[i]]);
-    //}
+    unsigned int gmin{ Plays::Max };
+    std::vector<PlayCode> bestI{};
 
-    constexpr const unsigned long perms = Math::ipow(MaxColors, MaxPegs);
-
-    // array to collect worst possible result count for each potential play
-    std::unique_ptr<std::array<unsigned int, perms>> max{ new std::array<unsigned int, perms>{} };
-
-    for (unsigned int i = 0; i < perms; ++i)                           // for all possible plays we could try
+    for (PlayCode i = 0; i < Plays::Max; ++i)                             // for all possible plays_ we could try
     {
-//      const Play p1{ i };                // create the play
-      [&]
+      [this, i, &gmin, &bestI]
       {
-        for (unsigned int k = 0; k < prevc; ++k)                       // compare play to all previous plays
+        for (unsigned int k = 0; k < prevc_; ++k)                         // compare play to all previous plays_
         {
-          if (i == previ[k]) return;                                    // if we tried this before, don't try it again
-          if (prevR[k] != Result{ plays[i], plays[previ[k]] }) return;      // if the result doesn't match, that can't be the opponent's solutions, so don't even try it
+          if (i == previ_[k]) return;                                     // if we tried this before, don't try it again
+          if (prevR_[k] != Result{ plays_[i], plays_[previ_[k]] }) return;// if the result doesn't match, that can't be the opponent's solutions, so don't even try it
         }
-        unsigned int RCCount[Result::RMax()]{};              // counter for how often each of the results happened
-        for (unsigned int j = 0; j < perms; ++j)                       // for all possible opponent's solutions
+        unsigned int RCCount[Result::RMax()]{};                           // counter for how often each of the results happened
+        for (PlayCode j = 0; j < Plays::Max; ++j)                         // for all possible opponent's solutions
         {
           bool match{ true };
-//          const Play p2{ j };            // create assumed opponent play
-          for (unsigned int k = 0; match && (k < prevc); ++k)          // compare play to all previous plays
+          for (unsigned int k = 0; match && (k < prevc_); ++k)            // compare play to all previous plays_
           {
-            match = (prevR[k] == Result{ plays[j], plays[previ[k]] });      // if the result doesn't match, that can't be the opponent's solutions
+            match = (prevR_[k] == Result{ plays_[j], plays_[previ_[k]] });// if the result doesn't match, that can't be the opponent's solutions
           }
 
           if (match)
           {
-            const Result r(plays[i], plays[j]);      // create result for the current play
-            RCCount[r]++;                                              // increment counter for this result
+            const Result r(plays_[i], plays_[j]);                         // create result for the current play
+            RCCount[r]++;                                                 // increment counter for this result
           }
         }
 
-        unsigned int lmax = 0;                                         // worst count found
+        unsigned int lmax = 0;                                            // worst count found
         for (unsigned int k = 0; k < Result::RMax(); ++k)
         {
           if (RCCount[k] > lmax)
@@ -192,39 +171,33 @@ namespace Logik
             lmax = RCCount[k];
           }
         }
-        (*max)[i] = lmax;                                                 // save worst (highest) count
+
+        if (lmax == 0);                                                   // ignore useless moves
+        else if (lmax < gmin)                                             // did we find a better move?
+        {
+          gmin = lmax;                                                    // save best 'worst count' and its index
+          bestI.clear();
+          bestI.push_back(i);
+        }
+        else if (lmax == gmin)                                            // found an equally good move, collect it
+        {
+          bestI.push_back(i);                                             // save the index
+        }
       }();
     }
 
-    unsigned int gmin{ perms };
-    std::vector<unsigned int> bestI{};
-    for (unsigned int i = 0; i < perms; ++i)                              // for all possible plays, find the best 'worst count'
-    {
-      if ((*max)[i] == 0);                                                // ignore useless moves
-      else if ((*max)[i] < gmin)                                          // found a better move
-      {
-        gmin = (*max)[i];                                                 // save best 'worst count' and its index
-        bestI.clear();
-        bestI.push_back(i);
-      }
-      else if ((*max)[i] == gmin)                                         // found an equally good move, collect it
-      {
-        bestI.push_back(i);
-      }
-    }
-
-    if (bestI.size() == 0) return -1;
+    if (bestI.size() == 0) throw 0;                                       // no moves are possible, there is a contradiction in the data
     return bestI[rand() % bestI.size()];                                  // randomly pick one of the equally good tries
   }
 
   void LogikPosition::Execute(const PlayCode& c)
   {
-    previ[prevc] = c;
+    previ_[prevc_] = c;
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc), &LogikPiece::GetPiece(plays[c][i]));
+      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc_), &LogikPiece::GetPiece(plays_[c][i]));
     }
-    prevc++;
+    prevc_++;
   }
 
 
@@ -319,36 +292,20 @@ namespace Logik
   bool LogikGame::AIMove(void)
   {
     LogikPosition* lpos = dynamic_cast<LogikPosition*>(pos);
-
-    // read all user input from screen (this allows to set up or modify existing moves and responses)
     assert(lpos != nullptr);
 
+    // read all user input from screen (this allows to set up or modify existing moves and responses)
     lpos->ReadPosition();
 
-    if (1 == 0) // to be done
+    PlayCode e{};
+    try { e = lpos->GetBestMove(); }
+    catch (int) // no possible move found
     {
-      ::AfxMessageBox(L"Player won!");
+      ::AfxMessageBox(L"No moves are possible - input is contradictory");
       return false;
     }
-
-    const PlayCode e = lpos->GetBestMove();
-
-    if (1 == 0)
-    {
-      ::AfxMessageBox(L"Computer resigns - Player wins!");
-    }
-    if (1 == 0)
-    {
-      ::AfxMessageBox(L"Computer won!");
-      return false;
-    }
-    if (1 == 0) {
-      ::AfxMessageBox(L"You might as well resign - Computer will win!");
-    }
-
     lpos->Execute(e);
     NextPlayer();
-
     return true;
   }
 
@@ -374,7 +331,8 @@ namespace Logik
 
   const PieceMapP& LogikGame::GetPieces(void) noexcept
   {
-    static const PieceMapP& p = std::make_shared<PieceMap>();
+    static const PieceMapP p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(&LogikPiece::LPieceB);
     p->Add(&LogikPiece::LPieceW);
     if (MaxColors > 0) p->Add(&LogikPiece::LPiece1);
@@ -387,24 +345,5 @@ namespace Logik
     if (MaxColors > 7) p->Add(&LogikPiece::LPiece8);
     return p;
   }
-
-  // ########## OLD #############
-#ifdef OLD_LOGIK
-
-  LLayout::LLayout(Coordinate x, Coordinate y) noexcept : MainLayout(LGame<8, 5, 7>::GetDimensions(x, y))
-  {
-    unsigned int z = 0;
-    for (Coordinate i = 0; i < x; i++)
-      for (Coordinate j = 0; j < y; j++, z++)
-      {
-        const CRect r{ (int)(BoardStartX + FieldSizeX * (3 + 1 + i + 0) + (i < y ? 0 : BoardFrameX) + (i < 2 * y ? 0 : 1) + (i < 3 * y ? 0 : BoardFrameX)),
-                 (int)(BoardStartY + FieldSizeY * (j + 0)),
-                 (int)(BoardStartX + FieldSizeX * (3 + 1 + i + 1) + (i < y ? 0 : BoardFrameX) + (i < 2 * y ? 0 : 1) + (i < 3 * y ? 0 : BoardFrameX)),
-                 (int)(BoardStartY + FieldSizeY * (j + 1)) };
-        tiles[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
-      }
-  }
-
-#endif // OLD_LOGIK
 
 }
