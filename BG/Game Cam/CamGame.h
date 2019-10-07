@@ -21,8 +21,8 @@ namespace Cam
 
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; };
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
-    bool CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
+    bool CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const noexcept;
 
   public:
     static const Pawn ThePawn;
@@ -34,7 +34,7 @@ namespace Cam
     constexpr inline Knight(void) noexcept : Pawn('N') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 400; }
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
 
   public:
     static const Knight TheKnight;

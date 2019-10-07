@@ -61,7 +61,7 @@ namespace LoA
     }
   }
 
-  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const
+  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept
   {
     CollectMoves(pos, l, moves, 1, 0); // check horizontal moves
     CollectMoves(pos, l, moves, 0, 1); // check vertical moves

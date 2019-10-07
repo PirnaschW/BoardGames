@@ -8,7 +8,7 @@ namespace Hasami
   inline const HasamiPiece HasamiPiece::HasamiPieceB{ &Checker::TheChecker, &Color::Black, IDB_HASAMI_B, IDB_HASAMI_BS };
   inline const HasamiPiece HasamiPiece::HasamiPieceW{ &Checker::TheChecker, &Color::White, IDB_HASAMI_W, IDB_HASAMI_WS };
 
-  void Checker::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const
+  void Checker::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::Rdirection)
     {

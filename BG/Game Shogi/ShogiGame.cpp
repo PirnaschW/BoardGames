@@ -51,7 +51,7 @@ namespace Shogi
   const ShogiPiece ShogiPiece::ShogiBLP{ &PLance::ThePLance,   &Color::Black, &ShogiPiece::ShogiBLP, &ShogiPiece::ShogiWL,  IDB_SHOGI_BLP_L, IDB_SHOGI_BLP_S };
   const ShogiPiece ShogiPiece::ShogiBPP{ &PPawn::ThePPawn,     &Color::Black, &ShogiPiece::ShogiBPP, &ShogiPiece::ShogiWP,  IDB_SHOGI_BPP_L, IDB_SHOGI_BPP_S };
 
-  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(0, dy));
@@ -67,7 +67,7 @@ namespace Shogi
     return true;
   }
 
-  void Lance::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Lance::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(0, z*dy)); z++);
@@ -77,7 +77,7 @@ namespace Shogi
     return p->IsColor(&Color::White) ? (l._y > 0) : (l._y < pos->GetSizeY() - 1);                  // move (or drop) anywhere except last row
   }
 
-  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, 2 * dy));
@@ -88,19 +88,19 @@ namespace Shogi
     return p->IsColor(&Color::White) ? (l._y > 1) : (l._y < pos->GetSizeY() - 2);                  // move (or drop) anywhere except last two rows
   }
 
-  void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::Bdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
-  void Rook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Rook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::Rdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
-  void Silver::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Silver::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, dy));
@@ -110,11 +110,11 @@ namespace Shogi
     p.AddIfLegal(moves, l, l + Offset(+1, -dy));
   }
 
-  void Gold::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Gold::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
-  void Gold::CollectGoldMoves(const MainPosition& p, const Location& l, Moves& moves)
+  void Gold::CollectGoldMoves(const MainPosition& p, const Location& l, Moves& moves) noexcept
   {
     const int dy = p.OnTurn() == &Color::White ? -1 : 1;
     p.AddIfLegal(moves, l, l + Offset(+1, dy));
@@ -125,28 +125,28 @@ namespace Shogi
     p.AddIfLegal(moves, l, l + Offset(+0, -dy));
   }
 
-  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::Qdirection)
       p.AddIfLegal(moves, l, l + d);
   }
 
-  void PPawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void PPawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
 
-  void PLance::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void PLance::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
 
-  void PKnight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void PKnight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     Gold::CollectGoldMoves(p, l, moves);
   }
 
-  void PBishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void PBishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::Bdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
@@ -154,7 +154,7 @@ namespace Shogi
       p.AddIfLegal(moves, l, l + d);
   }
 
-  void PRook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void PRook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::Rdirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
@@ -162,7 +162,7 @@ namespace Shogi
       p.AddIfLegal(moves, l, l + d);
   }
 
-  void PSilver::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void PSilver::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     Gold::CollectGoldMoves(p, l, moves);
   }

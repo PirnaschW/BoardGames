@@ -13,7 +13,7 @@ namespace Cam
   inline const CamPiece CamPiece::BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
   inline const CamPiece CamPiece::BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
 
-  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const
+  void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const noexcept
   {
     const CamPosition& pos = dynamic_cast<const CamPosition&>(p);         // position must be a Cam position
     const Piece* p0 = pos.GetPiece(l);                                    // piece that is moving
@@ -34,7 +34,7 @@ namespace Cam
     }
   }
 
-  bool Pawn::CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const
+  bool Pawn::CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const noexcept
   {
     const Piece* p0 = a.empty() ? p.GetPiece(fr) : a[0]->GetPiece();        // the piece that is moving
     assert(p0 != nullptr);
@@ -92,7 +92,7 @@ namespace Cam
   }
 
 
-  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const
+  void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const noexcept
   {
     Pawn::CollectMoves(p, l, m);
     const CamPosition& pos = dynamic_cast<const CamPosition&>(p);         // position must be a Cam position

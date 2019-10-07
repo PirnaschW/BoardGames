@@ -21,7 +21,7 @@ namespace LoA
 
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 0; } // in LoA, pieces have no value
-    virtual void CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const override;
+    virtual void CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept override;
 
 // extensions
   public:

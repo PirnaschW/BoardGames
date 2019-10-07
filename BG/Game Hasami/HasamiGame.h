@@ -20,7 +20,7 @@ namespace Hasami
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const override;
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
 
   public:
     static const Checker TheChecker;

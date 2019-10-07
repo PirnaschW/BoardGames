@@ -16,7 +16,7 @@ namespace Checkers
   inline const CheckersPiece CheckersPiece::CheckersQueenB{ &Queen::TheQueen,     &Color::Black, NULL,            IDB_BQD, IDB_BQS };
 
 
-  void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     const int dy = pos.GetPiece(l)->IsColor(&Color::White) ? -1 : 1;
@@ -26,7 +26,7 @@ namespace Checkers
   }
 
 
-  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
@@ -35,7 +35,7 @@ namespace Checkers
   }
 
 
-  void Queen::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const
+  void Queen::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
@@ -157,10 +157,10 @@ namespace Checkers
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();
     p->Add(&CheckersPiece::CheckersPieceW);
-    p->Add(&CheckersPiece::CheckersKingW);
-    p->Add(&CheckersPiece::CheckersQueenW);
     p->Add(&CheckersPiece::CheckersPieceB);
+    p->Add(&CheckersPiece::CheckersKingW);
     p->Add(&CheckersPiece::CheckersKingB);
+    p->Add(&CheckersPiece::CheckersQueenW);
     p->Add(&CheckersPiece::CheckersQueenB);
     return p;
   }
