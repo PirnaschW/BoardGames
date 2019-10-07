@@ -20,8 +20,8 @@
     <Filter Include="Core\Source Files">
       <UniqueIdentifier>{fe2a0e42-a16a-493c-8158-b9c66d86bb78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Logik\Source Files">
-      <UniqueIdentifier>{39a5604c-1ce8-4b23-a4ae-1a035b4c1360}</UniqueIdentifier>
+    <Filter Include="Game Checkers">
+      <UniqueIdentifier>{203e29f9-d511-46c8-8a9a-a0a7eae5d164}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -49,9 +49,6 @@
     <ClCompile Include="..\BG\Core\BGCorePlayer.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BG\Game Logik\LogikGame.cpp">
-      <Filter>Game Logik\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\BG\Core\BGCoreLayout.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
@@ -68,6 +65,21 @@
       <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\BG\Util\URL.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTest Checkers.cpp">
+      <Filter>UnitTests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Game Logik\LogikGame.cpp">
+      <Filter>Game Logik</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Game Checkers\CheckersGame.cpp">
+      <Filter>Game Checkers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreOffset.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreStep.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

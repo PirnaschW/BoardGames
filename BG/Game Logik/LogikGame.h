@@ -195,7 +195,7 @@ namespace Logik
   {
   public:
     inline LogikPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
-    virtual inline MainPosition* Clone(void) const override { return new LogikPosition(*this); }
+    virtual inline MainPosition* Clone(void) const noexcept override { return new LogikPosition(*this); }
 
     bool SetFirstFreePeg(const Piece* p) noexcept;       // returns if it could successfully set the Peg
     bool SetFirstFreeMarker(const Piece* p) noexcept;    // returns if it could successfully set the Marker

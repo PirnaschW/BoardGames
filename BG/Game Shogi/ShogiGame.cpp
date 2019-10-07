@@ -238,7 +238,7 @@ namespace Shogi
     }
   }
 
-  void ShogiPosition::GetAllMoves(void)                                   // generate all moves and save list
+  void ShogiPosition::GetAllMoves(void) noexcept                          // generate all moves and save list
   {
     MainPosition::GetAllMoves();                                          // standard: get moves for all pieces on the board
 
@@ -270,7 +270,7 @@ namespace Shogi
       }
   }
   
-  bool ShogiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const // returns true if further tries in this direction are allowed
+  bool ShogiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept // returns true if further tries in this direction are allowed
   {
     const Piece* pt = GetPiece(to);                                       // what is on the target field
     if (pt == nullptr) return false;                                      // out of board

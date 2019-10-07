@@ -44,8 +44,8 @@ namespace Template
   {
   public:
     inline TemplatePosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
-    virtual inline MainPosition* Clone(void) const override { return new TemplatePosition(*this); }
-    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
+    virtual inline MainPosition* Clone(void) const noexcept override { return new TemplatePosition(*this); }
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
   };
 

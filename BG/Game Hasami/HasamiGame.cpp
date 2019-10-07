@@ -44,7 +44,7 @@ namespace Hasami
     }
   }
 
-  bool HasamiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
+  bool HasamiPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;                                       // out of board

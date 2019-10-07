@@ -154,7 +154,7 @@ namespace BoardGamesCore
   }
 
 
-  MainPosition* MainPosition::GetPosition(AIContextP& plist, MoveP m) const // execute move, maintain in PList
+  MainPosition* MainPosition::GetPosition(AIContextP& plist, MoveP m) const noexcept // execute move, maintain in PList
   {
     MainPosition* pos(Clone());                                           // create a copy of the board
     if (m != nullptr) pos->Execute(*m);                                   // execute move if provided

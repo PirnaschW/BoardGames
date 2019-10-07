@@ -61,8 +61,8 @@ namespace Cam
   {
   public:
     CamPosition(const PieceMapP& p, const Dimensions& d) noexcept;
-    virtual inline MainPosition* Clone(void) const override { return new CamPosition(*this); }
-    virtual void GetAllMoves(void) override;
+    virtual inline MainPosition* Clone(void) const noexcept override { return new CamPosition(*this); }
+    virtual void GetAllMoves(void) noexcept override;
 
     // extensions:
   public:

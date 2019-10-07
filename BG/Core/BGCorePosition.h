@@ -79,7 +79,7 @@ namespace BoardGamesCore
   public:
     inline MainPosition(const PieceMapP& p, const Dimensions& d) noexcept : Position(p, d[0].xCount, d[0].yCount), _stock(p, d[1].xCount, d[1].yCount), _taken(p, d[2].xCount, d[2].yCount) {}
     ~MainPosition(void) noexcept override {}
-    virtual MainPosition* Clone(void) const = 0;
+    virtual MainPosition* Clone(void) const noexcept = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
     virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + _taken.GetHash() + std::hash<const Color*>()(OnTurn()); }
 
@@ -88,11 +88,11 @@ namespace BoardGamesCore
     virtual void NextPlayer(void) noexcept;
     virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
-    virtual void GetAllMoves(void);              // generate all moves and save list
-    virtual Moves CollectMoves(void) const { Moves m{}; return m; }
+    virtual void GetAllMoves(void) noexcept;              // generate all moves and save list
+    virtual Moves CollectMoves(void) const noexcept { Moves m{}; return m; }
     bool JumpsOnly(Moves& moves) const noexcept;
-    inline Moves& GetMoveList(bool w) { return w ? movelistW : movelistB; }
-    virtual bool AddIfLegal(Moves&, const Location, const Location) const { return false; };
+    constexpr inline Moves& GetMoveList(bool w) noexcept { return w ? movelistW : movelistB; }
+    virtual bool AddIfLegal(Moves&, const Location, const Location) const noexcept { return false; };
     virtual void EvaluateStatically(void) noexcept;       // calculate position value and save
     virtual PositionValue Evaluate(AIContextP& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value.Relative(w); }
@@ -104,12 +104,8 @@ namespace BoardGamesCore
     virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept;
     const Location GetNextTakenL(const Color* c) const noexcept;
     inline bool IsTaken(const Location& l) const noexcept { return l._b == BoardPart::Taken; }
-    virtual inline MoveP GetBestMove(bool w) const { return (w ? movelistW[0] : movelistB[0]); }
-    virtual MainPosition* GetPosition(AIContextP& plist, MoveP m = nullptr) const;     // execute move, maintain in PList
-#ifdef STILL_STEPS
-    virtual const std::vector<const Piece*> Execute(MoveP m);
-    virtual void Undo(const MoveP m);
-#endif STILL_STEPS
+    virtual inline MoveP GetBestMove(bool w) const noexcept { return (w ? movelistW[0] : movelistB[0]); }
+    virtual MainPosition* GetPosition(AIContextP& plist, MoveP m = nullptr) const noexcept;     // execute move, maintain in PList
     virtual void Execute(const Move& m) noexcept;
     virtual void Undo(const Move& m) noexcept;
 

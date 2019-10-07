@@ -102,7 +102,7 @@ namespace LoA
     return MainPosition::SetPiece(l, p);
   }
 
-  bool LoAPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
+  bool LoAPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
     const Piece* pf = GetPiece(fr);
     const Piece* pt = GetPiece(to);

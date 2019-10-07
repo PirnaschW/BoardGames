@@ -57,7 +57,7 @@ namespace BoardGamesCore
   }
 
 
-  void MainPosition::GetAllMoves(void) // collect all moves for all pieces
+  void MainPosition::GetAllMoves(void) noexcept // collect all moves for all pieces
   {
     assert(movelistW.empty());
     assert(movelistB.empty());

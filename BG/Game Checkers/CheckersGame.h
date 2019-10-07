@@ -14,7 +14,7 @@ namespace Checkers
 
   using namespace BoardGamesCore;
 
-  class Checker : public Kind
+  class Checker final : public Kind
   {
   private:
     constexpr inline Checker(void) noexcept : Kind('0') {}
@@ -26,19 +26,19 @@ namespace Checkers
     static const Checker TheChecker;
   };
 
-  class King : public Kind
+  class King final : public Kind
   {
   private:
     constexpr inline King(void) noexcept : Kind('K') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 10; }
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const override;
 
   public:
     static const King TheKing;
   };
 
-  class Queen : public Kind
+  class Queen final : public Kind
   {
   private:
     constexpr inline Queen(void) noexcept : Kind('K') {}
@@ -50,17 +50,17 @@ namespace Checkers
     static const Queen TheQueen;
   };
 
-  class CheckersPiece : public Piece
+  class CheckersPiece final : public Piece
   {
   private:
     inline CheckersPiece(const Kind* k, const Color* c, const CheckersPiece* u, UINT l, UINT s) noexcept : Piece(k, c, l, l, s), up(u) {}
     CheckersPiece(const CheckersPiece&) = delete;
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:
-    virtual inline bool IsPromotable(void) const noexcept override { return up != this; } // is this a promotable piece?
-    virtual inline const Piece* Promote(bool /*u*/) const noexcept override { return up; }    // promote this piece up/down
+    virtual inline bool IsPromotable(void) const noexcept override { return up != this; }          // is this a promotable piece?
+    virtual inline const Piece* Promote(bool /*u*/) const noexcept override { return up; }         // promote this piece up/down
   private:
-    const CheckersPiece* up;    // what this piece promotes up to
+    const CheckersPiece* up;                                                                       // what this piece promotes up to
 
   public:
     static const CheckersPiece CheckersPieceW;
@@ -72,13 +72,13 @@ namespace Checkers
   };
 
 
-  class CheckersPosition : public MainPosition
+  class CheckersPosition final : public MainPosition
   {
   public:
     CheckersPosition(const PieceMapP& p, const Dimensions& d) noexcept;
-    virtual inline MainPosition* Clone(void) const override { return new CheckersPosition(*this); }
-    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
-    virtual void GetAllMoves(void) override;
+    virtual inline MainPosition* Clone(void) const noexcept override { return new CheckersPosition(*this); }
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept override;
+    virtual void GetAllMoves(void) noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
 // extensions
   public:
@@ -88,7 +88,7 @@ namespace Checkers
   };
 
 
-  class CheckersGame : public Game
+  class CheckersGame final : public Game
   {
   private:
     CheckersGame(void) = delete;

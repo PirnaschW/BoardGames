@@ -43,8 +43,8 @@ namespace Hasami
   {
   public:
     HasamiPosition(const PieceMapP& p, const Dimensions& d) noexcept;
-    virtual inline MainPosition* Clone(void) const override { return new HasamiPosition(*this); }
-    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
+    virtual inline MainPosition* Clone(void) const noexcept override { return new HasamiPosition(*this); }
+    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
 
   protected:

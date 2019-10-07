@@ -56,7 +56,7 @@ namespace Checkers
     }
   }
 
-  bool CheckersPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
+  bool CheckersPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
     const Piece* p = GetPiece(to);
     if (p == nullptr) return false;                                       // out of board
@@ -133,7 +133,7 @@ namespace Checkers
     // ...
   }
 
-  void CheckersPosition::GetAllMoves(void)  // collect all moves for all pieces
+  void CheckersPosition::GetAllMoves(void) noexcept                       // collect all moves for all pieces
   {
     MainPosition::GetAllMoves();
     JumpsOnly(movelistW);
@@ -155,6 +155,7 @@ namespace Checkers
   const PieceMapP& CheckersGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(&CheckersPiece::CheckersPieceW);
     p->Add(&CheckersPiece::CheckersKingW);
     p->Add(&CheckersPiece::CheckersQueenW);

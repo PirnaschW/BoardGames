@@ -8,7 +8,7 @@ namespace Template
   inline const TemplatePiece TemplatePiece::TemplatePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
   inline const TemplatePiece TemplatePiece::TemplatePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
 
-  bool TemplatePosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
+  bool TemplatePosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
     const Piece* pf = GetPiece(fr);                                       // piece to move
     if (pf == nullptr) return false;                                      // out of board

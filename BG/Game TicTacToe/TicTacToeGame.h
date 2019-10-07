@@ -43,9 +43,8 @@ namespace TicTacToe
   public:
     inline TicTacToePosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
 
-    virtual inline MainPosition* Clone(void) const override { return new TicTacToePosition(*this); }
-    virtual void GetAllMoves(void) override;
-//    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const override;
+    virtual inline MainPosition* Clone(void) const noexcept override { return new TicTacToePosition(*this); }
+    virtual void GetAllMoves(void) noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
 
   protected:

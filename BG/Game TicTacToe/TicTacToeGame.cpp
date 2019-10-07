@@ -8,7 +8,7 @@ namespace TicTacToe
   inline const TicTacToePiece TicTacToePiece::TicTacToePieceB{ &Checker::TheChecker, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
   inline const TicTacToePiece TicTacToePiece::TicTacToePieceW{ &Checker::TheChecker, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
 
-  void TicTacToePosition::GetAllMoves(void) // collect all moves
+  void TicTacToePosition::GetAllMoves(void) noexcept                      // collect all moves
   {
     assert(movelistW.empty());
     assert(movelistB.empty());
