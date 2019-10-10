@@ -72,7 +72,7 @@ namespace Checkers
   }
 
 
-  bool CheckersPosition::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Location fr) const
+  bool CheckersPosition::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Location fr) const noexcept
   {
     const Location l0{ fr };
     const Piece* p0 = GetPiece(l0);                                       // the piece that is moving

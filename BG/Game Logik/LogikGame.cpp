@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <thread>
+#include <mutex>
+
 #include "LogikResource.h"
 #include "LogikGame.h"
 
@@ -138,52 +141,131 @@ namespace Logik
     unsigned int gmin{ Plays::Max };
     std::vector<PlayCode> bestI{};
 
-    for (PlayCode i = 0; i < Plays::Max; ++i)                             // for all possible plays_ we could try
+    constexpr unsigned int MaxThread{ 4U };
+    std::mutex mx;
+    auto f = [this, &mx, &gmin, &bestI](PlayCode min, PlayCode max)
     {
-      [this, i, &gmin, &bestI]
+      for (PlayCode i = min; i < max; ++i)
       {
-        for (unsigned int k = 0; k < prevc_; ++k)                         // compare play to all previous plays_
+        [this, &mx, i, &gmin, &bestI]
         {
-          if (i == previ_[k]) return;                                     // if we tried this before, don't try it again
-          if (prevR_[k] != Result{ plays_[i], plays_[previ_[k]] }) return;// if the result doesn't match, that can't be the opponent's solutions, so don't even try it
-        }
-        unsigned int RCCount[Result::RMax()]{};                           // counter for how often each of the results happened
-        for (PlayCode j = 0; j < Plays::Max; ++j)                         // for all possible opponent's solutions
-        {
-          bool match{ true };
-          for (unsigned int k = 0; match && (k < prevc_); ++k)            // compare play to all previous plays_
+          for (unsigned int k = 0; k < prevc_; ++k)                         // compare play to all previous plays_
           {
-            match = (prevR_[k] == Result{ plays_[j], plays_[previ_[k]] });// if the result doesn't match, that can't be the opponent's solutions
+            if (i == previ_[k]) return;                                     // if we tried this before, don't try it again
+            if (prevR_[k] != Result{ plays_[i], plays_[previ_[k]] }) return;// if the result doesn't match, that can't be the opponent's solutions, so don't even try it
+          }
+          unsigned int RCCount[Result::RMax()]{};                           // counter for how often each of the results happened
+          for (PlayCode j = 0; j < Plays::Max; ++j)                         // for all possible opponent's solutions
+          {
+            bool match{ true };
+            for (unsigned int k = 0; match && (k < prevc_); ++k)            // compare play to all previous plays_
+            {
+              match = (prevR_[k] == Result{ plays_[j], plays_[previ_[k]] });// if the result doesn't match, that can't be the opponent's solutions
+            }
+
+            if (match)
+            {
+              const Result r(plays_[i], plays_[j]);                         // create result for the current play
+              RCCount[r]++;                                                 // increment counter for this result
+            }
           }
 
-          if (match)
+          unsigned int lmax = 0U;
+          for (unsigned int k = 0; k < Result::RMax(); ++k)
           {
-            const Result r(plays_[i], plays_[j]);                         // create result for the current play
-            RCCount[r]++;                                                 // increment counter for this result
+            if (RCCount[k] > lmax)
+            {
+              lmax = RCCount[k];
+            }
           }
-        }
 
-        unsigned int lmax = 0;                                            // worst count found
-        for (unsigned int k = 0; k < Result::RMax(); ++k)
-        {
-          if (RCCount[k] > lmax)
+
+          if (lmax == 0);                                                   // ignore useless moves
+          else
           {
-            lmax = RCCount[k];
+            mx.lock();
+            if (lmax < gmin)                                             // did we find a better move?
+            {
+              gmin = lmax;                                                    // save best 'worst count' and its index
+              bestI.clear();
+              bestI.push_back(i);
+            }
+            else if (lmax == gmin)                                            // found an equally good move, collect it
+            {
+              bestI.push_back(i);                                             // save the index
+            }
+            mx.unlock();
           }
-        }
+        }();
+      }
+    };
 
-        if (lmax == 0);                                                   // ignore useless moves
-        else if (lmax < gmin)                                             // did we find a better move?
+    { // tt lives only in this block
+      std::array<std::shared_ptr<std::thread>, MaxThread> tt{ nullptr };
+      for (unsigned int t = 0U; t < MaxThread; ++t)
+      {
+        PlayCode min{ Plays::Max / MaxThread * t };
+        PlayCode max{ Plays::Max / MaxThread * (t + 1) };
+        unsigned int lmax = 0;
+
+        tt[t] = std::make_shared<std::thread>(f, min, max);
+
+      }
+      for (unsigned int t = 0U; t < MaxThread; ++t)
+      {
+        tt[t]->join();
+      }
+    }
+
+    if (1 == 0)
+    {
+      for (PlayCode i = 0; i < Plays::Max; ++i)                             // for all possible plays_ we could try
+      {
+        [this, i, &gmin, &bestI]
         {
-          gmin = lmax;                                                    // save best 'worst count' and its index
-          bestI.clear();
-          bestI.push_back(i);
-        }
-        else if (lmax == gmin)                                            // found an equally good move, collect it
-        {
-          bestI.push_back(i);                                             // save the index
-        }
-      }();
+          for (unsigned int k = 0; k < prevc_; ++k)                         // compare play to all previous plays_
+          {
+            if (i == previ_[k]) return;                                     // if we tried this before, don't try it again
+            if (prevR_[k] != Result{ plays_[i], plays_[previ_[k]] }) return;// if the result doesn't match, that can't be the opponent's solutions, so don't even try it
+          }
+          unsigned int RCCount[Result::RMax()]{};                           // counter for how often each of the results happened
+          for (PlayCode j = 0; j < Plays::Max; ++j)                         // for all possible opponent's solutions
+          {
+            bool match{ true };
+            for (unsigned int k = 0; match && (k < prevc_); ++k)            // compare play to all previous plays_
+            {
+              match = (prevR_[k] == Result{ plays_[j], plays_[previ_[k]] });// if the result doesn't match, that can't be the opponent's solutions
+            }
+
+            if (match)
+            {
+              const Result r(plays_[i], plays_[j]);                         // create result for the current play
+              RCCount[r]++;                                                 // increment counter for this result
+            }
+          }
+
+          unsigned int lmax = 0;                                            // worst count found
+          for (unsigned int k = 0; k < Result::RMax(); ++k)
+          {
+            if (RCCount[k] > lmax)
+            {
+              lmax = RCCount[k];
+            }
+          }
+
+          if (lmax == 0);                                                   // ignore useless moves
+          else if (lmax < gmin)                                             // did we find a better move?
+          {
+            gmin = lmax;                                                    // save best 'worst count' and its index
+            bestI.clear();
+            bestI.push_back(i);
+          }
+          else if (lmax == gmin)                                            // found an equally good move, collect it
+          {
+            bestI.push_back(i);                                             // save the index
+          }
+        }();
+      }
     }
 
     if (bestI.size() == 0) throw 0;                                       // no moves are possible, there is a contradiction in the data

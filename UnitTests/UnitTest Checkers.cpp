@@ -13,9 +13,17 @@ namespace UnitTestCheckers
   {
   public:
 
-    TEST_METHOD(TestCheckersPlay)
+    TEST_METHOD(TestCheckersPieces)
     {
-      Assert::IsTrue(1 == 1);
+      Assert::IsTrue(CheckersPiece::CheckersPieceW.IsPromotable());
+      Assert::IsTrue(CheckersPiece::CheckersPieceB.IsPromotable());
+      Assert::IsFalse(CheckersPiece::CheckersKingW.IsPromotable());
+      Assert::IsFalse(CheckersPiece::CheckersKingB.IsPromotable());
+      Assert::IsFalse(CheckersPiece::CheckersQueenW.IsPromotable());
+      Assert::IsFalse(CheckersPiece::CheckersQueenB.IsPromotable());
+
+      Assert::IsTrue(CheckersPiece::CheckersPieceW.Promote(true) == &CheckersPiece::CheckersQueenW);
+      Assert::IsTrue(CheckersPiece::CheckersPieceB.Promote(true) == &CheckersPiece::CheckersQueenB);
     }
 
     TEST_METHOD(TestCheckersPositionClone)

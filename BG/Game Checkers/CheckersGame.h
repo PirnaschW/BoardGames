@@ -53,14 +53,14 @@ namespace Checkers
   class CheckersPiece final : public Piece
   {
   private:
-    inline CheckersPiece(const Kind* k, const Color* c, const CheckersPiece* u, UINT l, UINT s) noexcept : Piece(k, c, l, l, s), up(u) {}
+    inline CheckersPiece(const Kind* k, const Color* c, const CheckersPiece* u, UINT l, UINT s) noexcept : Piece(k, c, l, l, s), up_(u) {}
     CheckersPiece(const CheckersPiece&) = delete;
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:
-    virtual inline bool IsPromotable(void) const noexcept override { return up != this; }          // is this a promotable piece?
-    virtual inline const Piece* Promote(bool /*u*/) const noexcept override { return up; }         // promote this piece up/down
+    virtual inline bool IsPromotable(void) const noexcept override { return up_ != this; }          // is this a promotable piece?
+    virtual inline const Piece* Promote(bool /*u*/) const noexcept override { return up_; }         // promote this piece up/down
   private:
-    const CheckersPiece* up;                                                                       // what this piece promotes up to
+    const CheckersPiece* up_;                                                                       // what this piece promotes up to
 
   public:
     static const CheckersPiece CheckersPieceW;
@@ -82,7 +82,7 @@ namespace Checkers
     virtual void EvaluateStatically(void) noexcept override;
 // extensions
   public:
-    bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Location fr) const;
+    bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Location fr) const noexcept;
   private:
     inline bool CanPromote(const Location &l) const noexcept;
   };
