@@ -40,9 +40,6 @@
     <ClCompile Include="..\BG\Core\BGCoreKind.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreMove.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\BG\Core\BGCorePiece.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>

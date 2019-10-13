@@ -297,7 +297,6 @@
     <ClCompile Include="Core\BGCoreColor.cpp" />
     <ClCompile Include="Core\BGCoreKind.cpp" />
     <ClCompile Include="Core\BGCoreLayout.cpp" />
-    <ClCompile Include="Core\BGCoreMove.cpp" />
     <ClCompile Include="Core\BGCoreOffset.cpp" />
     <ClCompile Include="Core\BGCorePiece.cpp" />
     <ClCompile Include="Core\BGCorePlayer.cpp" />

@@ -371,9 +371,6 @@
     <ClCompile Include="Game Checkers\CheckersGame.cpp">
       <Filter>Game Checkers\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\BGCoreMove.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Core\BGCoreColor.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>

@@ -99,41 +99,6 @@ namespace BoardGamesCore
     else onTurn = &Color::White;
   };
 
-#ifdef STILL_STEPS
-  const std::vector<const Piece*> MainPosition::Execute(MoveP m)
-  {
-    movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
-    movelistB.clear();                                                    // after the move is executed, the movelists will be outdated
-
-    sequence.push_back(m);                                                // save the move in the sequence
-
-    std::vector<const Piece*> taken{};
-    const Steps& steps{ m->GetSteps() };
-    const Piece* p = m->GetFr().GetPiece();
-
-    // collect taken pieces
-    for (auto& s : steps)
-    {
-      if (s->GetType() & Step::StepType::Promote) p = p->Promote(true);
-
-      const Fields& take = s->GetTakes();
-      for (auto& t : take)
-      {
-        const Piece* pt = t.GetPiece();
-        if (pt->IsBlank()) continue;                                      // ignore blank fields - nothing was taken
-        assert(pt != &Piece::NoTile);                                     // cannot be NoTile, as this means you moved out-of-bounds
-        taken.push_back(t.GetPiece());                                    // collect potential pieces taken (target tile or jumped over)
-        SetPiece(t.GetLocation(), &Piece::NoPiece);                       // remove the taken piece from the board
-      }
-    }
-
-    SetPiece(m->GetFr().GetLocation(), &Piece::NoPiece);                  // empty the start tile
-    SetPiece(m->GetTo().GetLocation(), m->GetTo().GetPiece());            // place the piece at the target field
-
-    NextPlayer();                                                         // after the move, it's the next player's turn
-    return taken;                                                         // return the collected taken pieces
-  }
-#endif STILL_STEPS
 
   void MainPosition::Execute(const Move& m) noexcept
   {
@@ -146,20 +111,6 @@ namespace BoardGamesCore
     NextPlayer();                                                         // after the move, it's the next player's turn
   }
 
-#ifdef STILL_STEPS
-  void MainPosition::Undo(const MoveP m)
-  {
-    const Steps& steps = m->GetSteps();
-    SetPiece(m->GetTo().GetLocation(), &Piece::NoPiece);                  // empty the target field
-    for (auto& s : steps)                                                 // for all steps
-    {
-      const Fields& takes = s->GetTakes();
-      for (auto& t : takes) SetPiece(t.GetLocation(), t.GetPiece());      // Put the taken piece(s) back on the board
-    }
-    SetPiece(m->GetFr().GetLocation(), m->GetFr().GetPiece());            // put the piece back on the starting field
-    PreviousPlayer();                                                     // after the undo, it's the previous player's turn
-  }
-#endif STILL_STEPS
   void MainPosition::Undo(const Move& m) noexcept
   {
     assert(1 == 0);
