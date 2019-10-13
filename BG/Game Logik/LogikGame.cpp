@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <thread>
-#include <mutex>
-
 #include "LogikResource.h"
 #include "LogikGame.h"
 
@@ -136,141 +133,87 @@ namespace Logik
     }
   }
 
-  PlayCode LogikPosition::GetBestMove(void) const                         // Evaluate best next move
+
+  PlayCode LogikPosition::GetBestMove(unsigned int nThreads) const        // Evaluate best next move
   {
-    unsigned int gmin{ Plays::Max };
-    std::vector<PlayCode> bestI{};
-
-    constexpr unsigned int MaxThread{ 4U };
-    std::mutex mx;
-    auto f = [this, &mx, &gmin, &bestI](PlayCode min, PlayCode max)
+    auto f = [this](PlayCode min, PlayCode max)
     {
-      for (PlayCode i = min; i < max; ++i)
+      for (PlayCode c = min; c < max; ++c)
       {
-        [this, &mx, i, &gmin, &bestI]
-        {
-          for (unsigned int k = 0; k < prevc_; ++k)                         // compare play to all previous plays_
-          {
-            if (i == previ_[k]) return;                                     // if we tried this before, don't try it again
-            if (prevR_[k] != Result{ plays_[i], plays_[previ_[k]] }) return;// if the result doesn't match, that can't be the opponent's solutions, so don't even try it
-          }
-          unsigned int RCCount[Result::RMax()]{};                           // counter for how often each of the results happened
-          for (PlayCode j = 0; j < Plays::Max; ++j)                         // for all possible opponent's solutions
-          {
-            bool match{ true };
-            for (unsigned int k = 0; match && (k < prevc_); ++k)            // compare play to all previous plays_
-            {
-              match = (prevR_[k] == Result{ plays_[j], plays_[previ_[k]] });// if the result doesn't match, that can't be the opponent's solutions
-            }
-
-            if (match)
-            {
-              const Result r(plays_[i], plays_[j]);                         // create result for the current play
-              RCCount[r]++;                                                 // increment counter for this result
-            }
-          }
-
-          unsigned int lmax = 0U;
-          for (unsigned int k = 0; k < Result::RMax(); ++k)
-          {
-            if (RCCount[k] > lmax)
-            {
-              lmax = RCCount[k];
-            }
-          }
-
-
-          if (lmax == 0);                                                   // ignore useless moves
-          else
-          {
-            mx.lock();
-            if (lmax < gmin)                                             // did we find a better move?
-            {
-              gmin = lmax;                                                    // save best 'worst count' and its index
-              bestI.clear();
-              bestI.push_back(i);
-            }
-            else if (lmax == gmin)                                            // found an equally good move, collect it
-            {
-              bestI.push_back(i);                                             // save the index
-            }
-            mx.unlock();
-          }
-        }();
+        const unsigned int lmax = EvaluatePlay(c);
+        if (lmax > 0U) CollectBestPlays(c, lmax);
       }
     };
 
-    { // tt lives only in this block
-      std::array<std::shared_ptr<std::thread>, MaxThread> tt{ nullptr };
-      for (unsigned int t = 0U; t < MaxThread; ++t)
-      {
-        PlayCode min{ Plays::Max / MaxThread * t };
-        PlayCode max{ Plays::Max / MaxThread * (t + 1) };
-        unsigned int lmax = 0;
-
-        tt[t] = std::make_shared<std::thread>(f, min, max);
-
-      }
-      for (unsigned int t = 0U; t < MaxThread; ++t)
-      {
-        tt[t]->join();
-      }
-    }
-
-    if (1 == 0)
+    std::vector<std::unique_ptr<std::thread>> tt{};
+    mx = new std::mutex;
+    for (unsigned int t = 0U; t < nThreads; ++t)
     {
-      for (PlayCode i = 0; i < Plays::Max; ++i)                             // for all possible plays_ we could try
-      {
-        [this, i, &gmin, &bestI]
-        {
-          for (unsigned int k = 0; k < prevc_; ++k)                         // compare play to all previous plays_
-          {
-            if (i == previ_[k]) return;                                     // if we tried this before, don't try it again
-            if (prevR_[k] != Result{ plays_[i], plays_[previ_[k]] }) return;// if the result doesn't match, that can't be the opponent's solutions, so don't even try it
-          }
-          unsigned int RCCount[Result::RMax()]{};                           // counter for how often each of the results happened
-          for (PlayCode j = 0; j < Plays::Max; ++j)                         // for all possible opponent's solutions
-          {
-            bool match{ true };
-            for (unsigned int k = 0; match && (k < prevc_); ++k)            // compare play to all previous plays_
-            {
-              match = (prevR_[k] == Result{ plays_[j], plays_[previ_[k]] });// if the result doesn't match, that can't be the opponent's solutions
-            }
-
-            if (match)
-            {
-              const Result r(plays_[i], plays_[j]);                         // create result for the current play
-              RCCount[r]++;                                                 // increment counter for this result
-            }
-          }
-
-          unsigned int lmax = 0;                                            // worst count found
-          for (unsigned int k = 0; k < Result::RMax(); ++k)
-          {
-            if (RCCount[k] > lmax)
-            {
-              lmax = RCCount[k];
-            }
-          }
-
-          if (lmax == 0);                                                   // ignore useless moves
-          else if (lmax < gmin)                                             // did we find a better move?
-          {
-            gmin = lmax;                                                    // save best 'worst count' and its index
-            bestI.clear();
-            bestI.push_back(i);
-          }
-          else if (lmax == gmin)                                            // found an equally good move, collect it
-          {
-            bestI.push_back(i);                                             // save the index
-          }
-        }();
-      }
+      PlayCode min{ Plays::Max / nThreads * t };
+      PlayCode max{ Plays::Max / nThreads * (t + 1) };
+      tt.push_back(std::make_unique<std::thread>(f, min, max));
     }
+    for (unsigned int t = 0U; t < nThreads; ++t)
+    {
+      tt[t]->join();
+    }
+    delete mx;
 
     if (bestI.size() == 0) throw 0;                                       // no moves are possible, there is a contradiction in the data
     return bestI[rand() % bestI.size()];                                  // randomly pick one of the equally good tries
   }
+
+  unsigned int LogikPosition::EvaluatePlay(const PlayCode& c) const noexcept
+  {
+    for (unsigned int k = 0; k < prevc_; ++k)                             // compare play to all previous plays_
+    {                                                                     
+      if (c == previ_[k]) return 0U;                                      // if we tried this before, don't try it again
+      if (prevR_[k] != Result{ plays_[c], plays_[previ_[k]] }) return 0U; // if the result doesn't match, that can't be the opponent's solutions, so don't even try it
+    }                                                                     
+    unsigned int RCCount[Result::RMax()]{};                               // counter for how often each of the results happened
+    for (PlayCode j = 0; j < Plays::Max; ++j)                             // for all possible opponent's solutions
+    {                                                                     
+      bool match{ true };                                                 
+      for (unsigned int k = 0; match && (k < prevc_); ++k)                // compare play to all previous plays_
+      {                                                                   
+        match = (prevR_[k] == Result{ plays_[j], plays_[previ_[k]] });    // if the result doesn't match, that can't be the opponent's solutions
+      }                                                                   
+                                                                          
+      if (match)                                                          
+      {                                                                   
+        const Result r(plays_[c], plays_[j]);                             // create result for the current play
+        RCCount[r]++;                                                     // increment counter for this result
+      }
+    }
+
+    unsigned int lmax = 0U;
+    for (unsigned int k = 0; k < Result::RMax(); ++k)
+    {
+      if (RCCount[k] > lmax)
+      {
+        lmax = RCCount[k];
+      }
+    }
+
+    return lmax;
+  }
+
+  void LogikPosition::CollectBestPlays(const PlayCode& c, unsigned int lmax) const noexcept
+  {
+    mx->lock();                                                            // lock the mutex
+    if (lmax < gmin)                                                      // did we find a better move?
+    {                                                                     
+      gmin = lmax;                                                        // save best 'worst count' and its index
+      bestI.clear();                                                      
+      bestI.push_back(c);                                                 
+    }                                                                     
+    else if (lmax == gmin)                                                // found an equally good move, collect it
+    {                                                                     
+      bestI.push_back(c);                                                 // save the index
+    }                                                                     
+    mx->unlock();                                                          // unlock the mutex
+  }
+
 
   void LogikPosition::Execute(const PlayCode& c)
   {
@@ -380,7 +323,7 @@ namespace Logik
     lpos->ReadPosition();
 
     PlayCode e{};
-    try { e = lpos->GetBestMove(); }
+    try { e = lpos->GetBestMove(16U); }
     catch (int) // no possible move found
     {
       ::AfxMessageBox(L"No moves are possible - input is contradictory");

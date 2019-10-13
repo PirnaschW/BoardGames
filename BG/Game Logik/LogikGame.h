@@ -1,3 +1,5 @@
+#include <thread>
+#include <mutex>
 
 namespace Logik
 {
@@ -197,17 +199,25 @@ namespace Logik
     inline LogikPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new LogikPosition(*this); }
 
-    bool SetFirstFreePeg(const Piece* p) noexcept;       // returns if it could successfully set the Peg
-    bool SetFirstFreeMarker(const Piece* p) noexcept;    // returns if it could successfully set the Marker
+    bool SetFirstFreePeg(const Piece* p) noexcept;                        // returns if it could successfully set the Peg
+    bool SetFirstFreeMarker(const Piece* p) noexcept;                     // returns if it could successfully set the Marker
     void ReadPosition(void) noexcept;
-    PlayCode GetBestMove(void) const;
+    PlayCode GetBestMove(unsigned int nThreads = 8) const;
     void Execute(const PlayCode& p);
 
   private:
-    unsigned int prevc_{};              // number of moves already made
-    PlayCode previ_[MaxTries]{};        // indices of moves already made
-    Result prevR_[MaxTries]{ {} };      // results of already made moves
-    static inline const Plays plays_;   // all possible plays
+    unsigned int EvaluatePlay(const PlayCode& c) const noexcept;
+    void CollectBestPlays(const PlayCode& c, unsigned int lmax) const noexcept;
+
+  private:
+    unsigned int prevc_{};                                                // number of moves already made
+    PlayCode previ_[MaxTries]{};                                          // indices of moves already made
+    Result prevR_[MaxTries]{ {} };                                        // results of already made moves
+    mutable std::mutex* mx{};                                             // mutex for multithreaded evaluation (locks gmin and bestI)
+    mutable unsigned int gmin{ Plays::Max };                              // best found count
+    mutable std::vector<PlayCode> bestI{};                                // moves that produce the best count found
+                                                                          
+    static inline const Plays plays_;                                     // all possible plays
   };
 
 
