@@ -202,7 +202,7 @@ namespace Logik
     bool SetFirstFreePeg(const Piece* p) noexcept;                        // returns if it could successfully set the Peg
     bool SetFirstFreeMarker(const Piece* p) noexcept;                     // returns if it could successfully set the Marker
     void ReadPosition(void) noexcept;
-    PlayCode GetBestMove(unsigned int nThreads = 8) const;
+    PlayCode GetBestMove(unsigned int nThreads = std::thread::hardware_concurrency()) const;
     void Execute(const PlayCode& p);
 
   private:

@@ -323,7 +323,7 @@ namespace Logik
     lpos->ReadPosition();
 
     PlayCode e{};
-    try { e = lpos->GetBestMove(16U); }
+    try { e = lpos->GetBestMove(); }
     catch (int) // no possible move found
     {
       ::AfxMessageBox(L"No moves are possible - input is contradictory");
