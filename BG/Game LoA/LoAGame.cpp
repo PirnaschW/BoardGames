@@ -140,8 +140,8 @@ namespace LoA
         for (auto& q : lp)
         {
           if (q.connected) continue;
-          const int dx = p.l._x - q.l._x;
-          const int dy = p.l._y - q.l._y;
+          const int dx = p.l.x_ - q.l.x_;
+          const int dy = p.l.y_ - q.l.y_;
           if (dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1)
           {
             q.connected = true;

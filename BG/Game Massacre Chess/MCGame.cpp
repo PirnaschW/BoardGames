@@ -7,7 +7,7 @@ namespace MassacreChess
 {
   MCPosition::MCPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    //srand((unsigned)time(NULL));
+    //srand((unsigned)time(nullptr));
     std::srand(1);
 
     for (Coordinate z = 0; z < d[0].xCount*d[0].yCount / 8; z++)

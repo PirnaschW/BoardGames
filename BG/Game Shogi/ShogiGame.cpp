@@ -58,10 +58,10 @@ namespace Shogi
   }
   bool Pawn::CanDrop(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    if (p->IsColor(&Color::White) ? (l._y < 1) : (l._y > pos->GetSizeY() - 2)) return false;       // drop anywhere except last row
+    if (p->IsColor(&Color::White) ? (l.y_ < 1) : (l.y_ > pos->GetSizeY() - 2)) return false;       // drop anywhere except last row
     for (Coordinate j = 0; j < pos->GetSizeY(); j++)
     {
-      const Piece* pp = pos->GetPiece(Location{ BoardPart::Main, l._x,j });
+      const Piece* pp = pos->GetPiece(Location{ BoardPart::Main, l.x_,j });
       if (pp == p) return false;                                                                   // no two pawns are allowed in the same row
     }
     return true;
@@ -74,7 +74,7 @@ namespace Shogi
   }
   bool Lance::CanMove(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    return p->IsColor(&Color::White) ? (l._y > 0) : (l._y < pos->GetSizeY() - 1);                  // move (or drop) anywhere except last row
+    return p->IsColor(&Color::White) ? (l.y_ > 0) : (l.y_ < pos->GetSizeY() - 1);                  // move (or drop) anywhere except last row
   }
 
   void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
@@ -85,7 +85,7 @@ namespace Shogi
   }
   bool Knight::CanMove(const Piece* p, const Location& l, const MainPosition* pos) const noexcept
   {
-    return p->IsColor(&Color::White) ? (l._y > 1) : (l._y < pos->GetSizeY() - 2);                  // move (or drop) anywhere except last two rows
+    return p->IsColor(&Color::White) ? (l.y_ > 1) : (l.y_ < pos->GetSizeY() - 2);                  // move (or drop) anywhere except last two rows
   }
 
   void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
@@ -330,7 +330,7 @@ namespace Shogi
   inline bool ShogiPosition::CanPromote(const Color* c, const Location& l) const noexcept
   {
     const bool f = ShogiGame::IsFull(sizeX, sizeY);
-    return c == &Color::White ? (l._y < (f ? 3U : 1U)) : (l._y > (f ? 8U : 3U));
+    return c == &Color::White ? (l.y_ < (f ? 3U : 1U)) : (l.y_ > (f ? 8U : 3U));
   }
     
   const VariantList& ShogiGame::GetVariants(void) noexcept

@@ -10,10 +10,10 @@ namespace Checkers
 
   inline const CheckersPiece CheckersPiece::CheckersPieceW{ &Checker::TheChecker, &Color::White, &CheckersQueenW, IDB_WCD, IDB_WCS };
   inline const CheckersPiece CheckersPiece::CheckersPieceB{ &Checker::TheChecker, &Color::Black, &CheckersQueenB, IDB_BCD, IDB_BCS };
-  inline const CheckersPiece CheckersPiece::CheckersKingW { &King::TheKing,       &Color::White, NULL,            IDB_WKD, IDB_WKS };
-  inline const CheckersPiece CheckersPiece::CheckersKingB { &King::TheKing,       &Color::Black, NULL,            IDB_BKD, IDB_BKS };
-  inline const CheckersPiece CheckersPiece::CheckersQueenW{ &Queen::TheQueen,     &Color::White, NULL,            IDB_WQD, IDB_WQS };
-  inline const CheckersPiece CheckersPiece::CheckersQueenB{ &Queen::TheQueen,     &Color::Black, NULL,            IDB_BQD, IDB_BQS };
+  inline const CheckersPiece CheckersPiece::CheckersKingW { &King::TheKing,       &Color::White, &CheckersKingW,  IDB_WKD, IDB_WKS };
+  inline const CheckersPiece CheckersPiece::CheckersKingB { &King::TheKing,       &Color::Black, &CheckersKingB,  IDB_BKD, IDB_BKS };
+  inline const CheckersPiece CheckersPiece::CheckersQueenW{ &Queen::TheQueen,     &Color::White, &CheckersQueenW, IDB_WQD, IDB_WQS };
+  inline const CheckersPiece CheckersPiece::CheckersQueenB{ &Queen::TheQueen,     &Color::Black, &CheckersQueenB, IDB_BQD, IDB_BQS };
 
 
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
@@ -22,7 +22,7 @@ namespace Checkers
     const int dy = pos.GetPiece(l)->IsColor(&Color::White) ? -1 : 1;
     pos.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
     pos.AddIfLegal(moves, l, l + Offset(-1, dy));
-    pos.AddIfLegalJump(moves, false, Actions{}, l);                       // check for jump moves
+//    pos.AddIfLegalJump(moves, false, Actions{}, l);                       // check for jump moves
   }
 
 
@@ -40,7 +40,7 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
-    pos.AddIfLegalJump(moves, true, Actions{}, l);                        // check for jump moves
+//    pos.AddIfLegalJump(moves, true, Actions{}, l);                        // check for jump moves
   }
 
 
@@ -58,15 +58,18 @@ namespace Checkers
 
   bool CheckersPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
-    const Piece* p = GetPiece(to);
-    if (p == nullptr) return false;                                       // out of board
-    if (!p->IsBlank()) return false;                                      // field is not empty
+    const Piece* pf = GetPiece(fr);
+    assert(pf != nullptr);
+    assert(!pf->IsBlank());
+    const Piece* pt = GetPiece(to);
+    if (pt == nullptr) return false;                                       // out of board
+    if (!pt->IsBlank()) return false;                                      // field is not empty
 
-    const Piece * p2 = CanPromote(to) ? GetPiece(fr)->Promote(true) : GetPiece(fr);
+    const Piece * pf2 = CanPromote(to,pf) ? pf->Promote(true) : pf;
 
     Actions a{};
-    a.push_back(std::make_shared<ActionTake>(fr, p));                     // pick piece up
-    a.push_back(std::make_shared<ActionPlace>(to, p2));                   // and place it on target
+    a.push_back(std::make_shared<ActionTake>(fr, pf));          // pick piece up
+    a.push_back(std::make_shared<ActionPlace>(to, pf2));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return true;
   }
@@ -140,9 +143,9 @@ namespace Checkers
     JumpsOnly(movelistB);
   }
 
-  bool CheckersPosition::CanPromote(const Location& l) const noexcept
+  bool CheckersPosition::CanPromote(const Location& l, const Piece* p) const noexcept
   {
-    return (OnTurn() == &Color::White && l._y == 0) || (OnTurn() != &Color::White && l._y == sizeY-1);
+    return (p->IsColor(&Color::White) && l.y_ == 0) || (p->IsColor(&Color::Black) && l.y_ == sizeY - 1);
   }
 
 

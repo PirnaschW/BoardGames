@@ -219,7 +219,7 @@ namespace BoardGamesCore
     Location l{ BoardPart::Main, 0U,0U};
     if (lay->GetLocation(point, l))
     {
-      if (l._b != BoardPart::Stock)
+      if (l.b_ != BoardPart::Stock)
         pos->SetPiece(l, dragPiece); // dropped on a valid target
     }
     dragPoint = {};
@@ -241,7 +241,7 @@ namespace BoardGamesCore
       for (const auto& m : p->GetMoveList(pos->OnTurn() == &Color::White))   // filter moves of the selected piece into 'moves'
       {
         const Location& lf = m->GetFrL();
-        if (lf == l || (lf._b == BoardPart::Stock && m->GetToL() == l)) moves.push_back(m);
+        if (lf == l || (lf.b_ == BoardPart::Stock && m->GetToL() == l)) moves.push_back(m);
       }
       if (!moves.empty())
       {

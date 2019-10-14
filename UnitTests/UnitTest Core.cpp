@@ -13,9 +13,9 @@ namespace Microsoft
       template<> inline std::wstring ToString<Offset>(const Offset* /*o*/) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
       template<> inline std::wstring ToString<Offset>(      Offset* /*o*/) { std::wstringstream _s; _s << "<cannotshow internal data of q>"; return _s.str(); }
 
-      template<> inline std::wstring ToString<Location>(const Location& l) { std::wstringstream _s; _s << '(' << l. _x << '|' << l. _y << ')'; return _s.str(); }
-      template<> inline std::wstring ToString<Location>(const Location* l) { std::wstringstream _s; _s << '(' << l->_x << '|' << l->_y << ')'; return _s.str(); }
-      template<> inline std::wstring ToString<Location>(      Location* l) { std::wstringstream _s; _s << '(' << l->_x << '|' << l->_y << ')'; return _s.str(); }
+      template<> inline std::wstring ToString<Location>(const Location& l) { std::wstringstream _s; _s << '(' << l. x_ << '|' << l. y_ << ')'; return _s.str(); }
+      template<> inline std::wstring ToString<Location>(const Location* l) { std::wstringstream _s; _s << '(' << l->x_ << '|' << l->y_ << ')'; return _s.str(); }
+      template<> inline std::wstring ToString<Location>(      Location* l) { std::wstringstream _s; _s << '(' << l->x_ << '|' << l->y_ << ')'; return _s.str(); }
 
       template<> inline std::wstring ToString<Field>(const Field& f) { std::wstringstream _s; _s << ToString(f. GetLocation()) << ',' << static_cast<const void*>(f. GetPiece()); return _s.str(); }
       template<> inline std::wstring ToString<Field>(const Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(f->GetPiece()); return _s.str(); }
@@ -307,6 +307,23 @@ namespace UnitTestCore
       Assert::IsTrue(hb.GetColor() == cb.GetColor());
       Assert::IsFalse(hw.GetColor() == cb.GetColor());
       Assert::IsFalse(cw.GetColor() == hb.GetColor());
+
+    }
+
+  };
+}
+
+
+namespace UnitTestAI
+{
+  TEST_CLASS(UnitTestAI)
+  {
+
+  public:
+    TEST_METHOD(TestAI)
+    {
+
+
 
     }
 

@@ -28,7 +28,7 @@ namespace BoardGamesCore
 
   const Piece* MainPosition::GetPiece(const Location& l) const noexcept
   {
-    switch (l._b)
+    switch (l.b_)
     {
       case BoardPart::Stock: return _stock.GetPiece(l);
       case BoardPart::Taken: return _taken.GetPiece(l);
@@ -38,7 +38,7 @@ namespace BoardGamesCore
 
   const Piece* MainPosition::SetPiece(const Location& l, const Piece* p) noexcept
   {
-    switch (l._b)
+    switch (l.b_)
     {
       case BoardPart::Stock: return _stock.SetPiece(l, p);
       case BoardPart::Taken: return _taken.SetPiece(l, p);

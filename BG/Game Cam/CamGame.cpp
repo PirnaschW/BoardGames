@@ -101,7 +101,7 @@ namespace Cam
 
   unsigned int CamPiece::GetValue(const MainPosition& p, const Location l) const noexcept
   {
-    return kind->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l._y : l._y);
+    return kind->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l.y_ : l.y_);
   }
 
 

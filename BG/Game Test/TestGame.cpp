@@ -443,8 +443,8 @@ namespace Test
     for (unsigned int i = 0; i < pos->sequence.size(); ++i)
     {
       const MoveP m = pos->sequence[i];
-      sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m->GetFr().GetLocation()._x + 'a', m->GetFr().GetLocation()._y + '1',
-                                                    m->GetTo().GetLocation()._x + 'a', m->GetTo().GetLocation()._y + '1');
+      sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m->GetFr().GetLocation()._x + 'a', m->GetFr().GetLocation().y_ + '1',
+                                                    m->GetTo().GetLocation()._x + 'a', m->GetTo().GetLocation().y_ + '1');
       s += buffer;
     }
     sprintf_s(buffer, "pos value = %u\n", (unsigned int) pos->GetValue(true));

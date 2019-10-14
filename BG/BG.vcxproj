@@ -255,7 +255,7 @@
     <ClInclude Include="Core\BGCorePosition.h" />
     <ClInclude Include="Core\BGCorePValue.h" />
     <ClInclude Include="Core\BGCoreResource.h" />
-    <ClInclude Include="Core\BGCoreStep.h" />
+    <ClInclude Include="Core\BGCoreAction.h" />
     <ClInclude Include="Core\BGCoreUI.h" />
     <ClInclude Include="Core\BGCoreVariant.h" />
     <ClInclude Include="Game Cam\CamGame.h" />
@@ -301,7 +301,7 @@
     <ClCompile Include="Core\BGCorePiece.cpp" />
     <ClCompile Include="Core\BGCorePlayer.cpp" />
     <ClCompile Include="Core\BGCorePosition.cpp" />
-    <ClCompile Include="Core\BGCoreStep.cpp" />
+    <ClCompile Include="Core\BGCoreAction.cpp" />
     <ClCompile Include="Game Cam\CamGame.cpp" />
     <ClCompile Include="Game Checkers\CheckersGame.cpp" />
     <ClCompile Include="Game Hasami\HasamiGame.cpp" />
