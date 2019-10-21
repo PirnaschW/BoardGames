@@ -95,24 +95,24 @@ namespace UnitTestLogik
       for (unsigned int i = 0; i < MaxPegs * MaxTries - 1; ++i)
       {
         p[i] = &LogikPiece::GetPiece(rand() % MaxColors);
-        set = pl1->SetFirstFreePeg(p[i]);
+        set = pl1->SetFirstFreePeg(*p[i]);
         Assert::IsTrue(set);
         m[i] = rand() % 2 ? &LogikPiece::LPieceB : &LogikPiece::LPieceW;
-        set = pl1->SetFirstFreeMarker(m[i]);
+        set = pl1->SetFirstFreeMarker(*m[i]);
         Assert::IsTrue(set);
       }
 
       pl1->ReadPosition();
 
       // verify that 'Peg full' is recognized correctly
-      set = pl1->SetFirstFreePeg(&LogikPiece::GetPiece(rand() % MaxColors));
+      set = pl1->SetFirstFreePeg(LogikPiece::GetPiece(rand() % MaxColors));
       Assert::IsTrue(set);
-      set = pl1->SetFirstFreePeg(&LogikPiece::GetPiece(rand() % MaxColors));
+      set = pl1->SetFirstFreePeg(LogikPiece::GetPiece(rand() % MaxColors));
       Assert::IsFalse(set);
       // verify that 'Marker full' is recognized correctly
-      set = pl1->SetFirstFreeMarker(rand() % 2 ? &LogikPiece::LPieceB : &LogikPiece::LPieceW);
+      set = pl1->SetFirstFreeMarker(rand() % 2 ? LogikPiece::LPieceB : LogikPiece::LPieceW);
       Assert::IsTrue(set);
-      set = pl1->SetFirstFreeMarker(rand() % 2 ? &LogikPiece::LPieceB : &LogikPiece::LPieceW);
+      set = pl1->SetFirstFreeMarker(rand() % 2 ? LogikPiece::LPieceB : LogikPiece::LPieceW);
       Assert::IsFalse(set);
 
       for (unsigned char i = 0; i < MaxPegs * MaxTries - 1; ++i)
@@ -121,11 +121,11 @@ namespace UnitTestLogik
         const unsigned char i31 = i / MaxPegs;
         const unsigned char i22 = i21 + MaxPegs;
         // verify Pegs come back as set
-        const Piece* pp2 = pl1->GetPiece(Location{ BoardPart::Main, i22, i31 });
-        Assert::IsTrue(pp2 == p[i]);
+        const Piece& pp2 = pl1->GetPiece(Location{ BoardPart::Main, i22, i31 });
+        Assert::IsTrue(pp2 == *p[i]);
         // verify Markers come back as set
-        const Piece* pm2 = pl1->GetPiece(Location{ BoardPart::Main, i21, i31 });
-        Assert::IsTrue(pm2 == m[i]);
+        const Piece& pm2 = pl1->GetPiece(Location{ BoardPart::Main, i21, i31 });
+        Assert::IsTrue(pm2 == *m[i]);
       }
     }
 
@@ -143,8 +143,8 @@ namespace UnitTestLogik
           for (unsigned char i = MaxPegs; i < 2 * MaxPegs; ++i)
           {
             // verify Pegs come back as set
-            const Piece* pp = l.GetPiece(Location{ BoardPart::Main, i, j });
-            Assert::IsTrue(pp == &LogikPiece::GetPiece(plays[c][i - MaxPegs]));
+            const Piece& pp = l.GetPiece(Location{ BoardPart::Main, i, j });
+            Assert::IsTrue(pp == LogikPiece::GetPiece(plays[c][i - MaxPegs]));
           }
         }
       }

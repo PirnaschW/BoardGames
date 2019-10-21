@@ -52,7 +52,7 @@ namespace Test
 
   bool TestPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const
   {
-    const Piece* p = GetPiece(to);
+    const Piece& p = GetPiece(to);
     if (p == nullptr) return false;  // out of board
     if (p->IsBlank()) return true;   // not a move, but keep trying this direction
     if (p->IsColor(OnTurn())) return false;  // own piece
@@ -160,7 +160,7 @@ namespace Test
       //for (auto& mi : m)                                      // for all possible opponent's moves
       //{
       //  MainPosition* pp(pos->Clone());                       // create a copy of the board
-      //  std::vector<const Piece*> taken = pp->Execute(mi);    // apply the move to the copy, return material taken
+      //  std::vector<const Piece&> taken = pp->Execute(mi);    // apply the move to the copy, return material taken
       //  pp->NextPlayer();
       //  PositionValue r{};
 

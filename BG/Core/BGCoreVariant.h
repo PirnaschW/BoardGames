@@ -24,7 +24,7 @@ namespace BoardGamesCore
   public:
     constexpr inline static const VariantList& GetVariants(void) noexcept { return TClass::GetVariants(); }
     constexpr inline static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept { return TClass::GetDimensions(x,y); }
-    constexpr inline static const PieceMapP& GetPieces(void) noexcept { const PieceMapP& p{ TClass::GetPieces() }; p->Add(&Piece::NoPiece); p->Add(&Piece::NoTile); return p; }
+    constexpr inline static const PieceMapP& GetPieces(void) noexcept { const PieceMapP& p{ TClass::GetPieces() }; p->Add(Piece::NoPiece); p->Add(Piece::NoTile); return p; }
   };
 
   static_assert(std::is_abstract<IUI>::value, "must be abstract");

@@ -144,10 +144,9 @@ namespace BoardGamesCore
         for (Coordinate i = 0; i < sizeX_; i++)                          // loop through all locations
         {                                                                 
           const Location l{ BoardPart::Main, i,j };
-          const Piece* p = GetPiece(l);                                   
-          if (p == nullptr) continue;                                     // field does not exist
-          if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;  // nothing here
-          value_ += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue(*this,l);
+          const Piece& p = GetPiece(l);                                   
+          if ((p == Piece::NoTile) || (p == Piece::NoPiece)) continue;  // nothing here
+          value_ += (p.IsColor(&Color::White) ? 1 : -1) * p.GetValue(*this,l);
         }
       }
     }

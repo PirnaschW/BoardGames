@@ -68,7 +68,7 @@ namespace Cam
   public:
 //    bool CollectJumps(const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const;
   private:
-//    bool IsRepeat(const Actions& a, const Piece* p, const Location fr, const Location to) const noexcept;
+//    bool IsRepeat(const Actions& a, const Piece& p, const Location fr, const Location to) const noexcept;
   };
 
   class CamGame : public Game

@@ -20,13 +20,13 @@ namespace BoardGamesCore
     unsigned int z{};
     for (const auto& p : list)
     {
-      while (pieces_[z] == pMap_->GetIndex(&Piece::NoTile)) z++; // skip non-existing fields
-      pieces_[z++] = pMap_->GetIndex(p);
+      while (pieces_[z] == pMap_->GetIndex(Piece::NoTile)) z++; // skip non-existing fields
+      pieces_[z++] = pMap_->GetIndex(*p);
     }
   }
 
 
-  const Piece* MainPosition::GetPiece(const Location& l) const noexcept
+  const Piece& MainPosition::GetPiece(const Location& l) const noexcept
   {
     switch (l.b_)
     {
@@ -36,7 +36,7 @@ namespace BoardGamesCore
     }
   }
 
-  const Piece* MainPosition::SetPiece(const Location& l, const Piece* p) noexcept
+  const Piece& MainPosition::SetPiece(const Location& l, const Piece& p) noexcept
   {
     switch (l.b_)
     {
@@ -52,7 +52,7 @@ namespace BoardGamesCore
     for (Coordinate x = 0; ; x++)
     {
       const Location l{ BoardPart::Taken, x, y };
-      if (taken_.GetPiece(l)->IsKind(noKind::NoKind)) return l;
+      if (taken_.GetPiece(l).IsKind(noKind::NoKind)) return l;
     }
   }
 
@@ -68,11 +68,10 @@ namespace BoardGamesCore
     {
       for (Coordinate j = 0; j < sizeY_; j++)
       {
-        const Piece* p = GetPiece(Location(BoardPart::Main, i, j));
-        assert(p != nullptr);
-        if (!p->IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
+        const Piece& p = GetPiece(Location(BoardPart::Main, i, j));
+        if (!p.IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
         {
-          p->CollectMoves(*this, Location(BoardPart::Main, i, j), p->IsColor(&Color::White) ? movesW_ : movesB_);
+          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(&Color::White) ? movesW_ : movesB_);
         }
       }
     }
@@ -118,7 +117,7 @@ namespace BoardGamesCore
     assert(1 == 0);
   }
 
-  //void TakenPosition::Push(unsigned int player, const std::vector<const Piece*>& p) noexcept
+  //void TakenPosition::Push(unsigned int player, const std::vector<const Piece&>& p) noexcept
   //{
   //  for (auto& pp : p)
   //  {

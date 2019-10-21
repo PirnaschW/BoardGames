@@ -8,7 +8,7 @@ namespace BoardGamesCore
     constexpr inline Position(void) noexcept = delete;
 
   protected:
-    inline Position(const PieceMapP& p, Coordinate x, Coordinate y, const Piece* init = &Piece::NoPiece) noexcept
+    inline Position(const PieceMapP& p, Coordinate x, Coordinate y, const Piece& init = Piece::NoPiece) noexcept
       : pMap_{ p }, sizeX_(x), sizeY_(y), pieces_(1ULL * x * y, pMap_->GetIndex(init)) {}
     inline Position(const Position& p) noexcept : pMap_{ p.pMap_ }, sizeX_(p.sizeX_), sizeY_(p.sizeY_), pieces_{ p.pieces_ } {}
   public:
@@ -16,14 +16,14 @@ namespace BoardGamesCore
 
     constexpr inline Coordinate GetSizeX(void) const noexcept { return sizeX_; }  // potentially needed for positional value calculations
     constexpr inline Coordinate GetSizeY(void) const noexcept { return sizeY_; }  // only needed for positional value calculations
-    constexpr inline const Piece* GetPiece(const Location& l) const noexcept { return l.Valid(sizeX_, sizeY_) ? pMap_->GetPiece(pieces_[l.Index(sizeX_, sizeY_)]) : nullptr; }
-    inline bool HasPiece(const Piece* p) const noexcept { const PieceIndex z = pMap_->GetIndex(p); for (const auto& pp : pieces_) if (pp == z) return true; return false; }
+    constexpr inline const Piece& GetPiece(const Location& l) const noexcept { return l.Valid(sizeX_, sizeY_) ? pMap_->GetPiece(pieces_[l.Index(sizeX_, sizeY_)]) : Piece::NoTile; }
+    inline bool HasPiece(const Piece& p) const noexcept { const PieceIndex z = pMap_->GetIndex(p); for (const auto& pp : pieces_) if (pp == z) return true; return false; }
     inline bool operator ==(const Position* p) const noexcept { return p->sizeX_ == sizeX_ && p->sizeY_ == sizeY_ && p->pieces_ == pieces_; }
     inline bool operator !=(const Position* p) const noexcept { return !(*this == p); }
 
     virtual std::size_t GetHash(void) const noexcept;
-    virtual void Serialize(CArchive* ar) const { for (auto& p : pieces_) pMap_->GetPiece(p)->Serialize(ar); }
-    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept { hash_ = 0; pieces_[l.Index(sizeX_, sizeY_)] = pMap_->GetIndex(p); return p; }
+    virtual void Serialize(CArchive* ar) const { for (auto& p : pieces_) pMap_->GetPiece(p).Serialize(ar); }
+    virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept { hash_ = 0; pieces_[l.Index(sizeX_, sizeY_)] = pMap_->GetIndex(p); return p; }
     virtual void SetPosition(std::vector<const Piece*> list);
 
   protected:
@@ -100,8 +100,8 @@ namespace BoardGamesCore
     inline Depth GetDepth(void) const noexcept { return depth_; }
     inline Depth SetDepth(Depth d) noexcept { return depth_ = d; }
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value_ = v.Relative(w); }
-    virtual const Piece* GetPiece(const Location& l) const noexcept;
-    virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept;
+    virtual const Piece& GetPiece(const Location& l) const noexcept;
+    virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
     const Location GetNextTakenL(const Color* c) const noexcept;
     inline bool IsTaken(const Location& l) const noexcept { return l.b_ == BoardPart::Taken; }
     virtual inline MoveP GetBestMove(bool w) const noexcept { return (w ? movesW_[0] : movesB_[0]); }

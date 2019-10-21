@@ -24,8 +24,8 @@ namespace UnitTestCheckers
       Assert::IsFalse(CheckersPiece::CheckersQueenW.IsPromotable());
       Assert::IsFalse(CheckersPiece::CheckersQueenB.IsPromotable());
 
-      Assert::IsTrue(CheckersPiece::CheckersPieceW.Promote(true) == &CheckersPiece::CheckersQueenW);
-      Assert::IsTrue(CheckersPiece::CheckersPieceB.Promote(true) == &CheckersPiece::CheckersQueenB);
+      Assert::IsTrue(CheckersPiece::CheckersPieceW.Promote(true) == CheckersPiece::CheckersQueenW);
+      Assert::IsTrue(CheckersPiece::CheckersPieceB.Promote(true) == CheckersPiece::CheckersQueenB);
 
       const CheckersPosition p{ Variants<Checkers::CheckersGame>::GetPieces(), CheckersGame::GetDimensions(8U, 8U) };
       Moves m{};
@@ -100,7 +100,7 @@ namespace UnitTestCheckers
               case 1: p = &CheckersPiece::CheckersPieceB; break;
               default: break;
             }
-            pos.SetPiece(Location{ BoardPart::Main, i,j }, p);
+            pos.SetPiece(Location{ BoardPart::Main, i,j }, *p);
           }
         }
 
@@ -111,14 +111,14 @@ namespace UnitTestCheckers
           for (Coordinate j = 0; j < MaxY; ++j)
           {
             const Location& lf{ BoardPart::Main, i, j };
-            const Piece* p = pos.GetPiece(lf);
-            if (p == &CheckersPiece::CheckersPieceW)
+            const Piece& p = pos.GetPiece(lf);
+            if (p == CheckersPiece::CheckersPieceW)
             {
               const Location& lul{ BoardPart::Main, i - 1U, j - 1U };     // up left
-              const Piece* pul = pos.GetPiece(lul);
-              if (pul == &Piece::NoPiece)
+              const Piece& pul = pos.GetPiece(lul);
+              if (pul == Piece::NoPiece)
               {
-                const Piece* pp = ((lul.y_ == 0) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((lul.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(lul, pp));      // place it on target
@@ -126,23 +126,23 @@ namespace UnitTestCheckers
               }
 
               const Location& lur{ BoardPart::Main, i + 1U, j - 1U };     // up right
-              const Piece* pur = pos.GetPiece(lur);
-              if (pur == &Piece::NoPiece)
+              const Piece& pur = pos.GetPiece(lur);
+              if (pur == Piece::NoPiece)
               {
-                const Piece* pp = ((lur.y_ == 0) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((lur.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(lur, pp));      // place it on target
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
             }
-            else if (p == &CheckersPiece::CheckersPieceB)
+            else if (p == CheckersPiece::CheckersPieceB)
             {
               const Location& ldl{ BoardPart::Main, i - 1U, j + 1U };     // down left
-              const Piece* pdl = pos.GetPiece(ldl);
-              if (pdl == &Piece::NoPiece)
+              const Piece& pdl = pos.GetPiece(ldl);
+              if (pdl == Piece::NoPiece)
               {
-                const Piece* pp = ((ldl.y_ == MaxY - 1) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((ldl.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(ldl, pp));      // place it on target
@@ -150,10 +150,10 @@ namespace UnitTestCheckers
               }
 
               const Location& ldr{ BoardPart::Main, i + 1U, j + 1U };     // dowm right
-              const Piece* pdr = pos.GetPiece(ldr);
-              if (pdr == &Piece::NoPiece)
+              const Piece& pdr = pos.GetPiece(ldr);
+              if (pdr == Piece::NoPiece)
               {
-                const Piece* pp = ((ldr.y_ == MaxY - 1) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((ldr.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(ldr, pp));      // place it on target
@@ -162,7 +162,7 @@ namespace UnitTestCheckers
             }
             else
             {
-              Assert::IsTrue(p == &Piece::NoPiece);                       // must be empty field
+              Assert::IsTrue(p == Piece::NoPiece);                       // must be empty field
             }
 
           }
@@ -236,7 +236,7 @@ namespace UnitTestCheckers
               case 3: p = &CheckersPiece::CheckersQueenB; break;
               default: break;
             }
-            pos.SetPiece(Location{ BoardPart::Main, i,j }, p);
+            pos.SetPiece(Location{ BoardPart::Main, i,j }, *p);
           }
         }
 
@@ -247,14 +247,14 @@ namespace UnitTestCheckers
           for (Coordinate j = 0; j < MaxY; ++j)
           {
             const Location& lf{ BoardPart::Main, i, j };
-            const Piece* p = pos.GetPiece(lf);
-            if (p == &CheckersPiece::CheckersPieceW)
+            const Piece& p = pos.GetPiece(lf);
+            if (p == CheckersPiece::CheckersPieceW)
             {
               const Location& lul{ BoardPart::Main, i - 1U, j - 1U };     // up left
-              const Piece* pul = pos.GetPiece(lul);
-              if (pul == &Piece::NoPiece)
+              const Piece& pul = pos.GetPiece(lul);
+              if (pul == Piece::NoPiece)
               {
-                const Piece* pp = ((lul.y_ == 0) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((lul.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(lul, pp));      // place it on target
@@ -262,23 +262,23 @@ namespace UnitTestCheckers
               }
 
               const Location& lur{ BoardPart::Main, i + 1U, j - 1U };     // up right
-              const Piece* pur = pos.GetPiece(lur);
-              if (pur == &Piece::NoPiece)
+              const Piece& pur = pos.GetPiece(lur);
+              if (pur == Piece::NoPiece)
               {
-                const Piece* pp = ((lur.y_ == 0) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((lur.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(lur, pp));      // place it on target
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
             }
-            else if (p == &CheckersPiece::CheckersPieceB)
+            else if (p == CheckersPiece::CheckersPieceB)
             {
               const Location& ldl{ BoardPart::Main, i - 1U, j + 1U };     // down left
-              const Piece* pdl = pos.GetPiece(ldl);
-              if (pdl == &Piece::NoPiece)
+              const Piece& pdl = pos.GetPiece(ldl);
+              if (pdl == Piece::NoPiece)
               {
-                const Piece* pp = ((ldl.y_ == MaxY - 1) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((ldl.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(ldl, pp));      // place it on target
@@ -286,25 +286,25 @@ namespace UnitTestCheckers
               }
 
               const Location& ldr{ BoardPart::Main, i + 1U, j + 1U };     // dowm right
-              const Piece* pdr = pos.GetPiece(ldr);
-              if (pdr == &Piece::NoPiece)
+              const Piece& pdr = pos.GetPiece(ldr);
+              if (pdr == Piece::NoPiece)
               {
-                const Piece* pp = ((ldr.y_ == MaxY - 1) && p->IsPromotable()) ? p->Promote(true) : p;
+                const Piece& pp = ((ldr.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
                 a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
                 a.push_back(std::make_shared<ActionPlace>(ldr, pp));      // place it on target
                 mb.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
             }
-            else if (p == &CheckersPiece::CheckersQueenW)
+            else if (p == CheckersPiece::CheckersQueenW)
             {
               for (const Offset& o : Offset::Bdirection)
               {
                 for (Coordinate k = 1U; k < MaxX; ++k)
                 {
                   const Location& lt{ lf + o * k };
-                  const Piece* pt = pos.GetPiece(lt);
-                  if (pt == &Piece::NoPiece)
+                  const Piece& pt = pos.GetPiece(lt);
+                  if (pt == Piece::NoPiece)
                   {
                     Actions a{};
                     a.push_back(std::make_shared<ActionTake>(lf, p));       // pick piece up
@@ -315,15 +315,15 @@ namespace UnitTestCheckers
                 }
               }
             }
-            else if (p == &CheckersPiece::CheckersQueenB)
+            else if (p == CheckersPiece::CheckersQueenB)
             {
               for (const Offset& o : Offset::Bdirection)
               {
                 for (Coordinate k = 1U; k < MaxX; ++k)
                 {
                   const Location& lt{ lf + o * k };
-                  const Piece* pt = pos.GetPiece(lt);
-                  if (pt == &Piece::NoPiece)
+                  const Piece& pt = pos.GetPiece(lt);
+                  if (pt == Piece::NoPiece)
                   {
                     Actions a{};
                     a.push_back(std::make_shared<ActionTake>(lf, p));       // pick piece up
@@ -336,7 +336,7 @@ namespace UnitTestCheckers
             }
             else
             {
-              Assert::IsTrue(p == &Piece::NoPiece);                       // must be empty field
+              Assert::IsTrue(p == Piece::NoPiece);                       // must be empty field
             }
 
           }

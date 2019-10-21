@@ -10,21 +10,19 @@ namespace Template
 
   bool TemplatePosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
-    const Piece* pf = GetPiece(fr);                                       // piece to move
-    if (pf == nullptr) return false;                                      // out of board
-    if (pf == &Piece::NoTile) return false;                               // out of board
-    if (pf->IsBlank()) return false;                                      // tile not occupied
+    const Piece& pf = GetPiece(fr);                                       // piece to move
+    if (pf == Piece::NoTile) return false;                               // out of board
+    if (pf.IsBlank()) return false;                                      // tile not occupied
 
-    const Piece* pt = GetPiece(to);                                       // piece on target field
-    if (pt == nullptr) return false;                                      // out of board
-    if (pt == &Piece::NoTile) return false;                               // out of board
+    const Piece& pt = GetPiece(to);                                       // piece on target field
+    if (pt == Piece::NoTile) return false;                               // out of board
 
     Actions a{};
     a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
-    if (!pt->IsBlank())
+    if (!pt.IsBlank())
     {
       a.push_back(std::make_shared<ActionTake>(to, pt));                    // pick opponent piece up
-      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pf->GetColor()), pt));                   // place it in Taken
+      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
     }
     a.push_back(std::make_shared<ActionPlace>(to, pf));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
@@ -47,8 +45,8 @@ namespace Template
   const PieceMapP& TemplateGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
-    p->Add(&TemplatePiece::TemplatePieceW);
-    p->Add(&TemplatePiece::TemplatePieceB);
+    p->Add(TemplatePiece::TemplatePieceW);
+    p->Add(TemplatePiece::TemplatePieceB);
     return p;
   }
 

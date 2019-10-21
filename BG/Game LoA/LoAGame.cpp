@@ -13,13 +13,13 @@ namespace LoA
   {
     std::vector<const Piece*> along{};
     const Piece* p{};
-    while ((p = pos.GetPiece(l = l + o)) != nullptr) along.push_back(p);
+    while ((p = &pos.GetPiece(l = l + o)) != &Piece::NoTile) along.push_back(p);
     return along;
   }
 
   void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves, int dx, int dy) const
   {
-    unsigned int s{ pos.GetPiece(l)->IsBlank() ? 0U : 1U };
+    unsigned int s{ pos.GetPiece(l).IsBlank() ? 0U : 1U };
     std::vector<const Piece*> a1 = CollectAlong(pos, l, Offset(dx, dy));
     std::vector<const Piece*> a2 = CollectAlong(pos, l, Offset(-dx, -dy));
 
@@ -77,26 +77,26 @@ namespace LoA
       {
         if (((i == 0) || (i == d[0].xCount_ - 1)) && (j != 0) && (j != d[0].yCount_ - 1))  // left or right border, but not top or bottom corner
         {
-          SetPiece(Location(BoardPart::Main, i, j), &LoAPiece::LoAPieceW);
+          SetPiece(Location(BoardPart::Main, i, j), LoAPiece::LoAPieceW);
         }
         else if (((j == 0) || (j == d[0].yCount_ - 1)) && (i != 0) && (i != d[0].xCount_ - 1))  // top or bottom border, but not left or right corner
         {
-          SetPiece(Location(BoardPart::Main, i, j), &LoAPiece::LoAPieceB);
+          SetPiece(Location(BoardPart::Main, i, j), LoAPiece::LoAPieceB);
         }
         else
-          SetPiece(Location(BoardPart::Main, i, j), &Piece::NoPiece);
+          SetPiece(Location(BoardPart::Main, i, j), Piece::NoPiece);
       }
   }
 
-  const Piece* LoAPosition::SetPiece(const Location& l, const Piece* p) noexcept
+  const Piece& LoAPosition::SetPiece(const Location& l, const Piece& p) noexcept
   {
     try
     {
       for (auto it = llw.begin(); it != llw.end(); ++it) if (it->l == l) { llw.erase(it); break; }
       for (auto it = llb.begin(); it != llb.end(); ++it) if (it->l == l) { llb.erase(it); break; }
 
-      if (p == &LoAPiece::LoAPieceW) llw.push_back(l);
-      else if (p == &LoAPiece::LoAPieceB) llb.push_back(l);
+      if (p == LoAPiece::LoAPieceW) llw.push_back(l);
+      else if (p == LoAPiece::LoAPieceB) llb.push_back(l);
     }
     catch (...) {};
     return MainPosition::SetPiece(l, p);
@@ -104,17 +104,17 @@ namespace LoA
 
   bool LoAPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
-    const Piece* pf = GetPiece(fr);
-    const Piece* pt = GetPiece(to);
-    if (pt == nullptr) return false;  // out of board
-    if (pt->IsColor(OnTurn())) return false;  // own piece
+    const Piece& pf = GetPiece(fr);
+    const Piece& pt = GetPiece(to);
+    if (pt == Piece::NoTile) return false;  // out of board
+    if (pt.IsColor(OnTurn())) return false;  // own piece
 
     Actions a{};
     a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
-    if (!pt->IsBlank())
+    if (!pt.IsBlank())
     {
       a.push_back(std::make_shared<ActionTake>(to, pt));                  // pick piece up
-      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt->GetColor()), pt));  // and place it on target
+      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt.GetColor()), pt));  // and place it on target
     }
     a.push_back(std::make_shared<ActionPlace>(to, pf));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
@@ -189,8 +189,8 @@ namespace LoA
       {
         for (Coordinate j = 0; j < sizeY_; j++)
         {
-          const Piece* p = GetPiece(Location{BoardPart::Main, i,j });
-          if (p->IsColor(&Color::NoColor)) continue;
+          const Piece& p = GetPiece(Location{BoardPart::Main, i,j });
+          if (p.IsColor(&Color::NoColor)) continue;
           int d{ 0 };
           for (Coordinate z = 0; z < (sizeX_ - 1) / 2; z++)
           {
@@ -209,7 +209,7 @@ namespace LoA
             case 6: v = 4; break;
             default: v = 6; break;
           }
-          value_ += (p->IsColor(&Color::White) ? v : -v);
+          value_ += (p.IsColor(&Color::White) ? v : -v);
         }
       }
     }
@@ -225,8 +225,8 @@ namespace LoA
   const PieceMapP& LoAGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
-    p->Add(&LoAPiece::LoAPieceW);
-    p->Add(&LoAPiece::LoAPieceB);
+    p->Add(LoAPiece::LoAPieceW);
+    p->Add(LoAPiece::LoAPieceB);
     return p;
   }
 

@@ -10,7 +10,7 @@ namespace BoardGamesCore
     inline bool InRect(const CPoint& p) const noexcept { return rect_.PtInRect(p) != 0; }
     constexpr inline const CRect& GetRect(void) const noexcept { return rect_; }
     constexpr inline const Location GetLocation(void) const noexcept { return location_; }
-    inline void Draw(CDC* pDC, const Piece* p) const { p->Draw(pDC, rect_, tilecolor_); }
+    inline void Draw(CDC* pDC, const Piece& p) const { p.Draw(pDC, rect_, tilecolor_); }
 
   private:
     const Location location_;

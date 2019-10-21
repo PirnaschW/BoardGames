@@ -210,7 +210,7 @@ namespace BoardGamesCore
     Location l{ BoardPart::Main, 0U,0U};
     if (!lay->GetLocation(point, l)) return; // clicked somewhere invalid
     dragPoint_ = point;
-    dragPiece_ = pos->GetPiece(l);
+    dragPiece_ = &(pos->GetPiece(l));
     _mode.Set(Mode::Dragging);
   }
 
@@ -220,7 +220,7 @@ namespace BoardGamesCore
     if (lay->GetLocation(point, l))
     {
       if (l.b_ != BoardPart::Stock)
-        pos->SetPiece(l, dragPiece_); // dropped on a valid target
+        pos->SetPiece(l, *dragPiece_); // dropped on a valid target
     }
     dragPoint_ = {};
     dragPiece_ = nullptr;

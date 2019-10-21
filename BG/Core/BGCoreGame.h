@@ -64,8 +64,8 @@ namespace BoardGamesCore
 
     virtual inline void Serialize(CArchive* ar) { pos->Serialize(ar); }
     virtual void ReadFromWWW(const std::string& gameno);
-    virtual inline const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
-    virtual inline void AddToStock(const Location& l, const Piece* p) noexcept { pos->SetPiece(l, p); }
+    virtual inline const std::unordered_map<std::string, const Piece&>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
+    virtual inline void AddToStock(const Location& l, const Piece& p) noexcept { pos->SetPiece(l, p); }
     virtual inline void AIAction(void) { while (!(_mode.IsSet(Mode::GameOver)) && CurrentPlayer()->IsAI()) if (!AIMove()) _mode = Mode::GameOver; }  // execute computer moves while it is its turn
 
     virtual inline void AddPlayer(Player* p) noexcept { players.push_back(p); }

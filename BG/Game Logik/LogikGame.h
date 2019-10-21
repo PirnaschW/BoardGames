@@ -197,8 +197,8 @@ namespace Logik
     inline LogikPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new LogikPosition(*this); }
 
-    bool SetFirstFreePeg(const Piece* p) noexcept;                        // returns if it could successfully set the Peg
-    bool SetFirstFreeMarker(const Piece* p) noexcept;                     // returns if it could successfully set the Marker
+    bool SetFirstFreePeg(const Piece& p) noexcept;                        // returns if it could successfully set the Peg
+    bool SetFirstFreeMarker(const Piece& p) noexcept;                     // returns if it could successfully set the Marker
     void ReadPosition(void) noexcept;
     PlayCode GetBestMove(unsigned int nThreads = std::thread::hardware_concurrency()) const;
     void Execute(const PlayCode& p);

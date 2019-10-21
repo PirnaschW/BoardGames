@@ -19,9 +19,9 @@ namespace Microsoft
       template<> inline std::wstring ToString<Location>(const Location* l) { std::wstringstream _s; _s << '(' << l->x_ << '|' << l->y_ << ')'; return _s.str(); }
       template<> inline std::wstring ToString<Location>(      Location* l) { std::wstringstream _s; _s << '(' << l->x_ << '|' << l->y_ << ')'; return _s.str(); }
 
-      template<> inline std::wstring ToString<Field>(const Field& f) { std::wstringstream _s; _s << ToString(f. GetLocation()) << ',' << static_cast<const void*>(f. GetPiece()); return _s.str(); }
-      template<> inline std::wstring ToString<Field>(const Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(f->GetPiece()); return _s.str(); }
-      template<> inline std::wstring ToString<Field>(      Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(f->GetPiece()); return _s.str(); }
+      template<> inline std::wstring ToString<Field>(const Field& f) { std::wstringstream _s; _s << ToString(f. GetLocation()) << ',' << static_cast<const void*>(&f. GetPiece()); return _s.str(); }
+      template<> inline std::wstring ToString<Field>(const Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(&f->GetPiece()); return _s.str(); }
+      template<> inline std::wstring ToString<Field>(      Field* f) { std::wstringstream _s; _s << ToString(f->GetLocation()) << ',' << static_cast<const void*>(&f->GetPiece()); return _s.str(); }
 
       template<> inline std::wstring ToString<Fields>(const Fields& f) { std::wstringstream _s; _s << f. size(); return _s.str(); }
       template<> inline std::wstring ToString<Fields>(const Fields* f) { std::wstringstream _s; _s << f->size(); return _s.str(); }
@@ -93,7 +93,7 @@ namespace UnitTestCore
     {
       Location l1(BoardPart::Main, 2U, 3U);
       Location l2(BoardPart::Main, 3U, 2U);
-      const Piece* p0{ nullptr };
+      const Piece& p0{ Piece::NoTile };
       Field f1{ l1,p0 };
       Field f2{ l2,p0 };
       Assert::AreEqual(l1, f1.GetLocation());
@@ -108,19 +108,19 @@ namespace UnitTestCore
       Location l2{ BoardPart::Main, 3U, 2U };
       Location l3{ BoardPart::Main, 4U, 1U };
 
-      ActionP a1{ std::make_shared<ActionTake>(l1,&BoardGamesChessPieces::ChessPiece::WQ) };
-      ActionP a2{ std::make_shared<ActionJump>(l2,&Piece::NoPiece) };
-      ActionP a3{ std::make_shared<ActionPlace>(l3,&BoardGamesChessPieces::ChessPiece::WQ) };
-      ActionP a4{ std::make_shared<ActionTake>(l1,&BoardGamesChessPieces::ChessPiece::WQ) };
-      ActionP a5{ std::make_shared<ActionJump>(l2,&Piece::NoPiece) };
-      ActionP a6{ std::make_shared<ActionPlace>(l3,&BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a1{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a2{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
+      ActionP a3{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a4{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a5{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
+      ActionP a6{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
 
       Assert::IsTrue(a1->GetLocation() == l1);
       Assert::IsTrue(a2->GetLocation() == l2);
       Assert::IsTrue(a3->GetLocation() == l3);
-      Assert::IsTrue(a1->GetPiece() == &BoardGamesChessPieces::ChessPiece::WQ);
-      Assert::IsTrue(a2->GetPiece() == &Piece::NoPiece);
-      Assert::IsTrue(a3->GetPiece() == &BoardGamesChessPieces::ChessPiece::WQ);
+      Assert::IsTrue(a1->GetPiece() == BoardGamesChessPieces::ChessPiece::WQ);
+      Assert::IsTrue(a2->GetPiece() == Piece::NoPiece);
+      Assert::IsTrue(a3->GetPiece() == BoardGamesChessPieces::ChessPiece::WQ);
 
       Assert::IsFalse(a1->IsJump());
       Assert::IsTrue(a2->IsJump());
@@ -172,37 +172,37 @@ namespace UnitTestCore
       Assert::IsFalse(a.IsRepeat(l1));
       Assert::IsFalse(a.IsRepeat(l3));
 
-      const Piece* p{nullptr};
-      std::function<const Piece* (void)>f = [p] (void) -> const Piece* { return p; };
+      const Piece& p{ Piece::NoTile };
+      std::function<const Piece& (void)>f = [&p] (void) -> const Piece& { return p; };
 
       //using namespace Checkers;
       class TestPosition : public MainPosition
       {
       public:
-        TestPosition(const Location& l, const Piece* p) noexcept : l_{ l }, p_(p), MainPosition(Variants<Checkers::CheckersGame>::GetPieces(), Checkers::CheckersGame::GetDimensions(8U, 8U)) {}
+        TestPosition(const Location& l, const Piece& p) noexcept : l_{ l }, p_(&p), MainPosition(Variants<Checkers::CheckersGame>::GetPieces(), Checkers::CheckersGame::GetDimensions(8U, 8U)) {}
         virtual MainPosition* Clone(void) const noexcept { return nullptr; }
-        virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override { Assert::IsTrue(l == l_); return p_ = p; }
-        virtual const Piece* GetPiece(const Location& l) const noexcept override { Assert::IsTrue(l == l_); return p_; }
+        virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept override { Assert::IsTrue(l == l_); p_ = &p; return p; }
+        virtual const Piece& GetPiece(const Location& l) const noexcept override { Assert::IsTrue(l == l_); return *p_; }
         const Location& l_;
         const Piece* p_;
       };
 
-      TestPosition t{ l1, &Piece::NoPiece };
-      Assert::IsTrue(t.SetPiece(l1, &Piece::NoPiece) == &Piece::NoPiece);
+      TestPosition t{ l1, Piece::NoPiece };
+      Assert::IsTrue(t.SetPiece(l1, Piece::NoPiece) == Piece::NoPiece);
 
       // testing Action.Execute():
       TestPosition t1{ a1->GetLocation(), a1->GetPiece() };   // take starting piece
       Assert::IsTrue(t1.GetPiece(a1->GetLocation()) == a1->GetPiece());
       a1->Execute(&t1);
-      Assert::IsTrue(t1.GetPiece(a1->GetLocation()) == &Piece::NoPiece);
+      Assert::IsTrue(t1.GetPiece(a1->GetLocation()) == Piece::NoPiece);
 
-      TestPosition t2{ a2->GetLocation(), &Piece::NoPiece };  // jump over empty field
-      Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == &Piece::NoPiece);
+      TestPosition t2{ a2->GetLocation(), Piece::NoPiece };  // jump over empty field
+      Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == Piece::NoPiece);
       a2->Execute(&t2);
-      Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == &Piece::NoPiece);
+      Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == Piece::NoPiece);
 
-      TestPosition t3{ a3->GetLocation(), &Piece::NoPiece };  // place on empty field
-      Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == &Piece::NoPiece);
+      TestPosition t3{ a3->GetLocation(), Piece::NoPiece };  // place on empty field
+      Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == Piece::NoPiece);
       a3->Execute(&t3);
       Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == a3->GetPiece());
 
@@ -388,10 +388,10 @@ namespace UnitTestCore
       Assert::IsFalse(BoardGamesCore::Piece::NoTile.IsPromotable());
       Assert::IsFalse(BoardGamesCore::Piece::NoPiece.IsPromotable());
 
-      Assert::IsTrue(*BoardGamesCore::Piece::NoTile.Promote(true) == BoardGamesCore::Piece::NoTile);
-      Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.Promote(true) == BoardGamesCore::Piece::NoPiece);
-      Assert::IsTrue(*BoardGamesCore::Piece::NoTile.Promote(false) == BoardGamesCore::Piece::NoTile);
-      Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.Promote(false) == BoardGamesCore::Piece::NoPiece);
+      Assert::IsTrue(BoardGamesCore::Piece::NoTile.Promote(true) == BoardGamesCore::Piece::NoTile);
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.Promote(true) == BoardGamesCore::Piece::NoPiece);
+      Assert::IsTrue(BoardGamesCore::Piece::NoTile.Promote(false) == BoardGamesCore::Piece::NoTile);
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.Promote(false) == BoardGamesCore::Piece::NoPiece);
 
     }
 

@@ -34,18 +34,17 @@ namespace BoardGamesCore
   }
 
 
-  ActionTake::ActionTake(const Location& l, const Piece* p) noexcept : Action(l, p)
+  ActionTake::ActionTake(const Location& l, const Piece& p) noexcept : Action(l, p)
   {
-    assert(p != nullptr);
-    assert(p != &Piece::NoTile);
-    assert(p != &Piece::NoPiece);
+    assert(p != Piece::NoTile);
+    assert(p != Piece::NoPiece);
   }
 
   void ActionTake::Execute(MainPosition* p) const noexcept
   {
     assert(p->GetPiece(l_) == p_);                                        // verify the source field really has that piece
     if (l_.b_ != BoardPart::Stock)                                        // empty the source field (except in Stock)
-      p->SetPiece(l_, &Piece::NoPiece);
+      p->SetPiece(l_, Piece::NoPiece);
   }
 
   void ActionJump::Execute(MainPosition* p) const noexcept
@@ -60,7 +59,7 @@ namespace BoardGamesCore
       for (Coordinate x = 0; ; x++)
       {
         const Location l{ BoardPart::Taken, x, l_.y_ };
-        if (p->taken_.GetPiece(l)->IsKind(noKind::NoKind))
+        if (p->taken_.GetPiece(l).IsKind(noKind::NoKind))
         {
           p->SetPiece(l, p_);
           return;
@@ -70,7 +69,7 @@ namespace BoardGamesCore
     }
     else
     {
-      assert(p->GetPiece(l_) == &Piece::NoPiece);                         // target field must be free
+      assert(p->GetPiece(l_) == Piece::NoPiece);                         // target field must be free
       p->SetPiece(l_, p_);
     }
   }

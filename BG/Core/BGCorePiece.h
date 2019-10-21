@@ -2,6 +2,14 @@
 namespace BoardGamesCore
 {
 
+  class Kind;
+  class Color;
+  class MainPosition;
+  class Move;
+  using MoveP = std::shared_ptr<Move>;
+  using Moves = std::vector<MoveP>;
+  class TileColor;
+
   // cannot be constexpr as it loads bitmaps at runtime
   class Piece
   {
@@ -14,23 +22,23 @@ namespace BoardGamesCore
     Piece& operator=(const Piece&) = delete;          // delete assignment operator
     virtual inline ~Piece(void) noexcept {}
 
-    constexpr inline bool operator ==(const Piece& p) const noexcept { return p.IsKind(*kind_) && p.IsColor(color_); }
-    constexpr inline bool operator !=(const Piece& p) const noexcept { return !(*this == p); }
-    constexpr inline bool IsBlank(void) const noexcept { return color_ == &Color::NoColor && kind_ == &noKind::NoKind; }
-    inline size_t GetHash(void) const noexcept { return kind_->GetHash() + color_->GetHash(); }
-    inline void CollectMoves(const MainPosition& p, const Location l, Moves& m) const { kind_->CollectMoves(p, l, m); }
-    constexpr inline bool IsKind(const Kind& k) const noexcept { return k == *kind_; }
-    constexpr inline bool IsColor(const Color* c) const noexcept { return c == color_; }
+    inline bool operator ==(const Piece& p) const noexcept { return p.IsKind(*kind_) && p.IsColor(color_); }
+    inline bool operator !=(const Piece& p) const noexcept { return !(*this == p); }
+    bool IsBlank(void) const noexcept;
+    size_t GetHash(void) const noexcept;
+    void CollectMoves(const MainPosition& p, const Location l, Moves& m) const;
+    bool IsKind(const Kind& k) const noexcept;
+    bool IsColor(const Color* c) const noexcept;
     constexpr inline const Color* GetColor(void) const noexcept { return color_; }
 
-    virtual inline void Serialize(CArchive* ar) const { color_->Serialize(ar); kind_->Serialize(ar); }
-    virtual inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept { return kind_->GetValue(p, l); }
+    virtual inline void Serialize(CArchive* ar) const;
+    virtual inline unsigned int GetValue(const MainPosition& p, const Location l) const noexcept;
     virtual inline bool IsPromotable(void) const noexcept { return false; }                     // by default: no promotions
-    virtual inline const Piece* Promote(bool /*up*/) const noexcept { return this; };           // by default: no promotions
+    virtual inline const Piece& Promote(bool /*up*/) const noexcept { return *this; };           // by default: no promotions
     virtual void Draw(CDC* pDC, const CRect& r, const TileColor* f) const;
 
-    static const std::unordered_map<std::string, const Piece*>& GetHTMLPieceMap(void) noexcept;
-    static std::vector<const Piece*> ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece*>&);
+    static const std::unordered_map<std::string, const Piece&>& GetHTMLPieceMap(void) noexcept;
+    static std::vector<const Piece*> ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece&>&);
 
   public:
     static const Piece NoTile;    // nothing exists there, don't draw the tile at all
@@ -52,7 +60,7 @@ namespace BoardGamesCore
   static_assert(!std::is_abstract<Piece>::value, "is abstract");
   static_assert(!std::is_trivially_constructible<Piece>::value, "must not be trivially constructible");
   static_assert(!std::is_constructible<Piece, Kind*, Color*, UINT, UINT, UINT>::value, "is not constructible");
-  static_assert(!std::is_assignable<Piece, Piece>::value, "is assignable");
+  //static_assert(!std::is_assignable<Piece, Piece>::value, "is assignable");
 
   using PieceIndex = unsigned char;
   class PieceMap final  // collects all the existing pieces for the game.
@@ -62,11 +70,11 @@ namespace BoardGamesCore
   public:
     constexpr inline PieceMap(void) noexcept {}
     constexpr inline PieceMap(const PieceMap& p) noexcept : used_{ p.used_ }, map_{ p.map_ } {}
-    constexpr inline PieceIndex GetIndex(const Piece* p) const { for (PieceIndex z = 0; z < used_; z++) if (map_[z] == p) return z; throw; }
-    constexpr inline void Add(const Piece* p) noexcept { map_[used_++] = p; }
+    constexpr inline PieceIndex GetIndex(const Piece& p) const { for (PieceIndex z = 0; z < used_; z++) if (map_[z] == &p) return z; throw; }
+    constexpr inline void Add(const Piece& p) noexcept { map_[used_++] = &p; }
     constexpr inline void Empty(void) noexcept { used_ = 0; }
     constexpr inline PieceIndex GetCount(void) const noexcept { return used_; }
-    constexpr inline const Piece* GetPiece(PieceIndex i) const noexcept { return map_[i]; }
+    constexpr inline const Piece& GetPiece(PieceIndex i) const noexcept { return *map_[i]; }
 
   private:
     constexpr static const PieceIndex max_{ 32 };

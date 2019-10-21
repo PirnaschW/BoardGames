@@ -19,10 +19,10 @@ namespace Checkers
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    const int dy = pos.GetPiece(l)->IsColor(&Color::White) ? -1 : 1;
+    const int dy = pos.GetPiece(l).IsColor(&Color::White) ? -1 : 1;
     pos.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
     pos.AddIfLegal(moves, l, l + Offset(-1, dy));
-    pos.AddIfLegalJump(moves, false, Actions{}, nullptr, l);              // check for jump moves
+    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);              // check for jump moves
   }
 
 
@@ -31,7 +31,7 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       pos.AddIfLegal(moves, l, l + d);                                    // check for slide moves
-    pos.AddIfLegalJump(moves, false, Actions{}, nullptr, l);              // check for jump moves
+    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);              // check for jump moves
   }
 
 
@@ -40,7 +40,7 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::Bdirection)
       for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
-    pos.AddIfLegalJump(moves, true, Actions{}, nullptr, l);               // check for jump moves
+    pos.AddIfLegalJump(moves, true, Actions{}, Piece::NoTile, l);               // check for jump moves
   }
 
 
@@ -50,22 +50,22 @@ namespace Checkers
     {
       for (Coordinate i = 0; i < d[0].xCount_; i++)
       {
-        if ((i + j) % 2) SetPiece(Location(BoardPart::Main, i, j), &CheckersPiece::CheckersPieceB);
-        else SetPiece(Location(BoardPart::Main, i, d[0].yCount_ - 1 - j), &CheckersPiece::CheckersPieceW);
+        if ((i + j) % 2) SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        else SetPiece(Location(BoardPart::Main, i, d[0].yCount_ - 1 - j), CheckersPiece::CheckersPieceW);
       }
     }
   }
 
   bool CheckersPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
   {
-    const Piece* pf = GetPiece(fr);
-    assert(pf != nullptr);
-    assert(!pf->IsBlank());
-    const Piece* pt = GetPiece(to);
-    if (pt == nullptr) return false;                                      // out of board
-    if (!pt->IsBlank()) return false;                                     // field is not empty
+    const Piece& pf = GetPiece(fr);
+    assert(pf != Piece::NoTile);
+    assert(!pf.IsBlank());
+    const Piece& pt = GetPiece(to);
+    if (pt == Piece::NoTile) return false;                                // out of board
+    if (!pt.IsBlank()) return false;                                     // field is not empty
 
-    const Piece * pf2 = CanPromote(to,pf) ? pf->Promote(true) : pf;
+    const Piece& pf2 = CanPromote(to,pf) ? pf.Promote(true) : pf;
 
     Actions a{};
     a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
@@ -75,12 +75,11 @@ namespace Checkers
   }
 
 
-  bool CheckersPosition::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece* p, const Location& fr) const noexcept
+  bool CheckersPosition::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept
   {
     const Location l0{ fr };
-    if (p == nullptr) p = GetPiece(fr);
-    assert(p != &Piece::NoTile);
-    assert(p != nullptr);
+    const Piece& p0 = p == Piece::NoTile ? GetPiece(fr) : p;
+    assert(p0 != Piece::NoTile);
 
     bool any{ false };                                                    // were any more jumps possible?
 
@@ -92,13 +91,12 @@ namespace Checkers
         const Location l1{ fr + d * z1 };                                 // location to jump over
 
                                                                           // check the jumped-over tile                                       
-        const Piece* p1 = GetPiece(l1);                                   // what is on the tile to jump over?
-        if (p1 == nullptr) break;                                         // tile is out of board, can't jump over it - or any further
-        if (p1 == &Piece::NoTile) break;                                  // tile is not existing, can't jump over it - or any further
-        if (p1->IsBlank()) continue;                                      // tile is not occupied, keep looking further (it's not a jump yet)
+        const Piece& p1 = GetPiece(l1);                                   // what is on the tile to jump over?
+        if (p1 == Piece::NoTile) break;                                  // tile is not existing, can't jump over it - or any further
+        if (p1.IsBlank()) continue;                                      // tile is not occupied, keep looking further (it's not a jump yet)
 
-        const Color* c1 = p1->GetColor();                                 // color of jumped-over piece
-        if (p->IsColor(c1)) break;                                        // can't jump own pieces, and not any further either
+        const Color* c1 = p1.GetColor();                                 // color of jumped-over piece
+        if (p0.IsColor(c1)) break;                                        // can't jump own pieces, and not any further either
 
         // now we look for free spaces to land on
         for (int z2 = 1; longjumps || z2 == 1; z2++)                      // for longjumps, allow any z, otherwise only 1 step
@@ -106,10 +104,9 @@ namespace Checkers
           const Location l2{ l1 + d * z2 };                               // location to land on
 
           // check the land-on tile                                       
-          const Piece* p2 = GetPiece(l2);                                 // what is on the jump-to tile
-          if (p2 == nullptr) break;                                       // tile is out of board, can't jump there or any further
-          if (p2 == &Piece::NoTile) break;                                // tile is not existing, can't jump there or any further
-          if (!p2->IsBlank()) break;                                      // tile is occupied, can't jump there or any further
+          const Piece& p2 = GetPiece(l2);                                 // what is on the jump-to tile
+          if (p2 == Piece::NoTile) break;                                // tile is not existing, can't jump there or any further
+          if (!p2.IsBlank()) break;                                      // tile is occupied, can't jump there or any further
 
           // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
           if (a.IsRepeat(l1)) break;                                      // don't allow the same piece to be jumped again
@@ -119,17 +116,17 @@ namespace Checkers
 
           // add the jump to the StepSimple list
           Actions a0{ a };
-          a0.push_back(std::make_shared<ActionTake>(fr, p));              // pick piece up
+          a0.push_back(std::make_shared<ActionTake>(fr, p0));              // pick piece up
           a0.push_back(std::make_shared<ActionJump>(l1, p1));             // jumped over piece
           a0.push_back(std::make_shared<ActionTake>(l1, p1));             // pick jumped piece up
-          a0.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p1->GetColor()), p1)); // place it in taken
-          a0.push_back(std::make_shared<ActionPlace>(l2, p));             // place jumping piece it on target
-          if (!AddIfLegalJump(m, longjumps, a0, p, l2))                   // collect potential further jumps
+          a0.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p1.GetColor()), p1)); // place it in taken
+          a0.push_back(std::make_shared<ActionPlace>(l2, p0));             // place jumping piece it on target
+          if (!AddIfLegalJump(m, longjumps, a0, p0, l2))                   // collect potential further jumps
           {
-            if (CanPromote(l2, p))                                        // could piece be promoted here?
+            if (CanPromote(l2, p0))                                        // could piece be promoted here?
             {
               a0.pop_back();                                              // remove unpromoted placement
-              a0.push_back(std::make_shared<ActionPlace>(l2, p->Promote(true)));  // place promoted piece on target
+              a0.push_back(std::make_shared<ActionPlace>(l2, p0.Promote(true)));  // place promoted piece on target
             }
             m.push_back(std::make_shared<Move>(a0));                      // add the action list as a move
           }
@@ -155,9 +152,9 @@ namespace Checkers
     JumpsOnly(movesB_);          // if there are any jumps, remove all non-jumps - jumping is mandatory
   }
 
-  bool CheckersPosition::CanPromote(const Location& l, const Piece* p) const noexcept
+  bool CheckersPosition::CanPromote(const Location& l, const Piece& p) const noexcept
   {
-    return (p->IsColor(&Color::White) && l.y_ == 0) || (p->IsColor(&Color::Black) && l.y_ == sizeY_ - 1);
+    return (p.IsColor(&Color::White) && l.y_ == 0) || (p.IsColor(&Color::Black) && l.y_ == sizeY_ - 1);
   }
 
 
@@ -171,12 +168,12 @@ namespace Checkers
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();
-    p->Add(&CheckersPiece::CheckersPieceW);
-    p->Add(&CheckersPiece::CheckersPieceB);
-    p->Add(&CheckersPiece::CheckersKingW);
-    p->Add(&CheckersPiece::CheckersKingB);
-    p->Add(&CheckersPiece::CheckersQueenW);
-    p->Add(&CheckersPiece::CheckersQueenB);
+    p->Add(CheckersPiece::CheckersPieceW);
+    p->Add(CheckersPiece::CheckersPieceB);
+    p->Add(CheckersPiece::CheckersKingW);
+    p->Add(CheckersPiece::CheckersKingB);
+    p->Add(CheckersPiece::CheckersQueenW);
+    p->Add(CheckersPiece::CheckersQueenB);
     return p;
   }
 

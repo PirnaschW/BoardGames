@@ -55,11 +55,11 @@ namespace Logik
   }
 
  
-  bool LogikPosition::SetFirstFreePeg(const Piece* p) noexcept
+  bool LogikPosition::SetFirstFreePeg(const Piece& p) noexcept
   {
     for (unsigned int j = 0; j < MaxTries; ++j)
       for (unsigned int i = MaxPegs; i < 2 * MaxPegs; ++i)
-        if (GetPiece(Location(BoardPart::Main, i, j)) == &Piece::NoPiece)
+        if (GetPiece(Location(BoardPart::Main, i, j)) == Piece::NoPiece)
         {
           SetPiece(Location(BoardPart::Main, i, j), p);
           return true;
@@ -67,24 +67,24 @@ namespace Logik
     return false;
   }
 
-  bool LogikPosition::SetFirstFreeMarker(const Piece* p) noexcept
+  bool LogikPosition::SetFirstFreeMarker(const Piece& p) noexcept
   {
     // define and execute a Lambda to find the Marker target row (= the last row containing any Pegs)
     unsigned char row = [this]() -> unsigned char
     {
       for (unsigned char j = MaxTries - 1; j >= 0; --j)                   // start with last row, check backwards
         for (unsigned char i = MaxPegs; i < 2 * MaxPegs; ++i)
-          if (GetPiece(Location(BoardPart::Main, i, j)) != &Piece::NoPiece) return j;  // if any Peg found, that's the target row
+          if (GetPiece(Location(BoardPart::Main, i, j)) != Piece::NoPiece) return j;  // if any Peg found, that's the target row
       return 0U;                                                          // if no Pegs were found at all, the first row is the target
     } ();
 
     // define a Lambda to find a free Marker slot in a given row
-    auto Find = [this, p](unsigned char j) -> bool
+    auto Find = [this, &p](unsigned char j) -> bool
     {
       for (unsigned char i = 0; i < MaxPegs; ++i)                         // check all Marker slots in the given row
       {
         const Location l{ BoardPart::Main, i, j };
-        if (GetPiece(l) == &Piece::NoPiece)                               // found a free slot, set the Marker
+        if (GetPiece(l) == Piece::NoPiece)                               // found a free slot, set the Marker
         {
           SetPiece(l, p);
           return true;
@@ -106,15 +106,15 @@ namespace Logik
       PlayCfg peg{};
       for (unsigned int i = 0; i < MaxPegs; ++i)
       {
-        const Piece* p = GetPiece(Location(BoardPart::Main, MaxPegs + i, k));
-        if (p->IsKind(Peg<'1'>::ThePeg)) peg[i] = 0;
-        else if (p->IsKind(Peg<'2'>::ThePeg)) peg[i] = 1;
-        else if (p->IsKind(Peg<'3'>::ThePeg)) peg[i] = 2;
-        else if (p->IsKind(Peg<'4'>::ThePeg)) peg[i] = 3;
-        else if (p->IsKind(Peg<'5'>::ThePeg)) peg[i] = 4;
-        else if (p->IsKind(Peg<'6'>::ThePeg)) peg[i] = 5;
-        else if (p->IsKind(Peg<'7'>::ThePeg)) peg[i] = 6;
-        else if (p->IsKind(Peg<'8'>::ThePeg)) peg[i] = 7;
+        const Piece& p = GetPiece(Location(BoardPart::Main, MaxPegs + i, k));
+        if (p.IsKind(Peg<'1'>::ThePeg)) peg[i] = 0;
+        else if (p.IsKind(Peg<'2'>::ThePeg)) peg[i] = 1;
+        else if (p.IsKind(Peg<'3'>::ThePeg)) peg[i] = 2;
+        else if (p.IsKind(Peg<'4'>::ThePeg)) peg[i] = 3;
+        else if (p.IsKind(Peg<'5'>::ThePeg)) peg[i] = 4;
+        else if (p.IsKind(Peg<'6'>::ThePeg)) peg[i] = 5;
+        else if (p.IsKind(Peg<'7'>::ThePeg)) peg[i] = 6;
+        else if (p.IsKind(Peg<'8'>::ThePeg)) peg[i] = 7;
         else return;                                                      // ignore incomplete lines and stop reading
       }
 
@@ -123,9 +123,9 @@ namespace Logik
       MarkerCount w{};
       for (unsigned char i = 0; i < MaxPegs; ++i)
       {
-        const Piece* p = GetPiece(Location(BoardPart::Main, i, k));
-        if (p->IsKind(Peg<'B'>::ThePeg)) b++;
-        if (p->IsKind(Peg<'W'>::ThePeg)) w++;
+        const Piece& p = GetPiece(Location(BoardPart::Main, i, k));
+        if (p.IsKind(Peg<'B'>::ThePeg)) b++;
+        if (p.IsKind(Peg<'W'>::ThePeg)) w++;
       }
       prevR_[k] = Result(b, w);
       previ_[k] = plays_[peg];
@@ -220,7 +220,7 @@ namespace Logik
     previ_[prevc_] = c;
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc_), &LogikPiece::GetPiece(plays_[c][i]));
+      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc_), LogikPiece::GetPiece(plays_[c][i]));
     }
     prevc_++;
   }
@@ -299,14 +299,14 @@ namespace Logik
         if (nChar > '0' + MaxColors) return false;
         {
           const unsigned int c = nChar - '1';
-          return lpos->SetFirstFreePeg(&LogikPiece::GetPiece(c));
+          return lpos->SetFirstFreePeg(LogikPiece::GetPiece(c));
         }
       case 'B':
       case 'b':
-        return lpos->SetFirstFreeMarker(&LogikPiece::LPieceB);
+        return lpos->SetFirstFreeMarker(LogikPiece::LPieceB);
       case 'W':
       case 'w':
-        return lpos->SetFirstFreeMarker(&LogikPiece::LPieceW);
+        return lpos->SetFirstFreeMarker(LogikPiece::LPieceW);
       case '\r':
         AIMove();
         return true;
@@ -358,16 +358,16 @@ namespace Logik
   {
     static const PieceMapP p = std::make_shared<PieceMap>();
     p->Empty();
-    p->Add(&LogikPiece::LPieceB);
-    p->Add(&LogikPiece::LPieceW);
-    if (MaxColors > 0) p->Add(&LogikPiece::LPiece1);
-    if (MaxColors > 1) p->Add(&LogikPiece::LPiece2);
-    if (MaxColors > 2) p->Add(&LogikPiece::LPiece3);
-    if (MaxColors > 3) p->Add(&LogikPiece::LPiece4);
-    if (MaxColors > 4) p->Add(&LogikPiece::LPiece5);
-    if (MaxColors > 5) p->Add(&LogikPiece::LPiece6);
-    if (MaxColors > 6) p->Add(&LogikPiece::LPiece7);
-    if (MaxColors > 7) p->Add(&LogikPiece::LPiece8);
+    p->Add(LogikPiece::LPieceB);
+    p->Add(LogikPiece::LPieceW);
+    if (MaxColors > 0) p->Add(LogikPiece::LPiece1);
+    if (MaxColors > 1) p->Add(LogikPiece::LPiece2);
+    if (MaxColors > 2) p->Add(LogikPiece::LPiece3);
+    if (MaxColors > 3) p->Add(LogikPiece::LPiece4);
+    if (MaxColors > 4) p->Add(LogikPiece::LPiece5);
+    if (MaxColors > 5) p->Add(LogikPiece::LPiece6);
+    if (MaxColors > 6) p->Add(LogikPiece::LPiece7);
+    if (MaxColors > 7) p->Add(LogikPiece::LPiece8);
     return p;
   }
 

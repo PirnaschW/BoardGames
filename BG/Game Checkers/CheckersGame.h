@@ -58,7 +58,7 @@ namespace Checkers
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:
     virtual inline bool IsPromotable(void) const noexcept override { return up_ != this; }          // is this a promotable piece?
-    virtual inline const Piece* Promote(bool /*u*/) const noexcept override { return up_; }         // promote this piece up/down
+    virtual inline const Piece& Promote(bool /*u*/) const noexcept override { return *up_; }         // promote this piece up/down
   private:
     const CheckersPiece* up_;                                                                       // what this piece promotes up to
 
@@ -82,9 +82,9 @@ namespace Checkers
     virtual void EvaluateStatically(void) noexcept override;
 // extensions
   public:
-    bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece* p, const Location& fr) const noexcept;
+    bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept;
   private:
-    inline bool CanPromote(const Location &l, const Piece* p) const noexcept;
+    inline bool CanPromote(const Location &l, const Piece& p) const noexcept;
   };
 
 

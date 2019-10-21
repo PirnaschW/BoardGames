@@ -26,7 +26,7 @@ namespace MassacreChess
 
 // extensions
   private:
-    virtual bool PlaceRandomly(const Piece* p);
+    virtual bool PlaceRandomly(const Piece& p);
   };
 
   class MCGame : public Game
