@@ -4,17 +4,17 @@
 namespace BoardGamesCore
 {
 
-  void AIContext::Purge(const Moves& sequence) noexcept
+  void AIContext::Purge(const Moves& sequence_) noexcept
   {
     for (auto it = begin(); it != end();)
     {
       bool trash{ false };
-      if ((*it)->sequence.size() < sequence.size()) trash = true;
+      if ((*it)->sequence_.size() < sequence_.size()) trash = true;
       else
       {
-        for (size_t i = 0; i < sequence.size(); i++)
+        for (size_t i = 0; i < sequence_.size(); i++)
         {
-          if (*(*it)->sequence[i] != *sequence[i])
+          if (*(*it)->sequence_[i] != *sequence_[i])
           {
             trash = true;
             break;
@@ -35,34 +35,34 @@ namespace BoardGamesCore
   bool Game::AIMove(void)
   {
     // cleanup position buffer
-    plist->Purge(pos->sequence);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
+    plist->Purge(pos->sequence_);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
 
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
     assert(p != nullptr);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 20.0;  // run for n seconds
+    double limit = 5.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == &Color::White;
 
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
     {
       try
       {
-        PositionValue value = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+        PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
         pos->SetValue(w, p->GetValue(w));
         pos->SetDepth(p->GetDepth());
-        if (value == PositionValue::PValueType::Lost)
+        if (value_ == PositionValue::PValueType::Lost)
         {
           ::AfxMessageBox(L"Computer resigns - Player wins!");
           _mode.Set(Mode::GameOver);
           return false;
         }
-        if (value == PositionValue::PValueType::Won) {
+        if (value_ == PositionValue::PValueType::Won) {
           ::AfxMessageBox(L"You might as well resign - Computer will win!");
           break;
         }
 
-        if (value == PositionValue::PValueType::Tie) {
+        if (value_ == PositionValue::PValueType::Tie) {
           ::AfxMessageBox(L"Computer will hold a Draw.");
           break;
         }
@@ -111,7 +111,7 @@ namespace BoardGamesCore
       { 
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
         SetValue(w, alpha);                                               // save top value in current position
-        depth = plies;                                                    // save evaluation depth
+        depth_ = plies;                                                    // save evaluation depth
         if (plies == 2) plist->callback();
         return beta;
       }
@@ -119,7 +119,7 @@ namespace BoardGamesCore
 
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
-    depth = plies;                                                        // save evaluation depth
+    depth_ = plies;                                                        // save evaluation depth
     if (plies == 2) plist->callback();
     return alpha;                                                         // return best value
   }
@@ -127,27 +127,27 @@ namespace BoardGamesCore
 
   void MainPosition::EvaluateStatically(void) noexcept   // as seen from White
   {
-    assert(movelistW.empty());
-    assert(movelistB.empty());
-    assert(depth == 0);
+    assert(movesW_.empty());
+    assert(movesB_.empty());
+    assert(depth_ == 0);
 
     // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
     GetAllMoves();                                                                                        // fill the move lists
-    depth = 1;
-    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
+    depth_ = 1;
+    if (onTurn_ == &Color::White && movesW_.empty()) value_ = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn_ == &Color::Black && movesB_.empty()) value_ = PositionValue::PValueType::Won;
     else
     {
-      value = GetMoveCountFactor() * (movelistW.size() - movelistB.size());
-      for (Coordinate j = 0; j < sizeY; j++)
+      value_ = GetMoveCountFactor() * (movesW_.size() - movesB_.size());
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
-        for (Coordinate i = 0; i < sizeX; i++)                          // loop through all locations
+        for (Coordinate i = 0; i < sizeX_; i++)                          // loop through all locations
         {                                                                 
           const Location l{ BoardPart::Main, i,j };
           const Piece* p = GetPiece(l);                                   
           if (p == nullptr) continue;                                     // field does not exist
           if ((p == &Piece::NoTile) || (p == &Piece::NoPiece)) continue;  // nothing here
-          value += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue(*this,l);
+          value_ += (p->IsColor(&Color::White) ? 1 : -1) * p->GetValue(*this,l);
         }
       }
     }

@@ -203,8 +203,8 @@ namespace Shogi
   public:
     virtual inline bool IsPromotable(void) const noexcept override { return up != this; }            // is this a promotable piece?
     virtual inline const Piece* Promote(bool u) const noexcept override { return u ? up : down; }    // promote this piece up/down
-    inline bool CanDrop(const MainPosition* pos, const Location& l) const noexcept { return kind->CanDrop(this, l, pos); };
-    inline bool CanMove(const MainPosition* pos, const Location& l) const noexcept { return kind->CanMove(this, l, pos); };
+    inline bool CanDrop(const MainPosition* pos, const Location& l) const noexcept { return kind_->CanDrop(this, l, pos); };
+    inline bool CanMove(const MainPosition* pos, const Location& l) const noexcept { return kind_->CanMove(this, l, pos); };
 
   private:
     const ShogiPiece* up;    // what this piece promotes up to

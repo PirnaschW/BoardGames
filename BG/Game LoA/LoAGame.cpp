@@ -72,14 +72,14 @@ namespace LoA
   
   LoAPosition::LoAPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    for (Coordinate i = 0; i < d[0].xCount; i++)
-      for (Coordinate j = 0; j < d[0].yCount; j++)
+    for (Coordinate i = 0; i < d[0].xCount_; i++)
+      for (Coordinate j = 0; j < d[0].yCount_; j++)
       {
-        if (((i == 0) || (i == d[0].xCount - 1)) && (j != 0) && (j != d[0].yCount - 1))  // left or right border, but not top or bottom corner
+        if (((i == 0) || (i == d[0].xCount_ - 1)) && (j != 0) && (j != d[0].yCount_ - 1))  // left or right border, but not top or bottom corner
         {
           SetPiece(Location(BoardPart::Main, i, j), &LoAPiece::LoAPieceW);
         }
-        else if (((j == 0) || (j == d[0].yCount - 1)) && (i != 0) && (i != d[0].xCount - 1))  // top or bottom border, but not left or right corner
+        else if (((j == 0) || (j == d[0].yCount_ - 1)) && (i != 0) && (i != d[0].xCount_ - 1))  // top or bottom border, but not left or right corner
         {
           SetPiece(Location(BoardPart::Main, i, j), &LoAPiece::LoAPieceB);
         }
@@ -170,32 +170,32 @@ namespace LoA
   {
     if (IsConnected(false))
     {
-      value = PositionValue::PValueType::Lost;  // opponent is connected -> loss
+      value_ = PositionValue::PValueType::Lost;  // opponent is connected -> loss
       return;
     }
     if (IsConnected(true))
     {
-      value = PositionValue::PValueType::Won;   // player is connected -> win
+      value_ = PositionValue::PValueType::Won;   // player is connected -> win
       return;
     }
 
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Won;
+    if (onTurn_ == &Color::White && movesW_.empty()) value_ = PositionValue::PValueType::Lost;        // if no more moves, game over
+    else if (onTurn_ == &Color::Black && movesB_.empty()) value_ = PositionValue::PValueType::Won;
     else
     {
-      value = 0;
-      for (Coordinate i = 0; i < sizeX; i++)
+      value_ = 0;
+      for (Coordinate i = 0; i < sizeX_; i++)
       {
-        for (Coordinate j = 0; j < sizeY; j++)
+        for (Coordinate j = 0; j < sizeY_; j++)
         {
           const Piece* p = GetPiece(Location{BoardPart::Main, i,j });
           if (p->IsColor(&Color::NoColor)) continue;
           int d{ 0 };
-          for (Coordinate z = 0; z < (sizeX - 1) / 2; z++)
+          for (Coordinate z = 0; z < (sizeX_ - 1) / 2; z++)
           {
-            if (i > z && i < sizeX - 1 - z) d++;
-            if (j > z && j < sizeY - 1 - z) d++;
+            if (i > z && i < sizeX_ - 1 - z) d++;
+            if (j > z && j < sizeY_ - 1 - z) d++;
           }
           int v{ 0 };
           switch (d)
@@ -209,7 +209,7 @@ namespace LoA
             case 6: v = 4; break;
             default: v = 6; break;
           }
-          value += (p->IsColor(&Color::White) ? v : -v);
+          value_ += (p->IsColor(&Color::White) ? v : -v);
         }
       }
     }

@@ -35,12 +35,12 @@ namespace Hasami
 
   HasamiPosition::HasamiPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    for (Coordinate i = 0; i < d[0].xCount; i++)
+    for (Coordinate i = 0; i < d[0].xCount_; i++)
     {
       SetPiece(Location(BoardPart::Main, i, 0U), &HasamiPiece::HasamiPieceB);
       SetPiece(Location(BoardPart::Main, i, 1U), &HasamiPiece::HasamiPieceB);
-      SetPiece(Location(BoardPart::Main, i, d[0].yCount - 1), &HasamiPiece::HasamiPieceW);
-      SetPiece(Location(BoardPart::Main, i, d[0].yCount - 2), &HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, d[0].yCount_ - 1), &HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, d[0].yCount_ - 2), &HasamiPiece::HasamiPieceW);
     }
   }
 
@@ -79,19 +79,19 @@ namespace Hasami
   void HasamiPosition::EvaluateStatically(void) noexcept
   {
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Tie;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Tie;
+    if (onTurn_ == &Color::White && movesW_.empty()) value_ = PositionValue::PValueType::Tie;        // if no more moves, game over
+    else if (onTurn_ == &Color::Black && movesB_.empty()) value_ = PositionValue::PValueType::Tie;
     else
     {
 
       int v1{ 0 };
       int v2{ 0 };
 
-      for (Coordinate j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
-        const bool b1{ OnTurn() == &Color::White ? j < sizeY - 2 : j > 1 };  // limits for the player on turn
-        const bool b2{ OnTurn() == &Color::White ? j > 1 : j < sizeY - 2 };  // limits for the player not on turn
-        for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
+        const bool b1{ OnTurn() == &Color::White ? j < sizeY_ - 2 : j > 1 };  // limits for the player on turn
+        const bool b2{ OnTurn() == &Color::White ? j > 1 : j < sizeY_ - 2 };  // limits for the player not on turn
+        for (Coordinate i = 0; i < sizeX_; i++)  // loop through all locations
         {
           const Location l{ BoardPart::Main, i,j };
           const Piece* p = GetPiece(l);
@@ -126,7 +126,7 @@ namespace Hasami
             }
             if (z >= 5)
             {
-              value = w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
+              value_ = w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
               return;
             }
             (w ? v1 : v2) += GetChainValue(z);
@@ -134,7 +134,7 @@ namespace Hasami
         }
       }
 
-      value = v1 - v2;
+      value_ = v1 - v2;
     }
   }
 

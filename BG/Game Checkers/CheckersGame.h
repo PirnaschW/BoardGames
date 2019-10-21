@@ -82,7 +82,7 @@ namespace Checkers
     virtual void EvaluateStatically(void) noexcept override;
 // extensions
   public:
-    bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Location fr) const noexcept;
+    bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece* p, const Location& fr) const noexcept;
   private:
     inline bool CanPromote(const Location &l, const Piece* p) const noexcept;
   };

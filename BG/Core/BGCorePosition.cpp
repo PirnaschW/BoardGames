@@ -5,14 +5,14 @@ namespace BoardGamesCore
 
   std::size_t Position::GetHash(void) const noexcept
   {
-    if (hash) return hash;
+    if (hash_) return hash_;
     std::size_t z{};
-    for (auto& p : pieces)
+    for (auto& p : pieces_)
     {
       z ^= static_cast<size_t>(p) + 0x9e3779b9 + (z << 6) + (z >> 2);
-//      z ^= pMap->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
+//      z ^= pMap_->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
     }
-    return hash = z;
+    return hash_ = z;
   }
 
   void Position::SetPosition(std::vector<const Piece*> list)
@@ -20,8 +20,8 @@ namespace BoardGamesCore
     unsigned int z{};
     for (const auto& p : list)
     {
-      while (pieces[z] == pMap->GetIndex(&Piece::NoTile)) z++; // skip non-existing fields
-      pieces[z++] = pMap->GetIndex(p);
+      while (pieces_[z] == pMap_->GetIndex(&Piece::NoTile)) z++; // skip non-existing fields
+      pieces_[z++] = pMap_->GetIndex(p);
     }
   }
 
@@ -30,8 +30,8 @@ namespace BoardGamesCore
   {
     switch (l.b_)
     {
-      case BoardPart::Stock: return _stock.GetPiece(l);
-      case BoardPart::Taken: return _taken.GetPiece(l);
+      case BoardPart::Stock: return stock_.GetPiece(l);
+      case BoardPart::Taken: return taken_.GetPiece(l);
       default:               return Position::GetPiece(l);
     }
   }
@@ -40,8 +40,8 @@ namespace BoardGamesCore
   {
     switch (l.b_)
     {
-      case BoardPart::Stock: return _stock.SetPiece(l, p);
-      case BoardPart::Taken: return _taken.SetPiece(l, p);
+      case BoardPart::Stock: return stock_.SetPiece(l, p);
+      case BoardPart::Taken: return taken_.SetPiece(l, p);
       default:               return Position::SetPiece(l, p);
     }
   }
@@ -52,61 +52,63 @@ namespace BoardGamesCore
     for (Coordinate x = 0; ; x++)
     {
       const Location l{ BoardPart::Taken, x, y };
-      if (_taken.GetPiece(l)->IsKind(noKind::NoKind)) return l;
+      if (taken_.GetPiece(l)->IsKind(noKind::NoKind)) return l;
     }
   }
 
 
   void MainPosition::GetAllMoves(void) noexcept // collect all moves for all pieces
   {
-    assert(movelistW.empty());
-    assert(movelistB.empty());
+    assert(movesW_.empty());
+    assert(movesB_.empty());
 
-    movelistW.reserve(20);
-    movelistB.reserve(20);
-    for (Coordinate i = 0; i < sizeX; i++)
+    movesW_.reserve(20);
+    movesB_.reserve(20);
+    for (Coordinate i = 0; i < sizeX_; i++)
     {
-      for (Coordinate j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
         const Piece* p = GetPiece(Location(BoardPart::Main, i, j));
         assert(p != nullptr);
         if (!p->IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
         {
-          p->CollectMoves(*this, Location(BoardPart::Main, i, j), p->IsColor(&Color::White) ? movelistW : movelistB);
+          p->CollectMoves(*this, Location(BoardPart::Main, i, j), p->IsColor(&Color::White) ? movesW_ : movesB_);
         }
       }
     }
-  }
+  } 
 
-  bool MainPosition::JumpsOnly(Moves& moves) const noexcept
+  void MainPosition::JumpsOnly(Moves& moves) const noexcept
   {
-    // if there are any takes (catching opponent pieces) possible, remove all non-takes
-    //if (std::find_if(moves.begin(), moves.end(), [](const MoveP m) {return m->GetSteps().front()->IsTake(); }) == moves.end()) return false;
-    //moves.erase(std::remove_if(moves.begin(), moves.end(), [](const MoveP m) {return !m->GetSteps().front()->IsTake(); }), moves.end());
-    return false;
-//    return true;
+    // if there are any Jumps (catching opponent pieces) possible, remove all non-takes
+    auto MhasJump = [](const MoveP& m) -> bool { return m->GetActions().HasJump(); };
+    if (std::find_if(moves.cbegin(), moves.cend(), MhasJump) != moves.cend())
+    {
+      auto MhasNoJump = [](const MoveP& m) -> bool { return ! m->GetActions().HasJump(); };
+      moves.erase(std::remove_if(moves.begin(), moves.end(), MhasNoJump));
+    }
   }
 
   void MainPosition::NextPlayer(void) noexcept
   {
-    if (onTurn == &Color::White) onTurn = &Color::Black;
-    else onTurn = &Color::White;
+    if (onTurn_ == &Color::White) onTurn_ = &Color::Black;
+    else onTurn_ = &Color::White;
   };
 
   void MainPosition::PreviousPlayer(void) noexcept
   {
-    if (onTurn == &Color::White) onTurn = &Color::Black;
-    else onTurn = &Color::White;
+    if (onTurn_ == &Color::White) onTurn_ = &Color::Black;
+    else onTurn_ = &Color::White;
   };
 
 
   void MainPosition::Execute(const Move& m) noexcept
   {
-    movelistW.clear();                                                    // after the move is executed, the movelists will be outdated
-    movelistB.clear();                                                    // after the move is executed, the movelists will be outdated
-    depth = 0;
+    movesW_.clear();                                                    // after the move is executed, the movelists will be outdated
+    movesB_.clear();                                                    // after the move is executed, the movelists will be outdated
+    depth_ = 0;
 
-    sequence.push_back(std::make_shared<Move>(m));                                                // save the move in the sequence
+    sequence_.push_back(std::make_shared<Move>(m));                                                // save the move in the sequence_
     for (const auto& aa : m.GetActions()) aa->Execute(this);              // execute all Actions
     NextPlayer();                                                         // after the move, it's the next player's turn
   }
@@ -124,7 +126,7 @@ namespace BoardGamesCore
   //    if (pp->IsBlank()) continue;
   //    for (Coordinate i = 0; ; i++)
   //    {
-  //      assert(i < sizeX);
+  //      assert(i < sizeX_);
   //      const Location l{ BoardPart::Taken, i, static_cast<unsigned char>(player) };
   //      if (GetPiece(l) == &Piece::NoTile)
   //      {

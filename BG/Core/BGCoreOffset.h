@@ -6,13 +6,15 @@ namespace BoardGamesCore
   {
     friend class Location;
   public:
-    constexpr Offset(int dx, int dy) noexcept : _dx{ dx }, _dy{ dy } {}
-    constexpr inline bool operator==(const Offset& o) const noexcept { return o._dx == _dx && o._dy == _dy; }
-    constexpr inline const Offset operator*(int i) const noexcept { return Offset(_dx * i, _dy * i); }
+    constexpr Offset(int dx, int dy) noexcept : dx_{ dx }, dy_{ dy } {}
+    Offset(const Location& l1, const Location& l2) noexcept;
+    constexpr inline bool operator==(const Offset& o) const noexcept { return o.dx_ == dx_ && o.dy_ == dy_; }
+    constexpr inline const Offset operator*(int i) const noexcept { return Offset(dx_ * i, dy_ * i); }
+    constexpr inline bool IsParallel(const Offset& o) const noexcept { return dx_ * o.dy_ - o.dx_ * dy_ == 0; }    // 2-dim cross product is 0 when parallel
 
   private:
-    const int _dx;
-    const int _dy;
+    const int dx_;
+    const int dy_;
 
   public:
     static const Offset Rdirection[4];   // standard 4 'Rook'   directions

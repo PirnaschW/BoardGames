@@ -83,7 +83,7 @@ namespace UnitTestCheckers
     TEST_METHOD(TestCheckersMovesNoQueens)
     {
       srand(0); // always start with the same sequence to allow debugging!
-      for (unsigned int z = 0; z < 100; ++z)  // for now, only 1 time
+      for (unsigned int z = 0; z < 100; ++z)
       {
         CheckersPosition pos{ Variants<Checkers::CheckersGame>::GetPieces(), CheckersGame::GetDimensions(MaxX, MaxY) };
 

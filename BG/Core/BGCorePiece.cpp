@@ -5,12 +5,12 @@ namespace BoardGamesCore
 
   void Piece::Draw(CDC* pDC, const CRect& r, const TileColor* f) const
   {
-    if (ID_l == 0 && ID_d == 0) return;
-    if (cb_l.m_hObject == 0) cb_l.LoadBitmap(ID_l);
-    if (cb_d.m_hObject == 0) cb_d.LoadBitmap(ID_d);
-    if (cb_s.m_hObject == 0 && ID_s != 0) cb_s.LoadBitmap(ID_s);
+    if (ID_l_ == 0 && ID_d_ == 0) return;
+    if (cb_l_.m_hObject == 0) cb_l_.LoadBitmap(ID_l_);
+    if (cb_d_.m_hObject == 0) cb_d_.LoadBitmap(ID_d_);
+    if (cb_s_.m_hObject == 0 && ID_s_ != 0) cb_s_.LoadBitmap(ID_s_);
 
-    CBitmap& cb = (f == &TileColor::Light) ? cb_l : ((f == &TileColor::Dark) ? cb_d : cb_s);
+    CBitmap& cb = (f == &TileColor::Light) ? cb_l_ : ((f == &TileColor::Dark) ? cb_d_ : cb_s_);
 
     if (cb.m_hObject != 0)
     {
@@ -30,7 +30,7 @@ namespace BoardGamesCore
 
   const std::unordered_map<std::string, const Piece*>& Piece::GetHTMLPieceMap(void) noexcept
   {
-    static const std::unordered_map<std::string, const Piece*> map{
+    static const std::unordered_map<std::string, const Piece*> map_{
       { R"(blank35)",     &Piece::NoPiece },
       //{ R"(chess/wk35)",&BoardGamesChessPieces::ChessPiece::WK },
       //{ R"(chess/wq35)",&BoardGamesChessPieces::ChessPiece::WQ },
@@ -47,10 +47,10 @@ namespace BoardGamesCore
       //{ R"(hshogi/w35)",&Hasami::HasamiPiece::HasamiPieceW },
       //{ R"(hshogi/b35)",&Hasami::HasamiPiece::HasamiPieceB },
     };
-    return map;
+    return map_;
   }
 
-  std::vector<const Piece*> Piece::ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece*>& map)
+  std::vector<const Piece*> Piece::ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece*>& map_)
   {
     static const std::string s0{ R"(<div id="game-board-section">)" };
     static const std::string s1{ R"(<img src=https://i.brainking.com/)" };
@@ -65,8 +65,8 @@ namespace BoardGamesCore
     {
       p1 += s1.size();
       auto p2 = s.find(s2, p1);
-      const auto& it{ map.find(s.substr(p1, p2 - p1)) };
-      if (it != map.end()) list.push_back(it->second);
+      const auto& it{ map_.find(s.substr(p1, p2 - p1)) };
+      if (it != map_.end()) list.push_back(it->second);
       else;// throw s.substr(p1, p2 - p1);
     }
     return list;

@@ -3,16 +3,16 @@
 namespace BoardGamesCore
 {
 
-  Layout::Layout(const Dimension& d, const BoardPart b, const LayoutType lt) noexcept : dim(d), ltype(lt), tiles{ 1ULL * d.xCount*d.yCount,nullptr }
+  Layout::Layout(const Dimension& d, const BoardPart b, const LayoutType lt) noexcept : dim_(d), ltype_(lt), tiles_{ 1ULL * d.xCount_*d.yCount_,nullptr }
   {
-    if (ltype != LayoutType::None)  // None means the Game is handling its own tile creation
+    if (ltype_ != LayoutType::None)  // None means the Game is handling its own tile creation
     {
       unsigned int z = 0;
-      for (Coordinate i = 0; i < dim.xCount; i++)
-        for (Coordinate j = 0; j < dim.yCount; j++, z++)
+      for (Coordinate i = 0; i < dim_.xCount_; i++)
+        for (Coordinate j = 0; j < dim_.yCount_; j++, z++)
         {
           const TileColor* f{};
-          switch (ltype)
+          switch (ltype_)
           {
             case LayoutType::Light:       f = &TileColor::Light;                                     break;
             case LayoutType::Dark:        f = &TileColor::Dark;                                      break;
@@ -21,24 +21,24 @@ namespace BoardGamesCore
           }
 
           const CRect r{
-            (int)(dim.lEdge + dim.xSkip * i + dim.xDim * i),
-            (int)(dim.tEdge + dim.ySkip * j + dim.yDim * j),
-            (int)(dim.lEdge + dim.xSkip * i + dim.xDim * (i + 1U)),
-            (int)(dim.tEdge + dim.ySkip * j + dim.yDim * (j + 1U)) };
-          (tiles)[z] = new Tile(Location(b, i, j), r, f);
+            (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * i),
+            (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * j),
+            (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * (i + 1U)),
+            (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * (j + 1U)) };
+          (tiles_)[z] = new Tile(Location(b, i, j), r, f);
         }
     }
   }
 
   void Layout::Draw(CDC* pDC, const Position* pos, _Mode mode) const
   {
-    for (auto& t : tiles)
+    for (auto& t : tiles_)
       t->Draw(pDC, pos->GetPiece(t->GetLocation()));
   }
 
   void Layout::DrawSelected(CDC* pDC, const Location& l) const
   {
-    for (auto& t : tiles)
+    for (auto& t : tiles_)
       if (t->GetLocation() == l)
       {
         CRect r = t->GetRect();
@@ -53,7 +53,7 @@ namespace BoardGamesCore
 
   bool Layout::GetLocation(const CPoint& p, Location& l) const noexcept
   {
-    for (auto& t : tiles)
+    for (auto& t : tiles_)
       if (t->InRect(p)) {
         l = t->GetLocation();
         return true;
@@ -67,15 +67,15 @@ namespace BoardGamesCore
     for (unsigned int z = 4; z > 0; z--)
     {
       if (z != 2)
-        pDC->Rectangle((int)(dim.lEdge - z), (int)(dim.tEdge - z), (int)(dim.lEdge + dim.xCount * (dim.xDim + dim.xSkip) + z), (int)(dim.tEdge + dim.yCount * (dim.yDim + dim.ySkip) + z));
+        pDC->Rectangle((int)(dim_.lEdge_ - z), (int)(dim_.tEdge_ - z), (int)(dim_.lEdge_ + dim_.xCount_ * (dim_.xDim_ + dim_.xSkip_) + z), (int)(dim_.tEdge_ + dim_.yCount_ * (dim_.yDim_ + dim_.ySkip_) + z));
     }
     Layout::Draw(pDC, pos, mode);
 
     if (mode.IsSet(Mode::ShowStock) || mode.IsSet(Mode::Editing))
     {
-      _stock.Draw(pDC, &(pos->_stock), mode);
+      stock_.Draw(pDC, &(pos->stock_), mode);
     }
-    _taken.Draw(pDC, &(pos->_taken), mode);
+    taken_.Draw(pDC, &(pos->taken_), mode);
   }
 
 
@@ -96,8 +96,8 @@ namespace BoardGamesCore
 
     if (_mode.IsSet(Mode::Dragging))
     {
-      const CRect r(dragPoint, SIZE{32,32});  // doesn't work for all games! - some have 18x20
-      dragPiece->Draw(pDC, r, &TileColor::Small);
+      const CRect r(dragPoint_, SIZE{32,32});  // doesn't work for all games! - some have 18x20
+      dragPiece_->Draw(pDC, r, &TileColor::Small);
     }
 
     if (true) {
@@ -209,8 +209,8 @@ namespace BoardGamesCore
   {
     Location l{ BoardPart::Main, 0U,0U};
     if (!lay->GetLocation(point, l)) return; // clicked somewhere invalid
-    dragPoint = point;
-    dragPiece = pos->GetPiece(l);
+    dragPoint_ = point;
+    dragPiece_ = pos->GetPiece(l);
     _mode.Set(Mode::Dragging);
   }
 
@@ -220,10 +220,10 @@ namespace BoardGamesCore
     if (lay->GetLocation(point, l))
     {
       if (l.b_ != BoardPart::Stock)
-        pos->SetPiece(l, dragPiece); // dropped on a valid target
+        pos->SetPiece(l, dragPiece_); // dropped on a valid target
     }
-    dragPoint = {};
-    dragPiece = nullptr;
+    dragPoint_ = {};
+    dragPiece_ = nullptr;
     _mode.Del(Mode::Dragging);
   }
 

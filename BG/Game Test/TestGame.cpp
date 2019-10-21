@@ -337,7 +337,7 @@ namespace Test
   class TestPosAccess : public MainPosition
   {
   public:
-    inline const Moves GetMoveList(bool w) const { return w ? movelistW : movelistB; }
+    inline const Moves GetMoveList(bool w) const { return w ? movesW_ : movesB_; }
   };
   bool Test::TestMoveUndo(const MainPosition* pos)  // try all moves (for both colors) and undo them, to verify the Undo method
   {
@@ -440,9 +440,9 @@ namespace Test
 
     char buffer[100];
     std::string s{};
-    for (unsigned int i = 0; i < pos->sequence.size(); ++i)
+    for (unsigned int i = 0; i < pos->sequence_.size(); ++i)
     {
-      const MoveP m = pos->sequence[i];
+      const MoveP m = pos->sequence_[i];
       sprintf_s(buffer, "%d. %c%c - %c%c, ", i + 1, m->GetFr().GetLocation()._x + 'a', m->GetFr().GetLocation().y_ + '1',
                                                     m->GetTo().GetLocation()._x + 'a', m->GetTo().GetLocation().y_ + '1');
       s += buffer;

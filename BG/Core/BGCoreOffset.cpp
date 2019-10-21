@@ -14,4 +14,7 @@ namespace BoardGamesCore
                                                 Offset(+0, +1),                 Offset(+0, -1),
                                                 Offset(-1, +1), Offset(-1, +0), Offset(-1, -1) };
 
+
+  Offset::Offset(const Location& l1, const Location& l2) noexcept : dx_ { l2.x_ - l1.x_ }, dy_{ l2.y_ - l1.y_ } {}
+
 }

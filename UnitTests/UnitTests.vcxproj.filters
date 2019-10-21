@@ -79,6 +79,9 @@
     <ClCompile Include="..\BG\Core\BGCoreAction.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BG\Core\BGChessPieces.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

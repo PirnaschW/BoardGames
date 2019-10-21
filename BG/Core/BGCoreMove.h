@@ -19,7 +19,6 @@ namespace BoardGamesCore
     inline const Location& GetFrL(void) const noexcept { return a_.front()->GetLocation(); }
     inline const Location& GetToL(void) const noexcept { return a_.back()->GetLocation(); }
 
-//    virtual inline bool operator==(const Move& m) const = 0;
     virtual inline const Field& GetFr(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; }
     virtual inline const Field& GetTo(void) const noexcept { static Field f{ Location{BoardPart::Main,0U,0U},nullptr }; return f; }
 

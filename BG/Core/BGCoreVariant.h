@@ -5,16 +5,16 @@ namespace BoardGamesCore
   {
   public:
     constexpr Variant(Coordinate xd, Coordinate yd = 0, const char* n = nullptr, Coordinate xmin = 0, Coordinate xmax = 0, Coordinate ymin = 0, Coordinate ymax = 0) noexcept :
-      xDef(xd), yDef(yd ? yd : xd), name(n), xMin(xmin), xMax(xmax), yMin(ymin ? ymin : xmin), yMax(ymax ? ymax : xmax) {}
+      xDef_(xd), yDef_(yd ? yd : xd), name_(n), xMin_(xmin), xMax_(xmax), yMin_(ymin ? ymin : xmin), yMax_(ymax ? ymax : xmax) {}
     Variant& operator=(const Variant&) = default;  //{ *this = v; return *this; }
   public:
-    Coordinate xDef;
-    Coordinate yDef;
-    const char* name;
-    Coordinate xMin;
-    Coordinate xMax;
-    Coordinate yMin;
-    Coordinate yMax;
+    Coordinate xDef_;
+    Coordinate yDef_;
+    const char* name_;
+    Coordinate xMin_;
+    Coordinate xMax_;
+    Coordinate yMin_;
+    Coordinate yMax_;
   };
   typedef std::vector<Variant> VariantList;
 

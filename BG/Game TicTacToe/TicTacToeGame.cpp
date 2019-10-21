@@ -10,16 +10,16 @@ namespace TicTacToe
 
   void TicTacToePosition::GetAllMoves(void) noexcept                      // collect all moves
   {
-    assert(movelistW.empty());
-    assert(movelistB.empty());
+    assert(movesW_.empty());
+    assert(movesB_.empty());
 
     Actions aw0{};
     Actions ab0{};
     aw0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 0U, 0U }, &TicTacToePiece::TicTacToePieceW));
     ab0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 0U, 1U }, &TicTacToePiece::TicTacToePieceB));
-    for (Coordinate i = 0; i < sizeX; i++)
+    for (Coordinate i = 0; i < sizeX_; i++)
     {
-      for (Coordinate j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
         const Location l{ BoardPart::Main, i, j };
         const Piece* p = GetPiece(l);
@@ -30,8 +30,8 @@ namespace TicTacToe
           Actions ab{ ab0 };
           aw.push_back(std::make_shared<ActionPlace>(l, &TicTacToePiece::TicTacToePieceW));
           ab.push_back(std::make_shared<ActionPlace>(l, &TicTacToePiece::TicTacToePieceB));
-          movelistW.push_back(std::make_shared<Move>(aw));
-          movelistB.push_back(std::make_shared<Move>(ab));
+          movesW_.push_back(std::make_shared<Move>(aw));
+          movesB_.push_back(std::make_shared<Move>(ab));
         }
       }
     }
@@ -53,9 +53,9 @@ namespace TicTacToe
     int v2{ 0 };
 
     char posi[13]{};
-    for (Coordinate j = 0; j < sizeY; j++)
+    for (Coordinate j = 0; j < sizeY_; j++)
     {
-      for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
+      for (Coordinate i = 0; i < sizeX_; i++)  // loop through all locations
       {
         const Location l{ BoardPart::Main,i,j };
         const Piece* p = GetPiece(l);
@@ -64,17 +64,17 @@ namespace TicTacToe
         if (p->IsColor(&Color::Black)) c = 'B';
         posi[i + 4 * j] = c;
       }
-      posi[sizeX + 4 * j] = '|';
+      posi[sizeX_ + 4 * j] = '|';
     }
 
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn == &Color::White && movelistW.empty()) value = PositionValue::PValueType::Tie;        // if no more moves, game over
-    else if (onTurn == &Color::Black && movelistB.empty()) value = PositionValue::PValueType::Tie;
+    if (onTurn_ == &Color::White && movesW_.empty()) value_ = PositionValue::PValueType::Tie;        // if no more moves, game over
+    else if (onTurn_ == &Color::Black && movesB_.empty()) value_ = PositionValue::PValueType::Tie;
     else
     {
-      for (Coordinate j = 0; j < sizeY; j++)
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
-        for (Coordinate i = 0; i < sizeX; i++)  // loop through all locations
+        for (Coordinate i = 0; i < sizeX_; i++)  // loop through all locations
         {
           const Location l{ BoardPart::Main,i,j };
           const Piece* p = GetPiece(l);
@@ -98,9 +98,9 @@ namespace TicTacToe
                 break;
               }
             }
-            if (z >= sizeY || z >= sizeX)
+            if (z >= sizeY_ || z >= sizeX_)
             {
-              value = w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
+              value_ = w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
               return;
             }
             (w ? v1 : v2) += GetChainValue(z);
@@ -108,7 +108,7 @@ namespace TicTacToe
         }
       }
 
-      value = v1 - v2;
+      value_ = v1 - v2;
     }
   }
 

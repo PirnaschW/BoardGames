@@ -11,31 +11,30 @@ namespace BoardGamesCore
       Lost = 0x08,
       Tie = 0x10,
     };
-    constexpr inline bool operator== (PValueType type) const noexcept { return _type == type; }
+    constexpr inline bool operator== (PValueType type) const noexcept { return type_ == type; }
     constexpr inline bool operator!= (PValueType type) const noexcept { return !(*this == type); }
 
   public:
-    //    constexpr inline PositionValue(PValueType type = PValueType::Undefined) noexcept : _type{ type } {}
-    constexpr inline PositionValue(PValueType type) noexcept : _type{ type } {}
-    constexpr inline PositionValue(int value) noexcept : _type{ PValueType::Normal }, value_{ value } {}
-    constexpr inline PositionValue(size_t value) noexcept : _type{ PValueType::Normal }, value_{ static_cast<int>(value) } {}
+    constexpr inline PositionValue(PValueType type) noexcept : type_{ type } {}
+    constexpr inline PositionValue(int value) noexcept : type_{ PValueType::Normal }, value_{ value } {}
+    constexpr inline PositionValue(size_t value) noexcept : type_{ PValueType::Normal }, value_{ static_cast<int>(value) } {}
 
-    constexpr inline bool operator== (const PositionValue & p) const noexcept { return _type == p._type && value_ == p.value_; }
+    constexpr inline bool operator== (const PositionValue & p) const noexcept { return type_ == p.type_ && value_ == p.value_; }
     constexpr inline bool operator!= (const PositionValue & p) const noexcept { return !(*this == p); }
     constexpr inline bool operator> (const PositionValue & p) const noexcept
     {
-      switch (_type)
+      switch (type_)
       {
       case Lost: return false;                               // Lost is not greater than anything
-      case Undefined: return p._type == Lost;                // Undefined is only greater than lost
-      case Tie: return (p._type == Lost ||
-        p._type == Undefined ||
-        (p._type == Normal && p.value_ < 0));                // Tie is better than Lost. Undefined, and losing
-      case Normal: return (p._type == Lost ||
-        p._type == Undefined ||
-        (p._type == Tie && value_ > 0) ||                    // Any value is better than Lost; positive is better than Tie
-        (p._type == Normal && value_ > p.value_));           // and better is better, of course
-      case Won: return p._type != Won;                       // Won is better than anything except Won
+      case Undefined: return p.type_ == Lost;                // Undefined is only greater than lost
+      case Tie: return (p.type_ == Lost ||
+        p.type_ == Undefined ||
+        (p.type_ == Normal && p.value_ < 0));                // Tie is better than Lost. Undefined, and losing
+      case Normal: return (p.type_ == Lost ||
+        p.type_ == Undefined ||
+        (p.type_ == Tie && value_ > 0) ||                    // Any value is better than Lost; positive is better than Tie
+        (p.type_ == Normal && value_ > p.value_));           // and better is better, of course
+      case Won: return p.type_ != Won;                       // Won is better than anything except Won
       default: return false;
       }
     }
@@ -44,7 +43,7 @@ namespace BoardGamesCore
     constexpr inline bool operator<= (const PositionValue & p) const noexcept { return !(*this > p); }
     constexpr inline const PositionValue operator- (void) const noexcept
     {
-      switch (_type)
+      switch (type_)
       {
       case Lost: return PositionValue(Won);
       case Won: return PositionValue(Lost);
@@ -65,16 +64,16 @@ namespace BoardGamesCore
     constexpr inline PositionValue& operator-- (void) noexcept { value_--; return *this; }
     constexpr inline PositionValue Relative(bool w) const noexcept { return (w ? *this : -*this); }
 
-    constexpr inline operator int(void) const { if (_type != Normal) throw std::exception("undefined PValue"); return value_; }
+    constexpr inline operator int(void) const { if (type_ != Normal) throw std::exception("undefined PValue"); return value_; }
     inline operator const char*(void) const {
       static std::string s; 
-      if (_type == Normal) s = std::to_string(value_);
+      if (type_ == Normal) s = std::to_string(value_);
       else s = "undefined";
       return s.c_str();
     }
 
   private:
-    PValueType _type{ PValueType::Undefined };
+    PValueType type_{ PValueType::Undefined };
     int value_{ 0 };
   };
 

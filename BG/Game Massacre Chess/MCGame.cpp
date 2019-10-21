@@ -10,7 +10,7 @@ namespace MassacreChess
     //srand((unsigned)time(nullptr));
     std::srand(1);
 
-    for (Coordinate z = 0; z < d[0].xCount*d[0].yCount / 8; z++)
+    for (Coordinate z = 0; z < d[0].xCount_*d[0].yCount_ / 8; z++)
     {
       PlaceRandomly(&ChessPiece::WQ);
       PlaceRandomly(&ChessPiece::BQ);
@@ -48,8 +48,8 @@ namespace MassacreChess
   bool MCPosition::PlaceRandomly(const Piece* p)
   {
     std::vector<Location> ll;
-    for (Coordinate i = 0; i < sizeX; i++)
-      for (Coordinate j = 0; j < sizeY; j++)
+    for (Coordinate i = 0; i < sizeX_; i++)
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
         const Location l{ BoardPart::Main,  i,j };
         if (GetPiece(l) == &Piece::NoPiece) ll.push_back(l);

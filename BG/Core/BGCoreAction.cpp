@@ -13,71 +13,54 @@ namespace BoardGamesCore
     return true;
   }
 
-  bool Actions::IsRepeat(const Piece* p, const Location fr, const Location to) const noexcept
+  bool Actions::IsRepeat(const Location& l, const Offset& o) const noexcept
   {
-    bool first{ true };            // flag: we are looking for the first part of a move
-    Location l1{ fr };             // starting point of the move
-    Location lj{ fr.b_,(fr.x_ + to.x_) / 2U,(fr.y_ + to.y_) / 2U };
-
-    // loop through the actions, first find a Take of p, then a Place of p, then compare to given move
-    for (const auto& aa : *this)
+    // loop through the actions, find a Jump of l, then before it must be a Take, then compare the diff to given direction
+    for (unsigned int i = 1; i < this->size(); ++i)
     {
-      if (first)  // looking for first?
+      if ((*this)[i]->IsJump() && (*this)[i]->GetLocation() == l)  // jumping over the given location
       {
-        // check for a Take of p
-        if (aa->IsTake() && aa->GetPiece() == p)
-        {
-          // save it
-          l1 = aa->GetLocation();
-          first = false;
-        }
-      }
-      else        // looking for second
-      {
-        // check for a previous Jump over same location
-        if (aa->IsTake() && aa->GetLocation() == lj) return true;
-
-        // check for a Place of p
-        if (!aa->IsTake() && aa->GetPiece() == p)
-        {
-          const Location l2 = aa->GetLocation();
-          // compare forward and backward
-          if ((l1 == fr && l2 == to) || (l2 == fr && l1 == to)) return true;
-
-          first = true; // go on and look for another first
-        }
+        const Offset o0{ (*this)[i]->GetLocation(), (*this)[i-1]->GetLocation() };
+        if (o0.IsParallel(o)) return true;
       }
     }
     return false;
   }
 
+  bool Actions::HasJump(void) const noexcept
+  {
+    auto AhasJump = [](const ActionP& a) -> bool { return a->IsJump(); };
+    return std::find_if(this->cbegin(), this->cend(), AhasJump) != this->cend();
+  }
+
 
   ActionTake::ActionTake(const Location& l, const Piece* p) noexcept : Action(l, p)
   {
-    assert(p != nullptr); assert(p != &Piece::NoPiece);
+    assert(p != nullptr);
+    assert(p != &Piece::NoTile);
+    assert(p != &Piece::NoPiece);
   }
 
   void ActionTake::Execute(MainPosition* p) const noexcept
   {
-    assert(p->GetPiece(l_) == p_);
-    if (l_.b_ != BoardPart::Stock)                                        // empty the source field (except in stock)
+    assert(p->GetPiece(l_) == p_);                                        // verify the source field really has that piece
+    if (l_.b_ != BoardPart::Stock)                                        // empty the source field (except in Stock)
       p->SetPiece(l_, &Piece::NoPiece);
   }
 
   void ActionJump::Execute(MainPosition* p) const noexcept
   {
-    assert(p->GetPiece(l_) == p_);
-    p->SetPiece(l_, &Piece::NoPiece);                                     // empty the jumped field
+    assert(p->GetPiece(l_) == p_);                                        // nothing to do - if the jumped piece is affected, next action will handle it
   }
 
   void ActionPlace::Execute(MainPosition* p) const noexcept               // place piece on the the target field
   {
-    if (l_.b_ == BoardPart::Taken)
-    {  // Taken pieces will go in the next free spot
+    if (l_.b_ == BoardPart::Taken)                                        // Taken pieces will go in the next free spot
+    {  
       for (Coordinate x = 0; ; x++)
       {
         const Location l{ BoardPart::Taken, x, l_.y_ };
-        if (p->_taken.GetPiece(l)->IsKind(noKind::NoKind))
+        if (p->taken_.GetPiece(l)->IsKind(noKind::NoKind))
         {
           p->SetPiece(l, p_);
           return;
@@ -87,7 +70,7 @@ namespace BoardGamesCore
     }
     else
     {
-      assert(p->GetPiece(l_) == &Piece::NoPiece);
+      assert(p->GetPiece(l_) == &Piece::NoPiece);                         // target field must be free
       p->SetPiece(l_, p_);
     }
   }

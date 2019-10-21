@@ -6,12 +6,12 @@ namespace BoardGamesCore
   class Kind abstract
   {
   protected:
-    constexpr inline Kind(const char& k) noexcept : kind{ k } {}
+    constexpr inline Kind(const char& k) noexcept : kind_{ k } {}
   public:
     Kind& operator=(const Kind&) = delete;          // delete assignment operator
 
-    constexpr inline bool operator==(const Kind& k) const noexcept { return k.kind == kind; }
-    inline size_t GetHash(void) const noexcept { return std::hash<char>()(kind); }
+    constexpr inline bool operator==(const Kind& k) const noexcept { return k.kind_ == kind_; }
+    inline size_t GetHash(void) const noexcept { return std::hash<char>()(kind_); }
 
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept = 0;                              // no useful default implementation provided!
     virtual inline void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept {};                             // useful default implementation: No moves possible
@@ -20,7 +20,7 @@ namespace BoardGamesCore
     virtual void Serialize(CArchive* ar) const;
 
   private:
-    const char kind;
+    const char kind_;
   };
 
   static_assert(std::is_abstract<Kind>::value, "must be abstract");
@@ -38,6 +38,7 @@ namespace BoardGamesCore
   public:  // the only instance ever to exists; handed around by pointer
     static const noKind NoKind;
   };
+
   static_assert(!std::is_abstract<noKind>::value, "must not be abstract");
   static_assert(!std::is_trivially_constructible<class noKind>::value, "must not be trivially constructible");
 

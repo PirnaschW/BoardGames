@@ -15,7 +15,7 @@ namespace BoardGamesCore
     std::function<void(void)> callback;          // pointer to CDocument's callback function (to update window)
 //    int additionalData{};
     size_t freemem{};
-    void Purge(const Moves& sequence) noexcept;
+    void Purge(const Moves& sequence_) noexcept;
   };
 
   class _Mode
@@ -82,7 +82,7 @@ namespace BoardGamesCore
     virtual bool React(UINT command) override;                                                          // react to button/menu command
     virtual bool React(UINT event, UINT nFlags, const CPoint& p) override;                              // react to mouse events
     virtual void React(CCmdUI* pCmdUI) override;                                                        // react to UI events (allows to set buttons greyed, etc.)
-    virtual inline void DragTo(const CPoint& point) override { dragPoint = point; }
+    virtual inline void DragTo(const CPoint& point) override { dragPoint_ = point; }
     virtual void DragStart(const CPoint&) override;
     virtual void DragEnd(const CPoint&) override;
     virtual void Select(const CPoint& point) override;
@@ -90,7 +90,7 @@ namespace BoardGamesCore
     virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist->callback = cb; }
 
   protected:
-    const PieceMapP& pMap;                       // map of all pieces used in the game
+    const PieceMapP& pMap_;                       // map of all pieces used in the game
     MainPosition* pos;                           // logical position on the main playing board
     MainLayout* lay;                             // physical layout of the main playing board
 

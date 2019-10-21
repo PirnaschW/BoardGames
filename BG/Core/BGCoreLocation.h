@@ -22,10 +22,10 @@ namespace BoardGamesCore
     constexpr inline bool operator==(const Location& l) const noexcept { return l.b_ == b_ && l.x_ == x_ && l.y_ == y_; }
     constexpr inline bool operator!=(const Location& l) const noexcept { return !(l == *this); }
     constexpr inline Location operator+(const Offset & o) const noexcept { Location l(*this); return l += o; }
-    constexpr inline Location& operator+=(const Offset & o) noexcept { x_ += o._dx, y_ += o._dy; return *this; }
+    constexpr inline Location& operator+=(const Offset & o) noexcept { x_ += o.dx_, y_ += o.dy_; return *this; }
 
-    constexpr inline bool Valid(Coordinate sizeX, Coordinate sizeY) const noexcept { return x_ >= 0 && x_ < sizeX && y_ >= 0 && y_ < sizeY; }
-    constexpr inline unsigned int Index(Coordinate sizeX, Coordinate /*sizeY*/) const noexcept { return y_ * sizeX + x_; }
+    constexpr inline bool Valid(Coordinate sizeX_, Coordinate sizeY_) const noexcept { return x_ >= 0 && x_ < sizeX_ && y_ >= 0 && y_ < sizeY_; }
+    constexpr inline unsigned int Index(Coordinate sizeX_, Coordinate /*sizeY_*/) const noexcept { return y_ * sizeX_ + x_; }
 
   public:
     // can't be protected, as the values need to be used in many places

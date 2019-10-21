@@ -20,7 +20,7 @@ namespace BoardGamesCore
 
     inline const Location& GetLocation(void) const noexcept { return l_; }
     inline const Piece* GetPiece(void) const noexcept { return p_; }
-    inline virtual bool IsTake(void) const noexcept = 0;
+    inline virtual bool IsJump(void) const noexcept { return false; }
     inline virtual void Execute(MainPosition* p) const noexcept = 0;
 
   protected:
@@ -32,39 +32,33 @@ namespace BoardGamesCore
   class Actions : public std::vector<ActionP>
   {
   public:
-    bool IsRepeat(const Piece* p, const Location fr, const Location to) const noexcept;
+    bool IsRepeat(const Location& l, const Offset& o = Offset{ 0,0 }) const noexcept;
+    bool HasJump(void) const noexcept;
     bool operator == (const Actions& a) const noexcept;
     inline bool operator != (const Actions& a) const noexcept { return !(*this == a); }
   };
+
 
   class ActionTake : public Action  // Take-Action: Take one piece from the board (into 'hand')
   {
   public:
     ActionTake(const Location& l, const Piece* p) noexcept;
-    inline virtual bool IsTake(void) const noexcept { return true; }
-    void Execute(MainPosition* p) const noexcept override;
-    //inline bool operator == (const ActionTake& a) const noexcept { return l_ == a.l_ && p_ == a.p_; }
-    //inline bool operator != (const ActionTake& a) const noexcept { return !(*this == a); }
+    virtual void Execute(MainPosition* p) const noexcept override;
   };
 
-  // (only inserted if the jumping is relevant for the game)
   class ActionJump : public Action  // Jump-Action: Jump over one piece on the board
   {
   public:
     inline ActionJump(const Location& l, const Piece* p) noexcept : Action(l, p) {}
-    void Execute(MainPosition* p) const noexcept override;
-    //inline bool operator == (const ActionJump& a) const noexcept { return l_ == a.l_ && p_ == a.p_; }
-    //inline bool operator != (const ActionJump& a) const noexcept { return !(*this == a); }
+    inline virtual bool IsJump(void) const noexcept override { return true; }
+    virtual void Execute(MainPosition* p) const noexcept override;
   };
 
   class ActionPlace : public Action  // Place-Action: Place one piece on the board (from 'hand')
   {
   public:
     inline ActionPlace(const Location& l, const Piece* p) noexcept : Action(l, p) {}
-    inline virtual bool IsTake(void) const noexcept { return false; }
-    void Execute(MainPosition* p) const noexcept override;
-    //inline bool operator == (const ActionPlace& a) const noexcept { return l_ == a.l_ && p_ == a.p_; }
-    //inline bool operator != (const ActionPlace& a) const noexcept { return !(*this == a); }
+    virtual void Execute(MainPosition* p) const noexcept override;
   };
 
 }

@@ -170,8 +170,8 @@ namespace Shogi
 
   ShogiPosition::ShogiPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    assert((d[0].xCount == 9 && d[0].yCount == 9) || (d[0].xCount == 5 && d[0].yCount == 5));
-    if (ShogiGame::IsFull(d[0].xCount, d[0].yCount))
+    assert((d[0].xCount_ == 9 && d[0].yCount_ == 9) || (d[0].xCount_ == 5 && d[0].yCount_ == 5));
+    if (ShogiGame::IsFull(d[0].xCount_, d[0].yCount_))
     {
       SetPiece(Location( BoardPart::Main, 0U, 0U), &ShogiPiece::ShogiBL);
       SetPiece(Location( BoardPart::Main, 1U, 0U), &ShogiPiece::ShogiBN);
@@ -247,17 +247,17 @@ namespace Shogi
       for (Coordinate x = 0U; true; x++)
       {
         const Location l(BoardPart::Taken, x, y);
-        const Piece* p = _taken.GetPiece(l);
+        const Piece* p = taken_.GetPiece(l);
         if (p == nullptr) break;                                          // end of Taken reached
         if (p->IsBlank()) continue;                                       // no piece here to drop, try next Location
         const ShogiPiece* pp = dynamic_cast<const ShogiPiece*>(p);        // must be a shogipiece,
         assert(pp != nullptr);                                            // verify it
-        Moves& m = pp->IsColor(&Color::White) ? movelistW : movelistB;
+        Moves& m = pp->IsColor(&Color::White) ? movesW_ : movesB_;
 
         Actions a{};
         a.push_back(std::make_shared<ActionTake>(l, pp));
-        for (Coordinate i = 0; i < sizeX; i++)
-          for (Coordinate j = 0; j < sizeY; j++)
+        for (Coordinate i = 0; i < sizeX_; i++)
+          for (Coordinate j = 0; j < sizeY_; j++)
           {
             const Location ll{ BoardPart::Main, i, j };
             if (GetPiece(ll)->IsBlank() && pp->CanDrop(this, ll))
@@ -309,9 +309,9 @@ namespace Shogi
     //bool kw{false};
     //bool kb{false};
 
-    //for (Coordinate i = 0; i < sizeX; i++)
+    //for (Coordinate i = 0; i < sizeX_; i++)
     //{
-    //  for (Coordinate j = 0; j < sizeY; j++)
+    //  for (Coordinate j = 0; j < sizeY_; j++)
     //  {
     //    const Piece* p = GetPiece(Location{ BoardPart::Main,i,j });
     //    if ((p == &ShogiPiece::ShogiWK)) kw = true;
@@ -319,17 +319,17 @@ namespace Shogi
     //  }
     //}
 
-    //if (!kw) { value = PositionValue::PValueType::Lost; return; }
-    //if (!kb) { value = PositionValue::PValueType::Won;  return; }
+    //if (!kw) { value_ = PositionValue::PValueType::Lost; return; }
+    //if (!kb) { value_ = PositionValue::PValueType::Won;  return; }
 
-    if (!HasPiece(&ShogiPiece::ShogiWK)) { value = PositionValue::PValueType::Lost; return; }
-    if (!HasPiece(&ShogiPiece::ShogiBK)) { value = PositionValue::PValueType::Won;  return; }
+    if (!HasPiece(&ShogiPiece::ShogiWK)) { value_ = PositionValue::PValueType::Lost; return; }
+    if (!HasPiece(&ShogiPiece::ShogiBK)) { value_ = PositionValue::PValueType::Won;  return; }
     MainPosition::EvaluateStatically();
   }
 
   inline bool ShogiPosition::CanPromote(const Color* c, const Location& l) const noexcept
   {
-    const bool f = ShogiGame::IsFull(sizeX, sizeY);
+    const bool f = ShogiGame::IsFull(sizeX_, sizeY_);
     return c == &Color::White ? (l.y_ < (f ? 3U : 1U)) : (l.y_ > (f ? 8U : 3U));
   }
     

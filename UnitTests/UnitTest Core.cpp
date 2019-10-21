@@ -3,6 +3,8 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace BoardGamesCore;
 
+#include "../BG/Game Checkers/CheckersGame.h"
+
 namespace Microsoft
 {
   namespace VisualStudio
@@ -50,6 +52,14 @@ namespace UnitTestCore
       Offset o2 = o1 * 3;
       Offset o3{ 9,15 };
       Assert::AreEqual(o2, o3);
+      Assert::IsTrue(o1.IsParallel(o2));
+      Assert::IsTrue(o2.IsParallel(o1));
+      Offset o4{ 2,5 };
+      Offset o5{ 5,3 };
+      Offset o6{ -666,-1110 };
+      Assert::IsFalse(o1.IsParallel(o4));
+      Assert::IsFalse(o1.IsParallel(o5));
+      Assert::IsTrue(o1.IsParallel(o6));
     }
 
     TEST_METHOD(TestLocation)
@@ -90,6 +100,112 @@ namespace UnitTestCore
       Assert::AreEqual(p0, f1.GetPiece());
       Assert::AreNotEqual(f1, f2);
       Assert::AreEqual(l2, f2.GetLocation());
+    }
+
+    TEST_METHOD(TestAction)
+    {
+      Location l1{ BoardPart::Main, 2U, 3U };
+      Location l2{ BoardPart::Main, 3U, 2U };
+      Location l3{ BoardPart::Main, 4U, 1U };
+
+      ActionP a1{ std::make_shared<ActionTake>(l1,&BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a2{ std::make_shared<ActionJump>(l2,&Piece::NoPiece) };
+      ActionP a3{ std::make_shared<ActionPlace>(l3,&BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a4{ std::make_shared<ActionTake>(l1,&BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a5{ std::make_shared<ActionJump>(l2,&Piece::NoPiece) };
+      ActionP a6{ std::make_shared<ActionPlace>(l3,&BoardGamesChessPieces::ChessPiece::WQ) };
+
+      Assert::IsTrue(a1->GetLocation() == l1);
+      Assert::IsTrue(a2->GetLocation() == l2);
+      Assert::IsTrue(a3->GetLocation() == l3);
+      Assert::IsTrue(a1->GetPiece() == &BoardGamesChessPieces::ChessPiece::WQ);
+      Assert::IsTrue(a2->GetPiece() == &Piece::NoPiece);
+      Assert::IsTrue(a3->GetPiece() == &BoardGamesChessPieces::ChessPiece::WQ);
+
+      Assert::IsFalse(a1->IsJump());
+      Assert::IsTrue(a2->IsJump());
+      Assert::IsFalse(a3->IsJump());
+
+      Assert::IsTrue(*a1 == *a1);
+      Assert::IsTrue(*a2 == *a2);
+      Assert::IsTrue(*a3 == *a3);
+
+      Assert::IsTrue(*a1 == *a4);
+      Assert::IsFalse(*a1 == *a5);
+      Assert::IsFalse(*a1 == *a6);
+      Assert::IsFalse(*a2 == *a4);
+      Assert::IsTrue(*a2 == *a5);
+      Assert::IsFalse(*a2 == *a6);
+      Assert::IsFalse(*a3 == *a4);
+      Assert::IsFalse(*a3 == *a5);
+      Assert::IsTrue(*a3 == *a6);
+      Assert::IsTrue(*a4 == *a1);
+      Assert::IsFalse(*a5 == *a1);
+      Assert::IsFalse(*a6 == *a1);
+
+      Assert::IsFalse(*a1 != *a4);
+      Assert::IsTrue (*a1 != *a5);
+      Assert::IsTrue (*a1 != *a6);
+      Assert::IsTrue (*a2 != *a4);
+      Assert::IsFalse(*a2 != *a5);
+      Assert::IsTrue (*a2 != *a6);
+      Assert::IsTrue (*a3 != *a4);
+      Assert::IsTrue (*a3 != *a5);
+      Assert::IsFalse(*a3 != *a6);
+      Assert::IsFalse(*a4 != *a1);
+      Assert::IsTrue (*a5 != *a1);
+      Assert::IsTrue (*a6 != *a1);
+
+      Actions a{};
+      a.push_back(a1);
+      a.push_back(a3);
+      Assert::IsFalse(a.HasJump());
+
+      a.clear();
+      a.push_back(a1);
+      a.push_back(a2);
+      a.push_back(a3);
+      Assert::IsTrue(a.HasJump());
+
+      Assert::IsTrue(a.IsRepeat(l2));
+      Assert::IsTrue(a.IsRepeat(l2, Offset{ l3,l2 }));
+      Assert::IsFalse(a.IsRepeat(l1));
+      Assert::IsFalse(a.IsRepeat(l3));
+
+      const Piece* p{nullptr};
+      std::function<const Piece* (void)>f = [p] (void) -> const Piece* { return p; };
+
+      //using namespace Checkers;
+      class TestPosition : public MainPosition
+      {
+      public:
+        TestPosition(const Location& l, const Piece* p) noexcept : l_{ l }, p_(p), MainPosition(Variants<Checkers::CheckersGame>::GetPieces(), Checkers::CheckersGame::GetDimensions(8U, 8U)) {}
+        virtual MainPosition* Clone(void) const noexcept { return nullptr; }
+        virtual const Piece* SetPiece(const Location& l, const Piece* p) noexcept override { Assert::IsTrue(l == l_); return p_ = p; }
+        virtual const Piece* GetPiece(const Location& l) const noexcept override { Assert::IsTrue(l == l_); return p_; }
+        const Location& l_;
+        const Piece* p_;
+      };
+
+      TestPosition t{ l1, &Piece::NoPiece };
+      Assert::IsTrue(t.SetPiece(l1, &Piece::NoPiece) == &Piece::NoPiece);
+
+      // testing Action.Execute():
+      TestPosition t1{ a1->GetLocation(), a1->GetPiece() };   // take starting piece
+      Assert::IsTrue(t1.GetPiece(a1->GetLocation()) == a1->GetPiece());
+      a1->Execute(&t1);
+      Assert::IsTrue(t1.GetPiece(a1->GetLocation()) == &Piece::NoPiece);
+
+      TestPosition t2{ a2->GetLocation(), &Piece::NoPiece };  // jump over empty field
+      Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == &Piece::NoPiece);
+      a2->Execute(&t2);
+      Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == &Piece::NoPiece);
+
+      TestPosition t3{ a3->GetLocation(), &Piece::NoPiece };  // place on empty field
+      Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == &Piece::NoPiece);
+      a3->Execute(&t3);
+      Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == a3->GetPiece());
+
     }
 
     TEST_METHOD(TestPValue)

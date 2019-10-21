@@ -16,8 +16,8 @@ namespace BoardGamesCore
     virtual inline void Unselect(void) = 0;
     virtual void SetUpdateCallBack(std::function<void(void)> cb) = 0;
   protected:
-    const Piece* dragPiece{};       // currently dragged piece
-    CPoint dragPoint{};             // point the piece is dragged to
+    const Piece* dragPiece_{};       // currently dragged piece
+    CPoint dragPoint_{};             // point the piece is dragged to
   };
 
   static_assert(std::is_abstract<IUI>::value, "must be abstract");

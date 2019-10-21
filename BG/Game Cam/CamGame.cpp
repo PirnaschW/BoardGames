@@ -73,7 +73,7 @@ namespace Cam
       }
 
       // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
-      if (a.IsRepeat(p0, fr, l2)) continue;                               // don't allow the same move again
+      if (a.IsRepeat(l1, d)) continue;                                    // don't allow the same move again
 
       // a legal jump was found
       any = true;
@@ -101,13 +101,13 @@ namespace Cam
 
   unsigned int CamPiece::GetValue(const MainPosition& p, const Location l) const noexcept
   {
-    return kind->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l.y_ : l.y_);
+    return kind_->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l.y_ : l.y_);
   }
 
 
   CamPosition::CamPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    if (d[0].xCount == 12) // full Camelot
+    if (d[0].xCount_ == 12) // full Camelot
     {
       // Black Knights
       SetPiece(Location( BoardPart::Main,  2U,  5U), &CamPiece::BN);
@@ -248,8 +248,8 @@ namespace Cam
   void CamPosition::GetAllMoves(void) noexcept                            // collect all moves for all pieces
   {
     MainPosition::GetAllMoves();
-    JumpsOnly(movelistW);
-    JumpsOnly(movelistB);
+    JumpsOnly(movesW_);
+    JumpsOnly(movesB_);
   }
 
   //PositionValue CamPosition::EvaluateWin(void) const
@@ -257,10 +257,10 @@ namespace Cam
   //  bool wfree{false};
   //  bool bfree{false};
 
-  //  for (Coordinate i = 0; i < sizeX; i++)
+  //  for (Coordinate i = 0; i < sizeX_; i++)
   //  {
   //    const Piece* pw = GetPiece(Location(i, 0));
-  //    const Piece* pb = GetPiece(Location(i, sizeY - 1));
+  //    const Piece* pb = GetPiece(Location(i, sizeY_ - 1));
   //    if (pw != &Piece::NoTile && !pw->IsColor(&Color::White)) wfree = true;
   //    if (pb != &Piece::NoTile && !pb->IsColor(&Color::Black)) bfree = true;
   //  }

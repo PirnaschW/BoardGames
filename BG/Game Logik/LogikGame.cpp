@@ -136,9 +136,9 @@ namespace Logik
 
   PlayCode LogikPosition::GetBestMove(unsigned int nThreads) const        // Evaluate best next move
   {
-    auto f = [this](PlayCode min, PlayCode max)
+    auto f = [this](PlayCode min, PlayCode max_)
     {
-      for (PlayCode c = min; c < max; ++c)
+      for (PlayCode c = min; c < max_; ++c)
       {
         const unsigned int lmax = EvaluatePlay(c);
         if (lmax > 0U) CollectBestPlays(c, lmax);
@@ -150,8 +150,8 @@ namespace Logik
     for (unsigned int t = 0U; t < nThreads; ++t)
     {
       PlayCode min{ Plays::Max / nThreads * t };
-      PlayCode max{ Plays::Max / nThreads * (t + 1) };
-      tt.push_back(std::make_unique<std::thread>(f, min, max));
+      PlayCode max_{ Plays::Max / nThreads * (t + 1) };
+      tt.push_back(std::make_unique<std::thread>(f, min, max_));
     }
     for (unsigned int t = 0U; t < nThreads; ++t)
     {
@@ -229,18 +229,18 @@ namespace Logik
   LogikLayout::LogikLayout(const Dimensions& d) noexcept : MainLayout(d, LayoutType::None)
   {
     unsigned int z = 0;
-    for (Coordinate i = 0; i < d[0].xCount; i++)
+    for (Coordinate i = 0; i < d[0].xCount_; i++)
     {
-      const int dx = (i < d[0].xCount / 4 ? 0 : BoardFrameX) + (i < 2 * d[0].xCount / 4 ? 0 : 1) + (i < 3 * d[0].xCount / 4 ? 0 : BoardFrameX);
-      for (Coordinate j = 0; j < d[0].yCount; j++, z++)
+      const int dx = (i < d[0].xCount_ / 4 ? 0 : BoardFrameX) + (i < 2 * d[0].xCount_ / 4 ? 0 : 1) + (i < 3 * d[0].xCount_ / 4 ? 0 : BoardFrameX);
+      for (Coordinate j = 0; j < d[0].yCount_; j++, z++)
       {
         const CRect r{
-          (int)(dim.lEdge + dim.xSkip * i + dim.xDim * (i + 0U) + dx),
-          (int)(dim.tEdge + dim.ySkip * j + dim.yDim * (j + 0U)),
-          (int)(dim.lEdge + dim.xSkip * i + dim.xDim * (i + 1U) + dx),
-          (int)(dim.tEdge + dim.ySkip * j + dim.yDim * (j + 1U))
+          (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * (i + 0U) + dx),
+          (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * (j + 0U)),
+          (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * (i + 1U) + dx),
+          (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * (j + 1U))
         };
-        tiles[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
+        tiles_[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
       }
     }
   }
@@ -255,7 +255,7 @@ namespace Logik
     for (unsigned int z = 4; z > 0; z--)
     {
       if (z != 2)
-        pDC->Rectangle((int)(dim.lEdge - z), (int)(dim.tEdge - z), (int)(dim.lEdge + dim.xCount * (dim.xDim + dim.xSkip) + 2 * BoardFrameX + 1 + z), (int)(dim.tEdge + dim.yCount * (dim.yDim + dim.ySkip) + z));
+        pDC->Rectangle((int)(dim_.lEdge_ - z), (int)(dim_.tEdge_ - z), (int)(dim_.lEdge_ + dim_.xCount_ * (dim_.xDim_ + dim_.xSkip_) + 2 * BoardFrameX + 1 + z), (int)(dim_.tEdge_ + dim_.yCount_ * (dim_.yDim_ + dim_.ySkip_) + z));
     }
 
     // frame around the inner board
@@ -263,18 +263,18 @@ namespace Logik
     {
       if (z != 2)
         pDC->Rectangle(
-          static_cast<int>(dim.lEdge + (1 * MaxPegs) * (dim.xDim + dim.xSkip) + 0 + BoardFrameX - z),
-          static_cast<int>(dim.tEdge - z),
-          static_cast<int>(dim.lEdge + (3 * MaxPegs) * (dim.xDim + dim.xSkip) + 1 + BoardFrameX + z),
-          static_cast<int>(dim.tEdge + (MaxTries * (dim.yDim + dim.ySkip)) + z));
+          static_cast<int>(dim_.lEdge_ + (1 * MaxPegs) * (dim_.xDim_ + dim_.xSkip_) + 0 + BoardFrameX - z),
+          static_cast<int>(dim_.tEdge_ - z),
+          static_cast<int>(dim_.lEdge_ + (3 * MaxPegs) * (dim_.xDim_ + dim_.xSkip_) + 1 + BoardFrameX + z),
+          static_cast<int>(dim_.tEdge_ + (MaxTries * (dim_.yDim_ + dim_.ySkip_)) + z));
     }
     pDC->SelectObject(pOld);
   }
 
   const TileColor* LogikLayout::FC(Coordinate i, Coordinate j) const noexcept
   {
-    if ((i < dim.xCount / 4) || (i >= 3 * dim.xCount / 4)) return &TileColor::Light;
-    if ((j < dim.yCount - 1) || (i < 2 * dim.xCount / 4)) return &TileColor::Dark;
+    if ((i < dim_.xCount_ / 4) || (i >= 3 * dim_.xCount_ / 4)) return &TileColor::Light;
+    if ((j < dim_.yCount_ - 1) || (i < 2 * dim_.xCount_ / 4)) return &TileColor::Dark;
     return &TileColor::Light;
   }
 
