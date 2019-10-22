@@ -156,26 +156,27 @@ namespace UnitTestCore
       Assert::IsTrue (*a5 != *a1);
       Assert::IsTrue (*a6 != *a1);
 
-      Actions a{};
-      a.push_back(a1);
-      a.push_back(a3);
-      Assert::IsFalse(a.HasJump());
+      {
+        Actions a{};
+        a.push_back(a1);
+        a.push_back(a3);
+        Assert::IsFalse(a.HasJump());
 
-      a.clear();
-      a.push_back(a1);
-      a.push_back(a2);
-      a.push_back(a3);
-      Assert::IsTrue(a.HasJump());
+        a.clear();
+        a.push_back(a1);
+        a.push_back(a2);
+        a.push_back(a3);
+        Assert::IsTrue(a.HasJump());
 
-      Assert::IsTrue(a.IsRepeat(l2));
-      Assert::IsTrue(a.IsRepeat(l2, Offset{ l3,l2 }));
-      Assert::IsFalse(a.IsRepeat(l1));
-      Assert::IsFalse(a.IsRepeat(l3));
+        Assert::IsTrue(a.IsRepeat(l2));
+        Assert::IsTrue(a.IsRepeat(l2, Offset{ l3,l2 }));
+        Assert::IsFalse(a.IsRepeat(l1));
+        Assert::IsFalse(a.IsRepeat(l3));
+      }
 
       const Piece& p{ Piece::NoTile };
       std::function<const Piece& (void)>f = [&p] (void) -> const Piece& { return p; };
 
-      //using namespace Checkers;
       class TestPosition : public MainPosition
       {
       public:
@@ -205,6 +206,63 @@ namespace UnitTestCore
       Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == Piece::NoPiece);
       a3->Execute(&t3);
       Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == a3->GetPiece());
+    }
+
+    TEST_METHOD(TestMoves)
+    {
+      Location l1{ BoardPart::Main, 2U, 3U };
+      Location l2{ BoardPart::Main, 3U, 2U };
+      Location l3{ BoardPart::Main, 4U, 1U };
+
+      ActionP a11{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a12{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
+      ActionP a13{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+
+      ActionP a21{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a22{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+
+      ActionP a31{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a32{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
+      ActionP a33{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+
+      Actions a1{};
+      a1.push_back(a11);
+      a1.push_back(a12);
+      a1.push_back(a13);
+
+      Actions a2{};
+      a2.push_back(a21);
+      a2.push_back(a22);
+
+      Actions a3{};
+      a3.push_back(a31);
+      a3.push_back(a32);
+      a3.push_back(a33);
+
+      Move m1{ a1 };
+      Move m2{ a2 };
+      Move m3{ a3 };
+
+      Moves m{};
+      m.push_back(std::make_shared<Move>(a1));
+      m.push_back(std::make_shared<Move>(a2));
+      m.push_back(std::make_shared<Move>(a3));
+
+      class TestPosition : public MainPosition
+      {
+      public:
+        TestPosition(void) noexcept : MainPosition(Variants<Checkers::CheckersGame>::GetPieces(), Checkers::CheckersGame::GetDimensions(8U, 8U)) {}
+        virtual MainPosition* Clone(void) const noexcept { return nullptr; }
+      };
+
+      TestPosition pos{};
+      Assert::IsTrue(m.size() == 3);
+      pos.JumpsOnly(m);
+      Assert::IsTrue(m.size() == 2);
+      for (const auto& mi : m)
+      {
+        Assert::IsTrue(mi->GetActions().HasJump());
+      }
 
     }
 
@@ -328,11 +386,10 @@ namespace UnitTestCore
       Assert::IsFalse(BoardGamesCore::Color::NoColor == BoardGamesCore::Color::Black);
       Assert::IsFalse(BoardGamesCore::Color::White == BoardGamesCore::Color::Black);
 
-      Assert::IsTrue(!BoardGamesCore::Color::White == &BoardGamesCore::Color::Black);
-      Assert::IsTrue(!BoardGamesCore::Color::Black == &BoardGamesCore::Color::White);
-      Assert::IsTrue(!BoardGamesCore::Color::NoColor == &BoardGamesCore::Color::White);
-      Assert::IsTrue(!BoardGamesCore::Color::Void == &BoardGamesCore::Color::White);
-
+      Assert::IsTrue(!BoardGamesCore::Color::White == BoardGamesCore::Color::Black);
+      Assert::IsTrue(!BoardGamesCore::Color::Black == BoardGamesCore::Color::White);
+      Assert::IsTrue(!BoardGamesCore::Color::NoColor == BoardGamesCore::Color::White);
+      Assert::IsTrue(!BoardGamesCore::Color::Void == BoardGamesCore::Color::White);
     }
 
     TEST_METHOD(TestTileColor)
@@ -344,13 +401,11 @@ namespace UnitTestCore
       Assert::IsFalse(&BoardGamesCore::TileColor::Light == &BoardGamesCore::TileColor::Dark);
       Assert::IsFalse(&BoardGamesCore::TileColor::Light == &BoardGamesCore::TileColor::Small);
       Assert::IsFalse(&BoardGamesCore::TileColor::Dark == &BoardGamesCore::TileColor::Small);
-
     }
 
     TEST_METHOD(TestKind)
     {
       Assert::IsFalse(&BoardGamesCore::noKind::NoKind == nullptr);
-
     }
 
     TEST_METHOD(TestPiece)
@@ -376,11 +431,11 @@ namespace UnitTestCore
       Assert::IsTrue(BoardGamesCore::Piece::NoTile.IsKind(BoardGamesCore::noKind::NoKind));
       Assert::IsTrue(BoardGamesCore::Piece::NoPiece.IsKind(BoardGamesCore::noKind::NoKind));
 
-      Assert::IsTrue(BoardGamesCore::Piece::NoTile.IsColor(&BoardGamesCore::Color::Void));
-      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.IsColor(&BoardGamesCore::Color::NoColor));
+      Assert::IsTrue(BoardGamesCore::Piece::NoTile.IsColor(BoardGamesCore::Color::Void));
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.IsColor(BoardGamesCore::Color::NoColor));
 
-      Assert::IsTrue(*BoardGamesCore::Piece::NoTile.GetColor() == BoardGamesCore::Color::Void);
-      Assert::IsTrue(*BoardGamesCore::Piece::NoPiece.GetColor() == BoardGamesCore::Color::NoColor);
+      Assert::IsTrue(BoardGamesCore::Piece::NoTile.GetColor() == BoardGamesCore::Color::Void);
+      Assert::IsTrue(BoardGamesCore::Piece::NoPiece.GetColor() == BoardGamesCore::Color::NoColor);
 
       Assert::IsTrue(BoardGamesCore::Piece::NoTile.GetValue(*p, l1) == 0);
       Assert::IsTrue(BoardGamesCore::Piece::NoPiece.GetValue(*p, l1) == 0);
@@ -392,7 +447,6 @@ namespace UnitTestCore
       Assert::IsTrue(BoardGamesCore::Piece::NoPiece.Promote(true) == BoardGamesCore::Piece::NoPiece);
       Assert::IsTrue(BoardGamesCore::Piece::NoTile.Promote(false) == BoardGamesCore::Piece::NoTile);
       Assert::IsTrue(BoardGamesCore::Piece::NoPiece.Promote(false) == BoardGamesCore::Piece::NoPiece);
-
     }
 
     TEST_METHOD(TestPlayerType)
@@ -402,15 +456,14 @@ namespace UnitTestCore
 
       Assert::IsFalse(&BoardGamesCore::PlayerType::Human == &BoardGamesCore::PlayerType::Computer);
       Assert::IsFalse(BoardGamesCore::PlayerType::Human == BoardGamesCore::PlayerType::Computer);
-
     }
 
     TEST_METHOD(TestPlayer)
     {
-      Player hw(&BoardGamesCore::PlayerType::Human, &BoardGamesCore::Color::White);
-      Player hb(&BoardGamesCore::PlayerType::Human, &BoardGamesCore::Color::Black);
-      Player cw(&BoardGamesCore::PlayerType::Computer, &BoardGamesCore::Color::White);
-      Player cb(&BoardGamesCore::PlayerType::Computer, &BoardGamesCore::Color::Black);
+      Player hw(&BoardGamesCore::PlayerType::Human, BoardGamesCore::Color::White);
+      Player hb(&BoardGamesCore::PlayerType::Human, BoardGamesCore::Color::Black);
+      Player cw(&BoardGamesCore::PlayerType::Computer, BoardGamesCore::Color::White);
+      Player cb(&BoardGamesCore::PlayerType::Computer, BoardGamesCore::Color::Black);
 
       Assert::IsFalse(hw.IsAI());
       Assert::IsFalse(hb.IsAI());
@@ -423,7 +476,6 @@ namespace UnitTestCore
       Assert::IsTrue(hb.GetColor() == cb.GetColor());
       Assert::IsFalse(hw.GetColor() == cb.GetColor());
       Assert::IsFalse(cw.GetColor() == hb.GetColor());
-
     }
 
   };

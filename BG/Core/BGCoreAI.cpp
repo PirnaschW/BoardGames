@@ -42,7 +42,7 @@ namespace BoardGamesCore
 
     auto t_start = std::chrono::high_resolution_clock::now();
     double limit = 5.0;  // run for n seconds
-    bool w = CurrentPlayer()->GetColor() == &Color::White;
+    bool w = CurrentPlayer()->GetColor() == Color::White;
 
     for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
     {
@@ -81,7 +81,7 @@ namespace BoardGamesCore
       plist->callback();
     }
 
-    Execute(*(p->GetBestMove(CurrentPlayer()->GetColor() == &Color::White)));
+    Execute(*(p->GetBestMove(CurrentPlayer()->GetColor() == Color::White)));
     return true;
   }
 
@@ -146,7 +146,7 @@ namespace BoardGamesCore
           const Location l{ BoardPart::Main, i,j };
           const Piece& p = GetPiece(l);                                   
           if ((p == Piece::NoTile) || (p == Piece::NoPiece)) continue;  // nothing here
-          value_ += (p.IsColor(&Color::White) ? 1 : -1) * p.GetValue(*this,l);
+          value_ += (p.IsColor(Color::White) ? 1 : -1) * p.GetValue(*this,l);
         }
       }
     }

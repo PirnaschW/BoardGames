@@ -6,16 +6,16 @@
 namespace Logik
 {
 
-  const LogikPiece LogikPiece::LPieceB{ &Peg<'B'>::ThePeg, &Color::NoColor, IDB_PEGB, IDB_PEGBF };
-  const LogikPiece LogikPiece::LPieceW{ &Peg<'W'>::ThePeg, &Color::NoColor, IDB_PEGW, IDB_PEGWF };
-  const LogikPiece LogikPiece::LPiece1{ &Peg<'1'>::ThePeg, &Color::NoColor, IDB_PEG1, IDB_PEG1F };
-  const LogikPiece LogikPiece::LPiece2{ &Peg<'2'>::ThePeg, &Color::NoColor, IDB_PEG2, IDB_PEG2F };
-  const LogikPiece LogikPiece::LPiece3{ &Peg<'3'>::ThePeg, &Color::NoColor, IDB_PEG3, IDB_PEG3F };
-  const LogikPiece LogikPiece::LPiece4{ &Peg<'4'>::ThePeg, &Color::NoColor, IDB_PEG4, IDB_PEG4F };
-  const LogikPiece LogikPiece::LPiece5{ &Peg<'5'>::ThePeg, &Color::NoColor, IDB_PEG5, IDB_PEG5F };
-  const LogikPiece LogikPiece::LPiece6{ &Peg<'6'>::ThePeg, &Color::NoColor, IDB_PEG6, IDB_PEG6F };
-  const LogikPiece LogikPiece::LPiece7{ &Peg<'7'>::ThePeg, &Color::NoColor, IDB_PEG7, IDB_PEG7F };
-  const LogikPiece LogikPiece::LPiece8{ &Peg<'8'>::ThePeg, &Color::NoColor, IDB_PEG8, IDB_PEG8F };
+  const LogikPiece LogikPiece::LPieceB{ Peg<'B'>::ThePeg, Color::NoColor, IDB_PEGB, IDB_PEGBF };
+  const LogikPiece LogikPiece::LPieceW{ Peg<'W'>::ThePeg, Color::NoColor, IDB_PEGW, IDB_PEGWF };
+  const LogikPiece LogikPiece::LPiece1{ Peg<'1'>::ThePeg, Color::NoColor, IDB_PEG1, IDB_PEG1F };
+  const LogikPiece LogikPiece::LPiece2{ Peg<'2'>::ThePeg, Color::NoColor, IDB_PEG2, IDB_PEG2F };
+  const LogikPiece LogikPiece::LPiece3{ Peg<'3'>::ThePeg, Color::NoColor, IDB_PEG3, IDB_PEG3F };
+  const LogikPiece LogikPiece::LPiece4{ Peg<'4'>::ThePeg, Color::NoColor, IDB_PEG4, IDB_PEG4F };
+  const LogikPiece LogikPiece::LPiece5{ Peg<'5'>::ThePeg, Color::NoColor, IDB_PEG5, IDB_PEG5F };
+  const LogikPiece LogikPiece::LPiece6{ Peg<'6'>::ThePeg, Color::NoColor, IDB_PEG6, IDB_PEG6F };
+  const LogikPiece LogikPiece::LPiece7{ Peg<'7'>::ThePeg, Color::NoColor, IDB_PEG7, IDB_PEG7F };
+  const LogikPiece LogikPiece::LPiece8{ Peg<'8'>::ThePeg, Color::NoColor, IDB_PEG8, IDB_PEG8F };
 
  
   Result::Result(const Play& p1, const Play& p2) noexcept                 // get the result code from comparing two plays_
@@ -271,11 +271,11 @@ namespace Logik
     pDC->SelectObject(pOld);
   }
 
-  const TileColor* LogikLayout::FC(Coordinate i, Coordinate j) const noexcept
+  const TileColor& LogikLayout::FC(Coordinate i, Coordinate j) const noexcept
   {
-    if ((i < dim_.xCount_ / 4) || (i >= 3 * dim_.xCount_ / 4)) return &TileColor::Light;
-    if ((j < dim_.yCount_ - 1) || (i < 2 * dim_.xCount_ / 4)) return &TileColor::Dark;
-    return &TileColor::Light;
+    if ((i < dim_.xCount_ / 4) || (i >= 3 * dim_.xCount_ / 4)) return TileColor::Light;
+    if ((j < dim_.yCount_ - 1) || (i < 2 * dim_.xCount_ / 4)) return TileColor::Dark;
+    return TileColor::Light;
   }
 
 

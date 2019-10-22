@@ -3,49 +3,50 @@
 namespace BoardGamesCore
 {
 
-  void Piece::CollectMoves(const MainPosition& p, const Location l, Moves& m) const
+  void Piece::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const
   {
-    kind_->CollectMoves(p, l, m);
+    kind_.CollectMoves(p, l, m);
   }
 
   size_t Piece::GetHash(void) const noexcept
   { 
-    return kind_->GetHash() + color_->GetHash();
+    return kind_.GetHash() + color_.GetHash();
   }
   
   bool Piece::IsKind(const Kind& k) const noexcept
   { 
-    return k == *kind_;
+    return k == kind_;
   }
-  bool Piece::IsColor(const Color* c) const noexcept
+  bool Piece::IsColor(const Color& c) const noexcept
   { 
     return c == color_;
   }
 
   bool Piece::IsBlank(void) const noexcept
   {
-    return color_ == &Color::NoColor && kind_ == &noKind::NoKind;
+    return color_ == Color::NoColor && kind_ == noKind::NoKind;
   }
 
   inline void Piece::Serialize(CArchive* ar) const
   { 
-    color_->Serialize(ar); kind_->Serialize(ar);
+    color_.Serialize(ar);
+    kind_.Serialize(ar);
   }
   
-  inline unsigned int Piece::GetValue(const MainPosition& p, const Location l) const noexcept
+  inline unsigned int Piece::GetValue(const MainPosition& p, const Location& l) const noexcept
   { 
-    return kind_->GetValue(p, l);
+    return kind_.GetValue(p, l);
   }
 
 
-  void Piece::Draw(CDC* pDC, const CRect& r, const TileColor* f) const
+  void Piece::Draw(CDC* pDC, const CRect& r, const TileColor& f) const
   {
     if (ID_l_ == 0 && ID_d_ == 0) return;
     if (cb_l_.m_hObject == 0) cb_l_.LoadBitmap(ID_l_);
     if (cb_d_.m_hObject == 0) cb_d_.LoadBitmap(ID_d_);
     if (cb_s_.m_hObject == 0 && ID_s_ != 0) cb_s_.LoadBitmap(ID_s_);
 
-    CBitmap& cb = (f == &TileColor::Light) ? cb_l_ : ((f == &TileColor::Dark) ? cb_d_ : cb_s_);
+    CBitmap& cb = (f == TileColor::Light) ? cb_l_ : ((f == TileColor::Dark) ? cb_d_ : cb_s_);
 
     if (cb.m_hObject != 0)
     {
@@ -107,7 +108,7 @@ namespace BoardGamesCore
     return list;
   }
 
-  const Piece Piece::NoTile { &noKind::NoKind, &Color::Void,    0,       0,       0 };   // nothing exists there, don't draw the tile at all
-  const Piece Piece::NoPiece{ &noKind::NoKind, &Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
+  const Piece Piece::NoTile { noKind::NoKind, Color::Void,    0,       0,       0 };   // nothing exists there, don't draw the tile at all
+  const Piece Piece::NoPiece{ noKind::NoKind, Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
 
 }

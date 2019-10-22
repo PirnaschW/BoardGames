@@ -19,7 +19,7 @@ namespace TicTacToe
   private:
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 0; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
 
   public:
     static const Checker TheChecker;
@@ -28,7 +28,7 @@ namespace TicTacToe
   class TicTacToePiece : public Piece
   {
   private:
-    inline TicTacToePiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline TicTacToePiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     TicTacToePiece(const TicTacToePiece&) = delete;
     TicTacToePiece& operator=(const TicTacToePiece&) = delete;
 

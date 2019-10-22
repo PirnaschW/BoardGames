@@ -34,7 +34,7 @@ namespace BoardGamesCore
   }
 
 
-  ActionTake::ActionTake(const Location& l, const Piece& p) noexcept : Action(l, p)
+  ActionTake::ActionTake(const Location l, const Piece& p) noexcept : Action(l, p)
   {
     assert(p != Piece::NoTile);
     assert(p != Piece::NoPiece);

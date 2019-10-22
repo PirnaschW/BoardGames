@@ -6,8 +6,8 @@
 namespace LoA
 {
   inline const LoAPeg LoAPeg::ThePeg{};
-  inline const LoAPiece LoAPiece::LoAPieceW{ &LoAPeg::ThePeg, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-  inline const LoAPiece LoAPiece::LoAPieceB{ &LoAPeg::ThePeg, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+  inline const LoAPiece LoAPiece::LoAPieceW{ LoAPeg::ThePeg, Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
+  inline const LoAPiece LoAPiece::LoAPieceB{ LoAPeg::ThePeg, Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
 
   std::vector<const Piece*> LoAPeg::CollectAlong(const MainPosition& pos, Location l, const Offset& o) const
   {
@@ -102,7 +102,7 @@ namespace LoA
     return MainPosition::SetPiece(l, p);
   }
 
-  bool LoAPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
+  bool LoAPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     const Piece& pf = GetPiece(fr);
     const Piece& pt = GetPiece(to);
@@ -123,7 +123,7 @@ namespace LoA
 
   bool LoAPosition::IsConnected(bool t) const noexcept
   {
-    const std::list<Peg>& lp = (t ^ (OnTurn() == &Color::White) ? llb : llw);
+    const std::list<Peg>& lp = (t ^ (OnTurn() == Color::White) ? llb : llw);
     if (lp.empty()) return true;
 
     for (auto& p : lp) p.connected = p.checked = false; // reset the flags
@@ -190,7 +190,7 @@ namespace LoA
         for (Coordinate j = 0; j < sizeY_; j++)
         {
           const Piece& p = GetPiece(Location{BoardPart::Main, i,j });
-          if (p.IsColor(&Color::NoColor)) continue;
+          if (p.IsColor(Color::NoColor)) continue;
           int d{ 0 };
           for (Coordinate z = 0; z < (sizeX_ - 1) / 2; z++)
           {
@@ -209,7 +209,7 @@ namespace LoA
             case 6: v = 4; break;
             default: v = 6; break;
           }
-          value_ += (p.IsColor(&Color::White) ? v : -v);
+          value_ += (p.IsColor(Color::White) ? v : -v);
         }
       }
     }

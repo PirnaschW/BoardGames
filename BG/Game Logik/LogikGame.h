@@ -37,7 +37,7 @@ namespace Logik
     constexpr inline Peg<k>(void) noexcept : Kind(k) {}
 
   public:
-    constexpr virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1; }
+    constexpr virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 1; }
 
   public:
     static const Peg<k> ThePeg;
@@ -50,7 +50,7 @@ namespace Logik
   class LogikPiece final : public Piece
   {
   private:
-    inline LogikPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline LogikPiece(const Kind& k, const Color& c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     LogikPiece(const LogikPiece&) = delete;
     LogikPiece& operator=(const LogikPiece&) = delete;
 
@@ -187,7 +187,7 @@ namespace Logik
     virtual void Draw(CDC* pDC, const MainPosition* pos, _Mode mode) const override;
 
   private:
-    inline const TileColor* FC(Coordinate i, Coordinate j) const noexcept;
+    inline const TileColor& FC(Coordinate i, Coordinate j) const noexcept;
   };
 
 

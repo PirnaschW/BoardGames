@@ -19,7 +19,7 @@ namespace Template
   private:
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
 
   public:
     static const Checker TheChecker;
@@ -28,7 +28,7 @@ namespace Template
   class TemplatePiece : public Piece
   {
   private:
-    inline TemplatePiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline TemplatePiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     TemplatePiece(const TemplatePiece&) = delete;
     TemplatePiece& operator=(const TemplatePiece&) = delete;
   public:
@@ -45,7 +45,7 @@ namespace Template
   public:
     inline TemplatePosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new TemplatePosition(*this); }
-    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept override;
+    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
   };
 

@@ -19,7 +19,7 @@ namespace Hasami
   private:
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1000; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 1000; }
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
 
   public:
@@ -29,7 +29,7 @@ namespace Hasami
   class HasamiPiece : public Piece
   {
   private:
-    inline HasamiPiece(const Kind* k, const Color* c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline HasamiPiece(const Kind& k, const Color& c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
     HasamiPiece(const HasamiPiece&) = delete;
     HasamiPiece& operator=(const HasamiPiece&) = delete;
 
@@ -44,7 +44,7 @@ namespace Hasami
   public:
     HasamiPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const noexcept override { return new HasamiPosition(*this); }
-    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept override;
+    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
 
   protected:

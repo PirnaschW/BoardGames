@@ -7,8 +7,9 @@ namespace BoardGamesCore
     constexpr inline Color(const char& c) noexcept : color_{ c } {}
   public:
     constexpr inline bool operator ==(const Color& c) const noexcept { return c.color_ == color_; }
+    constexpr inline bool operator !=(const Color& c) const noexcept { return !(*this == c); }
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(color_); }
-    constexpr inline const Color* operator !(void) const noexcept { return color_ == 'W' ? &Black : &White; }
+    constexpr inline const Color& operator !(void) const noexcept { return color_ == 'W' ? Black : White; }
     void Serialize(CArchive* ar) const;
 
   private:
@@ -31,6 +32,8 @@ namespace BoardGamesCore
   private:
     constexpr inline TileColor(const char& f) noexcept : tilecolor_{ f } {}
   public:
+    constexpr inline bool operator ==(const TileColor& t) const noexcept { return t.tilecolor_ == tilecolor_; }
+    constexpr inline bool operator !=(const TileColor& t) const noexcept { return !(*this == t); }
     void Serialize(CArchive* ar) const;
 
   private:

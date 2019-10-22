@@ -20,7 +20,7 @@ namespace LoA
     constexpr inline LoAPeg(void) noexcept : Kind('L') {}
 
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 0; } // in LoA, pieces have no value
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; } // in LoA, pieces have no value
     virtual void CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept override;
 
 // extensions
@@ -36,7 +36,7 @@ namespace LoA
   class LoAPiece : public Piece
   {
   private:
-    inline LoAPiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline LoAPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     LoAPiece(const LoAPiece&) = delete;
     LoAPiece& operator=(const LoAPiece&) = delete;
 
@@ -52,7 +52,7 @@ namespace LoA
     LoAPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const noexcept override { return new LoAPosition(*this); }
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept override;
-    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept override;
+    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
 
     // extensions

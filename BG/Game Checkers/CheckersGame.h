@@ -19,7 +19,7 @@ namespace Checkers
   private:
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 1; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 1; }
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
@@ -31,7 +31,7 @@ namespace Checkers
   private:
     constexpr inline King(void) noexcept : Kind('K') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 5; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 5; }
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
@@ -43,7 +43,7 @@ namespace Checkers
   private:
     constexpr inline Queen(void) noexcept : Kind('K') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 8; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 8; }
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
@@ -53,7 +53,7 @@ namespace Checkers
   class CheckersPiece final : public Piece
   {
   private:
-    inline CheckersPiece(const Kind* k, const Color* c, const CheckersPiece* u, UINT l, UINT s) noexcept : Piece(k, c, l, l, s), up_(u) {}
+    inline CheckersPiece(const Kind& k, const Color& c, const CheckersPiece* u, UINT l, UINT s) noexcept : Piece(k, c, l, l, s), up_(u) {}
     CheckersPiece(const CheckersPiece&) = delete;
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:
@@ -77,14 +77,14 @@ namespace Checkers
   public:
     CheckersPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const noexcept override { return new CheckersPosition(*this); }
-    virtual bool AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept override;
+    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual void GetAllMoves(void) noexcept override;
     virtual void EvaluateStatically(void) noexcept override;
 // extensions
   public:
     bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept;
   private:
-    inline bool CanPromote(const Location &l, const Piece& p) const noexcept;
+    inline bool CanPromote(const Location& l, const Piece& p) const noexcept;
   };
 
 

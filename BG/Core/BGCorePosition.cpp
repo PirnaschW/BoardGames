@@ -46,9 +46,9 @@ namespace BoardGamesCore
     }
   }
 
-  const Location MainPosition::GetNextTakenL(const Color* c) const noexcept
+  const Location MainPosition::GetNextTakenL(const Color& c) const noexcept
   {
-    Coordinate y{ c == &Color::White ? 0U : 1U };
+    Coordinate y{ c == Color::White ? 0U : 1U };
     for (Coordinate x = 0; ; x++)
     {
       const Location l{ BoardPart::Taken, x, y };
@@ -71,7 +71,7 @@ namespace BoardGamesCore
         const Piece& p = GetPiece(Location(BoardPart::Main, i, j));
         if (!p.IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
         {
-          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(&Color::White) ? movesW_ : movesB_);
+          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(Color::White) ? movesW_ : movesB_);
         }
       }
     }
@@ -83,8 +83,8 @@ namespace BoardGamesCore
     auto MhasJump = [](const MoveP& m) -> bool { return m->GetActions().HasJump(); };
     if (std::find_if(moves.cbegin(), moves.cend(), MhasJump) != moves.cend())
     {
-      auto MhasNoJump = [](const MoveP& m) -> bool { return ! m->GetActions().HasJump(); };
-      moves.erase(std::remove_if(moves.begin(), moves.end(), MhasNoJump));
+      auto MhasNoJump = [](const MoveP& m) -> bool { return !m->GetActions().HasJump(); };
+      moves.erase(std::remove_if(moves.begin(), moves.end(), MhasNoJump), moves.end());
     }
   }
 

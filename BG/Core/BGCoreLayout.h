@@ -5,16 +5,16 @@ namespace BoardGamesCore
   class Tile final
   {
   public:
-    constexpr inline Tile(const Location& l, const CRect& r, const TileColor* f) noexcept : location_{ l }, tilecolor_{ f }, rect_{ r } {}
+    constexpr inline Tile(const Location l, const CRect& r, const TileColor& f) noexcept : location_{ l }, tilecolor_{ f }, rect_{ r } {}
     Tile& operator=(const Tile&) = delete;
     inline bool InRect(const CPoint& p) const noexcept { return rect_.PtInRect(p) != 0; }
     constexpr inline const CRect& GetRect(void) const noexcept { return rect_; }
-    constexpr inline const Location GetLocation(void) const noexcept { return location_; }
+    constexpr inline const Location& GetLocation(void) const noexcept { return location_; }
     inline void Draw(CDC* pDC, const Piece& p) const { p.Draw(pDC, rect_, tilecolor_); }
 
   private:
     const Location location_;
-    const TileColor* tilecolor_;
+    const TileColor& tilecolor_;
     CRect rect_;
   };
   

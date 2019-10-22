@@ -5,11 +5,11 @@ namespace BoardGamesCore
   class Field final // combines a Location and a Piece on it
   {
   public:
-    constexpr inline Field(const Location l, const Piece& p) noexcept : l_{ l }, p_{ p } {}
+    constexpr inline Field(const Location& l, const Piece& p) noexcept : l_{ l }, p_{ p } {}
     inline bool operator==(const Field& f) const noexcept { return l_ == f.l_ && p_ == f.p_; }
     inline bool operator!=(const Field& f) const noexcept { return !(f == *this); }
 
-    constexpr inline const Location GetLocation(void) const noexcept { return l_; }
+    constexpr inline const Location& GetLocation(void) const noexcept { return l_; }
     constexpr inline const Piece& GetPiece(void) const noexcept { return p_; }
 
   private:

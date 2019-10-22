@@ -8,18 +8,18 @@ namespace Checkers
   inline const King    King   ::TheKing   {};
   inline const Queen   Queen  ::TheQueen  {};
 
-  inline const CheckersPiece CheckersPiece::CheckersPieceW{ &Checker::TheChecker, &Color::White, &CheckersQueenW, IDB_WCD, IDB_WCS };
-  inline const CheckersPiece CheckersPiece::CheckersPieceB{ &Checker::TheChecker, &Color::Black, &CheckersQueenB, IDB_BCD, IDB_BCS };
-  inline const CheckersPiece CheckersPiece::CheckersKingW { &King::TheKing,       &Color::White, &CheckersKingW,  IDB_WKD, IDB_WKS };
-  inline const CheckersPiece CheckersPiece::CheckersKingB { &King::TheKing,       &Color::Black, &CheckersKingB,  IDB_BKD, IDB_BKS };
-  inline const CheckersPiece CheckersPiece::CheckersQueenW{ &Queen::TheQueen,     &Color::White, &CheckersQueenW, IDB_WQD, IDB_WQS };
-  inline const CheckersPiece CheckersPiece::CheckersQueenB{ &Queen::TheQueen,     &Color::Black, &CheckersQueenB, IDB_BQD, IDB_BQS };
+  inline const CheckersPiece CheckersPiece::CheckersPieceW{ Checker::TheChecker, Color::White, &CheckersQueenW, IDB_WCD, IDB_WCS };
+  inline const CheckersPiece CheckersPiece::CheckersPieceB{ Checker::TheChecker, Color::Black, &CheckersQueenB, IDB_BCD, IDB_BCS };
+  inline const CheckersPiece CheckersPiece::CheckersKingW { King::TheKing,       Color::White, &CheckersKingW,  IDB_WKD, IDB_WKS };
+  inline const CheckersPiece CheckersPiece::CheckersKingB { King::TheKing,       Color::Black, &CheckersKingB,  IDB_BKD, IDB_BKS };
+  inline const CheckersPiece CheckersPiece::CheckersQueenW{ Queen::TheQueen,     Color::White, &CheckersQueenW, IDB_WQD, IDB_WQS };
+  inline const CheckersPiece CheckersPiece::CheckersQueenB{ Queen::TheQueen,     Color::Black, &CheckersQueenB, IDB_BQD, IDB_BQS };
 
 
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    const int dy = pos.GetPiece(l).IsColor(&Color::White) ? -1 : 1;
+    const int dy = pos.GetPiece(l).IsColor(Color::White) ? -1 : 1;
     pos.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
     pos.AddIfLegal(moves, l, l + Offset(-1, dy));
     pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);              // check for jump moves
@@ -56,7 +56,7 @@ namespace Checkers
     }
   }
 
-  bool CheckersPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
+  bool CheckersPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     const Piece& pf = GetPiece(fr);
     assert(pf != Piece::NoTile);
@@ -95,7 +95,7 @@ namespace Checkers
         if (p1 == Piece::NoTile) break;                                  // tile is not existing, can't jump over it - or any further
         if (p1.IsBlank()) continue;                                      // tile is not occupied, keep looking further (it's not a jump yet)
 
-        const Color* c1 = p1.GetColor();                                 // color of jumped-over piece
+        const Color& c1 = p1.GetColor();                                 // color of jumped-over piece
         if (p0.IsColor(c1)) break;                                        // can't jump own pieces, and not any further either
 
         // now we look for free spaces to land on
@@ -154,7 +154,7 @@ namespace Checkers
 
   bool CheckersPosition::CanPromote(const Location& l, const Piece& p) const noexcept
   {
-    return (p.IsColor(&Color::White) && l.y_ == 0) || (p.IsColor(&Color::Black) && l.y_ == sizeY_ - 1);
+    return (p.IsColor(Color::White) && l.y_ == 0) || (p.IsColor(Color::Black) && l.y_ == sizeY_ - 1);
   }
 
 

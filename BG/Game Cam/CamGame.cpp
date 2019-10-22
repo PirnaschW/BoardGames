@@ -8,16 +8,16 @@ namespace Cam
 
   inline const Pawn   Pawn  ::ThePawn  {};
   inline const Knight Knight::TheKnight{};
-  inline const CamPiece CamPiece::WP{ &Pawn::ThePawn,     &Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
-  inline const CamPiece CamPiece::WN{ &Knight::TheKnight, &Color::White, IDB_WNL, IDB_WND, IDB_WNS };
-  inline const CamPiece CamPiece::BP{ &Pawn::ThePawn,     &Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
-  inline const CamPiece CamPiece::BN{ &Knight::TheKnight, &Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
+  inline const CamPiece CamPiece::WP{ Pawn::ThePawn,     Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
+  inline const CamPiece CamPiece::WN{ Knight::TheKnight, Color::White, IDB_WNL, IDB_WND, IDB_WNS };
+  inline const CamPiece CamPiece::BP{ Pawn::ThePawn,     Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
+  inline const CamPiece CamPiece::BN{ Knight::TheKnight, Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const noexcept
   {
     const CamPosition& pos = dynamic_cast<const CamPosition&>(p);         // position must be a Cam position
     const Piece& p0 = pos.GetPiece(l);                                    // piece that is moving
-    CollectJumps(p, l, Actions{}, false, &Color::NoColor, m);                // collect all jumps
+    CollectJumps(p, l, Actions{}, false, Color::NoColor, m);                // collect all jumps
 
     for (const auto& d : Offset::Qdirection)                              // try slides all eight directions
     {
@@ -33,39 +33,38 @@ namespace Cam
     }
   }
 
-  bool Pawn::CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const noexcept
+  bool Pawn::CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color& c, Moves& m) const noexcept
   {
     const Piece& p0 = a.empty() ? p.GetPiece(fr) : a[0]->GetPiece();        // the piece that is moving
     assert(p0 != Piece::NoTile);
     assert(!p0.IsBlank());
 
-    const Color* c0 = p0.GetColor();                                     // color of the piece moving
+    const Color& c0 = p0.GetColor();                                     // color of the piece moving
     bool any{ false };                                                    // were any more jumps possible?
 
     for (auto& d : Offset::Qdirection)                                    // try all eight directions
     {
       Actions a1{ a };                                                    // copy the previous jump sequence, so we can extend it
-      const Color* cc{ c };                                               // color last jumped over (can switch once if charge)
       const Location l1{ fr + d };                                        // location to jump over
       const Location l2{ l1 + d };                                        // location to jump to
 
       // check the jumped-over tile                                         
       const Piece& p1 = p.GetPiece(l1);                                   // what is on the tile to jump over?
-      if (p1 == Piece::NoTile) continue;                                 // tile is not existing, can't jump over it
-      if (p1.IsBlank()) continue;                                        // tile is not occupied, can't jump over it
-      const Color* c1 = p1.GetColor();                                   // color of jumped-over piece
+      if (p1 == Piece::NoTile) continue;                                  // tile is not existing, can't jump over it
+      if (p1.IsBlank()) continue;                                         // tile is not occupied, can't jump over it
+      const Color& c1 = p1.GetColor();                                    // color of jumped-over piece
 
       // check the jump-to tile                                           
       const Piece& p2 = p.GetPiece(l2);                                   // what is on the jump-to tile
-      if (p2 == Piece::NoTile) continue;                                 // tile is not existing, can't jump there
-      if (!p2.IsBlank()) continue;                                       // tile is occupied, can't jump there
+      if (p2 == Piece::NoTile) continue;                                  // tile is not existing, can't jump there
+      if (!p2.IsBlank()) continue;                                        // tile is occupied, can't jump there
 
       // check the jump is allowed
-      if (cc == &Color::NoColor) cc = c1;                                 // first jump - either one is allowed
-      else if (cc != c1)                                                  // trying to switch jumped color
+      const Color& cc{ c == Color::NoColor ? c1 : c };                    // first jump - either one is allowed
+      if (c != Color::NoColor)                                            // trying to switch jumped color?
       {
         if (cc != c0) continue;                                           // can't switch back to jumping own pieces
-        if (!charge) continue;                                            // can't switch to enemy pieces
+        if (!charge) continue;                                            // can't switch to enemy pieces if not 'charging'
       }
 
       // check if the same jump was done before (can't jump back and forth or in circles, and can't jump the same opponent piece twice)
@@ -77,7 +76,7 @@ namespace Cam
       if (c1 != c0)                                                       // jump was over an enemy piece, take it
       {
         a1.push_back(std::make_shared<ActionTake>(l1, p1));
-        a1.push_back(std::make_shared<ActionPlace>(Location(BoardPart::Taken, 0, p1.GetColor() == &Color::White ? 0U : 1U), p1));
+        a1.push_back(std::make_shared<ActionPlace>(Location(BoardPart::Taken, 0, p1.GetColor() == Color::White ? 0U : 1U), p1));
       }
       a1.push_back(std::make_shared<ActionPlace>(l2, p0));
 
@@ -92,12 +91,12 @@ namespace Cam
   {
     Pawn::CollectMoves(p, l, m);
     const CamPosition& pos = dynamic_cast<const CamPosition&>(p);         // position must be a Cam position
-    CollectJumps(p, l, Actions{}, true, &Color::NoColor, m);             // collect all jumps
+    CollectJumps(p, l, Actions{}, true, Color::NoColor, m);             // collect all jumps
   }
 
-  unsigned int CamPiece::GetValue(const MainPosition& p, const Location l) const noexcept
+  unsigned int CamPiece::GetValue(const MainPosition& p, const Location& l) const noexcept
   {
-    return kind_->GetValue(p, l) + isqr(IsColor(&Color::White) ? p.GetSizeY() - 1 - l.y_ : l.y_);
+    return kind_.GetValue(p, l) + isqr(IsColor(Color::White) ? p.GetSizeY() - 1 - l.y_ : l.y_);
   }
 
 

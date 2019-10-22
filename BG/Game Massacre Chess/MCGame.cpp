@@ -23,7 +23,7 @@ namespace MassacreChess
     }
   }
 
-  bool MCPosition::AddIfLegal(Moves& m, const Location fr, const Location to) const noexcept
+  bool MCPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     const Piece& pf = GetPiece(fr);
     assert(pf != Piece::NoTile);                                                // start field must exist

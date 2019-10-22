@@ -27,23 +27,23 @@ namespace BoardGamesCore
     virtual void SetPosition(std::vector<const Piece*> list);
 
   protected:
-    const PieceMapP& pMap_;
-    const Coordinate sizeX_;
-    const Coordinate sizeY_;
+    const PieceMapP& pMap_;                                               // map of all potential pieces in this game
+    const Coordinate sizeX_;                                              // horizontal board size
+    const Coordinate sizeY_;                                              // vertical board size
   private:
-    std::vector<PieceIndex> pieces_;
-    mutable std::size_t hash_{};
+    std::vector<PieceIndex> pieces_;                                      // pMap-index of the Piece at each Location
+    mutable std::size_t hash_{};                                          // mutable, so it can be lazy-filled
   };
 
 
-  struct Dimension final  /// PoD structure to collect a game's layout dimensions
+  struct Dimension final                                                  // PoD structure to collect a game's layout dimensions
   {
   public:
     constexpr Dimension(
-      Coordinate xc, Coordinate yc,                         // tile count in x and y directions
-      unsigned int le, unsigned int te,                     // starting edge in x and y directions
-      unsigned int xd, unsigned int yd,                     // tile size in x and y directions
-      unsigned int xs = 0, unsigned int ys = 0) noexcept :  // extra distance between tiles in x and y directions
+      Coordinate xc, Coordinate yc,                                       // tile count in x and y directions
+      unsigned int le, unsigned int te,                                   // starting edge in x and y directions
+      unsigned int xd, unsigned int yd,                                   // tile size in x and y directions
+      unsigned int xs = 0, unsigned int ys = 0) noexcept :                // extra distance between tiles in x and y directions
       xCount_(xc), yCount_(yc),
       xDim_(xd), yDim_(yd),
       xSkip_(xs), ySkip_(ys),
@@ -59,7 +59,7 @@ namespace BoardGamesCore
     const unsigned int lEdge_;
     const unsigned int tEdge_;
   };
-  using Dimensions = std::array<Dimension, 3>;  // Main, Stock, Taken
+  using Dimensions = std::array<Dimension, 3>;                            // Main, Stock, Taken
 
 
   class AIContext;
@@ -81,10 +81,10 @@ namespace BoardGamesCore
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const noexcept = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
-    virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + taken_.GetHash() + std::hash<const Color*>()(OnTurn()); }
+    virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + taken_.GetHash() + std::hash<const Color*>()(onTurn_); }
 
-    inline void SetOnTurn(const Color* c) noexcept { onTurn_ = c; }
-    inline const Color* OnTurn(void) const noexcept { return onTurn_; }
+    inline void SetOnTurn(const Color& c) noexcept { onTurn_ = &c; }
+    inline const Color& OnTurn(void) const noexcept { return *onTurn_; }
     virtual void NextPlayer(void) noexcept;
     virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
@@ -92,7 +92,7 @@ namespace BoardGamesCore
     virtual Moves CollectMoves(void) const noexcept { Moves m{}; return m; }
     void JumpsOnly(Moves& moves) const noexcept;          // if there are any jumps, remove all non-jumps - jumping is mandatory
     constexpr inline Moves& GetMoveList(bool w) noexcept { return w ? movesW_ : movesB_; }
-    virtual bool AddIfLegal(Moves&, const Location, const Location) const noexcept { return false; };
+    virtual bool AddIfLegal(Moves&, const Location&, const Location&) const noexcept { return false; };
     virtual void EvaluateStatically(void) noexcept;       // calculate position value and save
     virtual PositionValue Evaluate(AIContextP& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
     inline PositionValue GetValue(bool w) const noexcept { return value_.Relative(w); }
@@ -102,7 +102,7 @@ namespace BoardGamesCore
     inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value_ = v.Relative(w); }
     virtual const Piece& GetPiece(const Location& l) const noexcept;
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
-    const Location GetNextTakenL(const Color* c) const noexcept;
+    const Location GetNextTakenL(const Color& c) const noexcept;
     inline bool IsTaken(const Location& l) const noexcept { return l.b_ == BoardPart::Taken; }
     virtual inline MoveP GetBestMove(bool w) const noexcept { return (w ? movesW_[0] : movesB_[0]); }
     virtual MainPosition* GetPosition(AIContextP& plist, MoveP m = nullptr) const noexcept;     // execute move, maintain in PList
@@ -110,16 +110,16 @@ namespace BoardGamesCore
     virtual void Undo(const Move& m) noexcept;
 
   public:
-    Moves sequence_{};
-    Position stock_;
-    Position taken_;
+    Moves sequence_{};                                                    // list of historic moves that led to this position
+    Position stock_;                                                      // associated Stock position
+    Position taken_;                                                      // associated Taken position
 
   protected:
-    const Color* onTurn_{ &Color::White };
-    Depth depth_{ 0 };
-    PositionValue value_{ PositionValue::Undefined };                 // position value for White
-    Moves movesW_{};
-    Moves movesB_{};
+    const Color* onTurn_{ &Color::White };                                // color (player) currently on turn
+    Depth depth_{ 0 };                                                    // evaluated depth of the position
+    PositionValue value_{ PositionValue::Undefined };                     // calculated position value (positiv is good for White)
+    Moves movesW_{};                                                      // list of possible moves for White
+    Moves movesB_{};                                                      // list of possible moves for Black
   };
 
 }

@@ -20,9 +20,9 @@ namespace Cam
     constexpr inline Pawn(const char& k = 'P') noexcept : Kind(k) {}
 
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 100; };
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; };
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
-    bool CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const noexcept;
+    bool CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const Color& c, Moves& m) const noexcept;
 
   public:
     static const Pawn ThePawn;
@@ -33,7 +33,7 @@ namespace Cam
   private:
     constexpr inline Knight(void) noexcept : Pawn('N') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location /*l*/) const noexcept override { return 400; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 400; }
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
 
   public:
@@ -44,10 +44,10 @@ namespace Cam
   class CamPiece : public Piece
   {
   private:
-    inline CamPiece(const Kind* k, const Color* c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline CamPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
     CamPiece(const CamPiece&) = delete;
     CamPiece& operator=(const CamPiece&) = delete;
-    virtual unsigned int GetValue(const MainPosition& p, const Location l) const noexcept override;
+    virtual unsigned int GetValue(const MainPosition& p, const Location& l) const noexcept override;
 
   public:
     static const CamPiece WP;
@@ -66,9 +66,9 @@ namespace Cam
 
     // extensions:
   public:
-//    bool CollectJumps(const Location& fr, const Actions& a, bool charge, const Color* c, Moves& m) const;
+//    bool CollectJumps(const Location& fr, const Actions& a, bool charge, const Color& c, Moves& m) const;
   private:
-//    bool IsRepeat(const Actions& a, const Piece& p, const Location fr, const Location to) const noexcept;
+//    bool IsRepeat(const Actions& a, const Piece& p, const Location& fr, const Location& to) const noexcept;
   };
 
   class CamGame : public Game
