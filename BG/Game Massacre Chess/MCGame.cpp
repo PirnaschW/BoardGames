@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "MCResource.h"
 #include "MCGame.h"
@@ -36,10 +36,10 @@ namespace MassacreChess
 
     // valid move, save into collection
     Actions a{};
-    a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
-    a.push_back(std::make_shared<ActionTake>(to, pt));                    // pick opponent piece up
-    a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
-    a.push_back(std::make_shared<ActionPlace>(to, pf));                   // and place it on target
+    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
+    a.push_back(std::make_shared<ActionLift>(to, pt));                    // pick opponent piece up
+    a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+    a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
 
     return false;                                                         // don't keep trying this direction

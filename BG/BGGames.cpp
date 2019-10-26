@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "BGSelect.h"
 
 // this code is in a separate file as it needs to include all games' includes, and will therefore be compiled often

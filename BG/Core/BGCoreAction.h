@@ -39,10 +39,10 @@ namespace BoardGamesCore
   };
 
 
-  class ActionTake : public Action  // Take-Action: Take one piece from the board (into 'hand')
+  class ActionLift : public Action  // Lift-Action: Lift up one piece from the board (into 'hand')
   {
   public:
-    ActionTake(const Location l, const Piece& p) noexcept;
+    ActionLift(const Location l, const Piece& p) noexcept;
     virtual void Execute(MainPosition* p) const noexcept override;
   };
 
@@ -54,10 +54,10 @@ namespace BoardGamesCore
     virtual void Execute(MainPosition* p) const noexcept override;
   };
 
-  class ActionPlace : public Action  // Place-Action: Place one piece on the board (from 'hand')
+  class ActionDrop : public Action  // Drop-Action: Drop one piece on the board (from 'hand')
   {
   public:
-    inline ActionPlace(const Location l, const Piece& p) noexcept : Action(l, p) {}
+    inline ActionDrop(const Location l, const Piece& p) noexcept : Action(l, p) {}
     virtual void Execute(MainPosition* p) const noexcept override;
   };
 

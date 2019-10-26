@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "CheckersGame.h"
 
@@ -68,8 +68,8 @@ namespace Checkers
     const Piece& pf2 = CanPromote(to,pf) ? pf.Promote(true) : pf;
 
     Actions a{};
-    a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
-    a.push_back(std::make_shared<ActionPlace>(to, pf2));                  // and place it on target
+    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
+    a.push_back(std::make_shared<ActionDrop>(to, pf2));                  // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return true;
   }
@@ -116,17 +116,17 @@ namespace Checkers
 
           // add the jump to the StepSimple list
           Actions a0{ a };
-          a0.push_back(std::make_shared<ActionTake>(fr, p0));              // pick piece up
+          a0.push_back(std::make_shared<ActionLift>(fr, p0));              // pick piece up
           a0.push_back(std::make_shared<ActionJump>(l1, p1));             // jumped over piece
-          a0.push_back(std::make_shared<ActionTake>(l1, p1));             // pick jumped piece up
-          a0.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p1.GetColor()), p1)); // place it in taken
-          a0.push_back(std::make_shared<ActionPlace>(l2, p0));             // place jumping piece it on target
+          a0.push_back(std::make_shared<ActionLift>(l1, p1));             // pick jumped piece up
+          a0.push_back(std::make_shared<ActionDrop>(GetNextTakenL(p1.GetColor()), p1)); // place it in taken
+          a0.push_back(std::make_shared<ActionDrop>(l2, p0));             // place jumping piece it on target
           if (!AddIfLegalJump(m, longjumps, a0, p0, l2))                   // collect potential further jumps
           {
             if (CanPromote(l2, p0))                                        // could piece be promoted here?
             {
               a0.pop_back();                                              // remove unpromoted placement
-              a0.push_back(std::make_shared<ActionPlace>(l2, p0.Promote(true)));  // place promoted piece on target
+              a0.push_back(std::make_shared<ActionDrop>(l2, p0.Promote(true)));  // place promoted piece on target
             }
             m.push_back(std::make_shared<Move>(a0));                      // add the action list as a move
           }

@@ -18,12 +18,12 @@ namespace UnitTestLogik
     {
       for (PlayCode c = 0; c < Plays::Max; ++c)
       {
-        Assert::IsTrue(c == plays_[c]);                                    // code was stored correctly?
+        Assert::IsTrue(c == plays_[c]);                                   // code was stored correctly?
 
         PlayCfg pegs{};
         for (unsigned int z = 0; z < MaxPegs; ++z)
         {
-          pegs[z] = plays_[c][z];                                          // retrieve Peg list one by one
+          pegs[z] = plays_[c][z];                                         // retrieve Peg list one by one
         }
 
         Assert::IsTrue(plays_[c] == plays_[pegs]);

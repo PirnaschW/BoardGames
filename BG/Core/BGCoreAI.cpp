@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "../Game Test/TestGame.h"
+#include "pch.h"
+//#include "../Game Test/TestGame.h"
 
 namespace BoardGamesCore
 {
@@ -44,13 +44,14 @@ namespace BoardGamesCore
     double limit = 5.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == Color::White;
 
-    for (unsigned int pl = 0; true /*pl <= plies*/; pl++)                          // use iterative deepening
+    for (unsigned int pl = 0; /*pl <= plies*/; pl++)                          // use iterative deepening
     {
       try
       {
         PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
         pos->SetValue(w, p->GetValue(w));
         pos->SetDepth(p->GetDepth());
+        plist->callback();
         if (value_ == PositionValue::PValueType::Lost)
         {
           ::AfxMessageBox(L"Computer resigns - Player wins!");
@@ -78,7 +79,8 @@ namespace BoardGamesCore
       auto t_now = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double> elapsed = t_now - t_start;
       if (elapsed.count() > limit) break;
-      plist->callback();
+      if (p->GetMoveList(CurrentPlayer()->GetColor() == Color::White).size() == 1) break;          // if there is only one move, don't spend time evaluating it
+//      plist->callback();
     }
 
     Execute(*(p->GetBestMove(CurrentPlayer()->GetColor() == Color::White)));
@@ -112,7 +114,7 @@ namespace BoardGamesCore
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
         SetValue(w, alpha);                                               // save top value in current position
         depth_ = plies;                                                    // save evaluation depth
-        if (plies == 2) plist->callback();
+//        if (plies == 2) plist->callback();
         return beta;
       }
     }
@@ -120,7 +122,7 @@ namespace BoardGamesCore
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
     depth_ = plies;                                                        // save evaluation depth
-    if (plies == 2) plist->callback();
+//    if (plies == 2) plist->callback();
     return alpha;                                                         // return best value
   }
 
@@ -129,7 +131,7 @@ namespace BoardGamesCore
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
-    assert(depth_ == 0);
+    //assert(depth_ == 0);
 
     // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
     GetAllMoves();                                                                                        // fill the move lists

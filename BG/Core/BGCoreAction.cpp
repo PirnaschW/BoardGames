@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 namespace BoardGamesCore
 {
@@ -34,13 +34,13 @@ namespace BoardGamesCore
   }
 
 
-  ActionTake::ActionTake(const Location l, const Piece& p) noexcept : Action(l, p)
+  ActionLift::ActionLift(const Location l, const Piece& p) noexcept : Action(l, p)
   {
     assert(p != Piece::NoTile);
     assert(p != Piece::NoPiece);
   }
 
-  void ActionTake::Execute(MainPosition* p) const noexcept
+  void ActionLift::Execute(MainPosition* p) const noexcept
   {
     assert(p->GetPiece(l_) == p_);                                        // verify the source field really has that piece
     if (l_.b_ != BoardPart::Stock)                                        // empty the source field (except in Stock)
@@ -52,7 +52,7 @@ namespace BoardGamesCore
     assert(p->GetPiece(l_) == p_);                                        // nothing to do - if the jumped piece is affected, next action will handle it
   }
 
-  void ActionPlace::Execute(MainPosition* p) const noexcept               // place piece on the the target field
+  void ActionDrop::Execute(MainPosition* p) const noexcept               // place piece on the the target field
   {
     if (l_.b_ == BoardPart::Taken)                                        // Taken pieces will go in the next free spot
     {  

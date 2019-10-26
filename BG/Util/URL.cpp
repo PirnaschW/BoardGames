@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include<wininet.h>
 #pragma comment(lib, "Wininet")

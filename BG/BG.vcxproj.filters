@@ -162,9 +162,6 @@
     <ClInclude Include="BG.h">
       <Filter>BG\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>BG\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>BG\Header Files</Filter>
     </ClInclude>
@@ -300,12 +297,12 @@
     <ClInclude Include="Core\BGCoreAction.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>BG\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
-      <Filter>BG\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
       <Filter>BG\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainFrm.cpp">
@@ -394,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="Core\BGCoreAction.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>BG\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

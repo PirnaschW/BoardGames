@@ -120,8 +120,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((lul.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(lul, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(lul, pp));      // place it on target
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
@@ -131,8 +131,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((lur.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(lur, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(lur, pp));      // place it on target
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
             }
@@ -144,8 +144,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((ldl.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(ldl, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(ldl, pp));      // place it on target
                 mb.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
@@ -155,8 +155,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((ldr.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(ldr, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(ldr, pp));      // place it on target
                 mb.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
             }
@@ -256,8 +256,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((lul.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(lul, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(lul, pp));      // place it on target
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
@@ -267,8 +267,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((lur.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(lur, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(lur, pp));      // place it on target
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
             }
@@ -280,8 +280,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((ldl.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(ldl, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(ldl, pp));      // place it on target
                 mb.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
@@ -291,8 +291,8 @@ namespace UnitTestCheckers
               {
                 const Piece& pp = ((ldr.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
                 Actions a{};
-                a.push_back(std::make_shared<ActionTake>(lf, p));         // pick piece up
-                a.push_back(std::make_shared<ActionPlace>(ldr, pp));      // place it on target
+                a.push_back(std::make_shared<ActionLift>(lf, p));         // pick piece up
+                a.push_back(std::make_shared<ActionDrop>(ldr, pp));      // place it on target
                 mb.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
             }
@@ -307,8 +307,8 @@ namespace UnitTestCheckers
                   if (pt == Piece::NoPiece)
                   {
                     Actions a{};
-                    a.push_back(std::make_shared<ActionTake>(lf, p));       // pick piece up
-                    a.push_back(std::make_shared<ActionPlace>(lt, p));      // place it on target
+                    a.push_back(std::make_shared<ActionLift>(lf, p));       // pick piece up
+                    a.push_back(std::make_shared<ActionDrop>(lt, p));      // place it on target
                     mw.push_back(std::make_shared<Move>(a));                // add move to move list
                   }
                   else break;                                               // end the loop if no space
@@ -326,8 +326,8 @@ namespace UnitTestCheckers
                   if (pt == Piece::NoPiece)
                   {
                     Actions a{};
-                    a.push_back(std::make_shared<ActionTake>(lf, p));       // pick piece up
-                    a.push_back(std::make_shared<ActionPlace>(lt, p));      // place it on target
+                    a.push_back(std::make_shared<ActionLift>(lf, p));       // pick piece up
+                    a.push_back(std::make_shared<ActionDrop>(lt, p));      // place it on target
                     mb.push_back(std::make_shared<Move>(a));                // add move to move list
                   }
                   else break;                                               // end the loop if no space

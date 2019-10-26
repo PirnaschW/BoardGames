@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 namespace BoardGamesCore
 {
@@ -103,11 +103,11 @@ namespace BoardGamesCore
 
   void MainPosition::Execute(const Move& m) noexcept
   {
-    movesW_.clear();                                                    // after the move is executed, the movelists will be outdated
-    movesB_.clear();                                                    // after the move is executed, the movelists will be outdated
-    depth_ = 0;
+    movesW_.clear();                                                      // after the move is executed, the movelists will be outdated
+    movesB_.clear();
+    //depth_ = 0; " keep value for display
 
-    sequence_.push_back(std::make_shared<Move>(m));                                                // save the move in the sequence_
+    sequence_.push_back(std::make_shared<Move>(m));                       // save the move in the sequence_
     for (const auto& aa : m.GetActions()) aa->Execute(this);              // execute all Actions
     NextPlayer();                                                         // after the move, it's the next player's turn
   }

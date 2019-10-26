@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 namespace BoardGamesCore
 {
@@ -101,7 +101,7 @@ namespace BoardGamesCore
       dragPiece_->Draw(pDC, r, TileColor::Small);
     }
 
-    if (true) {
+    if (pos->GetDepth() > 0U) {
       CString s;
       int h = 10;
       const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == Color::White));
@@ -114,14 +114,9 @@ namespace BoardGamesCore
       s = "sizeof(vector<Move>)"; pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Moves));         pDC->TextOutW(1000, h, s);
       s = "sizeof(Move)";         pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Move));          pDC->TextOutW(1000, h, s);
       s = "sizeof(Action)";       pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Action));        pDC->TextOutW(1000, h, s);
-      s = "sizeof(ActionTake)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionTake));    pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionLift)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionLift));    pDC->TextOutW(1000, h, s);
       s = "sizeof(ActionJump)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionJump));    pDC->TextOutW(1000, h, s);
-      s = "sizeof(ActionPlace)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionPlace));   pDC->TextOutW(1000, h, s);
-    //s = "sizeof(StepPlace)";    pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(StepPlace));     pDC->TextOutW(1000, h, s);
-    //s = "sizeof(StepSimple)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(StepSimple));    pDC->TextOutW(1000, h, s);
-    //s = "sizeof(StepComplex)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(StepComplex));   pDC->TextOutW(1000, h, s);
-    //s = "sizeof(SimpleMove)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(SimpleMove));    pDC->TextOutW(1000, h, s);
-    //s = "sizeof(ComplexMove)";  pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ComplexMove));   pDC->TextOutW(1000, h, s);
+      s = "sizeof(ActionDrop)";   pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(ActionDrop));    pDC->TextOutW(1000, h, s);
     }
   }
 

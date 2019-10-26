@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "CamGame.h"
 
@@ -27,8 +27,8 @@ namespace Cam
       if (!p1.IsBlank()) continue;                                       // tile occupied
 
       Actions a{};
-      a.push_back(std::make_shared<ActionTake>(l, p0));                   // pick piece up
-      a.push_back(std::make_shared<ActionPlace>(to, p0));                 // and place it on target
+      a.push_back(std::make_shared<ActionLift>(l, p0));                   // pick piece up
+      a.push_back(std::make_shared<ActionDrop>(to, p0));                 // and place it on target
       m.push_back(std::make_shared<Move>(a));                             // add move to move list
     }
   }
@@ -72,13 +72,13 @@ namespace Cam
 
       // a legal jump was found
       any = true;
-      a1.push_back(std::make_shared<ActionTake>(fr, p0));
+      a1.push_back(std::make_shared<ActionLift>(fr, p0));
       if (c1 != c0)                                                       // jump was over an enemy piece, take it
       {
-        a1.push_back(std::make_shared<ActionTake>(l1, p1));
-        a1.push_back(std::make_shared<ActionPlace>(Location(BoardPart::Taken, 0, p1.GetColor() == Color::White ? 0U : 1U), p1));
+        a1.push_back(std::make_shared<ActionLift>(l1, p1));
+        a1.push_back(std::make_shared<ActionDrop>(Location(BoardPart::Taken, 0, p1.GetColor() == Color::White ? 0U : 1U), p1));
       }
-      a1.push_back(std::make_shared<ActionPlace>(l2, p0));
+      a1.push_back(std::make_shared<ActionDrop>(l2, p0));
 
       if (!CollectJumps(p, l2, a1, charge, cc, m) || (c0 == c1))          // collect potential further jumps
         m.push_back(std::make_shared<Move>(a1));                          // if it could NOT be extended, or was a jump over an own piece, add as move

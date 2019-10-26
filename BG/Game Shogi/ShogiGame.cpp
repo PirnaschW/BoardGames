@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "ShogiGame.h"
 
@@ -255,7 +255,7 @@ namespace Shogi
         Moves& m = pp.IsColor(Color::White) ? movesW_ : movesB_;
 
         Actions a{};
-        a.push_back(std::make_shared<ActionTake>(l, pp));
+        a.push_back(std::make_shared<ActionLift>(l, pp));
         for (Coordinate i = 0; i < sizeX_; i++)
           for (Coordinate j = 0; j < sizeY_; j++)
           {
@@ -263,7 +263,7 @@ namespace Shogi
             if (GetPiece(ll).IsBlank() && pp.CanDrop(this, ll))
             {
               Actions aa{ a };
-              aa.push_back(std::make_shared<ActionPlace>(ll, pp));
+              aa.push_back(std::make_shared<ActionDrop>(ll, pp));
               m.push_back(std::make_shared<Move>(aa));
             }
           }
@@ -282,23 +282,23 @@ namespace Shogi
     if (IsTaken(fr) && !pf.CanDrop(this, to)) return false;
 
     Actions a{};
-    a.push_back(std::make_shared<ActionTake>(fr, pf));
+    a.push_back(std::make_shared<ActionLift>(fr, pf));
     if (!pt.IsBlank()) // if something is there, take it and place in Taken
     {
-      a.push_back(std::make_shared<ActionTake>(to, pt));
+      a.push_back(std::make_shared<ActionLift>(to, pt));
       const Piece& pt0 = pt.Promote(false);  // demote and change color/owner
-      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt.GetColor()), pt0));
+      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pt.GetColor()), pt0));
     }
     // if this is not a drop, check if promotion is possible
     if (!IsTaken(fr) && (CanPromote(pf.GetColor(), fr) || CanPromote(pf.GetColor(), to)) && pf.IsPromotable())
     {
       Actions aa{ a }; // promote is optional, so we make a copy and add as second move
-      aa.push_back(std::make_shared<ActionPlace>(to, pf.Promote(true)));
+      aa.push_back(std::make_shared<ActionDrop>(to, pf.Promote(true)));
       m.push_back(std::make_shared<Move>(aa));
     }
     if (pf.CanMove(this, to)) // if no promotion, verify if this piece can ever move/drop there
     {
-      a.push_back(std::make_shared<ActionPlace>(to, pf));  // unpromoted placement
+      a.push_back(std::make_shared<ActionDrop>(to, pf));  // unpromoted placement
       m.push_back(std::make_shared<Move>(a));
     }
     return pt.IsBlank();   // if free tile, keep trying this direction

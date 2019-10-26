@@ -108,12 +108,12 @@ namespace UnitTestCore
       Location l2{ BoardPart::Main, 3U, 2U };
       Location l3{ BoardPart::Main, 4U, 1U };
 
-      ActionP a1{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a1{ std::make_shared<ActionLift>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
       ActionP a2{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a3{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
-      ActionP a4{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a3{ std::make_shared<ActionDrop>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a4{ std::make_shared<ActionLift>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
       ActionP a5{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a6{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a6{ std::make_shared<ActionDrop>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
 
       Assert::IsTrue(a1->GetLocation() == l1);
       Assert::IsTrue(a2->GetLocation() == l2);
@@ -214,16 +214,16 @@ namespace UnitTestCore
       Location l2{ BoardPart::Main, 3U, 2U };
       Location l3{ BoardPart::Main, 4U, 1U };
 
-      ActionP a11{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a11{ std::make_shared<ActionLift>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
       ActionP a12{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a13{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a13{ std::make_shared<ActionDrop>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
 
-      ActionP a21{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
-      ActionP a22{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a21{ std::make_shared<ActionLift>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a22{ std::make_shared<ActionDrop>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
 
-      ActionP a31{ std::make_shared<ActionTake>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a31{ std::make_shared<ActionLift>(l1,BoardGamesChessPieces::ChessPiece::WQ) };
       ActionP a32{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a33{ std::make_shared<ActionPlace>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
+      ActionP a33{ std::make_shared<ActionDrop>(l3,BoardGamesChessPieces::ChessPiece::WQ) };
 
       Actions a1{};
       a1.push_back(a11);

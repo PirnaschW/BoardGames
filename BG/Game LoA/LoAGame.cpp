@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "LoAResource.h"
 #include "LoAGame.h"
@@ -110,13 +110,13 @@ namespace LoA
     if (pt.IsColor(OnTurn())) return false;  // own piece
 
     Actions a{};
-    a.push_back(std::make_shared<ActionTake>(fr, pf));                    // pick piece up
+    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
     if (!pt.IsBlank())
     {
-      a.push_back(std::make_shared<ActionTake>(to, pt));                  // pick piece up
-      a.push_back(std::make_shared<ActionPlace>(GetNextTakenL(pt.GetColor()), pt));  // and place it on target
+      a.push_back(std::make_shared<ActionLift>(to, pt));                  // pick piece up
+      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pt.GetColor()), pt));  // and place it on target
     }
-    a.push_back(std::make_shared<ActionPlace>(to, pf));                   // and place it on target
+    a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return false;
   }

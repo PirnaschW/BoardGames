@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "HasamiGame.h"
 
@@ -51,7 +51,7 @@ namespace Hasami
     if (!p.IsBlank()) return false;                                      // occupied
 
     Actions a{};
-    a.push_back(std::make_shared<ActionTake>(fr, p));                     // pick piece up
+    a.push_back(std::make_shared<ActionLift>(fr, p));                     // pick piece up
 
     for (auto& d : Offset::Rdirection)
     {
@@ -64,14 +64,14 @@ namespace Hasami
         if (l == fr) break;                                               // was this going backwards?
         if (pp->GetColor() != p.GetColor())                              // opponent's piece? Take it tentatively
         {
-          ad.push_back(std::make_shared<ActionTake>(l, *pp));              // pick opponents piece up
-          ad.push_back(std::make_shared<ActionPlace>(GetNextTakenL(p.GetColor()), *pp));            // and place it to Taken
+          ad.push_back(std::make_shared<ActionLift>(l, *pp));              // pick opponents piece up
+          ad.push_back(std::make_shared<ActionDrop>(GetNextTakenL(p.GetColor()), *pp));            // and place it to Taken
         }
         else a.insert(a.end(),ad.begin(),ad.end());                       // own piece; tentative takes become real
       }
     }
 
-    a.push_back(std::make_shared<ActionPlace>(to, p));                    // and place it on target
+    a.push_back(std::make_shared<ActionDrop>(to, p));                    // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return true;
   }

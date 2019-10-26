@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "TicTacToeGame.h"
 
@@ -15,8 +15,8 @@ namespace TicTacToe
 
     Actions aw0{};
     Actions ab0{};
-    aw0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 0U, 0U }, TicTacToePiece::TicTacToePieceW));
-    ab0.push_back(std::make_shared<ActionTake>(Location{ BoardPart::Stock, 0U, 1U }, TicTacToePiece::TicTacToePieceB));
+    aw0.push_back(std::make_shared<ActionLift>(Location{ BoardPart::Stock, 0U, 0U }, TicTacToePiece::TicTacToePieceW));
+    ab0.push_back(std::make_shared<ActionLift>(Location{ BoardPart::Stock, 0U, 1U }, TicTacToePiece::TicTacToePieceB));
     for (Coordinate i = 0; i < sizeX_; i++)
     {
       for (Coordinate j = 0; j < sizeY_; j++)
@@ -28,8 +28,8 @@ namespace TicTacToe
         {
           Actions aw{ aw0 };
           Actions ab{ ab0 };
-          aw.push_back(std::make_shared<ActionPlace>(l, TicTacToePiece::TicTacToePieceW));
-          ab.push_back(std::make_shared<ActionPlace>(l, TicTacToePiece::TicTacToePieceB));
+          aw.push_back(std::make_shared<ActionDrop>(l, TicTacToePiece::TicTacToePieceW));
+          ab.push_back(std::make_shared<ActionDrop>(l, TicTacToePiece::TicTacToePieceB));
           movesW_.push_back(std::make_shared<Move>(aw));
           movesB_.push_back(std::make_shared<Move>(ab));
         }
