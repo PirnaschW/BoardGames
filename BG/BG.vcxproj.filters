@@ -726,4 +726,7 @@
       <Filter>Game CFour\Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\New Game Instructions.txt" />
+  </ItemGroup>
 </Project>
