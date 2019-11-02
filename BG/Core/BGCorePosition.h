@@ -63,9 +63,6 @@ namespace BoardGamesCore
 
 
   class AIContext;
-  using AIContextP = std::shared_ptr<AIContext>;
-
-  //class AIContextP;   // forward declaration needed for class MainPosition
   class MainPosition : public Position
   {
   public:
@@ -88,26 +85,30 @@ namespace BoardGamesCore
     virtual void NextPlayer(void) noexcept;
     virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
-    virtual void GetAllMoves(void) noexcept;              // generate all moves and save list
-    virtual Moves CollectMoves(void) const noexcept { Moves m{}; return m; }
-    void JumpsOnly(Moves& moves) const noexcept;          // if there are any jumps, remove all non-jumps - jumping is mandatory
-    constexpr inline Moves& GetMoveList(bool w) noexcept { return w ? movesW_ : movesB_; }
+    constexpr inline Moves& GetMoveList(bool w) const noexcept { return w ? movesW_ : movesB_; }
     virtual bool AddIfLegal(Moves&, const Location&, const Location&) const noexcept { return false; };
-    virtual void EvaluateStatically(void) noexcept;       // calculate position value and save
-    virtual PositionValue Evaluate(AIContextP& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies);
+    virtual PositionValue EvaluateStatically(void) const noexcept;       // calculate position value
+    virtual PositionValue EvaluateChainLengths(unsigned int max) const noexcept;        // calculate position value by chain lengths
+    virtual unsigned int GetChainValue(unsigned int z) const noexcept { return 0; }
+    virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies) const noexcept;
     inline PositionValue GetValue(bool w) const noexcept { return value_.Relative(w); }
     virtual inline unsigned int GetMoveCountFactor(void) const noexcept { return 20; }
     inline Depth GetDepth(void) const noexcept { return depth_; }
-    inline Depth SetDepth(Depth d) noexcept { return depth_ = d; }
-    inline PositionValue SetValue(bool w, PositionValue v) noexcept { return value_ = v.Relative(w); }
+    inline Depth SetDepth(Depth d) const noexcept { return depth_ = d; }
+    inline PositionValue SetValue(bool w, PositionValue v) const noexcept { return value_ = v.Relative(w); }
     virtual const Piece& GetPiece(const Location& l) const noexcept;
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
     const Location GetNextTakenL(const Color& c) const noexcept;
     inline bool IsTaken(const Location& l) const noexcept { return l.b_ == BoardPart::Taken; }
     virtual inline MoveP GetBestMove(bool w) const noexcept { return (w ? movesW_[0] : movesB_[0]); }
-    virtual MainPosition* GetPosition(AIContextP& plist, MoveP m = nullptr) const noexcept;     // execute move, maintain in PList
+    virtual MainPosition* GetPosition(AIContext& plist, MoveP m = nullptr) const noexcept;     // execute move, maintain in PList
     virtual void Execute(const Move& m) noexcept;
     virtual void Undo(const Move& m) noexcept;
+
+    virtual void GetAllMoves(void) const noexcept;              // generate all moves and save list
+    void JumpsOnly(Moves& moves) const noexcept;          // if there are any jumps, remove all non-jumps - jumping is mandatory
+//    virtual Moves CollectMoves(void) const noexcept { Moves m{}; return m; }
+
 
   public:
     Moves sequence_{};                                                    // list of historic moves that led to this position
@@ -116,10 +117,12 @@ namespace BoardGamesCore
 
   protected:
     const Color* onTurn_{ &Color::White };                                // color (player) currently on turn
-    Depth depth_{ 0 };                                                    // evaluated depth of the position
-    PositionValue value_{ PositionValue::Undefined };                     // calculated position value (positiv is good for White)
-    Moves movesW_{};                                                      // list of possible moves for White
-    Moves movesB_{};                                                      // list of possible moves for Black
+
+    //below members are mutable because adjusting them during the evaluation doesn't 'change' the position'.
+    mutable PositionValue value_{ PositionValue::Undefined };             // calculated position value (positiv is good for White)
+    mutable Depth depth_{ 0 };                                            // evaluated depth of the position
+    mutable Moves movesW_{};                                              // list of possible moves for White
+    mutable Moves movesB_{};                                              // list of possible moves for Black
   };
 
 }

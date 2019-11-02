@@ -1,11 +1,25 @@
 #include "pch.h"
-//#include "../Game Test/TestGame.h"
 
 namespace BoardGamesCore
 {
 
   void AIContext::Purge(const Moves& sequence_) noexcept
   {
+    static int dummy{};
+    dummy++;
+
+    auto l = [&sequence_] (const MainPosition* p) -> bool
+    {
+      if (p->sequence_.size() < sequence_.size()) return true;
+      else
+      {
+        for (size_t i = 0; i < sequence_.size(); i++)
+        {
+          if (*(p->sequence_[i]) != *sequence_[i]) return true;
+        }
+      }
+    };
+
     for (auto it = begin(); it != end();)
     {
       bool trash{ false };
@@ -22,6 +36,14 @@ namespace BoardGamesCore
         }
       }
 
+      //MainPosition* p{ *it };
+      //++it;
+      //if (trash)
+      //{
+      //  erase(p);
+      //  delete p;
+      //}
+
       if (trash)
       {
         const MainPosition* p{ *it };
@@ -29,13 +51,19 @@ namespace BoardGamesCore
         delete p;
       }
       else it++;
+
     }
+
+//    std::unordered_set< MainPosition*, AIContextHelper::Hash, AIContextHelper::Equality> pp{};
+//    std::swap(*this, pp);
+
+    dummy++;
   }
 
   bool Game::AIMove(void)
   {
     // cleanup position buffer
-    plist->Purge(pos->sequence_);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
+    plist.Purge(pos->sequence_);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
 
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
     assert(p != nullptr);
@@ -51,7 +79,7 @@ namespace BoardGamesCore
         PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
         pos->SetValue(w, p->GetValue(w));
         pos->SetDepth(p->GetDepth());
-        plist->callback();
+        plist.callback();
         if (value_ == PositionValue::PValueType::Lost)
         {
           ::AfxMessageBox(L"Computer resigns - Player wins!");
@@ -73,7 +101,7 @@ namespace BoardGamesCore
         throw;
       }
 
-      if (plist->size() > 150000)
+      if (plist.size() > 4500000)
         break;
 
       auto t_now = std::chrono::high_resolution_clock::now();
@@ -88,15 +116,12 @@ namespace BoardGamesCore
   }
 
 
-  PositionValue MainPosition::Evaluate(AIContextP& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies)
+  PositionValue MainPosition::Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies) const noexcept
   {
     if (plies == 0) return GetValue(w);
-    //if (plist->size() > 200000) return GetValue(w);
 
     auto& movelist = GetMoveList(w);
     if (movelist.empty()) return GetValue(w);
-
-    assert(plist->find(this) != plist->end());                              // the current position must have been checked before
 
     const auto l = [](MoveP a, MoveP b) { return *b < *a; };    // define sort predicate
 
@@ -121,56 +146,90 @@ namespace BoardGamesCore
 
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
-    depth_ = plies;                                                        // save evaluation depth
+    depth_ = plies;                                                       // save evaluation depth
 //    if (plies == 2) plist->callback();
     return alpha;                                                         // return best value
   }
 
 
-  void MainPosition::EvaluateStatically(void) noexcept   // as seen from White
+  PositionValue MainPosition::EvaluateStatically(void) const noexcept   // as seen from White
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
-    //assert(depth_ == 0);
 
     // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
-    GetAllMoves();                                                                                        // fill the move lists
+    GetAllMoves();                                                             // fill the move lists
     depth_ = 1;
-    if (onTurn_ == &Color::White && movesW_.empty()) value_ = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn_ == &Color::Black && movesB_.empty()) value_ = PositionValue::PValueType::Won;
-    else
+    if (onTurn_ == &Color::White && movesW_.empty()) return PositionValue::PValueType::Lost;     // if no more moves, game over
+    if (onTurn_ == &Color::Black && movesB_.empty()) return PositionValue::PValueType::Won;
+    PositionValue v{ GetMoveCountFactor() * (movesW_.size() - movesB_.size()) };
+    for (Coordinate j = 0; j < sizeY_; j++)
     {
-      value_ = GetMoveCountFactor() * (movesW_.size() - movesB_.size());
-      for (Coordinate j = 0; j < sizeY_; j++)
+      for (Coordinate i = 0; i < sizeX_; i++)                                // loop through all locations
       {
-        for (Coordinate i = 0; i < sizeX_; i++)                          // loop through all locations
-        {                                                                 
-          const Location l{ BoardPart::Main, i,j };
-          const Piece& p = GetPiece(l);                                   
-          if ((p == Piece::NoTile) || (p == Piece::NoPiece)) continue;  // nothing here
-          value_ += (p.IsColor(Color::White) ? 1 : -1) * p.GetValue(*this,l);
+        const Location l{ BoardPart::Main, i,j };
+        const Piece& p = GetPiece(l);
+        if ((p == Piece::NoTile) || (p == Piece::NoPiece)) continue;         // nothing here
+        v += (p.IsColor(Color::White) ? 1 : -1) * p.GetValue(*this, l);
+      }
+    }
+    return v;
+  }
+
+  PositionValue MainPosition::EvaluateChainLengths(unsigned int max) const noexcept           // as seen from White
+  {
+    int v1{ 0 };
+    int v2{ 0 };
+    for (Coordinate j = 0; j < sizeY_; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)                                  // loop through all locations
+      {                                                                       
+        const Location l{ BoardPart::Main,i,j };                              
+        const Piece& p = GetPiece(l);                                         
+        if (p.IsColor(Color::NoColor)) continue;                               // nothing here, so no chain can start
+        const bool w = p.IsColor(Color::White);                               
+
+        for (const Offset& d : Offset::Qdirection)
+        {                                                                     
+          const Piece* pp{ &GetPiece(l + d * -1) };                           
+          if (pp != &Piece::NoTile && pp->IsColor(p.GetColor())) continue;     // if same color is that direction, we counted it already, so move on
+          if (pp != &Piece::NoTile && pp->IsBlank()) (w ? v1 : v2) += 100;     // free field, give an extra point - much better than opponent's piece
+          Location ll{ BoardPart::Main,i,j };
+          unsigned int z{ 1 };
+          while ((pp = &GetPiece(ll += d)) != nullptr)
+          {
+            if (pp->IsColor(p.GetColor())) z++;
+            else
+            {
+              if (pp->IsColor(Color::NoColor)) (w ? v1 : v2) += 100;           // if line ends with free field, give an extra point - much better than opponent's piece
+              break;
+            }
+          }
+          if (z >= max) return w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
+          (w ? v1 : v2) += GetChainValue(z);
         }
       }
     }
+
+    return v1 - v2;
   }
 
-
-  MainPosition* MainPosition::GetPosition(AIContextP& plist, MoveP m) const noexcept // execute move, maintain in PList
+  MainPosition* MainPosition::GetPosition(AIContext& plist, MoveP m) const noexcept                // execute move, maintain resulting pos in PList
   {
-    MainPosition* pos(Clone());                                           // create a copy of the board
-    if (m != nullptr) pos->Execute(*m);                                   // execute move if provided
-
-    auto pl0 = plist->find(pos);                                          // check if we evaluated this position before
-    if (pl0 != plist->end())
-    {
-      delete pos;
-      return *pl0;                                                        // found - return it
+    MainPosition* pos(Clone());                                                                    // create a copy of the board
+    if (m != nullptr) pos->Execute(*m);                                                            // execute move if provided
+                                                                                                   
+    auto pl0 = plist.find(pos);                                                                    // check if we evaluated this position before
+    if (pl0 != plist.end())                                                                        
+    {                                                                                              
+      delete pos;                                                                                  
+      return *pl0;                                                                                 // found - return it
     }
 
-    pos->EvaluateStatically();                                            // evaluate position statically
-    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist->insert(pos);    // and save it
+    pos->SetValue(true,pos->EvaluateStatically());                                                 // evaluate position statically
+    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist.insert(pos);          // and save it
     assert(pl1.second);
-    return *(pl1.first);                                                  // return the pointer to the new entry
+    return *(pl1.first);                                                                           // return the pointer to the new entry
   }
 
 }

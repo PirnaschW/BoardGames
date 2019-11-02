@@ -157,6 +157,18 @@
     <Filter Include="Game Checkers\Source Files">
       <UniqueIdentifier>{6a958c18-2aef-4981-9d35-8339ce32203b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game CFour">
+      <UniqueIdentifier>{08d9ee87-905d-4beb-98bf-f716a7d5cd61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game CFour\Header Files">
+      <UniqueIdentifier>{740b769a-2629-46c0-bafc-9ecd245db2a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game CFour\Resource Files">
+      <UniqueIdentifier>{3b65e25c-1414-44c2-9d00-e71567e4bc2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game CFour\Source Files">
+      <UniqueIdentifier>{ee3bf2c3-c806-4cc6-be53-70224ffb31c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h">
@@ -300,6 +312,12 @@
     <ClInclude Include="pch.h">
       <Filter>BG\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game CFour\CFourGame.h">
+      <Filter>Game CFour\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game CFour\CFourResource.h">
+      <Filter>Game CFour\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
@@ -395,6 +413,9 @@
     <ClCompile Include="pch.cpp">
       <Filter>BG\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game CFour\CFourGame.cpp">
+      <Filter>Game CFour\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\BG.rc2">
@@ -435,6 +456,9 @@
     </None>
     <None Include="Game Checkers\Checkers.rc2">
       <Filter>Game Checkers\Resource Files</Filter>
+    </None>
+    <None Include="Game CFour\CFour.rc2">
+      <Filter>Game CFour\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -697,6 +721,9 @@
     </Image>
     <Image Include="Core\res\CheckerWS.bmp">
       <Filter>Core\Resource Files</Filter>
+    </Image>
+    <Image Include="Game CFour\res\CFourDoc.ico">
+      <Filter>Game CFour\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

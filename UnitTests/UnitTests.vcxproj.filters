@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{7abec923-417b-4423-a614-317ec30bd28b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Logik">
-      <UniqueIdentifier>{c5610456-f887-44a6-b74b-0cde3372deec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UnitTests">
       <UniqueIdentifier>{dd8d0b79-5ef1-4b45-b061-c692f6382bec}</UniqueIdentifier>
     </Filter>
@@ -17,11 +11,8 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Core\Source Files">
-      <UniqueIdentifier>{fe2a0e42-a16a-493c-8158-b9c66d86bb78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Checkers">
-      <UniqueIdentifier>{203e29f9-d511-46c8-8a9a-a0a7eae5d164}</UniqueIdentifier>
+    <Filter Include="Existing Source Files">
+      <UniqueIdentifier>{7abec923-417b-4423-a614-317ec30bd28b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,53 +25,59 @@
     <ClCompile Include="pch.cpp">
       <Filter>UnitTests\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreColor.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreKind.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCorePiece.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCorePlayer.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreLayout.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Util\ClipBoard.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCorePosition.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreAI.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreGame.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Util\URL.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UnitTest Checkers.cpp">
       <Filter>UnitTests\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BG\Game Logik\LogikGame.cpp">
-      <Filter>Game Logik</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Game Checkers\CheckersGame.cpp">
-      <Filter>Game Checkers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreOffset.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BG\Core\BGCoreAction.cpp">
-      <Filter>Core\Source Files</Filter>
+    <ClCompile Include="UnitTest CFour.cpp">
+      <Filter>UnitTests\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\BG\Core\BGChessPieces.cpp">
-      <Filter>Core\Source Files</Filter>
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreAction.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreAI.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreColor.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreGame.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreKind.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreLayout.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCoreOffset.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCorePiece.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCorePlayer.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Core\BGCorePosition.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Util\ClipBoard.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Util\URL.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Game Checkers\CheckersGame.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Game Logik\LogikGame.cpp">
+      <Filter>Existing Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BG\Game CFour\CFourGame.cpp">
+      <Filter>Existing Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

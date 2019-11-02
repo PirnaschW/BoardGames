@@ -107,8 +107,8 @@ namespace BoardGamesCore
       const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == Color::White));
       s = "Depth";                pDC->TextOutW(800, h += 20, s);  s.Format(_T("%d"),  pos->GetDepth());       pDC->TextOutW(1000, h, s);
       s = "Value";                pDC->TextOutW(800, h += 20, s);  s = v;                                      pDC->TextOutW(1000, h, s);
-      s = "PList size";           pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), plist->size());         pDC->TextOutW(1000, h, s);
-      s = "free mem";             pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), plist->freemem);        pDC->TextOutW(1000, h, s);
+      s = "PList size";           pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), plist.size());          pDC->TextOutW(1000, h, s);
+      s = "free mem";             pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), plist.freemem);         pDC->TextOutW(1000, h, s);
       s = "sizeof(Position)";     pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Position));      pDC->TextOutW(1000, h, s);
       s = "sizeof(MainPosition)"; pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(MainPosition));  pDC->TextOutW(1000, h, s);
       s = "sizeof(vector<Move>)"; pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), sizeof(Moves));         pDC->TextOutW(1000, h, s);

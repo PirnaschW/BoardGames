@@ -29,9 +29,9 @@ namespace Template
     return false;
   };
 
-  void TemplatePosition::EvaluateStatically(void) noexcept
+  PositionValue TemplatePosition::EvaluateStatically(void) const noexcept
   {
-    MainPosition::EvaluateStatically();
+    return MainPosition::EvaluateStatically();
     // ...
   }
 

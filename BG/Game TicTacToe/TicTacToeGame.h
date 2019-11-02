@@ -44,11 +44,11 @@ namespace TicTacToe
     inline TicTacToePosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
 
     virtual inline MainPosition* Clone(void) const noexcept override { return new TicTacToePosition(*this); }
-    virtual void GetAllMoves(void) noexcept override;
-    virtual void EvaluateStatically(void) noexcept override;
+    virtual void GetAllMoves(void) const noexcept override;
+    virtual PositionValue EvaluateStatically(void) const noexcept override;
 
   protected:
-    inline unsigned int GetChainValue(unsigned int z) const noexcept;
+    virtual unsigned int GetChainValue(unsigned int z) const noexcept override;
   };
 
 

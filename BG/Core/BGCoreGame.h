@@ -9,13 +9,25 @@ namespace BoardGamesCore
     struct Equality { inline bool operator()(const pMP Lhs, const pMP Rhs) const noexcept { return *Lhs == *Rhs; } };
   }
 
-  class AIContext final : public std::unordered_set< MainPosition*, AIContextHelper::Hash, AIContextHelper::Equality>
+  class AIContext final
   {
+    using MPSet = std::unordered_set< MainPosition*, AIContextHelper::Hash, AIContextHelper::Equality>;
   public:
+    ~AIContext(void) { for (MainPosition* p : map_) delete p; }
+    MPSet::const_iterator find(MainPosition* p) const noexcept { return map_.find(p); }
+    MPSet::const_iterator begin(void) const noexcept { return map_.begin(); }
+    MPSet::const_iterator end(void) const noexcept { return map_.end(); }
+    size_t erase(MainPosition* p) noexcept { return map_.erase(p); }
+    MPSet::const_iterator erase(MPSet::const_iterator it) noexcept { return map_.erase(it); }
+    size_t size(void) const noexcept { return map_.size(); }
+    std::pair<std::unordered_set<MainPosition*>::iterator, bool> insert(MainPosition* p) noexcept { return map_.insert(p); }
+
+
     std::function<void(void)> callback;          // pointer to CDocument's callback function (to update window)
-//    int additionalData{};
     size_t freemem{};
     void Purge(const Moves& sequence_) noexcept;
+  private:
+    MPSet map_{};
   };
 
   class _Mode
@@ -87,14 +99,14 @@ namespace BoardGamesCore
     virtual void DragEnd(const CPoint&) override;
     virtual void Select(const CPoint& point) override;
     virtual inline void Unselect(void) override { moves.clear(); _mode.Del(Mode::SelectTo); _mode.Set(Mode::SelectFr); }
-    virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist->callback = cb; }
+    virtual inline void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist.callback = cb; }
 
   protected:
-    const PieceMapP& pMap_;                       // map of all pieces used in the game
+    const PieceMapP& pMap_;                      // map of all pieces used in the game
     MainPosition* pos;                           // logical position on the main playing board
     MainLayout* lay;                             // physical layout of the main playing board
 
-    AIContextP plist{};                          // collected positions with their evaluations
+    AIContext plist{};                           // collected positions with their evaluations
 
   private:
     _Mode _mode{ Mode::SelectFr };               // current game mode

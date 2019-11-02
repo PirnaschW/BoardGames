@@ -57,7 +57,7 @@ namespace BoardGamesCore
   }
 
 
-  void MainPosition::GetAllMoves(void) noexcept // collect all moves for all pieces
+  void MainPosition::GetAllMoves(void) const noexcept // collect all moves for all pieces
   {
     assert(movesW_.empty());
     assert(movesB_.empty());

@@ -40,7 +40,7 @@ namespace LoA
           if (!a1[i]->IsBlank() && !a1[i]->IsColor(pos.OnTurn())) free = false;
         }
       }
-      if (free) pos.AddIfLegal(moves, l, l + Offset(dx * s, dy*s));
+      if (free) pos.AddIfLegal(moves, l, l + Offset(dx * s, dy * s));
     }
 
     if (a2.size() >= s) // will a move even fit on the board?
@@ -69,7 +69,7 @@ namespace LoA
     CollectMoves(pos, l, moves, 1, 1); // check diagonal '\' moves
   }
 
-  
+
   LoAPosition::LoAPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
     for (Coordinate i = 0; i < d[0].xCount_; i++)
@@ -166,53 +166,43 @@ namespace LoA
     return false;
   }
 
-  void LoAPosition::EvaluateStatically(void) noexcept
+  PositionValue LoAPosition::EvaluateStatically(void) const noexcept
   {
-    if (IsConnected(false))
-    {
-      value_ = PositionValue::PValueType::Lost;  // opponent is connected -> loss
-      return;
-    }
-    if (IsConnected(true))
-    {
-      value_ = PositionValue::PValueType::Won;   // player is connected -> win
-      return;
-    }
+    if (IsConnected(false)) return PositionValue::PValueType::Lost;  // opponent is connected -> loss
+    if (IsConnected(true))  return PositionValue::PValueType::Won;   // player is connected -> win
 
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn_ == &Color::White && movesW_.empty()) value_ = PositionValue::PValueType::Lost;        // if no more moves, game over
-    else if (onTurn_ == &Color::Black && movesB_.empty()) value_ = PositionValue::PValueType::Won;
-    else
+    if (onTurn_ == &Color::White && movesW_.empty()) return PositionValue::PValueType::Lost;        // if no more moves, game over
+    if (onTurn_ == &Color::Black && movesB_.empty()) return PositionValue::PValueType::Won;
+    PositionValue value{ 0 };
+    for (Coordinate i = 0; i < sizeX_; i++)
     {
-      value_ = 0;
-      for (Coordinate i = 0; i < sizeX_; i++)
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
-        for (Coordinate j = 0; j < sizeY_; j++)
+        const Piece& p = GetPiece(Location{ BoardPart::Main, i,j });
+        if (p.IsColor(Color::NoColor)) continue;
+        int d{ 0 };
+        for (Coordinate z = 0; z < (sizeX_ - 1) / 2; z++)
         {
-          const Piece& p = GetPiece(Location{BoardPart::Main, i,j });
-          if (p.IsColor(Color::NoColor)) continue;
-          int d{ 0 };
-          for (Coordinate z = 0; z < (sizeX_ - 1) / 2; z++)
-          {
-            if (i > z && i < sizeX_ - 1 - z) d++;
-            if (j > z && j < sizeY_ - 1 - z) d++;
-          }
-          int v{ 0 };
-          switch (d)
-          {
-            case 0: v = -5; break;
-            case 1: v = -2; break;
-            case 2: v = -1; break;
-            case 3: v = 0; break;
-            case 4: v = 1; break;
-            case 5: v = 2; break;
-            case 6: v = 4; break;
-            default: v = 6; break;
-          }
-          value_ += (p.IsColor(Color::White) ? v : -v);
+          if (i > z&& i < sizeX_ - 1 - z) d++;
+          if (j > z&& j < sizeY_ - 1 - z) d++;
         }
+        int v{ 0 };
+        switch (d)
+        {
+          case 0: v = -5; break;
+          case 1: v = -2; break;
+          case 2: v = -1; break;
+          case 3: v = 0; break;
+          case 4: v = 1; break;
+          case 5: v = 2; break;
+          case 6: v = 4; break;
+          default: v = 6; break;
+        }
+        value += (p.IsColor(Color::White) ? v : -v);
       }
     }
+    return value;
   }
 
 

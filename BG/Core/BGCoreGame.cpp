@@ -3,7 +3,7 @@
 namespace BoardGamesCore
 {
 
-  Game::Game(const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept : pMap_{ m }, pos {p}, lay{ l }, plist(std::make_shared<AIContext>())
+  Game::Game(const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept : pMap_{ m }, pos {p}, lay{ l }
   {
     // create the standard two players
     AddPlayer(new Player(&PlayerType::Human, Color::White));
@@ -19,7 +19,6 @@ namespace BoardGamesCore
 
   Game::~Game(void)
   {
-    for (auto& p : *plist) delete p;
     delete pos;
     delete lay;
 //    if (tlay != nullptr) delete tlay;

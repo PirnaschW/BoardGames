@@ -1,5 +1,5 @@
 
-namespace Template
+namespace CFour
 {
 
   // Display Dimensions
@@ -19,44 +19,46 @@ namespace Template
   private:
     constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
 
   public:
     static const Checker TheChecker;
   };
 
-  class TemplatePiece : public Piece
+  class CFourPiece : public Piece
   {
   private:
-    inline TemplatePiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
-    TemplatePiece(const TemplatePiece&) = delete;
-    TemplatePiece& operator=(const TemplatePiece&) = delete;
+    inline CFourPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    CFourPiece(const CFourPiece&) = delete;
+    CFourPiece& operator=(const CFourPiece&) = delete;
   public:
-    ~TemplatePiece(void) override {}
+    ~CFourPiece(void) override {}
 
   public:
-    static const TemplatePiece TemplatePieceW;
-    static const TemplatePiece TemplatePieceB;
+    static const CFourPiece CFourPieceW;
+    static const CFourPiece CFourPieceB;
   };
 
 
-  class TemplatePosition : public MainPosition
+  class CFourPosition : public MainPosition
   {
   public:
-    inline TemplatePosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
-    virtual inline MainPosition* Clone(void) const noexcept override { return new TemplatePosition(*this); }
+    inline CFourPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
+    virtual inline MainPosition* Clone(void) const noexcept override { return new CFourPosition(*this); }
+    virtual void GetAllMoves(void) const noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
+    virtual unsigned int GetChainValue(unsigned int z) const noexcept override;
   };
 
 
-  class TemplateGame : public Game
+  class CFourGame : public Game
   {
   private:
-    TemplateGame(void) = delete;
+    CFourGame(void) = delete;
 
   public:
-    inline TemplateGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new TemplatePosition(m, d), new MainLayout(d)) {}
+    inline CFourGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new CFourPosition(m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
     static const Dimensions& GetDimensions(Coordinate x, Coordinate y) noexcept;

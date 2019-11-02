@@ -159,6 +159,7 @@
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,6 +190,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnablePREfast>true</EnablePREfast>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -264,6 +266,8 @@
     <ClInclude Include="Core\BGCoreVariant.h" />
     <ClInclude Include="Game Cam\CamGame.h" />
     <ClInclude Include="Game Cam\CamResource.h" />
+    <ClInclude Include="Game CFour\CFourGame.h" />
+    <ClInclude Include="Game CFour\CFourResource.h" />
     <ClInclude Include="Game Checkers\CheckersGame.h" />
     <ClInclude Include="Game Checkers\CheckersResource.h" />
     <ClInclude Include="Game Hasami\HasamiGame.h" />
@@ -307,6 +311,7 @@
     <ClCompile Include="Core\BGCorePosition.cpp" />
     <ClCompile Include="Core\BGCoreAction.cpp" />
     <ClCompile Include="Game Cam\CamGame.cpp" />
+    <ClCompile Include="Game CFour\CFourGame.cpp" />
     <ClCompile Include="Game Checkers\CheckersGame.cpp" />
     <ClCompile Include="Game Hasami\HasamiGame.cpp" />
     <ClCompile Include="Game LoA\LoAGame.cpp" />
@@ -330,6 +335,7 @@
     <None Include="BG.reg" />
     <None Include="Core\Core.rc2" />
     <None Include="Game Cam\Cam.rc2" />
+    <None Include="Game CFour\CFour.rc2" />
     <None Include="Game Checkers\Checkers.rc2" />
     <None Include="Game Hasami\Hasami.rc2" />
     <None Include="Game LoA\LoA.rc2" />
@@ -391,6 +397,7 @@
     <Image Include="Core\res\xxl.bmp" />
     <Image Include="Game Cam\res\CamDoc.ico" />
     <Image Include="Game Cam\res\CamelotDoc.ico" />
+    <Image Include="Game CFour\res\CFourDoc.ico" />
     <Image Include="Game Checkers\res\CheckersDoc.ico" />
     <Image Include="Game Hasami\res\HasamiB.bmp" />
     <Image Include="Game Hasami\res\HasamiBs.bmp" />

@@ -139,13 +139,13 @@ namespace Checkers
     return any;                                                           
   }
 
-  void CheckersPosition::EvaluateStatically(void) noexcept
+  PositionValue CheckersPosition::EvaluateStatically(void) const noexcept
   {
-    MainPosition::EvaluateStatically();
+    return MainPosition::EvaluateStatically();
     // ...
   }
 
-  void CheckersPosition::GetAllMoves(void) noexcept                       // collect all moves for all pieces
+  void CheckersPosition::GetAllMoves(void) const noexcept                       // collect all moves for all pieces
   {
     MainPosition::GetAllMoves();
     JumpsOnly(movesW_);          // if there are any jumps, remove all non-jumps - jumping is mandatory

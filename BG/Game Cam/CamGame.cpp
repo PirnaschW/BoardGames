@@ -240,7 +240,7 @@ namespace Cam
   }
 
 
-  void CamPosition::GetAllMoves(void) noexcept                            // collect all moves for all pieces
+  void CamPosition::GetAllMoves(void) const noexcept                            // collect all moves for all pieces
   {
     MainPosition::GetAllMoves();
     JumpsOnly(movesW_);

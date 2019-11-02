@@ -238,7 +238,7 @@ namespace Shogi
     }
   }
 
-  void ShogiPosition::GetAllMoves(void) noexcept                          // generate all moves and save list
+  void ShogiPosition::GetAllMoves(void) const noexcept                          // generate all moves and save list
   {
     MainPosition::GetAllMoves();                                          // standard: get moves for all pieces on the board
 
@@ -304,7 +304,7 @@ namespace Shogi
     return pt.IsBlank();   // if free tile, keep trying this direction
   }
 
-  void ShogiPosition::EvaluateStatically(void) noexcept
+  PositionValue ShogiPosition::EvaluateStatically(void) const noexcept
   {
     //bool kw{false};
     //bool kb{false};
@@ -322,9 +322,9 @@ namespace Shogi
     //if (!kw) { value_ = PositionValue::PValueType::Lost; return; }
     //if (!kb) { value_ = PositionValue::PValueType::Won;  return; }
 
-    if (!HasPiece(ShogiPiece::ShogiWK)) { value_ = PositionValue::PValueType::Lost; return; }
-    if (!HasPiece(ShogiPiece::ShogiBK)) { value_ = PositionValue::PValueType::Won;  return; }
-    MainPosition::EvaluateStatically();
+    if (!HasPiece(ShogiPiece::ShogiWK)) return PositionValue::PValueType::Lost;
+    if (!HasPiece(ShogiPiece::ShogiBK)) return PositionValue::PValueType::Won;
+    return MainPosition::EvaluateStatically();
   }
 
   inline bool ShogiPosition::CanPromote(const Color& c, const Location& l) const noexcept
