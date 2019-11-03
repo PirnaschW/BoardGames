@@ -32,15 +32,16 @@ const VariantList& BGSelect::GetVariants(int id) const
 {
   switch (id)
   {
-    case IDR_GAMETYPE_CAMELOT:    return Variants<Cam::CamGame>::GetVariants();
-    case IDR_GAMETYPE_CFOUR:      return Variants<CFour::CFourGame>::GetVariants();
-    case IDR_GAMETYPE_CHECKERS:   return Variants<Checkers::CheckersGame>::GetVariants();
-    case IDR_GAMETYPE_HASAMI:     return Variants<Hasami::HasamiGame>::GetVariants();
-    case IDR_GAMETYPE_LOA:        return Variants<LoA::LoAGame>::GetVariants();
-    case IDR_GAMETYPE_LOGIK:      return Variants<Logik::LogikGame>::GetVariants();
-    case IDR_GAMETYPE_MCHESS:     return Variants<MassacreChess::MCGame>::GetVariants();
-    case IDR_GAMETYPE_SHOGI:      return Variants<Shogi::ShogiGame>::GetVariants();
-    case IDR_GAMETYPE_TICTACTOE:  return Variants<TicTacToe::TicTacToeGame>::GetVariants();
+    case IDR_GAMETYPE_CAMELOT:    return Variants<Cam::          CamGame      >::GetVariants();
+    case IDR_GAMETYPE_CFOUR:      return Variants<CFour::        CFourGame    >::GetVariants();
+    case IDR_GAMETYPE_CHECKERS:   return Variants<Checkers::     CheckersGame >::GetVariants();
+    case IDR_GAMETYPE_HASAMI:     return Variants<Hasami::       HasamiGame   >::GetVariants();
+    case IDR_GAMETYPE_LOA:        return Variants<LoA::          LoAGame      >::GetVariants();
+    case IDR_GAMETYPE_LOGIK:      return Variants<Logik::        LogikGame    >::GetVariants();
+    case IDR_GAMETYPE_MCHESS:     return Variants<MassacreChess::MCGame       >::GetVariants();
+    case IDR_GAMETYPE_SHOGI:      return Variants<Shogi::        ShogiGame    >::GetVariants();
+    case IDR_GAMETYPE_TICTACTOE:  return Variants<TicTacToe::    TicTacToeGame>::GetVariants();
+    default:                      return Variants<TicTacToe::    TicTacToeGame>::GetVariants();
   }
 }
 

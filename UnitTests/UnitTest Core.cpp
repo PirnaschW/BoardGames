@@ -268,7 +268,7 @@ namespace UnitTestCore
 
     TEST_METHOD(TestPValue)
     {
-      PositionValue p0(PositionValue::Undefined);
+      PositionValue p0(PositionValue::PValueType::Undefined);
       PositionValue p1(45);
       PositionValue p2(56);
       PositionValue p3(-67);
@@ -285,7 +285,7 @@ namespace UnitTestCore
       Assert::IsFalse(p4 != p3);
 
       Assert::IsFalse(p0 == PositionValue(0));
-      Assert::IsTrue(p0 == PositionValue(PositionValue::Undefined));
+      Assert::IsTrue(p0 == PositionValue(PositionValue::PValueType::Undefined));
       Assert::AreEqual(p1, PositionValue(45));
       Assert::AreEqual(p2, PositionValue(56));
       Assert::AreEqual(p3, PositionValue(-67));

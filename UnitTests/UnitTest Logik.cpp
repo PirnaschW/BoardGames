@@ -129,9 +129,10 @@ namespace UnitTestLogik
       }
     }
 
+
     TEST_METHOD(TestLogikPositionExecute)
     {
-      const Plays plays;
+      std::unique_ptr<const Plays> plays = std::make_unique<const Plays>();
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a position works multiple times
       {
         LogikPosition l{ Variants<Logik::LogikGame>::GetPieces(), LogikGame::GetDimensions(MaxPegs, MaxTries) };
@@ -144,7 +145,7 @@ namespace UnitTestLogik
           {
             // verify Pegs come back as set
             const Piece& pp = l.GetPiece(Location{ BoardPart::Main, i, j });
-            Assert::IsTrue(pp == LogikPiece::GetPiece(plays[c][i - MaxPegs]));
+            Assert::IsTrue(pp == LogikPiece::GetPiece((*plays)[c][i - MaxPegs]));
           }
         }
       }

@@ -83,7 +83,7 @@ namespace UnitTestCFour
       Assert::IsTrue(pos.GetValue(true) == PositionValue(-1800)); // 100 + 6 + 100 - 106 - 12 - 106
 
       Put(5, 5, CFourPiece::CFourPieceW);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue::Won);  // four in a row
+      Assert::IsTrue(pos.GetValue(true) == PositionValue::PValueType::Won);  // four in a row
     }
 
     class TestCFourPosition : public CFourPosition
@@ -117,9 +117,9 @@ namespace UnitTestCFour
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
-//            wchar_t buffer[256];
- //           wsprintfW(buffer, L"%d\n", (int) p2->GetValue(true));
-  //          OutputDebugString(buffer);
+            wchar_t buffer[256];
+            wsprintfW(buffer, L"%3d %3d: %10d\n", i1, i2, (int)p2->GetValue(true));
+            OutputDebugString(buffer);
             Assert::IsTrue(p2->GetValue(true) == PositionValue(val2[i1][i2]));
           }
         }

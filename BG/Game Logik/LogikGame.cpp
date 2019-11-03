@@ -72,10 +72,10 @@ namespace Logik
     // define and execute a Lambda to find the Marker target row (= the last row containing any Pegs)
     unsigned char row = [this]() -> unsigned char
     {
-      for (unsigned char j = MaxTries - 1; j >= 0; --j)                   // start with last row, check backwards
+      for (unsigned char j = 0, z = MaxTries - 1; j < MaxTries-1; ++j, --z)              // start with last row, check backwards
         for (unsigned char i = MaxPegs; i < 2 * MaxPegs; ++i)
-          if (GetPiece(Location(BoardPart::Main, i, j)) != Piece::NoPiece) return j;  // if any Peg found, that's the target row
-      return 0U;                                                          // if no Pegs were found at all, the first row is the target
+          if (GetPiece(Location(BoardPart::Main, i, z)) != Piece::NoPiece) return z;     // if any Peg found, that's the target row
+      return 0U;                                                                         // if no Pegs were found at all, the first row is the target
     } ();
 
     // define a Lambda to find a free Marker slot in a given row

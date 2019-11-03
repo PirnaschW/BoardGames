@@ -19,7 +19,7 @@ namespace BoardGamesCore
     inline const Location& GetToL(void) const noexcept { return a_.back()->GetLocation(); }
 
   private:
-    PositionValue value_{ PositionValue::Undefined };
+    PositionValue value_{ PositionValue::PValueType::Undefined };
     const Actions a_{};
   };
   static_assert(!std::is_abstract<Move>::value, "must not be constructible");

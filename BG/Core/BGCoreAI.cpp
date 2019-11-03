@@ -129,7 +129,7 @@ namespace BoardGamesCore
     {
       MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
       PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);// evaluate the result
-      assert(v != PositionValue::Undefined);
+      assert(v != PositionValue::PValueType::Undefined);
       m->SetValue(p->GetValue(w));                                        // save real position value into move for sorting
 
       // apply alpha/beta pruning

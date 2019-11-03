@@ -119,7 +119,7 @@ namespace BoardGamesCore
     const Color* onTurn_{ &Color::White };                                // color (player) currently on turn
 
     //below members are mutable because adjusting them during the evaluation doesn't 'change' the position'.
-    mutable PositionValue value_{ PositionValue::Undefined };             // calculated position value (positiv is good for White)
+    mutable PositionValue value_{ PositionValue::PValueType::Undefined }; // calculated position value (positiv is good for White)
     mutable Depth depth_{ 0 };                                            // evaluated depth of the position
     mutable Moves movesW_{};                                              // list of possible moves for White
     mutable Moves movesB_{};                                              // list of possible moves for Black

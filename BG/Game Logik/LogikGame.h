@@ -127,7 +127,7 @@ namespace Logik
   class Plays final
   {
   public:
-    inline Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) plays_[c] = new Play(c); }
+    constexpr inline Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) plays_[c] = new Play(c); }
     inline ~Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) delete plays_[c]; }
     constexpr inline const Play& operator[](const PlayCode& c) const noexcept { return *plays_[c]; }
     constexpr inline const Play& operator[](const PlayCfg& p) const noexcept { return *plays_[Play::Convert(p)]; }

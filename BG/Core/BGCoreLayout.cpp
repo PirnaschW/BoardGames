@@ -18,6 +18,7 @@ namespace BoardGamesCore
             case LayoutType::Dark:        f = &TileColor::Dark;                                      break;
             case LayoutType::Small:       f = &TileColor::Small;                                     break;
             case LayoutType::Alternating: f = ((i + j) % 2) ? &TileColor::Dark : &TileColor::Light;  break;
+            default:                      f = &TileColor::Light;                                     break;
           }
           assert(f != nullptr);
 

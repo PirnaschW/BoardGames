@@ -16,9 +16,10 @@ namespace URL
     HINTERNET OpenAddress = InternetOpenUrl(connect, url.c_str(), nullptr, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
     assert(OpenAddress);
 
-    char DataReceived[len];
+    std::string DataReceived{};
+    DataReceived.resize(len);
     DWORD NumberOfBytesRead = 0;
-    InternetReadFile(OpenAddress, DataReceived, len, &NumberOfBytesRead);
+    InternetReadFile(OpenAddress, DataReceived.data(), len, &NumberOfBytesRead);
     assert(NumberOfBytesRead > 0 && NumberOfBytesRead < len);
 
     InternetCloseHandle(OpenAddress);
