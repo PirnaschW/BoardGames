@@ -123,14 +123,14 @@ namespace BoardGamesCore
     auto& movelist = GetMoveList(w);
     if (movelist.empty()) return GetValue(w);
 
-    const auto l = [](MoveP a, MoveP b) { return *b < *a; };    // define sort predicate
+    const auto l = [](MoveP a, MoveP b) { return *b < *a; };              // define sort predicate
 
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
-      MainPosition* p{ GetPosition(plist,m) };                           // find the board in the list
-      PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);   // evaluate the result
+      MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
+      PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);// evaluate the result
       assert(v != PositionValue::Undefined);
-      m->SetValue(p->GetValue(w));                                         // save real position value into move for sorting
+      m->SetValue(p->GetValue(w));                                        // save real position value into move for sorting
 
       // apply alpha/beta pruning
       if (v > alpha) { alpha = v; }                                       // reduce range for alpha, continue
@@ -138,8 +138,7 @@ namespace BoardGamesCore
       { 
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
         SetValue(w, alpha);                                               // save top value in current position
-        depth_ = plies;                                                    // save evaluation depth
-//        if (plies == 2) plist->callback();
+        depth_ = plies;                                                   // save evaluation depth
         return beta;
       }
     }
@@ -147,12 +146,11 @@ namespace BoardGamesCore
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
     SetValue(w, alpha);                                                   // save top value in current position
     depth_ = plies;                                                       // save evaluation depth
-//    if (plies == 2) plist->callback();
     return alpha;                                                         // return best value
   }
 
 
-  PositionValue MainPosition::EvaluateStatically(void) const noexcept   // as seen from White
+  [[ nodiscard ]] PositionValue MainPosition::EvaluateStatically(void) const noexcept   // as seen from White
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
@@ -176,7 +174,7 @@ namespace BoardGamesCore
     return v;
   }
 
-  PositionValue MainPosition::EvaluateChainLengths(unsigned int max) const noexcept           // as seen from White
+  [[ nodiscard ]] PositionValue MainPosition::EvaluateChainLengths(unsigned int max) const noexcept           // as seen from White
   {
     int v1{ 0 };
     int v2{ 0 };
