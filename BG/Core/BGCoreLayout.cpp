@@ -102,7 +102,7 @@ namespace BoardGamesCore
       dragPiece_->Draw(pDC, r, TileColor::Small);
     }
 
-    if (pos->GetDepth() > 0U) {
+    if (pos->GetDepth() >= 0U) {
       CString s;
       int h = 10;
       const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == Color::White));

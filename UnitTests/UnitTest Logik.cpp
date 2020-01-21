@@ -77,6 +77,7 @@ namespace UnitTestLogik
 
       LogikPosition* pl2{ dynamic_cast<LogikPosition*>(p2) };
       Assert::IsTrue(pl2 != nullptr);
+      delete p2;
     }
 
     TEST_METHOD(TestLogikPositionPegsMarkers)

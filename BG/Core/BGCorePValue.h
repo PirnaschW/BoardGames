@@ -68,8 +68,15 @@ namespace BoardGamesCore
     constexpr inline operator int(void) const { if (type_ != PValueType::Normal) throw std::exception("undefined PValue"); return value_; }
     inline operator const char* (void) const {
       static std::string s;
-      if (type_ == PValueType::Normal) s = std::to_string(value_);
-      else s = "undefined";
+      switch (type_)
+      {
+        case PValueType::Normal:    s = std::to_string(value_);   break;
+        case PValueType::Won:       s = "Won";                    break;
+        case PValueType::Lost:      s = "Lost";                   break;
+        case PValueType::Tie:       s = "Tie";                    break;
+        case PValueType::Undefined: s = "Undefined!";             break;
+        default:                    s = "huh?";                   break;
+      }
       return s.c_str();
     }
 

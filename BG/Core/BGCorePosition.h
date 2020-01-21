@@ -91,6 +91,7 @@ namespace BoardGamesCore
     [[ nodiscard ]] virtual PositionValue EvaluateChainLengths(unsigned int max) const noexcept;        // calculate position value by chain lengths
     virtual unsigned int GetChainValue(unsigned int z) const noexcept { return 0; }
     virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies) const noexcept;
+    virtual PositionValue EvaluateBF(AIContext& plist, bool w, unsigned int plies) const noexcept;
     inline PositionValue GetValue(bool w) const noexcept { return value_.Relative(w); }
     virtual inline unsigned int GetMoveCountFactor(void) const noexcept { return 20; }
     inline Depth GetDepth(void) const noexcept { return depth_; }

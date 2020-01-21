@@ -70,6 +70,7 @@ namespace UnitTestCheckers
       CheckersPosition* p2{ dynamic_cast<CheckersPosition*>(pm) };
       Assert::IsTrue(p2 != nullptr);
       Assert::IsTrue(p1 == *p2);
+      delete p2;
     }
 
     TEST_METHOD(TestCheckersGame)

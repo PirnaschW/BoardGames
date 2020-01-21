@@ -69,16 +69,17 @@ namespace BoardGamesCore
     assert(p != nullptr);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 5.0;  // run for n seconds
+    double limit = 30.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == Color::White;
 
-    for (unsigned int pl = 0; /*pl <= plies*/; pl++)                          // use iterative deepening
+    for (unsigned int pl = 0; /*pl <= 4*/; pl++)                               // use iterative deepening
     {
       try
       {
-        PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
-        pos->SetValue(w, p->GetValue(w));
-        pos->SetDepth(p->GetDepth());
+//      PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+        PositionValue value_ = p->EvaluateBF(plist, w, pl);
+        pos->SetValue(w, value_);
+        pos->SetDepth(pl);
         plist.callback();
         if (value_ == PositionValue::PValueType::Lost)
         {
@@ -133,20 +134,51 @@ namespace BoardGamesCore
       m->SetValue(p->GetValue(w));                                        // save real position value into move for sorting
 
       // apply alpha/beta pruning
-      if (v > alpha) { alpha = v; }                                       // reduce range for alpha, continue
       if (v >= beta)                                                      // cut branch off, use current value
       { 
-        std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth
-        SetValue(w, alpha);                                               // save top value in current position
-        depth_ = plies;                                                   // save evaluation depth
+        std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth)
+        //SetValue(w, v);                                                   // save top value in current position
+        //depth_ = plies;                                                   // save evaluation depth
         return beta;
       }
+      if (v > alpha) { alpha = v; }                                       // reduce range for alpha, continue
     }
 
-    std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth
-    SetValue(w, alpha);                                                   // save top value in current position
-    depth_ = plies;                                                       // save evaluation depth
+    std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth)
+    //SetValue(w, alpha);                                                   // save top value in current position
+    //depth_ = plies;                                                       // save evaluation depth
     return alpha;                                                         // return best value
+  }
+
+
+  PositionValue MainPosition::EvaluateBF(AIContext& plist, bool w, unsigned int plies) const noexcept
+  {
+    if (plies == 0) return GetValue(w);
+
+    auto& movelist = GetMoveList(w);
+    if (movelist.empty()) return GetValue(w);
+
+    PositionValue best = PositionValue::PValueType::Lost;
+    int z = 0;
+    for (auto& m : movelist)                                              // for all possible opponent's moves
+    {
+      MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
+      PositionValue v = -p->EvaluateBF(plist, !w, plies - 1);             // evaluate the result
+      assert(v != PositionValue::PValueType::Undefined);
+      m->SetValue(v);                                                     // save position value into move for sorting
+      if (v > best) best = v;
+
+      //wchar_t buffer[256];
+      //const Location& l{ m->GetActions()[1]->GetLocation() };
+      //wsprintfW(buffer, L"Depth: %1d - Move %d (%d) has Value:%10.10S\n", plies, ++z, l.x_, (const char*)p->GetValue(w));
+      //OutputDebugString(buffer);
+
+    }
+
+    const auto l = [](MoveP a, MoveP b) { return *b < *a; };              // define sort predicate
+    std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth)
+    SetValue(w, best);                                                    // save best value in current position
+    return best;                                                          // return best value
   }
 
 
