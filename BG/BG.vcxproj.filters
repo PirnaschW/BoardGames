@@ -169,6 +169,42 @@
     <Filter Include="Game CFour\Source Files">
       <UniqueIdentifier>{ee3bf2c3-c806-4cc6-be53-70224ffb31c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Ataxx">
+      <UniqueIdentifier>{15fd4ace-2a22-4196-b923-5b8064ae2ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Ataxx\Header Files">
+      <UniqueIdentifier>{17a94995-aae1-4da2-8a25-5d559d3cf807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Ataxx\Resource Files">
+      <UniqueIdentifier>{737a6abf-5b2e-4a76-bb23-aaf4ada55a45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Ataxx\Source Files">
+      <UniqueIdentifier>{e2fd3c4a-81e5-4247-977b-8da762715d0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Knight Fight">
+      <UniqueIdentifier>{e39b09ed-c11b-4c76-89b0-c5864d3495dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cheversi">
+      <UniqueIdentifier>{dff8d498-c1fc-4122-bdf4-d588d1b8cef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cheversi\Source Files">
+      <UniqueIdentifier>{7b12f54e-3611-4fcb-aa4d-94ea075f8999}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Knight Fight\Source Files">
+      <UniqueIdentifier>{eec1aaf8-b25b-4708-b676-9bb5ee3098e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cheversi\Header Files">
+      <UniqueIdentifier>{88aa0a19-f6fb-4016-bc74-fbf4dfa90ab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Knight Fight\Header Files">
+      <UniqueIdentifier>{99086aa2-a66b-4caf-a8c8-a5dd20109b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Cheversi\Resource Files">
+      <UniqueIdentifier>{7312a631-8507-4f11-99db-7f032e53ef1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Knight Fight\Resource Files">
+      <UniqueIdentifier>{85d45058-6690-4790-bd45-445e6b95cbdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h">
@@ -318,6 +354,24 @@
     <ClInclude Include="Game CFour\CFourResource.h">
       <Filter>Game CFour\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game Ataxx\AtaxxGame.h">
+      <Filter>Game Ataxx\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Ataxx\AtaxxResource.h">
+      <Filter>Game Ataxx\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Knight Fight\KnightFGame.h">
+      <Filter>Game Knight Fight\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Knight Fight\KnightFResource.h">
+      <Filter>Game Knight Fight\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Cheversi\CheversiGame.h">
+      <Filter>Game Cheversi\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Cheversi\CheversiResource.h">
+      <Filter>Game Cheversi\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
@@ -416,6 +470,15 @@
     <ClCompile Include="Game CFour\CFourGame.cpp">
       <Filter>Game CFour\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game Ataxx\AtaxxGame.cpp">
+      <Filter>Game Ataxx\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Knight Fight\KnightFGame.cpp">
+      <Filter>Game Knight Fight\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Cheversi\CheversiGame.cpp">
+      <Filter>Game Cheversi\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\BG.rc2">
@@ -459,6 +522,15 @@
     </None>
     <None Include="Game CFour\CFour.rc2">
       <Filter>Game CFour\Resource Files</Filter>
+    </None>
+    <None Include="Game Ataxx\Ataxx.rc2">
+      <Filter>Game Ataxx\Resource Files</Filter>
+    </None>
+    <None Include="Game Knight Fight\KnightF.rc2">
+      <Filter>Game Knight Fight\Resource Files</Filter>
+    </None>
+    <None Include="Game Cheversi\Cheversi.rc2">
+      <Filter>Game Cheversi\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -724,6 +796,15 @@
     </Image>
     <Image Include="Game CFour\res\CFourDoc.ico">
       <Filter>Game CFour\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Ataxx\res\AtaxxDoc.ico">
+      <Filter>Game Ataxx\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Knight Fight\res\KnightFDoc.ico">
+      <Filter>Game Knight Fight\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Cheversi\res\CheversiDoc.ico">
+      <Filter>Game Cheversi\Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

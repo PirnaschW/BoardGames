@@ -69,7 +69,7 @@ namespace BoardGamesCore
     assert(p != nullptr);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 30.0;  // run for n seconds
+    double limit = 3.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == Color::White;
 
     for (unsigned int pl = 0; /*pl <= 4*/; pl++)                               // use iterative deepening
