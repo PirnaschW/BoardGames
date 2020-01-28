@@ -76,43 +76,16 @@ namespace Ataxx
 
   AtaxxPosition::AtaxxPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-      SetPiece(Location(BoardPart::Main, 0U, 0U), AtaxxPiece::AtaxxPieceW);
-      SetPiece(Location(BoardPart::Main, 7U, 7U), AtaxxPiece::AtaxxPieceW);
-      SetPiece(Location(BoardPart::Main, 0U, 7U), AtaxxPiece::AtaxxPieceB);
-      SetPiece(Location(BoardPart::Main, 7U, 0U), AtaxxPiece::AtaxxPieceB);
+    SetPiece(Location(BoardPart::Main, 0U, 7U), AtaxxPiece::AtaxxPieceW);
+    SetPiece(Location(BoardPart::Main, 7U, 0U), AtaxxPiece::AtaxxPieceW);
+    SetPiece(Location(BoardPart::Main, 0U, 0U), AtaxxPiece::AtaxxPieceB);
+    SetPiece(Location(BoardPart::Main, 7U, 7U), AtaxxPiece::AtaxxPieceB);
   }
-
-  bool AtaxxPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
-  {
-    const Piece& pf = GetPiece(fr);                                       // piece to move
-    if (pf == Piece::NoTile) return false;                               // out of board
-    if (pf.IsBlank()) return false;                                      // tile not occupied
-
-    const Piece& pt = GetPiece(to);                                       // piece on target field
-    if (pt == Piece::NoTile) return false;                               // out of board
-
-    Actions a{};
-    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
-    if (!pt.IsBlank())
-    {
-      a.push_back(std::make_shared<ActionLift>(to, pt));                    // pick opponent piece up
-      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
-    }
-    a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
-    m.push_back(std::make_shared<Move>(a));                               // add move to move list
-    return false;
-  };
-
-  PositionValue AtaxxPosition::EvaluateStatically(void) const noexcept
-  {
-    return MainPosition::EvaluateStatically();
-    // ...
-  }
-
 
   const VariantList& AtaxxGame::GetVariants(void) noexcept
   {
-    static VariantList v{ { Variant{ 8, 8, "Ataxx", 2, 20 } } };
+    static VariantList v{ { Variant{ 8, 8, "Ataxx",        2, 20 } },
+                          { Variant{ 8, 8, "Assimilation", 2, 20 } } };
     return v;
   }
 

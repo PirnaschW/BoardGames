@@ -1,15 +1,11 @@
 #include "pch.h"
 
-#include "MCResource.h"
 #include "MCGame.h"
 
 namespace MassacreChess
 {
   MCPosition::MCPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
-    //srand((unsigned)time(nullptr));
-    std::srand(1);
-
     for (Coordinate z = 0; z < d[0].xCount_*d[0].yCount_ / 8; z++)
     {
       PlaceRandomly(ChessPiece::WQ);

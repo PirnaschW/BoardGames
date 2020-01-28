@@ -46,8 +46,6 @@ namespace Ataxx
   public:
     AtaxxPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const noexcept override { return new AtaxxPosition(*this); }
-    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
   };
 
 

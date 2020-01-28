@@ -5,6 +5,9 @@ namespace BoardGamesCore
 
   Game::Game(const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept : pMap_{ m }, pos {p}, lay{ l }
   {
+    //srand((unsigned)time(nullptr));
+    std::srand(1);
+
     // create the standard two players
     AddPlayer(new Player(&PlayerType::Human, Color::White));
     AddPlayer(new Player(&PlayerType::Computer, Color::Black));

@@ -14,6 +14,8 @@ namespace KnightF
 
   using namespace BoardGamesCore;
 
+  using FieldValue = unsigned char;
+
   class Checker : public Kind
   {
   private:
@@ -43,10 +45,12 @@ namespace KnightF
   class KnightFPosition : public MainPosition
   {
   public:
-    inline KnightFPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d) {}
+    KnightFPosition(const PieceMapP& p, const Dimensions& d) noexcept;
     virtual inline MainPosition* Clone(void) const noexcept override { return new KnightFPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
+  private:
+    std::vector<FieldValue> fValue_{};
   };
 
 
