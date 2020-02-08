@@ -14,6 +14,7 @@
 #include "Game Logik\LogikGame.h"
 #include "Game Massacre Chess\MCGame.h"
 #include "Game Shogi\ShogiGame.h"
+#include "Game Tank Battle\TankBGame.h"
 #include "Game TicTacToe\TicTacToeGame.h"
 
 using namespace BoardGamesCore;
@@ -31,6 +32,7 @@ void BGSelect::AddGames(void)
   AddGame(IDR_GAMETYPE_LOGIK);
   AddGame(IDR_GAMETYPE_MCHESS);
   AddGame(IDR_GAMETYPE_SHOGI);
+  AddGame(IDR_GAMETYPE_TANKB);
   AddGame(IDR_GAMETYPE_TICTACTOE);
 }
 
@@ -50,6 +52,7 @@ const VariantList& BGSelect::GetVariants(int id) const
     case IDR_GAMETYPE_MCHESS:     return Variants<MassacreChess::MCGame       >::GetVariants();
     case IDR_GAMETYPE_SHOGI:      return Variants<Shogi::        ShogiGame    >::GetVariants();
     case IDR_GAMETYPE_TICTACTOE:  return Variants<TicTacToe::    TicTacToeGame>::GetVariants();
+    case IDR_GAMETYPE_TANKB:      return Variants<TankB::        TankBGame    >::GetVariants();
     default:                      return Variants<TicTacToe::    TicTacToeGame>::GetVariants();
   }
 }
@@ -73,6 +76,7 @@ Game* BGSelect::CreateGame(void)
       case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame       (Variants<MassacreChess::MCGame       >::GetPieces(), MassacreChess::MCGame::       GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_SHOGI:      return new Shogi::        ShogiGame    (Variants<Shogi::        ShogiGame    >::GetPieces(), Shogi::        ShogiGame::    GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe::    TicTacToeGame(Variants<TicTacToe::    TicTacToeGame>::GetPieces(), TicTacToe::    TicTacToeGame::GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_TANKB:      return new TankB::        TankBGame    (Variants<TankB::        TankBGame    >::GetPieces(), TankB::        TankBGame::    GetDimensions(m_size_x, m_size_y));
     }
   }
   return nullptr;

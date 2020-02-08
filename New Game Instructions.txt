@@ -2,7 +2,7 @@ New Game:
 create new Windows Dir
 copy Template Game.h, .cpp, .rc2, TemplateResource.h, TemplateDoc.ico to new dir
 rename all files
-crweate new folders in Solutions
+create new folders in Solutions
 add them in the respective Folders
 open all files and rename namespace
 rename classes

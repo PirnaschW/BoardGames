@@ -205,6 +205,18 @@
     <Filter Include="Game Knight Fight\Resource Files">
       <UniqueIdentifier>{85d45058-6690-4790-bd45-445e6b95cbdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Tank Battle">
+      <UniqueIdentifier>{f1004ef3-0c6b-4f29-a1ba-fbda3da254bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Tank Battle\Source Files">
+      <UniqueIdentifier>{62541c26-f175-4aa8-9730-84aae9de2f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Tank Battle\Header Files">
+      <UniqueIdentifier>{e825853e-5e80-46fb-84eb-d32bb73a0411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Tank Battle\Resource Files">
+      <UniqueIdentifier>{a908f33e-08dd-4019-8d49-df6ecf56084e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h">
@@ -372,6 +384,12 @@
     <ClInclude Include="Game Cheversi\CheversiResource.h">
       <Filter>Game Cheversi\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game Tank Battle\TankBGame.h">
+      <Filter>Game Tank Battle\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Tank Battle\TankBResource.h">
+      <Filter>Game Tank Battle\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
@@ -479,6 +497,9 @@
     <ClCompile Include="Game Cheversi\CheversiGame.cpp">
       <Filter>Game Cheversi\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game Tank Battle\TankBGame.cpp">
+      <Filter>Game Tank Battle\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\BG.rc2">
@@ -531,6 +552,9 @@
     </None>
     <None Include="Game Cheversi\Cheversi.rc2">
       <Filter>Game Cheversi\Resource Files</Filter>
+    </None>
+    <None Include="Game Tank Battle\TankB.rc2">
+      <Filter>Game Tank Battle\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -805,6 +829,9 @@
     </Image>
     <Image Include="Game Cheversi\res\CheversiDoc.ico">
       <Filter>Game Cheversi\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Tank Battle\res\TankBDoc.ico">
+      <Filter>Game Tank Battle\Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
