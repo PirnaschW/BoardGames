@@ -195,8 +195,8 @@ namespace Shogi
   class ShogiPiece : public Piece
   {
   private:
-    inline ShogiPiece(const Kind& k, const Color& c, const ShogiPiece& u, const ShogiPiece& d, UINT l, UINT s) noexcept
-      : Piece(k, c, l, l, s), up(u), down(d) {}
+    inline ShogiPiece(const Kind& k, const PieceColor& c, const ShogiPiece& u, const ShogiPiece& d, UINT ID) noexcept
+      : Piece(k, c, ID), up(u), down(d) {}
     ShogiPiece(const ShogiPiece&) = delete;
     ShogiPiece& operator=(const ShogiPiece&) = delete;
 
@@ -259,7 +259,7 @@ namespace Shogi
   // extensions to base class
   public:
   private:
-    inline bool CanPromote(const Color& c, const Location &l) const noexcept;
+    inline bool CanPromote(const PieceColor& c, const Location &l) const noexcept;
 
   private:
   };

@@ -5,8 +5,8 @@
 namespace CFour
 {
   inline const Checker Checker::TheChecker{};
-  inline const CFourPiece CFourPiece::CFourPieceW{ Checker::TheChecker, Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-  inline const CFourPiece CFourPiece::CFourPieceB{ Checker::TheChecker, Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+  inline const CFourPiece CFourPiece::CFourPieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
+  inline const CFourPiece CFourPiece::CFourPieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
 
   bool CFourPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
@@ -73,8 +73,8 @@ namespace CFour
     GetAllMoves();                                                                                 // fill the move lists
     depth_ = 1;
 
-    if (onTurn_ == &Color::White && movesW_.empty()) return PositionValue::PValueType::Lost;     // if no more moves, game over
-    if (onTurn_ == &Color::Black && movesB_.empty()) return PositionValue::PValueType::Won;
+    if (onTurn_ == &PieceColor::White && movesW_.empty()) return PositionValue::PValueType::Lost;     // if no more moves, game over
+    if (onTurn_ == &PieceColor::Black && movesB_.empty()) return PositionValue::PValueType::Won;
     return EvaluateChainLengths(4);
   }
 

@@ -36,13 +36,13 @@ namespace LoA
   class LoAPiece : public Piece
   {
   private:
-    inline LoAPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline LoAPiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     LoAPiece(const LoAPiece&) = delete;
     LoAPiece& operator=(const LoAPiece&) = delete;
 
   public:
-    static const LoAPiece LoAPieceW; //{ &LoAPeg::ThePeg, &Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-    static const LoAPiece LoAPieceB; //{ &LoAPeg::ThePeg, &Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+    static const LoAPiece LoAPieceW; //{ &LoAPeg::ThePeg, &PieceColor::White, IDB_WCL, IDB_WCD, IDB_WCS };
+    static const LoAPiece LoAPieceB; //{ &LoAPeg::ThePeg, &PieceColor::Black, IDB_BCL, IDB_BCD, IDB_BCS };
   };
 
 

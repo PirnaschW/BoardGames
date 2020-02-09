@@ -28,7 +28,7 @@ namespace TicTacToe
   class TicTacToePiece : public Piece
   {
   private:
-    inline TicTacToePiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline TicTacToePiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     TicTacToePiece(const TicTacToePiece&) = delete;
     TicTacToePiece& operator=(const TicTacToePiece&) = delete;
 

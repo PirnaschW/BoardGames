@@ -28,7 +28,7 @@ namespace Template
   class TemplatePiece : public Piece
   {
   private:
-    inline TemplatePiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline TemplatePiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     TemplatePiece(const TemplatePiece&) = delete;
     TemplatePiece& operator=(const TemplatePiece&) = delete;
   public:

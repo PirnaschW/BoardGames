@@ -5,8 +5,8 @@
 namespace Ataxx
 {
   inline const Checker Checker::TheChecker{};
-  inline const AtaxxPiece AtaxxPiece::AtaxxPieceW{ Checker::TheChecker, Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-  inline const AtaxxPiece AtaxxPiece::AtaxxPieceB{ Checker::TheChecker, Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+  inline const AtaxxPiece AtaxxPiece::AtaxxPieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
+  inline const AtaxxPiece AtaxxPiece::AtaxxPieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
 
 
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const noexcept
@@ -16,7 +16,7 @@ namespace Ataxx
 
     const AtaxxPosition& pos = dynamic_cast<const AtaxxPosition&>(p);     // position must be a Cam position
     const Piece& p0 = pos.GetPiece(l);                                    // piece that is moving
-    const Location ls{ p0.IsColor(Color::White) ? w : b };
+    const Location ls{ p0.IsColor(PieceColor::White) ? w : b };
 
     for (const auto& d : Offset::Qdirection)                              // try slides all eight directions
     {
@@ -92,6 +92,7 @@ namespace Ataxx
   const PieceMapP& AtaxxGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(AtaxxPiece::AtaxxPieceW);
     p->Add(AtaxxPiece::AtaxxPieceB);
     return p;

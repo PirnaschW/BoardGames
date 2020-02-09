@@ -5,8 +5,8 @@
 namespace TicTacToe
 {
   inline const Checker Checker::TheChecker;
-  inline const TicTacToePiece TicTacToePiece::TicTacToePieceB{ Checker::TheChecker, Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
-  inline const TicTacToePiece TicTacToePiece::TicTacToePieceW{ Checker::TheChecker, Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
+  inline const TicTacToePiece TicTacToePiece::TicTacToePieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
+  inline const TicTacToePiece TicTacToePiece::TicTacToePieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
 
   void TicTacToePosition::GetAllMoves(void) const noexcept                      // collect all moves
   {
@@ -60,24 +60,24 @@ namespace TicTacToe
         const Location l{ BoardPart::Main,i,j };
         const Piece& p = GetPiece(l);
         char c = '-';
-        if (p.IsColor(Color::White)) c = 'W';
-        if (p.IsColor(Color::Black)) c = 'B';
+        if (p.IsColor(PieceColor::White)) c = 'W';
+        if (p.IsColor(PieceColor::Black)) c = 'B';
         posi[i + 4 * j] = c;
       }
       posi[sizeX_ + 4 * j] = '|';
     }
 
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn_ == &Color::White && movesW_.empty()) return PositionValue::PValueType::Tie;        // if no more moves, game over
-    if (onTurn_ == &Color::Black && movesB_.empty()) return PositionValue::PValueType::Tie;
+    if (onTurn_ == &PieceColor::White && movesW_.empty()) return PositionValue::PValueType::Tie;        // if no more moves, game over
+    if (onTurn_ == &PieceColor::Black && movesB_.empty()) return PositionValue::PValueType::Tie;
     for (Coordinate j = 0; j < sizeY_; j++)
     {
       for (Coordinate i = 0; i < sizeX_; i++)  // loop through all locations
       {
         const Location l{ BoardPart::Main,i,j };
         const Piece& p = GetPiece(l);
-        if (p.IsColor(Color::NoColor)) continue;  // nothing here, so no chain can start
-        const bool w = p.IsColor(Color::White);
+        if (p.IsColor(PieceColor::NoColor)) continue;  // nothing here, so no chain can start
+        const bool w = p.IsColor(PieceColor::White);
 
         for (const Offset& d : Offset::Qdirection)
         {
@@ -91,7 +91,7 @@ namespace TicTacToe
             if (pp->IsColor(p.GetColor())) z++;
             else
             {
-              if (pp->IsColor(Color::NoColor)) (w ? v1 : v2) += 1;     // if line ends with free field, give an extra point - much better than opponent's piece
+              if (pp->IsColor(PieceColor::NoColor)) (w ? v1 : v2) += 1;     // if line ends with free field, give an extra point - much better than opponent's piece
               break;
             }
           }

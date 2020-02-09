@@ -29,7 +29,7 @@ namespace Hasami
   class HasamiPiece : public Piece
   {
   private:
-    inline HasamiPiece(const Kind& k, const Color& c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline HasamiPiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     HasamiPiece(const HasamiPiece&) = delete;
     HasamiPiece& operator=(const HasamiPiece&) = delete;
 

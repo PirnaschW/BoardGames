@@ -30,7 +30,7 @@ namespace KnightF
   class KnightFPiece : public Piece
   {
   private:
-    inline KnightFPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline KnightFPiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     KnightFPiece(const KnightFPiece&) = delete;
     KnightFPiece& operator=(const KnightFPiece&) = delete;
   public:

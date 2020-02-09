@@ -3,7 +3,7 @@
 namespace BoardGamesChessPieces
 {
   using BoardGamesCore::Offset;
-  using BoardGamesCore::Color;
+  using BoardGamesCore::PieceColor;
 
   inline const Pawn   Pawn  ::ThePawn  {};
   inline const Knight Knight::TheKnight{};
@@ -12,19 +12,19 @@ namespace BoardGamesChessPieces
   inline const Queen  Queen ::TheQueen {};
   inline const King   King  ::TheKing  {};
   
-  inline const ChessPiece ChessPiece::WP{ Pawn  ::ThePawn,   Color::White, IDB_WPL, IDB_WPD, IDB_WPS };
-  inline const ChessPiece ChessPiece::WB{ Bishop::TheBishop, Color::White, IDB_WBL, IDB_WBD, IDB_WBS };
-  inline const ChessPiece ChessPiece::WN{ Knight::TheKnight, Color::White, IDB_WNL, IDB_WND, IDB_WNS };
-  inline const ChessPiece ChessPiece::WR{ Rook  ::TheRook,   Color::White, IDB_WRL, IDB_WRD, IDB_WRS };
-  inline const ChessPiece ChessPiece::WQ{ Queen ::TheQueen,  Color::White, IDB_WQL, IDB_WQD, IDB_WQS };
-  inline const ChessPiece ChessPiece::WK{ King  ::TheKing,   Color::White, IDB_WKL, IDB_WKD, IDB_WKS };
+  inline const ChessPiece ChessPiece::WP{ Pawn  ::ThePawn,   PieceColor::White, IDB_WPL };
+  inline const ChessPiece ChessPiece::WB{ Bishop::TheBishop, PieceColor::White, IDB_WBL };
+  inline const ChessPiece ChessPiece::WN{ Knight::TheKnight, PieceColor::White, IDB_WNL };
+  inline const ChessPiece ChessPiece::WR{ Rook  ::TheRook,   PieceColor::White, IDB_WRL };
+  inline const ChessPiece ChessPiece::WQ{ Queen ::TheQueen,  PieceColor::White, IDB_WQL };
+  inline const ChessPiece ChessPiece::WK{ King  ::TheKing,   PieceColor::White, IDB_WKL };
 
-  inline const ChessPiece ChessPiece::BP{ Pawn  ::ThePawn,   Color::Black, IDB_BPL, IDB_BPD, IDB_BPS };
-  inline const ChessPiece ChessPiece::BB{ Bishop::TheBishop, Color::Black, IDB_BBL, IDB_BBD, IDB_BBS };
-  inline const ChessPiece ChessPiece::BN{ Knight::TheKnight, Color::Black, IDB_BNL, IDB_BND, IDB_BNS };
-  inline const ChessPiece ChessPiece::BR{ Rook  ::TheRook,   Color::Black, IDB_BRL, IDB_BRD, IDB_BRS };
-  inline const ChessPiece ChessPiece::BQ{ Queen ::TheQueen,  Color::Black, IDB_BQL, IDB_BQD, IDB_BQS };
-  inline const ChessPiece ChessPiece::BK{ King  ::TheKing,   Color::Black, IDB_BKL, IDB_BKD, IDB_BKS };
+  inline const ChessPiece ChessPiece::BP{ Pawn  ::ThePawn,   PieceColor::Black, IDB_BPL };
+  inline const ChessPiece ChessPiece::BB{ Bishop::TheBishop, PieceColor::Black, IDB_BBL };
+  inline const ChessPiece ChessPiece::BN{ Knight::TheKnight, PieceColor::Black, IDB_BNL };
+  inline const ChessPiece ChessPiece::BR{ Rook  ::TheRook,   PieceColor::Black, IDB_BRL };
+  inline const ChessPiece ChessPiece::BQ{ Queen ::TheQueen,  PieceColor::Black, IDB_BQL };
+  inline const ChessPiece ChessPiece::BK{ King  ::TheKing,   PieceColor::Black, IDB_BKL };
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {

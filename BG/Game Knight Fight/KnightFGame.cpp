@@ -5,8 +5,8 @@
 namespace KnightF
 {
   inline const Checker Checker::TheChecker{};
-  inline const KnightFPiece KnightFPiece::KnightFPieceW{ Checker::TheChecker, Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-  inline const KnightFPiece KnightFPiece::KnightFPieceB{ Checker::TheChecker, Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+  inline const KnightFPiece KnightFPiece::KnightFPieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
+  inline const KnightFPiece KnightFPiece::KnightFPieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
 
   KnightFPosition::KnightFPosition(const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(p, d)
   {
@@ -62,6 +62,7 @@ namespace KnightF
   const PieceMapP& KnightFGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(KnightFPiece::KnightFPieceW);
     p->Add(KnightFPiece::KnightFPieceB);
     return p;

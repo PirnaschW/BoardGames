@@ -2,6 +2,13 @@
 
 namespace BoardGamesCore
 {
+  void Tile::Draw(CDC* pDC, const Piece& p) const
+  {
+    if (p == Piece::NoTile) return;
+    tilecolor_.Draw(pDC, rect_);
+    if (p == Piece::NoPiece) return;
+    p.Draw(pDC, rect_);
+  }
 
   Layout::Layout(const Dimension& d, const BoardPart b, const LayoutType lt) noexcept : dim_(d), ltype_(lt), tiles_{ 1ULL * d.xCount_*d.yCount_,nullptr }
   {
@@ -99,13 +106,13 @@ namespace BoardGamesCore
     if (_mode.IsSet(Mode::Dragging))
     {
       const CRect r(dragPoint_, SIZE{32,32});  // doesn't work for all games! - some have 18x20
-      dragPiece_->Draw(pDC, r, TileColor::Small);
+      dragPiece_->Draw(pDC, r);
     }
 
     if (pos->GetDepth() >= 0U) {
       CString s;
       int h = 10;
-      const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == Color::White));
+      const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == PieceColor::White));
       s = "Depth";                pDC->TextOutW(800, h += 20, s);  s.Format(_T("%d"),  pos->GetDepth());       pDC->TextOutW(1000, h, s);
       s = "Value";                pDC->TextOutW(800, h += 20, s);  s = v;                                      pDC->TextOutW(1000, h, s);
       s = "PList size";           pDC->TextOutW(800, h += 20, s);  s.Format(_T("%zu"), plist.size());          pDC->TextOutW(1000, h, s);
@@ -235,7 +242,7 @@ namespace BoardGamesCore
     {
       assert(moves.empty());
       MainPosition* p{ pos->GetPosition(plist) };  // need to get ALL legal moves (this piece might not be allowed to move because another one has a mandatory jump)
-      for (const auto& m : p->GetMoveList(pos->OnTurn() == Color::White))   // filter moves of the selected piece into 'moves'
+      for (const auto& m : p->GetMoveList(pos->OnTurn() == PieceColor::White))   // filter moves of the selected piece into 'moves'
       {
         const Location& lf = m->GetFrL();
         if (lf == l || (lf.b_ == BoardPart::Stock && m->GetToL() == l)) moves.push_back(m);

@@ -70,7 +70,7 @@ namespace BoardGamesCore
 
     auto t_start = std::chrono::high_resolution_clock::now();
     double limit = 3.0;  // run for n seconds
-    bool w = CurrentPlayer()->GetColor() == Color::White;
+    bool w = CurrentPlayer()->GetColor() == PieceColor::White;
 
     for (unsigned int pl = 0; /*pl <= 4*/; pl++)                               // use iterative deepening
     {
@@ -108,11 +108,11 @@ namespace BoardGamesCore
       auto t_now = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double> elapsed = t_now - t_start;
       if (elapsed.count() > limit) break;
-      if (p->GetMoveList(CurrentPlayer()->GetColor() == Color::White).size() == 1) break;          // if there is only one move, don't spend time evaluating it
+      if (p->GetMoveList(CurrentPlayer()->GetColor() == PieceColor::White).size() == 1) break;          // if there is only one move, don't spend time evaluating it
 //      plist->callback();
     }
 
-    Execute(*(p->GetBestMove(CurrentPlayer()->GetColor() == Color::White)));
+    Execute(*(p->GetBestMove(CurrentPlayer()->GetColor() == PieceColor::White)));
     return true;
   }
 
@@ -190,8 +190,8 @@ namespace BoardGamesCore
     // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
     GetAllMoves();                                                             // fill the move lists
     depth_ = 1;
-    if (onTurn_ == &Color::White && movesW_.empty()) return PositionValue::PValueType::Lost;     // if no more moves, game over
-    if (onTurn_ == &Color::Black && movesB_.empty()) return PositionValue::PValueType::Won;
+    if (onTurn_ == &PieceColor::White && movesW_.empty()) return PositionValue::PValueType::Lost;     // if no more moves, game over
+    if (onTurn_ == &PieceColor::Black && movesB_.empty()) return PositionValue::PValueType::Won;
     PositionValue v{ GetMoveCountFactor() * (movesW_.size() - movesB_.size()) };
     for (Coordinate j = 0; j < sizeY_; j++)
     {
@@ -200,7 +200,7 @@ namespace BoardGamesCore
         const Location l{ BoardPart::Main, i,j };
         const Piece& p = GetPiece(l);
         if ((p == Piece::NoTile) || (p == Piece::NoPiece)) continue;         // nothing here
-        v += (p.IsColor(Color::White) ? 1 : -1) * p.GetValue(*this, l);
+        v += (p.IsColor(PieceColor::White) ? 1 : -1) * p.GetValue(*this, l);
       }
     }
     return v;
@@ -216,8 +216,8 @@ namespace BoardGamesCore
       {                                                                       
         const Location l{ BoardPart::Main,i,j };                              
         const Piece& p = GetPiece(l);                                         
-        if (p.IsColor(Color::NoColor)) continue;                               // nothing here, so no chain can start
-        const bool w = p.IsColor(Color::White);                               
+        if (p.IsColor(PieceColor::NoColor)) continue;                               // nothing here, so no chain can start
+        const bool w = p.IsColor(PieceColor::White);                               
 
         for (const Offset& d : Offset::Qdirection)
         {                                                                     
@@ -231,7 +231,7 @@ namespace BoardGamesCore
             if (pp->IsColor(p.GetColor())) z++;
             else
             {
-              if (pp->IsColor(Color::NoColor)) (w ? v1 : v2) += 100;           // if line ends with free field, give an extra point - much better than opponent's piece
+              if (pp->IsColor(PieceColor::NoColor)) (w ? v1 : v2) += 100;           // if line ends with free field, give an extra point - much better than opponent's piece
               break;
             }
           }

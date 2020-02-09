@@ -46,9 +46,9 @@ namespace BoardGamesCore
     }
   }
 
-  const Location MainPosition::GetNextTakenL(const Color& c) const noexcept
+  const Location MainPosition::GetNextTakenL(const PieceColor& c) const noexcept
   {
-    Coordinate y{ c == Color::White ? 0U : 1U };
+    Coordinate y{ c == PieceColor::White ? 0U : 1U };
     for (Coordinate x = 0; ; x++)
     {
       const Location l{ BoardPart::Taken, x, y };
@@ -71,7 +71,7 @@ namespace BoardGamesCore
         const Piece& p = GetPiece(Location(BoardPart::Main, i, j));
         if (!p.IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
         {
-          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(Color::White) ? movesW_ : movesB_);
+          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(PieceColor::White) ? movesW_ : movesB_);
         }
       }
     }
@@ -90,14 +90,14 @@ namespace BoardGamesCore
 
   void MainPosition::NextPlayer(void) noexcept
   {
-    if (onTurn_ == &Color::White) onTurn_ = &Color::Black;
-    else onTurn_ = &Color::White;
+    if (onTurn_ == &PieceColor::White) onTurn_ = &PieceColor::Black;
+    else onTurn_ = &PieceColor::White;
   };
 
   void MainPosition::PreviousPlayer(void) noexcept
   {
-    if (onTurn_ == &Color::White) onTurn_ = &Color::Black;
-    else onTurn_ = &Color::White;
+    if (onTurn_ == &PieceColor::White) onTurn_ = &PieceColor::Black;
+    else onTurn_ = &PieceColor::White;
   };
 
 

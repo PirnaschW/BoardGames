@@ -3,19 +3,17 @@ namespace BoardGamesCore
 {
 
   class Kind;
-  class Color;
+  class PieceColor;
   class MainPosition;
   class Move;
   using MoveP = std::shared_ptr<Move>;
   using Moves = std::vector<MoveP>;
   class TileColor;
 
-  // cannot be constexpr as it loads bitmaps at runtime
-  class Piece
+  class Piece // an object that can be on a Location - could be checkers, a wall, or nothing
   {
   protected:
-    inline Piece(const Kind& k, const Color& c, UINT nID_l, UINT nID_d, UINT nID_s) noexcept
-      : kind_{ k }, color_{ c }, ID_l_{ nID_l }, ID_d_{ nID_d }, ID_s_{ nID_s } {}
+    inline Piece(const Kind& k, const PieceColor& c, UINT ID) noexcept : kind_{ k }, color_{ c }, ID_{ ID } {}
   public:
     Piece(void) noexcept = delete;
     Piece(const Piece&) noexcept = delete;            // delete copy constructor
@@ -28,38 +26,35 @@ namespace BoardGamesCore
     size_t GetHash(void) const noexcept;
     void CollectMoves(const MainPosition& p, const Location& l, Moves& m) const;
     bool IsKind(const Kind& k) const noexcept;
-    bool IsColor(const Color& c) const noexcept;
-    constexpr inline const Color& GetColor(void) const noexcept { return color_; }
+    bool IsColor(const PieceColor& c) const noexcept;
+    constexpr inline const PieceColor& GetColor(void) const noexcept { return color_; }
 
     virtual inline void Serialize(CArchive* ar) const;
     virtual inline unsigned int GetValue(const MainPosition& p, const Location& l) const noexcept;
     virtual inline bool IsPromotable(void) const noexcept { return false; }                     // by default: no promotions
     virtual inline const Piece& Promote(bool /*up*/) const noexcept { return *this; };           // by default: no promotions
-    virtual void Draw(CDC* pDC, const CRect& r, const TileColor& f) const;
+    virtual void Draw(CDC* pDC, const CRect& r) const;
 
     static const std::unordered_map<std::string, const Piece&>& GetHTMLPieceMap(void) noexcept;
     static std::vector<const Piece*> ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece&>&);
 
   public:
-    static const Piece NoTile;    // nothing exists there, not part of the board, don't draw the tile at all
-    static const Piece NoPiece;   // no piece, but valid part of the board, draw it
+    static const Piece NoTile;    // used to indicate 'not part of the board'
+    static const Piece NoPiece;   // used to indicate 'empty field'
 
   protected:
-    const Kind& kind_;      // static shared object ('Singleton')
-    const Color& color_;    // static shared object ('Singleton')
+    const Kind& kind_;            // static shared object ('Singleton')
+    const PieceColor& color_;     // static shared object ('Singleton')
 
   private:
-    UINT ID_l_;             // bitmap ID for light tile
-    UINT ID_d_;             // bitmap ID for dark tile
-    UINT ID_s_;             // bitmap ID for small tile
-    mutable CBitmap cb_l_{};  // mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
-    mutable CBitmap cb_d_{};
-    mutable CBitmap cb_s_{};
+    UINT ID_;                // bitmap ID
+    mutable CBitmap bmP_{};  // Piece bitmap - mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
+    mutable CBitmap bmM_{};  // Mask  bitmap 
   };
 
   static_assert(!std::is_abstract<Piece>::value, "is abstract");
   static_assert(!std::is_trivially_constructible<Piece>::value, "must not be trivially constructible");
-  static_assert(!std::is_constructible<Piece, Kind*, Color*, UINT, UINT, UINT>::value, "is not constructible");
+  static_assert(!std::is_constructible<Piece, Kind*, PieceColor*, UINT, UINT, UINT>::value, "is not constructible");
   static_assert(!std::is_assignable<Piece, Piece>::value, "is assignable");
 
   using PieceIndex = unsigned char;

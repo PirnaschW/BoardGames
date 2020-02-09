@@ -148,7 +148,7 @@ namespace Test
       //assert(pl0 == 4);
 
       //MainPosition* pos = game.GetPosition();
-      //assert(pos->OnTurn() == &Color::White);
+      //assert(pos->OnTurn() == &PieceColor::White);
 
 
       //AIContext plist{};
@@ -297,22 +297,22 @@ namespace Test
       }
 
       PositionValue Best{ 0 };
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 2);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 3);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 4);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 5);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 6);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 7);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 8);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 9);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 10);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 11);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 12);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 13);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 14);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 15);
-      Best = pos->Evaluate(plist, &Color::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 16);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 2);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 3);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 4);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 5);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 6);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 7);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 8);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 9);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 10);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 11);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 12);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 13);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 14);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 15);
+      Best = pos->Evaluate(plist, &PieceColor::White, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 16);
 
       bool ok{ true };
       //    ok = game.AIMove();

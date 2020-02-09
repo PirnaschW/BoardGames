@@ -29,7 +29,7 @@ namespace Ataxx
   class AtaxxPiece : public Piece
   {
   private:
-    inline AtaxxPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline AtaxxPiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     AtaxxPiece(const AtaxxPiece&) = delete;
     AtaxxPiece& operator=(const AtaxxPiece&) = delete;
   public:

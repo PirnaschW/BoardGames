@@ -28,7 +28,7 @@ namespace CFour
   class CFourPiece : public Piece
   {
   private:
-    inline CFourPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) noexcept : Piece(k, c, l, d, s) {}
+    inline CFourPiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     CFourPiece(const CFourPiece&) = delete;
     CFourPiece& operator=(const CFourPiece&) = delete;
   public:

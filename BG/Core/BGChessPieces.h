@@ -79,7 +79,7 @@ namespace BoardGamesChessPieces
   class ChessPiece : public Piece
   {
   private:
-    ChessPiece(const Kind& k, const Color& c, UINT l, UINT d, UINT s) : Piece(k, c, l, d, s) {}
+    ChessPiece(const Kind& k, const PieceColor& c, UINT ID) : Piece(k, c, ID) {}
     ChessPiece(const ChessPiece&) = delete;
     ChessPiece& operator=(const ChessPiece&) = delete;
 

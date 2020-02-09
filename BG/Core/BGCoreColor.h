@@ -1,43 +1,47 @@
 namespace BoardGamesCore
 {
 
-  class Color final
+  class PieceColor final
   {
   private:
-    constexpr inline Color(const char& c) noexcept : color_{ c } {}
+    constexpr inline PieceColor(const char& c) noexcept : color_{ c } {}
   public:
-    constexpr inline bool operator ==(const Color& c) const noexcept { return c.color_ == color_; }
-    constexpr inline bool operator !=(const Color& c) const noexcept { return !(*this == c); }
+    constexpr inline bool operator ==(const PieceColor& c) const noexcept { return c.color_ == color_; }
+    constexpr inline bool operator !=(const PieceColor& c) const noexcept { return !(*this == c); }
     inline size_t GetHash(void) const noexcept { return std::hash<char>()(color_); }
-    constexpr inline const Color& operator !(void) const noexcept { return color_ == 'W' ? Black : White; }
     void Serialize(CArchive* ar) const;
 
   private:
     const char color_;
 
   public:  // the only instances ever to exists; handed around by pointer
-    static const Color Void;
-    static const Color NoColor;
-    static const Color White;
-    static const Color Black;
+    static const PieceColor Void;
+    static const PieceColor NoColor;
+    static const PieceColor White;
+    static const PieceColor Black;
   };
 
-  static_assert(!std::is_abstract<Color>::value, "must not be abstract");
-  static_assert(!std::is_trivially_constructible<class Color>::value, "must not be trivially constructible");
-  static_assert(!std::is_constructible<class Color, char&>::value, "must not be 'char&' constructible");
+  static_assert(!std::is_abstract<PieceColor>::value, "must not be abstract");
+  static_assert(!std::is_trivially_constructible<class PieceColor>::value, "must not be trivially constructible");
+  static_assert(!std::is_constructible<class PieceColor, char&>::value, "must not be 'char&' constructible");
 
 
-  class TileColor final
+  class TileColor
   {
-  private:
-    constexpr inline TileColor(const char& f) noexcept : tilecolor_{ f } {}
+  protected:
+    inline TileColor(const char& f, UINT ID) noexcept : tilecolor_{ f }, ID_{ ID } {}
   public:
     constexpr inline bool operator ==(const TileColor& t) const noexcept { return t.tilecolor_ == tilecolor_; }
     constexpr inline bool operator !=(const TileColor& t) const noexcept { return !(*this == t); }
+    virtual void Draw(CDC* pDC, const CRect& r) const;
     void Serialize(CArchive* ar) const;
 
   private:
     const char tilecolor_;
+
+  private:
+    UINT ID_;               // bitmap ID for tile
+    mutable CBitmap cb_{};  // mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
 
   public:  // the only instances ever to exists; handed around by pointer
     static const TileColor Light;

@@ -9,8 +9,8 @@ namespace BoardGamesCore
     std::srand(1);
 
     // create the standard two players
-    AddPlayer(new Player(&PlayerType::Human, Color::White));
-    AddPlayer(new Player(&PlayerType::Computer, Color::Black));
+    AddPlayer(new Player(&PlayerType::Human, PieceColor::White));
+    AddPlayer(new Player(&PlayerType::Computer, PieceColor::Black));
 
     // automatically put the content of the PieceMap in the Stock
     for (PieceIndex i = 0; i < m->GetCount()-1; i++) // skip the last piece, it is NoTile, and cannot be drawn

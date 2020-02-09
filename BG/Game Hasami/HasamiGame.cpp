@@ -5,8 +5,8 @@
 namespace Hasami
 {
   inline const Checker Checker::TheChecker{};
-  inline const HasamiPiece HasamiPiece::HasamiPieceB{ Checker::TheChecker, Color::Black, IDB_HASAMI_B, IDB_HASAMI_BS };
-  inline const HasamiPiece HasamiPiece::HasamiPieceW{ Checker::TheChecker, Color::White, IDB_HASAMI_W, IDB_HASAMI_WS };
+  inline const HasamiPiece HasamiPiece::HasamiPieceB{ Checker::TheChecker, PieceColor::Black, IDB_HASAMI_B };
+  inline const HasamiPiece HasamiPiece::HasamiPieceW{ Checker::TheChecker, PieceColor::White, IDB_HASAMI_W };
 
   void Checker::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept
   {
@@ -79,22 +79,22 @@ namespace Hasami
   PositionValue HasamiPosition::EvaluateStatically(void) const noexcept
   {
     GetAllMoves();                                                        // fill the move lists
-    if (onTurn_ == &Color::White && movesW_.empty()) return PositionValue::PValueType::Tie;        // if no more moves, game over
-    if (onTurn_ == &Color::Black && movesB_.empty()) return PositionValue::PValueType::Tie;
+    if (onTurn_ == &PieceColor::White && movesW_.empty()) return PositionValue::PValueType::Tie;        // if no more moves, game over
+    if (onTurn_ == &PieceColor::Black && movesB_.empty()) return PositionValue::PValueType::Tie;
 
     int v1{ 0 };
     int v2{ 0 };
 
     for (Coordinate j = 0; j < sizeY_; j++)
     {
-      const bool b1{ OnTurn() == Color::White ? j < sizeY_ - 2 : j > 1 };  // limits for the player on turn
-      const bool b2{ OnTurn() == Color::White ? j > 1 : j < sizeY_ - 2 };  // limits for the player not on turn
+      const bool b1{ OnTurn() == PieceColor::White ? j < sizeY_ - 2 : j > 1 };  // limits for the player on turn
+      const bool b2{ OnTurn() == PieceColor::White ? j > 1 : j < sizeY_ - 2 };  // limits for the player not on turn
       for (Coordinate i = 0; i < sizeX_; i++)  // loop through all locations
       {
         const Location l{ BoardPart::Main, i,j };
         const Piece& p = GetPiece(l);
-        if (p.IsColor(Color::NoColor)) continue;  // nothing here, so no chain can start
-        const bool w = p.IsColor(Color::White);
+        if (p.IsColor(PieceColor::NoColor)) continue;  // nothing here, so no chain can start
+        const bool w = p.IsColor(PieceColor::White);
 
         for (unsigned int k = 0; k < 4; k++)
         {
@@ -115,7 +115,7 @@ namespace Hasami
             }
             else
             {
-              if (pp->IsColor(Color::NoColor))
+              if (pp->IsColor(PieceColor::NoColor))
               {
                 (p.IsColor(OnTurn()) ? v1 : v2) += 1;    // if line ends with free field, give an extra point - much better than opponent's piece
               }

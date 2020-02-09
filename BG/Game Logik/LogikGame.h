@@ -50,7 +50,7 @@ namespace Logik
   class LogikPiece final : public Piece
   {
   private:
-    inline LogikPiece(const Kind& k, const Color& c, UINT l, UINT s) noexcept : Piece(k, c, l, l, s) {}
+    inline LogikPiece(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
     LogikPiece(const LogikPiece&) = delete;
     LogikPiece& operator=(const LogikPiece&) = delete;
 

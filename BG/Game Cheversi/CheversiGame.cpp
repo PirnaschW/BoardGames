@@ -43,7 +43,7 @@ namespace Cheversi
         const Piece& p = GetPiece(Location(BoardPart::Main, i, j));
         if (!p.IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
         {
-          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(Color::White) ? movesW_ : movesB_);
+          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(PieceColor::White) ? movesW_ : movesB_);
         }
       }
     }
@@ -87,6 +87,7 @@ namespace Cheversi
   const PieceMapP& CheversiGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(ChessPiece::WK);
     p->Add(ChessPiece::BK);
     p->Add(ChessPiece::WQ);

@@ -6,16 +6,16 @@
 namespace Logik
 {
 
-  const LogikPiece LogikPiece::LPieceB{ Peg<'B'>::ThePeg, Color::NoColor, IDB_PEGB, IDB_PEGBF };
-  const LogikPiece LogikPiece::LPieceW{ Peg<'W'>::ThePeg, Color::NoColor, IDB_PEGW, IDB_PEGWF };
-  const LogikPiece LogikPiece::LPiece1{ Peg<'1'>::ThePeg, Color::NoColor, IDB_PEG1, IDB_PEG1F };
-  const LogikPiece LogikPiece::LPiece2{ Peg<'2'>::ThePeg, Color::NoColor, IDB_PEG2, IDB_PEG2F };
-  const LogikPiece LogikPiece::LPiece3{ Peg<'3'>::ThePeg, Color::NoColor, IDB_PEG3, IDB_PEG3F };
-  const LogikPiece LogikPiece::LPiece4{ Peg<'4'>::ThePeg, Color::NoColor, IDB_PEG4, IDB_PEG4F };
-  const LogikPiece LogikPiece::LPiece5{ Peg<'5'>::ThePeg, Color::NoColor, IDB_PEG5, IDB_PEG5F };
-  const LogikPiece LogikPiece::LPiece6{ Peg<'6'>::ThePeg, Color::NoColor, IDB_PEG6, IDB_PEG6F };
-  const LogikPiece LogikPiece::LPiece7{ Peg<'7'>::ThePeg, Color::NoColor, IDB_PEG7, IDB_PEG7F };
-  const LogikPiece LogikPiece::LPiece8{ Peg<'8'>::ThePeg, Color::NoColor, IDB_PEG8, IDB_PEG8F };
+  const LogikPiece LogikPiece::LPieceB{ Peg<'B'>::ThePeg, PieceColor::NoColor, IDB_PEGB };
+  const LogikPiece LogikPiece::LPieceW{ Peg<'W'>::ThePeg, PieceColor::NoColor, IDB_PEGW };
+  const LogikPiece LogikPiece::LPiece1{ Peg<'1'>::ThePeg, PieceColor::NoColor, IDB_PEG1 };
+  const LogikPiece LogikPiece::LPiece2{ Peg<'2'>::ThePeg, PieceColor::NoColor, IDB_PEG2 };
+  const LogikPiece LogikPiece::LPiece3{ Peg<'3'>::ThePeg, PieceColor::NoColor, IDB_PEG3 };
+  const LogikPiece LogikPiece::LPiece4{ Peg<'4'>::ThePeg, PieceColor::NoColor, IDB_PEG4 };
+  const LogikPiece LogikPiece::LPiece5{ Peg<'5'>::ThePeg, PieceColor::NoColor, IDB_PEG5 };
+  const LogikPiece LogikPiece::LPiece6{ Peg<'6'>::ThePeg, PieceColor::NoColor, IDB_PEG6 };
+  const LogikPiece LogikPiece::LPiece7{ Peg<'7'>::ThePeg, PieceColor::NoColor, IDB_PEG7 };
+  const LogikPiece LogikPiece::LPiece8{ Peg<'8'>::ThePeg, PieceColor::NoColor, IDB_PEG8 };
 
  
   Result::Result(const Play& p1, const Play& p2) noexcept                 // get the result code from comparing two plays_

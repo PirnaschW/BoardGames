@@ -3,6 +3,9 @@
 namespace BoardGamesCore
 {
 
+  const Piece Piece::NoTile { noKind::NoKind, PieceColor::Void,    0 };   // nothing exists there, not even a tile
+  const Piece Piece::NoPiece{ noKind::NoKind, PieceColor::NoColor, 0 };   // empty tile
+
   void Piece::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const
   {
     kind_.CollectMoves(p, l, m);
@@ -17,14 +20,14 @@ namespace BoardGamesCore
   { 
     return k == kind_;
   }
-  bool Piece::IsColor(const Color& c) const noexcept
+  bool Piece::IsColor(const PieceColor& c) const noexcept
   { 
     return c == color_;
   }
 
   bool Piece::IsBlank(void) const noexcept
   {
-    return color_ == Color::NoColor && kind_ == noKind::NoKind;
+    return color_ == PieceColor::NoColor && kind_ == noKind::NoKind;
   }
 
   inline void Piece::Serialize(CArchive* ar) const
@@ -39,30 +42,58 @@ namespace BoardGamesCore
   }
 
 
-  void Piece::Draw(CDC* pDC, const CRect& r, const TileColor& f) const
+  void Piece::Draw(CDC* pDC, const CRect& r) const
   {
-    if (ID_l_ == 0 && ID_d_ == 0) return;
-    if (cb_l_.m_hObject == 0) cb_l_.LoadBitmap(ID_l_);
-    if (cb_d_.m_hObject == 0) cb_d_.LoadBitmap(ID_d_);
-    if (cb_s_.m_hObject == 0 && ID_s_ != 0) cb_s_.LoadBitmap(ID_s_);
+    assert(ID_ != 0);
 
-    CBitmap& cb = (f == TileColor::Light) ? cb_l_ : ((f == TileColor::Dark) ? cb_d_ : cb_s_);
-
-    if (cb.m_hObject != 0)
+    if (bmP_.m_hObject == 0) // lazy load
     {
+      bmP_.LoadBitmap(ID_);
+      assert(bmP_.m_hObject != 0);
+
       BITMAP bm;
-      cb.GetObject(sizeof(BITMAP), &bm);
+      bmP_.GetObject(sizeof(BITMAP), &bm);  // really does 'GetObjectInfo'
       if ((bm.bmWidth != r.Width()) || (bm.bmHeight != r.Height()))
       {
         //throw ("rectangle has wrong size!");
       }
+
+      // Create monochrome (1 bit) mask bitmap.  
+      auto b = bmM_.CreateBitmap(bm.bmWidth, bm.bmHeight, 1U, 1U, NULL);
+
+      // Get compatible CDC for mask calculation
+      CDC CDCImage;
+      CDCImage.CreateCompatibleDC(pDC);
+      CBitmap* Imageold = CDCImage.SelectObject(&bmP_);
+      // Set the background color of the image to the color to be transparent.
+      CDCImage.SetBkColor(COLORREF(0x00FF00FF));
+
+      CDC CDCMask;
+      CDCMask.CreateCompatibleDC(pDC);
+      CBitmap* Maskold = CDCMask.SelectObject(&bmM_);
+      // Copy image to the B+W mask - background color ends up white, everything else ends up black
+      CDCMask.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, &CDCImage, 0, 0, SRCCOPY);
+
+      // use mask to turn the transparent colour in original image to black so the transparency effect will work right
+      CDCImage.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, &CDCMask, 0, 0, SRCINVERT);
+
+      // clean up
+      CDCMask.SelectObject(Maskold);
+      CDCImage.SelectObject(Imageold);
+      CDCMask.DeleteDC();
+      CDCImage.DeleteDC();
     }
+
     CDC dcMemory;
     dcMemory.CreateCompatibleDC(pDC);
-    dcMemory.SelectObject(&cb);
-    pDC->BitBlt(r.TopLeft().x, r.TopLeft().y, r.Width(), r.Height(), &dcMemory, 0, 0, SRCCOPY);
-  }
+    CBitmap* MaskOld = dcMemory.SelectObject(&bmM_);
+    pDC->BitBlt(r.TopLeft().x, r.TopLeft().y, r.Width(), r.Height(), &dcMemory, 0, 0, SRCAND);
 
+    dcMemory.SelectObject(&bmP_);
+    pDC->BitBlt(r.TopLeft().x, r.TopLeft().y, r.Width(), r.Height(), &dcMemory, 0, 0, SRCPAINT);
+    dcMemory.SelectObject(MaskOld);
+    dcMemory.DeleteDC();
+  }
 
   const std::unordered_map<std::string, const Piece&>& Piece::GetHTMLPieceMap(void) noexcept
   {
@@ -107,8 +138,5 @@ namespace BoardGamesCore
     }
     return list;
   }
-
-  const Piece Piece::NoTile { noKind::NoKind, Color::Void,    0,       0,       0 };   // nothing exists there, don't draw the tile at all
-  const Piece Piece::NoPiece{ noKind::NoKind, Color::NoColor, IDB_XXL, IDB_XXD, 0 };   // no piece on the tile, but still draw it
 
 }

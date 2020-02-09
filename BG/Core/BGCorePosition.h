@@ -78,10 +78,10 @@ namespace BoardGamesCore
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const noexcept = 0;
     virtual inline bool operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
-    virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + taken_.GetHash() + std::hash<const Color*>()(onTurn_); }
+    virtual inline std::size_t GetHash(void) const noexcept { return Position::GetHash() + taken_.GetHash() + std::hash<const PieceColor*>()(onTurn_); }
 
-    inline void SetOnTurn(const Color& c) noexcept { onTurn_ = &c; }
-    inline const Color& OnTurn(void) const noexcept { return *onTurn_; }
+    inline void SetOnTurn(const PieceColor& c) noexcept { onTurn_ = &c; }
+    inline const PieceColor& OnTurn(void) const noexcept { return *onTurn_; }
     virtual void NextPlayer(void) noexcept;
     virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
@@ -99,7 +99,7 @@ namespace BoardGamesCore
     inline PositionValue SetValue(bool w, PositionValue v) const noexcept { return value_ = v.Relative(w); }
     virtual const Piece& GetPiece(const Location& l) const noexcept;
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
-    const Location GetNextTakenL(const Color& c) const noexcept;
+    const Location GetNextTakenL(const PieceColor& c) const noexcept;
     inline bool IsTaken(const Location& l) const noexcept { return l.b_ == BoardPart::Taken; }
     virtual inline MoveP GetBestMove(bool w) const noexcept { return (w ? movesW_[0] : movesB_[0]); }
     virtual MainPosition* GetPosition(AIContext& plist, MoveP m = nullptr) const noexcept;     // execute move, maintain in PList
@@ -117,7 +117,7 @@ namespace BoardGamesCore
     Position taken_;                                                      // associated Taken position
 
   protected:
-    const Color* onTurn_{ &Color::White };                                // color (player) currently on turn
+    const PieceColor* onTurn_{ &PieceColor::White };                                // color (player) currently on turn
 
     //below members are mutable because adjusting them during the evaluation doesn't 'change' the position'.
     mutable PositionValue value_{ PositionValue::PValueType::Undefined }; // calculated position value (positiv is good for White)

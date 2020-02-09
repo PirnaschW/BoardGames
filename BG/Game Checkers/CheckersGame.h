@@ -53,7 +53,7 @@ namespace Checkers
   class CheckersPiece final : public Piece
   {
   private:
-    inline CheckersPiece(const Kind& k, const Color& c, const CheckersPiece* u, UINT l, UINT s) noexcept : Piece(k, c, l, l, s), up_(u) {}
+    inline CheckersPiece(const Kind& k, const PieceColor& c, const CheckersPiece* u, UINT ID) noexcept : Piece(k, c, ID), up_(u) {}
     CheckersPiece(const CheckersPiece&) = delete;
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:

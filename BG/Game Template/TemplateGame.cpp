@@ -5,8 +5,8 @@
 namespace Template
 {
   inline const Checker Checker::TheChecker{};
-  inline const TemplatePiece TemplatePiece::TemplatePieceW{ Checker::TheChecker, Color::White, IDB_WCL, IDB_WCD, IDB_WCS };
-  inline const TemplatePiece TemplatePiece::TemplatePieceB{ Checker::TheChecker, Color::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+  inline const TemplatePiece TemplatePiece::TemplatePieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
+  inline const TemplatePiece TemplatePiece::TemplatePieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
 
   bool TemplatePosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
@@ -45,6 +45,7 @@ namespace Template
   const PieceMapP& TemplateGame::GetPieces(void) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(TemplatePiece::TemplatePieceW);
     p->Add(TemplatePiece::TemplatePieceB);
     return p;
