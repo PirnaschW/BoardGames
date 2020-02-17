@@ -7,12 +7,10 @@ namespace TankB
   const TBTileColor TBTileColor::Green{ 'G', IDB_XXG };
   const TBTileColor TBTileColor::Blue { 'B', IDB_XXB };
   const TBTileColor TBTileColor::Red  { 'R', IDB_XXR };
+  const TBTileColor TBTileColor::Wall { 'W', IDB_WALL };
                                           
-  const Wall  Wall ::TheWall {};
   const NTank NTank::TheNTank{};
   const CTank CTank::TheCTank{};
-
-  const TankBWall TankBWall::TheWall { Wall::TheWall,  PieceColor::Void,  IDB_WALL   };
 
   const NTankPiece NTankPiece::NTankW{ NTank::TheNTank, PieceColor::White, IDB_NTANKW };
   const NTankPiece NTankPiece::NTankB{ NTank::TheNTank, PieceColor::Black, IDB_NTANKB };
@@ -50,10 +48,15 @@ namespace TankB
 
   const TileColor& TankBLayout::FC(Coordinate i, Coordinate j) const noexcept
   {
-    if (i + j <  5)                       return TBTileColor::Green;
-    if (i + j > 15)                       return TBTileColor::Blue;
-    if (i > 3 && i < 7 && j > 3 && j < 7) return TBTileColor::Red;
-    return TileColor::Light;
+    switch (TankBGame::GetFieldType(dim_.xCount_, dim_.yCount_, i, j))
+    {
+      case TankBGame::FieldType::Standard:     return TBTileColor::Light;
+      case TankBGame::FieldType::HomeWhite:    return TBTileColor::Green;
+      case TankBGame::FieldType::HomeBlack:    return TBTileColor::Blue;
+      case TankBGame::FieldType::Contaminated: return TBTileColor::Red;
+      case TankBGame::FieldType::Wall:         return TBTileColor::Wall;
+      default:                                 return TBTileColor::Light;
+    }
   }
 
 
@@ -88,28 +91,6 @@ namespace TankB
     SetPiece(Location(BoardPart::Main,  3U,  0U), NTankPiece::NTankB);
     SetPiece(Location(BoardPart::Main,  3U,  1U), NTankPiece::NTankB);
     SetPiece(Location(BoardPart::Main,  4U,  0U), NTankPiece::NTankB);
-
-    // Walls
-    SetPiece(Location(BoardPart::Main,  0U,  5U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  1U,  1U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  1U,  9U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  2U,  3U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  2U,  5U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  2U,  7U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  3U,  2U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  3U,  8U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  5U,  0U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  5U,  2U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  5U,  8U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  5U, 10U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  7U,  2U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  7U,  8U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  8U,  3U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  8U,  5U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  8U,  7U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  9U,  1U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main,  9U,  9U), TankBWall::TheWall);
-    SetPiece(Location(BoardPart::Main, 10U,  5U), TankBWall::TheWall);
   }
 
 
@@ -121,9 +102,14 @@ namespace TankB
 
     const Piece& pt = GetPiece(to);                                      // piece on target field
     if (pt == Piece::NoTile) return false;                               // out of board
-    if (pt == TankBWall::TheWall) return false;                          // wall
-    if (IsContaminated(to)) return false;                                // contaminated zone
     if (!pt.IsBlank() && pt.IsColor(pf.GetColor())) return false;        // own piece
+
+    switch (TankBGame::GetFieldType(sizeX_, sizeY_, to.x_, to.y_))
+    {
+      case TankBGame::FieldType::Contaminated: return false;             // contaminated zone
+      case TankBGame::FieldType::Wall:         return false;             // Wall
+      default:;                                                          // fine
+    }
 
     Actions a{};
     a.push_back(std::make_shared<ActionLift>(fr, pf));                   // pick piece up
@@ -143,11 +129,40 @@ namespace TankB
     // ...
   }
 
-  bool TankBPosition::IsContaminated(const Location& l) const noexcept
-  {
-    return false;
-  }
 
+  const std::vector<Location> TankBGame::walls_{
+  {BoardPart::Main,  0U,  5U },
+  {BoardPart::Main,  1U,  1U },
+  {BoardPart::Main,  1U,  9U },
+  {BoardPart::Main,  2U,  3U },
+  {BoardPart::Main,  2U,  5U },
+  {BoardPart::Main,  2U,  7U },
+  {BoardPart::Main,  3U,  2U },
+  {BoardPart::Main,  3U,  8U },
+  {BoardPart::Main,  5U,  0U },
+  {BoardPart::Main,  5U,  2U },
+  {BoardPart::Main,  5U,  8U },
+  {BoardPart::Main,  5U, 10U },
+  {BoardPart::Main,  7U,  2U },
+  {BoardPart::Main,  7U,  8U },
+  {BoardPart::Main,  8U,  3U },
+  {BoardPart::Main,  8U,  5U },
+  {BoardPart::Main,  8U,  7U },
+  {BoardPart::Main,  9U,  1U },
+  {BoardPart::Main,  9U,  9U },
+  {BoardPart::Main, 10U,  5U },
+  };
+
+  TankBGame::FieldType TankBGame::GetFieldType(const Coordinate& sizeX, const Coordinate& sizeY, const Coordinate& x, const Coordinate& y) noexcept
+  {
+    assert(sizeX == 11 && sizeY == 11); // for now, we only support 11x11
+
+    if (x + y < 5)                                                return TankBGame::FieldType::HomeBlack;
+    if (x + y > 15)                                               return TankBGame::FieldType::HomeWhite;
+    if (x > 3 && x < 7 && y > 3 && y < 7)                         return TankBGame::FieldType::Contaminated;
+    for (const Location& w : walls_) if (w.x_ == x && w.y_ == y)  return TankBGame::FieldType::Wall;
+    return                                                               TankBGame::FieldType::Standard;
+  }
 
   const VariantList& TankBGame::GetVariants(void) noexcept
   {
@@ -163,7 +178,6 @@ namespace TankB
     p->Add(NTankPiece::NTankB);
     p->Add(CTankPiece::CTankW);
     p->Add(CTankPiece::CTankB);
-    p->Add(TankBWall::TheWall);
     return p;
   }
 

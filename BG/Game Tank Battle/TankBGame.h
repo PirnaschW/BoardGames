@@ -24,18 +24,7 @@ namespace TankB
     static const TBTileColor Green;
     static const TBTileColor Blue;
     static const TBTileColor Red;
-  };
-
-
-  class Wall : public Kind  // Wall
-  {
-  private:
-    constexpr inline Wall(void) noexcept : Kind('W') {}
-  public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
-
-  public:
-    static const Wall TheWall;
+    static const TBTileColor Wall;
   };
 
   class NTank : public Kind  // Normal Tank
@@ -59,15 +48,6 @@ namespace TankB
 
   public:
     static const CTank TheCTank;
-  };
-
-
-  class TankBWall : public Piece
-  {
-  private:
-    inline TankBWall(const Kind& k, const PieceColor& c, UINT ID) noexcept : Piece(k, c, ID) {}
-  public:
-    static const TankBWall TheWall;
   };
 
   class NTankPiece : public Piece
@@ -105,9 +85,6 @@ namespace TankB
     virtual inline MainPosition* Clone(void) const noexcept override { return new TankBPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
-
-  private:
-    bool IsContaminated(const Location& l) const noexcept;
   };
 
 
@@ -115,6 +92,13 @@ namespace TankB
   {
   private:
     TankBGame(void) = delete;
+
+  public:
+    enum class FieldType { Standard, Wall, HomeWhite, HomeBlack, Contaminated};
+    static FieldType GetFieldType(const Coordinate& sizeX, const Coordinate& sizeY, const Coordinate& x, const Coordinate& y) noexcept;
+
+  private:
+    const static std::vector<Location> walls_;
 
   public:
     inline TankBGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new TankBPosition(m, d), new TankBLayout(d)) {}
