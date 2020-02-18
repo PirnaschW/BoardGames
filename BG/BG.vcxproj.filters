@@ -217,6 +217,18 @@
     <Filter Include="Game Tank Battle\Resource Files">
       <UniqueIdentifier>{a908f33e-08dd-4019-8d49-df6ecf56084e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Espionage">
+      <UniqueIdentifier>{c4de1ccb-2a9b-4670-9015-b44f57ac0d5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Espionage\Source Files">
+      <UniqueIdentifier>{ce13bfc8-7436-4748-872f-38ea48c10e8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Espionage\Resource Files">
+      <UniqueIdentifier>{d475dfec-7054-4268-93b9-151ef66c9961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Espionage\Header Files">
+      <UniqueIdentifier>{7f39928f-441d-47ae-ac48-b725d84ced47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h">
@@ -390,6 +402,12 @@
     <ClInclude Include="Game Tank Battle\TankBResource.h">
       <Filter>Game Tank Battle\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game Espionage\EspionageGame.h">
+      <Filter>Game Espionage\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Espionage\EspionageResource.h">
+      <Filter>Game Espionage\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BG.cpp">
@@ -500,6 +518,9 @@
     <ClCompile Include="Game Tank Battle\TankBGame.cpp">
       <Filter>Game Tank Battle\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game Espionage\EspionageGame.cpp">
+      <Filter>Game Espionage\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\BG.rc2">
@@ -555,6 +576,9 @@
     </None>
     <None Include="Game Tank Battle\TankB.rc2">
       <Filter>Game Tank Battle\Resource Files</Filter>
+    </None>
+    <None Include="Game Espionage\Espionage.rc2">
+      <Filter>Game Espionage\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -817,6 +841,201 @@
     </Image>
     <Image Include="Game Tank Battle\res\Wall.bmp">
       <Filter>Game Tank Battle\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageDoc.ico">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBHeadquarter.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBMine.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBSapper.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBSoldier1.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBSoldier2.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBSoldier3.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBSoldier4.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBSoldier5.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageBSpy.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWHeadquarter.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWMine.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWSapper.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWSoldier1.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWSoldier2.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWSoldier3.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWSoldier4.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWSoldier5.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageWSpy.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BB_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BB_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BBP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BG_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BG_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BK_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BK_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BL_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BL_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BLP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BN_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BN_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BNP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BP_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BPP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BR_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BR_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BRP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BS_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BS_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_BSP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WB_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WB_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WBP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WG_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WG_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WK_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WK_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WL_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WL_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WLP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WN_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WN_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WNP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WP_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WPP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WR_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WR_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WRP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WS_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WS_S.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Shogi\res\Shogi_WSP_L.bmp">
+      <Filter>Game Shogi\Respoure Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageVolcano.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="Game Espionage\res\EspionageUnknown.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

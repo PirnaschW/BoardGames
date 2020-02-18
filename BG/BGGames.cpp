@@ -8,6 +8,7 @@
 #include "Game CFour\CFourGame.h"
 #include "Game Checkers\CheckersGame.h"
 #include "Game Cheversi\CheversiGame.h"
+#include "Game Espionage\EspionageGame.h"
 #include "Game Hasami\HasamiGame.h"
 #include "Game Knight Fight\KnightFGame.h"
 #include "Game LoA\LoAGame.h"
@@ -26,6 +27,7 @@ void BGSelect::AddGames(void)
   AddGame(IDR_GAMETYPE_CFOUR);
   AddGame(IDR_GAMETYPE_CHECKERS);
   AddGame(IDR_GAMETYPE_CHEVERSI);
+  AddGame(IDR_GAMETYPE_ESPIONAGE);
   AddGame(IDR_GAMETYPE_HASAMI);
   AddGame(IDR_GAMETYPE_KNIGHTF);
   AddGame(IDR_GAMETYPE_LOA);
@@ -45,6 +47,7 @@ const VariantList& BGSelect::GetVariants(int id) const
     case IDR_GAMETYPE_CFOUR:      return Variants<CFour::        CFourGame    >::GetVariants();
     case IDR_GAMETYPE_CHECKERS:   return Variants<Checkers::     CheckersGame >::GetVariants();
     case IDR_GAMETYPE_CHEVERSI:   return Variants<Cheversi::     CheversiGame >::GetVariants();
+    case IDR_GAMETYPE_ESPIONAGE:  return Variants<Espionage::    EspionageGame>::GetVariants();
     case IDR_GAMETYPE_HASAMI:     return Variants<Hasami::       HasamiGame   >::GetVariants();
     case IDR_GAMETYPE_KNIGHTF:    return Variants<KnightF::      KnightFGame  >::GetVariants();
     case IDR_GAMETYPE_LOA:        return Variants<LoA::          LoAGame      >::GetVariants();
@@ -69,6 +72,7 @@ Game* BGSelect::CreateGame(void)
       case IDR_GAMETYPE_CFOUR:      return new CFour::        CFourGame    (Variants<CFour::        CFourGame    >::GetPieces(), CFour::        CFourGame::    GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_CHECKERS:   return new Checkers::     CheckersGame (Variants<Checkers::     CheckersGame >::GetPieces(), Checkers::     CheckersGame:: GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_CHEVERSI:   return new Cheversi::     CheversiGame (Variants<Cheversi::     CheversiGame >::GetPieces(), Cheversi::     CheversiGame:: GetDimensions(m_size_x, m_size_y));
+      case IDR_GAMETYPE_ESPIONAGE:  return new Espionage::    EspionageGame(Variants<Espionage::    EspionageGame>::GetPieces(), Espionage::    EspionageGame::GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_HASAMI:     return new Hasami::       HasamiGame   (Variants<Hasami::       HasamiGame   >::GetPieces(), Hasami::       HasamiGame::   GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_KNIGHTF:    return new KnightF::      KnightFGame  (Variants<KnightF::      KnightFGame  >::GetPieces(), KnightF::      KnightFGame::  GetDimensions(m_size_x, m_size_y));
       case IDR_GAMETYPE_LOA:        return new LoA::          LoAGame      (Variants<LoA::          LoAGame      >::GetPieces(), LoA::          LoAGame::      GetDimensions(m_size_x, m_size_y));
