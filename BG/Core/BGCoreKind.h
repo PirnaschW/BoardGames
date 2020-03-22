@@ -15,11 +15,12 @@ namespace BoardGamesCore
 
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept = 0;                             // no useful default implementation provided!
     virtual inline void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept {};                    // useful default implementation: No moves possible
-    virtual inline bool CanDrop(const Piece& /*p*/, const Location& /*l*/, const MainPosition* /*pos*/) const noexcept { return false; }   // useful default implementation: cannot drop
-    virtual inline bool CanMove(const Piece& /*p*/, const Location& /*l*/, const MainPosition* /*pos*/) const noexcept { return true; }    // useful default implementation: can move
+    virtual inline bool CanMove(const Piece& /*p*/, const Location& /*l*/, const MainPosition* /*pos*/) const noexcept { return true; }    // useful default implementation: this kind can move
+    virtual inline bool CanTake(const Kind& /*k*/) const noexcept { return true; }                                                         // useful default implementation: this kind can take any other kind
+    virtual inline bool CanDrop(const Piece& /*p*/, const Location& /*l*/, const MainPosition* /*pos*/) const noexcept { return false; }   // useful default implementation: this kind cannot drop
     virtual void Serialize(CArchive* ar) const;
 
-  private:
+  protected:
     const char kind_;
   };
 

@@ -31,8 +31,9 @@ namespace BoardGamesCore
 
     virtual inline void Serialize(CArchive* ar) const;
     virtual inline unsigned int GetValue(const MainPosition& p, const Location& l) const noexcept;
-    virtual inline bool IsPromotable(void) const noexcept { return false; }                     // by default: no promotions
-    virtual inline const Piece& Promote(bool /*up*/) const noexcept { return *this; };           // by default: no promotions
+    virtual bool CanTake(const Piece& p) const noexcept;
+    virtual inline bool IsPromotable(void) const noexcept { return false; }                        // by default: no promotions
+    virtual inline const Piece& Promote(bool /*up*/) const noexcept { return *this; };             // by default: no promotions
     virtual void Draw(CDC* pDC, const CRect& r) const;
 
     static const std::unordered_map<std::string, const Piece&>& GetHTMLPieceMap(void) noexcept;

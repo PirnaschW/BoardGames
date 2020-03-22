@@ -25,11 +25,20 @@ namespace Espionage
   };
 
 
+  class EKind : public Kind  // helper class as all Espionage kinds move the same way
+  {
+  protected:
+    constexpr inline EKind(unsigned char z) noexcept : Kind(z) {}
+  public:
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
+    virtual bool CanTake(const Kind&) const noexcept override;
+  };
+
   template <unsigned char z> // standard Soldiers 1 to 5
-  class Soldier : public Kind
+  class Soldier : public EKind
   {
   private:
-    constexpr inline Soldier(void) noexcept : Kind(z) {}
+    constexpr inline Soldier(void) noexcept : EKind(z) {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100 * (z - '0'); }
 
@@ -37,10 +46,10 @@ namespace Espionage
     static const Soldier TheSoldier;
   };
 
-  class Spy : public Kind
+  class Spy : public EKind
   {
   private:
-    constexpr inline Spy(void) noexcept : Kind('S') {}
+    constexpr inline Spy(void) noexcept : EKind('S') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 350; }
 
@@ -48,10 +57,10 @@ namespace Espionage
     static const Spy TheSpy;
   };
 
-  class Sapper : public Kind
+  class Sapper : public EKind
   {
   private:
-    constexpr inline Sapper(void) noexcept : Kind('s') {}
+    constexpr inline Sapper(void) noexcept : EKind('s') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 250; }
 
@@ -124,6 +133,9 @@ namespace Espionage
   {
   public:
     EspionageLayout(const Dimensions& d) noexcept;
+
+  private:
+    const TileColor& FC(Coordinate i, Coordinate j) const noexcept;
   };
 
   class EspionagePosition : public MainPosition
@@ -140,6 +152,11 @@ namespace Espionage
   {
   private:
     EspionageGame(void) = delete;
+
+  public:
+    enum class FieldType { Standard, Volcano };
+    static FieldType GetFieldType(const Coordinate& sizeX, const Coordinate& sizeY, const Coordinate& x, const Coordinate& y) noexcept;
+
 
   public:
     inline EspionageGame(const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new EspionagePosition(m, d), new EspionageLayout(d)) {}

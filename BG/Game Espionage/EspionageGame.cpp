@@ -43,11 +43,42 @@ namespace Espionage
   const EPiece EPiece::UMine       { Mine        ::TheMine,        PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
   const EPiece EPiece::UHeadquarter{ Headquarter ::TheHeadquarter, PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
 
+
+  void EKind::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
+  {
+    for (auto& d : Offset::Rdirection)
+      p.AddIfLegal(moves, l, l + d);
+  }
+
+
+  bool EKind::CanTake(const Kind& p) const noexcept
+  {
+    if ((p == Headquarter::TheHeadquarter) ||
+        (p == Sapper::TheSapper)           ||
+        (p == Spy::TheSpy)                 ) return true;                                          // anybody can take those
+    if (p == Mine::TheMine) return *this == Sapper::TheSapper;
+
+    if (p == Soldier<'5'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
+                                              *this == Sapper::TheSapper;                          // Sapper and 5 takes 5
+    if (p == Soldier<'4'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
+                                              *this == Soldier<'4'>::TheSoldier;                   // 4 and 5 takes 4
+    if (p == Soldier<'3'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
+                                              *this == Soldier<'4'>::TheSoldier ||
+                                              *this == Soldier<'3'>::TheSoldier;                   // 3 to 5 takes 3
+    if (p == Soldier<'2'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
+                                              *this == Soldier<'4'>::TheSoldier ||
+                                              *this == Soldier<'3'>::TheSoldier ||
+                                              *this == Soldier<'2'>::TheSoldier;                   // 2 to 5 takes 2
+    if (p == Soldier<'1'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
+                                              *this == Soldier<'4'>::TheSoldier ||
+                                              *this == Soldier<'3'>::TheSoldier ||
+                                              *this == Soldier<'2'>::TheSoldier ||
+                                              *this == Soldier<'1'>::TheSoldier;                   // 1 to 5 takes 1
+    return false;
+  }
+
   EspionageLayout::EspionageLayout(const Dimensions& d) noexcept : MainLayout(d, LayoutType::None)
   {
-    const Coordinate volcano1 = rand() % 3 + 2;
-    const Coordinate volcano2 = rand() % 5;
-
     unsigned int z = 0;
     for (Coordinate i = 0; i < dim_.xCount_; i++)
       for (Coordinate j = 0; j < dim_.yCount_; j++, z++)
@@ -58,13 +89,18 @@ namespace Espionage
           (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * (i + 1U)),
           (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * (j + 1U)) };
 
-        bool v{ false };
-        if (j == 4 && i == volcano1 + 0) v = true;
-        if (j == 4 && i == 9 - volcano2) v = true;
-        if (j == 5 && i == volcano2 + 0) v = true;
-        if (j == 5 && i == 9 - volcano1) v = true;
-        tiles_[z] = new Tile(Location(BoardPart::Main, i, j), r, v ? ETileColor::Volcano : TileColor::Light);
+        tiles_[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
       }
+  }
+
+  const TileColor& EspionageLayout::FC(Coordinate i, Coordinate j) const noexcept
+  {
+    switch (EspionageGame::GetFieldType(dim_.xCount_, dim_.yCount_, i, j))
+    {
+      case EspionageGame::FieldType::Standard:     return ETileColor::Light;
+      case EspionageGame::FieldType::Volcano:      return ETileColor::Volcano;
+      default:                                     return ETileColor::Light;
+    }
   }
 
 
@@ -115,20 +151,40 @@ namespace Espionage
   bool EspionagePosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     const Piece& pf = GetPiece(fr);                                       // piece to move
-    if (pf == Piece::NoTile) return false;                               // out of board
-    if (pf.IsBlank()) return false;                                      // tile not occupied
+    if (pf == Piece::NoTile) return false;                                // out of board
+    if (pf.IsBlank()) return false;                                       // tile not occupied
 
     const Piece& pt = GetPiece(to);                                       // piece on target field
-    if (pt == Piece::NoTile) return false;                               // out of board
+    if (pt == Piece::NoTile) return false;                                // out of board
+    if (pt.IsColor(pf.GetColor())) return false;                          // own piece
+    
+    switch (EspionageGame::GetFieldType(sizeX_, sizeY_, to.x_, to.y_))
+    {
+      case EspionageGame::FieldType::Volcano:      return false;          // Volcano
+      default:;                                                           // fine
+    }
 
     Actions a{};
-    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
-    if (!pt.IsBlank())
+    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick own piece up
+    if (pt.IsBlank())
     {
-      a.push_back(std::make_shared<ActionLift>(to, pt));                    // pick opponent piece up
-      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+      a.push_back(std::make_shared<ActionDrop>(to, pf));                  // place it on target
     }
-    a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
+    else
+    {
+      a.push_back(std::make_shared<ActionLift>(to, pt));                  // pick opponent piece up
+      if (pf.CanTake(pt))
+      {
+        a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+        a.push_back(std::make_shared<ActionDrop>(to, pf));                  // place own piece on target
+      }
+      else
+      {
+        a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pt.GetColor()), pf));                   // place own piece in Taken
+        a.push_back(std::make_shared<ActionDrop>(to, pt));                  // place opponent piece (back) on target
+      }
+    }
+
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return false;
   };
@@ -137,6 +193,18 @@ namespace Espionage
   {
     return MainPosition::EvaluateStatically();
     // ...
+  }
+
+  EspionageGame::FieldType EspionageGame::GetFieldType(const Coordinate& sizeX, const Coordinate& sizeY, const Coordinate& x, const Coordinate& y) noexcept
+  {
+    const static Coordinate volcano1 = rand() % 3 + 2;
+    const static Coordinate volcano2 = rand() % 5;
+
+    if (y == 4 && x == volcano1 + 0) return EspionageGame::FieldType::Volcano;
+    if (y == 4 && x == 9 - volcano2) return EspionageGame::FieldType::Volcano;
+    if (y == 5 && x == volcano2 + 0) return EspionageGame::FieldType::Volcano;
+    if (y == 5 && x == 9 - volcano1) return EspionageGame::FieldType::Volcano;
+    return                                  EspionageGame::FieldType::Standard;
   }
 
 

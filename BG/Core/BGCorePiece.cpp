@@ -41,6 +41,10 @@ namespace BoardGamesCore
     return kind_.GetValue(p, l);
   }
 
+  bool Piece::CanTake(const Piece& p) const noexcept
+  {
+    return kind_.CanTake(p.kind_);
+  }
 
   void Piece::Draw(CDC* pDC, const CRect& r) const
   {
