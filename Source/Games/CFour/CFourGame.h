@@ -14,32 +14,6 @@ namespace CFour
 
   using namespace BoardGamesCore;
 
-  class Checker : public Kind
-  {
-  private:
-    constexpr inline Checker(void) noexcept : Kind('0') {}
-  public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
-
-  public:
-    static const Checker TheChecker;
-  };
-
-  class CFourPiece : public Piece
-  {
-  private:
-    inline CFourPiece(const Kind& k, const PieceColor& c, unsigned int ID) noexcept : Piece(k, c, ID) {}
-    CFourPiece(const CFourPiece&) = delete;
-    CFourPiece& operator=(const CFourPiece&) = delete;
-  public:
-    ~CFourPiece(void) override {}
-
-  public:
-    static const CFourPiece CFourPieceW;
-    static const CFourPiece CFourPieceB;
-  };
-
-
   class CFourPosition : public MainPosition
   {
   public:

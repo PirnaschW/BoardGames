@@ -50,18 +50,6 @@
     <Image Include="..\Source\Core\res\brs.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\Source\Core\res\CheckerBL.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\CheckerBS.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\CheckerWL.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\CheckerWS.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="..\Source\Core\res\wbl.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -105,6 +93,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="..\Source\Core\res\xxs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bcl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bcs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wcl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wcs.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -160,13 +160,13 @@
     <ClInclude Include="..\Source\Core\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\ChessPieces.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Core\Action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\Using.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\CorePieces.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -204,9 +204,6 @@
     <ClCompile Include="..\Source\Core\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\ChessPieces.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Core\AI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -214,6 +211,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Variant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\CorePieces.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,8 +1,18 @@
 
-namespace BoardGamesChessPieces
+namespace BoardGamesCore
 {
 
-  using namespace BoardGamesCore;
+  class Checker : public Kind
+  {
+  private:
+    constexpr inline Checker(void) noexcept : Kind('C') {}
+  public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+
+  public:
+    static const Checker TheChecker;
+  };
 
   class Pawn : public Kind
   {
@@ -76,29 +86,31 @@ namespace BoardGamesChessPieces
     static const King TheKing;
   };
 
-  class ChessPiece : public Piece
+  class CorePiece : public Piece
   {
   private:
-    ChessPiece(const Kind& k, const PieceColor& c, unsigned int ID) : Piece(k, c, ID) {}
-    ChessPiece(const ChessPiece&) = delete;
-    ChessPiece& operator=(const ChessPiece&) = delete;
+    CorePiece(const Kind& k, const PieceColor& c, unsigned int ID) : Piece(k, c, ID) {}
+    CorePiece(const CorePiece&) = delete;
+    CorePiece& operator=(const CorePiece&) = delete;
 
   public:
-    virtual ~ChessPiece(void) override {}
+    virtual ~CorePiece(void) override {}
 
   public:
-    static const ChessPiece WP;
-    static const ChessPiece WB;
-    static const ChessPiece WN;
-    static const ChessPiece WR;
-    static const ChessPiece WQ;
-    static const ChessPiece WK;
-    static const ChessPiece BP;
-    static const ChessPiece BB;
-    static const ChessPiece BN;
-    static const ChessPiece BR;
-    static const ChessPiece BQ;
-    static const ChessPiece BK;
+    static const CorePiece WC;  // White Checker
+    static const CorePiece BC;  // Black Checker
+    static const CorePiece WP;  // White Pawn
+    static const CorePiece WB;  // White Bishop
+    static const CorePiece WN;  // White Knight
+    static const CorePiece WR;  // White Rook 
+    static const CorePiece WQ;  // White Queen
+    static const CorePiece WK;  // White King 
+    static const CorePiece BP;  // Black Pawn 
+    static const CorePiece BB;  // Black Bishop
+    static const CorePiece BN;  // Black Knight
+    static const CorePiece BR;  // Black Rook 
+    static const CorePiece BQ;  // Black Queen
+    static const CorePiece BK;  // Black King 
   };
 
 }

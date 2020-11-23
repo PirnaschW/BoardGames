@@ -4,9 +4,6 @@
 
 namespace CFour
 {
-  const Checker Checker::TheChecker{};
-  const CFourPiece CFourPiece::CFourPieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
-  const CFourPiece CFourPiece::CFourPieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
 
   bool CFourPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
@@ -108,13 +105,13 @@ namespace CFour
     for (const Location& l : m)
     {
       Actions aw{};
-      aw.push_back(std::make_shared<ActionLift>(w, CFourPiece::CFourPieceW));                      // pick new piece up
-      aw.push_back(std::make_shared<ActionDrop>(l, CFourPiece::CFourPieceW));                      // and place it on target
+      aw.push_back(std::make_shared<ActionLift>(w, CorePiece::WC));                                // pick new piece up
+      aw.push_back(std::make_shared<ActionDrop>(l, CorePiece::WC));                                // and place it on target
       movesW_.push_back(std::make_shared<Move>(aw));                                               // add move to move list
-                                                                                                  
-      Actions ab{};                                                                               
-      ab.push_back(std::make_shared<ActionLift>(b, CFourPiece::CFourPieceB));                      // pick new piece up
-      ab.push_back(std::make_shared<ActionDrop>(l, CFourPiece::CFourPieceB));                      // and place it on target
+                                                                                                            
+      Actions ab{};                                                                                         
+      ab.push_back(std::make_shared<ActionLift>(b, CorePiece::BC));                                // pick new piece up
+      ab.push_back(std::make_shared<ActionDrop>(l, CorePiece::BC));                                // and place it on target
       movesB_.push_back(std::make_shared<Move>(ab));                                               // add move to move list
     }
   }
@@ -160,8 +157,8 @@ namespace CFour
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();
-    p->Add(CFourPiece::CFourPieceW);
-    p->Add(CFourPiece::CFourPieceB);
+    p->Add(CorePiece::WC);
+    p->Add(CorePiece::BC);
     return p;
   }
 

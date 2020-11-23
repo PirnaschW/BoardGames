@@ -8,14 +8,14 @@ namespace MassacreChess
   {
     for (Coordinate z = 0; z < d[0].xCount_*d[0].yCount_ / 8; z++)
     {
-      PlaceRandomly(ChessPiece::WQ);
-      PlaceRandomly(ChessPiece::BQ);
-      PlaceRandomly(ChessPiece::WR);
-      PlaceRandomly(ChessPiece::BR);
-      PlaceRandomly(ChessPiece::WB);
-      PlaceRandomly(ChessPiece::BB);
-      PlaceRandomly(ChessPiece::WN);
-      PlaceRandomly(ChessPiece::BN);
+      PlaceRandomly(CorePiece::WQ);
+      PlaceRandomly(CorePiece::BQ);
+      PlaceRandomly(CorePiece::WR);
+      PlaceRandomly(CorePiece::BR);
+      PlaceRandomly(CorePiece::WB);
+      PlaceRandomly(CorePiece::BB);
+      PlaceRandomly(CorePiece::WN);
+      PlaceRandomly(CorePiece::BN);
     }
   }
 
@@ -68,14 +68,14 @@ namespace MassacreChess
   const PieceMapP& MCGame::GetPieces(VariantCode c) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
-    p->Add(ChessPiece::WQ);
-    p->Add(ChessPiece::WR);
-    p->Add(ChessPiece::WB);
-    p->Add(ChessPiece::WN);
-    p->Add(ChessPiece::BQ);
-    p->Add(ChessPiece::BR);
-    p->Add(ChessPiece::BB);
-    p->Add(ChessPiece::BN);
+    p->Add(CorePiece::WQ);
+    p->Add(CorePiece::WR);
+    p->Add(CorePiece::WB);
+    p->Add(CorePiece::WN);
+    p->Add(CorePiece::BQ);
+    p->Add(CorePiece::BR);
+    p->Add(CorePiece::BB);
+    p->Add(CorePiece::BN);
     return p;
   }
 

@@ -36,10 +36,10 @@
     <Image Include="..\Source\Core\res\bqs.bmp" />
     <Image Include="..\Source\Core\res\brl.bmp" />
     <Image Include="..\Source\Core\res\brs.bmp" />
-    <Image Include="..\Source\Core\res\CheckerBL.bmp" />
-    <Image Include="..\Source\Core\res\CheckerBS.bmp" />
-    <Image Include="..\Source\Core\res\CheckerWL.bmp" />
-    <Image Include="..\Source\Core\res\CheckerWS.bmp" />
+    <Image Include="..\Source\Core\res\bcl.bmp" />
+    <Image Include="..\Source\Core\res\bcs.bmp" />
+    <Image Include="..\Source\Core\res\wcl.bmp" />
+    <Image Include="..\Source\Core\res\wcs.bmp" />
     <Image Include="..\Source\Core\res\wbl.bmp" />
     <Image Include="..\Source\Core\res\wbs.bmp" />
     <Image Include="..\Source\Core\res\wkl.bmp" />
@@ -59,7 +59,7 @@
   <ItemGroup>
     <ClInclude Include="..\Source\BGResource.h" />
     <ClInclude Include="..\Source\Core\Action.h" />
-    <ClInclude Include="..\Source\Core\ChessPieces.h" />
+    <ClInclude Include="..\Source\Core\CorePieces.h" />
     <ClInclude Include="..\Source\Core\Color.h" />
     <ClInclude Include="..\Source\Core\Core.h" />
     <ClInclude Include="..\Source\Core\Field.h" />
@@ -95,7 +95,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\ChessPieces.cpp">
+    <ClCompile Include="..\Source\Core\CorePieces.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core.h</PrecompiledHeaderFile>
     </ClCompile>

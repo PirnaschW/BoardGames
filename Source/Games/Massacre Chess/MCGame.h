@@ -14,7 +14,6 @@ namespace MassacreChess
   constexpr unsigned int BoardStartY = 30;  // offset for drawing the board
 
   using namespace BoardGamesCore;
-  using namespace BoardGamesChessPieces;
 
   class MCPosition : public MainPosition
   {

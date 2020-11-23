@@ -32,4 +32,4 @@
 #include "Core\Layout.h"
 #include "Core\Game.h"
 
-#include "Core\ChessPieces.h"
+#include "Core\CorePieces.h"
