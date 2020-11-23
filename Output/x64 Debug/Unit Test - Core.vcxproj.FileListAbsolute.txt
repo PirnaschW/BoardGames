@@ -1,2 +1,0 @@
-D:\Projects\BoardGames\Output\x64 Debug\Unit Test - Core.dll
-D:\Projects\BoardGames\Output\x64 Debug\Unit Test - Core.pdb
