@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{4e3918b0-25d1-4f1e-bf58-f50c8d36de11}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Source\Core\res\bbl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bbs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bkl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bks.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bnl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bns.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bpl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bps.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bql.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\bqs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\brl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\brs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\CheckerBL.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\CheckerBS.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\CheckerWL.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\CheckerWS.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wbl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wbs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wkl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wks.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wnl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wns.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wpl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wps.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wql.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wqs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wrl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\wrs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\xxd.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\xxl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Core\res\xxs.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\BGResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Variant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\PValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Position.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Piece.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Offset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Move.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Location.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Layout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Kind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Field.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\ChessPieces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Action.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Using.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Core\Position.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Piece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Offset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Move.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Location.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Layout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Kind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\ChessPieces.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\AI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Action.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Variant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Core\Core.rc2">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

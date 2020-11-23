@@ -1,0 +1,278 @@
+#include "Core.h"
+
+#include <chrono>
+#include <algorithm>
+
+namespace BoardGamesCore
+{
+  
+  void AIContext::Purge(const Moves& sequence_) noexcept
+  {
+    static int dummy{};
+    dummy++;
+
+    auto l = [&sequence_] (const MainPosition* p) -> bool
+    {
+      if (p->sequence_.size() < sequence_.size()) return true;
+      else
+      {
+        for (size_t i = 0; i < sequence_.size(); i++)
+        {
+          if (*(p->sequence_[i]) != *sequence_[i]) return true;
+        }
+      }
+    };
+
+    for (auto it = begin(); it != end();)
+    {
+      bool trash{ false };
+      if ((*it)->sequence_.size() < sequence_.size()) trash = true;
+      else
+      {
+        for (size_t i = 0; i < sequence_.size(); i++)
+        {
+          if (*(*it)->sequence_[i] != *sequence_[i])
+          {
+            trash = true;
+            break;
+          }
+        }
+      }
+
+      //MainPosition* p{ *it };
+      //++it;
+      //if (trash)
+      //{
+      //  erase(p);
+      //  delete p;
+      //}
+
+      if (trash)
+      {
+        const MainPosition* p{ *it };
+        it = erase(it);
+        delete p;
+      }
+      else it++;
+
+    }
+
+//    std::unordered_set< MainPosition*, AIContextHelper::Hash, AIContextHelper::Equality> pp{};
+//    std::swap(*this, pp);
+
+    dummy++;
+  }
+
+  bool Game::AIMove(void)
+  {
+    // cleanup position buffer
+    plist.Purge(pos->sequence_);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
+
+    MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
+    assert(p != nullptr);
+
+    auto t_start = std::chrono::high_resolution_clock::now();
+    double limit = 12.0;  // run for n seconds
+    bool w = CurrentPlayer()->GetColor() == PieceColor::White;
+
+    for (unsigned int pl = 0; /*pl <= 4*/; pl++)                               // use iterative deepening
+    {
+      try
+      {
+//      PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+        PositionValue value_ = p->EvaluateBF(plist, w, pl);
+        pos->SetValue(w, value_);
+        pos->SetDepth(pl);
+        plist.callback();
+        if (value_ == PositionValue::PValueType::Lost)
+        {
+          BoardGamesMFC::AfxMessageBox("Computer resigns - Player wins!");
+          _mode.Set(Mode::GameOver);
+          return false;
+        }
+        if (value_ == PositionValue::PValueType::Won) {
+          BoardGamesMFC::AfxMessageBox("You might as well resign - Computer will win!");
+          break;
+        }
+
+        if (value_ == PositionValue::PValueType::Tie) {
+          BoardGamesMFC::AfxMessageBox("Computer will hold a Draw.");
+          break;
+        }
+      }
+      catch (std::bad_alloc)
+      {
+        throw;
+      }
+
+      if (plist.size() > 4500000)
+        break;
+
+      auto t_now = std::chrono::high_resolution_clock::now();
+      std::chrono::duration<double> elapsed = t_now - t_start;
+      if (elapsed.count() > limit) break;
+      if (p->GetMoveList(CurrentPlayer()->GetColor() == PieceColor::White).size() == 1) break;          // if there is only one move, don't spend time evaluating it
+//      plist->callback();
+    }
+
+    Execute(*(p->GetBestMove(CurrentPlayer()->GetColor() == PieceColor::White)));
+    return true;
+  }
+
+
+  PositionValue MainPosition::Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies) const noexcept
+  {
+    if (plies == 0) return GetValue(w);
+
+    auto& movelist = GetMoveList(w);
+    if (movelist.empty()) return GetValue(w);
+
+    const auto l = [](MoveP a, MoveP b) { return *b < *a; };              // define sort predicate
+
+    for (auto& m : movelist)                                              // for all possible opponent's moves
+    {
+      MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
+      PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);// evaluate the result
+      assert(v != PositionValue::PValueType::Undefined);
+      m->SetValue(p->GetValue(w));                                        // save real position value into move for sorting
+
+      // apply alpha/beta pruning
+      if (v >= beta)                                                      // cut branch off, use current value
+      { 
+        std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth)
+        //SetValue(w, v);                                                   // save top value in current position
+        //depth_ = plies;                                                   // save evaluation depth
+        return beta;
+      }
+      if (v > alpha) { alpha = v; }                                       // reduce range for alpha, continue
+    }
+
+    std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth)
+    //SetValue(w, alpha);                                                   // save top value in current position
+    //depth_ = plies;                                                       // save evaluation depth
+    return alpha;                                                         // return best value
+  }
+
+
+  PositionValue MainPosition::EvaluateBF(AIContext& plist, bool w, unsigned int plies) const noexcept
+  {
+    if (plies == 0) return GetValue(w);
+
+    auto& movelist = GetMoveList(w);
+    if (movelist.empty()) return GetValue(w);
+
+    PositionValue best = PositionValue::PValueType::Lost;
+    int z = 0;
+    for (auto& m : movelist)                                              // for all possible opponent's moves
+    {
+      MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
+      PositionValue v = -p->EvaluateBF(plist, !w, plies - 1);             // evaluate the result
+      assert(v != PositionValue::PValueType::Undefined);
+      m->SetValue(v);                                                     // save position value into move for sorting
+      if (v > best) best = v;
+
+      //wchar_t buffer[256];
+      //const Location& l{ m->GetActions()[1]->GetLocation() };
+      //wsprintfW(buffer, L"Depth: %1d - Move %d (%d) has Value:%10.10S\n", plies, ++z, l.x_, (const char*)p->GetValue(w));
+      //OutputDebugString(buffer);
+
+    }
+
+    const auto l = [](MoveP a, MoveP b) { return *b < *a; };              // define sort predicate
+    std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth)
+    SetValue(w, best);                                                    // save best value in current position
+    return best;                                                          // return best value
+  }
+
+
+  [[ nodiscard ]] PositionValue MainPosition::EvaluateStatically(void) const noexcept   // as seen from White
+  {
+    assert(movesW_.empty());
+    assert(movesB_.empty());
+
+    // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
+    GetAllMoves();                                                             // fill the move lists
+    depth_ = 1;
+    if (onTurn_ == &PieceColor::White && movesW_.empty()) return PositionValue::PValueType::Lost;     // if no more moves, game over
+    if (onTurn_ == &PieceColor::Black && movesB_.empty()) return PositionValue::PValueType::Won;
+    PositionValue v{ GetMoveCountFactor() * (movesW_.size() - movesB_.size()) };
+    for (Coordinate j = 0; j < sizeY_; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)                                // loop through all locations
+      {
+        const Location l{ BoardPart::Main, i,j };
+        const Piece& p = GetPiece(l);
+        if ((p == Piece::NoTile) || (p == Piece::NoPiece)) continue;         // nothing here
+        v += (p.IsColor(PieceColor::White) ? 1 : -1) * p.GetValue(*this, l);
+      }
+    }
+    return v;
+  }
+
+  [[ nodiscard ]] PositionValue MainPosition::EvaluateChainLengths(unsigned int max) const noexcept           // as seen from White
+  {
+    PositionValue v{ 0 };
+    for (Coordinate j = 0; j < sizeY_; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)                                                      // loop through all locations
+      {                                                                       
+        PositionValue vv = EvaluateChainLength(Location(BoardPart::Main, i, j), max);
+        if (vv != PositionValue::PValueType::Normal) return vv;
+        v += vv;
+      }
+    }
+
+    return v;
+  }
+
+  [[ nodiscard ]] PositionValue MainPosition::EvaluateChainLength(Location l, unsigned int max) const noexcept    // as seen from White
+  {
+    int v1{ 0 };
+    int v2{ 0 };
+
+    const Piece* p = &GetPiece(l);
+    if (p->IsColor(PieceColor::NoColor)) return 0;                                                 // nothing here, so no chain can start
+    const bool w = p->IsColor(PieceColor::White);
+
+    for (const Offset& d : Offset::Qdirection)
+    {
+      const Piece* pp{ &GetPiece(l + d * -1) };
+      if (pp != &Piece::NoTile && pp->IsColor(p->GetColor())) continue;                            // if same color is that direction, we counted it already, so move on
+      if (pp != &Piece::NoTile && pp->IsBlank()) (w ? v1 : v2) += GetChainValue(0);                // free field, give an extra point - much better than opponent's piece
+      Location ll{l};
+//      Location ll{ BoardPart::Main,i,j };
+      unsigned int z{ 1 };
+      while ((pp = &GetPiece(ll += d)) != nullptr)
+      {
+        if (pp->IsColor(p->GetColor())) z++;
+        else
+        {
+          if (pp->IsColor(PieceColor::NoColor)) (w ? v1 : v2) += GetChainValue(0);                 // if line ends with free field, give an extra point - much better than opponent's piece
+          break;
+        }
+      }
+      if (z >= max) return w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
+      (w ? v1 : v2) += GetChainValue(z);
+    }
+    return v1 - v2;
+  }
+
+  MainPosition* MainPosition::GetPosition(AIContext& plist, MoveP m) const noexcept                // execute move, maintain resulting pos in PList
+  {
+    MainPosition* pos(Clone());                                                                    // create a copy of the board
+    if (m != nullptr) pos->Execute(*m);                                                            // execute move if provided
+                                                                                                   
+    auto pl0 = plist.find(pos);                                                                    // check if we evaluated this position before
+    if (pl0 != plist.end())                                                                        
+    {                                                                                              
+      delete pos;                                                                                  
+      return *pl0;                                                                                 // found - return it
+    }
+
+    pos->SetValue(true,pos->EvaluateStatically());                                                 // evaluate position statically
+    std::pair<std::unordered_set<MainPosition*>::iterator, bool> pl1 = plist.insert(pos);          // and save it
+    assert(pl1.second);
+    return *(pl1.first);                                                                           // return the pointer to the new entry
+  }
+
+}

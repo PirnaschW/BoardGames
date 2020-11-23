@@ -1,0 +1,11 @@
+New Game:
+create new Windows Dir
+copy Template Game.h, .cpp, .rc2, TemplateResource.h, TemplateDoc.ico to new dir
+rename all files
+create new folders in Solutions
+add the new source files in the respective Folders
+open all files and rename namespace
+rename classes
+add lines in BGGames.cpp
+add lines in BGResource.h
+add lines in BG.rc (3 places!)
