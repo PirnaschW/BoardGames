@@ -1,0 +1,2 @@
+D:\Projects\BoardGames\Output\x64 Debug\Games.lib
+D:\Projects\BoardGames\Output\x64 Debug\Games.pdb

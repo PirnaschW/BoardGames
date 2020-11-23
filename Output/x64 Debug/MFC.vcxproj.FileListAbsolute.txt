@@ -1,0 +1,2 @@
+D:\Projects\BoardGames\Output\x64 Debug\MFC.lib
+D:\Projects\BoardGames\Output\x64 Debug\MFC.pdb
