@@ -168,7 +168,7 @@ namespace BoardGamesCore
         }        
         return true;
       case ID_EDIT_INSERT:
-        pos->SetPosition(Piece::ListFromHTML(ClipBoard::GetClipboardText(),GetHTMLPieceMap()));
+        //pos->SetPosition(Piece::ListFromHTML(ClipBoard::GetClipboardText(),GetHTMLPieceMap()));
         return true;
 //    case ID_LEVEL_PLUS: plies++; break;
 //    case ID_LEVEL_MINUS: if (plies > 1) plies--; break;

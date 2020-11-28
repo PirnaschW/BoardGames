@@ -1,13 +1,5 @@
 #include "Core.h"
 
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
-#undef _CXX17_DEPRECATE_CODECVT_HEADER
-#define _CXX17_DEPRECATE_CODECVT_HEADER
-#include <xstring>
-#include <locale>
-#include <codecvt>
-
 namespace BoardGamesCore
 {
 
@@ -32,14 +24,7 @@ namespace BoardGamesCore
     for (auto& p : players) delete p;
   }
 
-  void Game::ReadFromWWW(const std::string& gameno)
-  {
-    const std::wstring url = LR"(http://brainking.com/en/ShowGame?g=)" + std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(gameno);
-    std::string html = URL::GetHTMLFromURL(url);
-    pos->SetPosition(Piece::ListFromHTML(html, Piece::GetHTMLPieceMap()));
-  }
-
-  void Game::Execute(const Move& m)
+    void Game::Execute(const Move& m)
   {
     pos->Execute(m);                                                      // execute move (includes setting pos to next player)
     NextPlayer();                                                         // the game has also a pointer to the current player

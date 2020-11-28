@@ -2,7 +2,7 @@
 
 #define VC_EXTRALEAN        // Exclude rarely-used stuff from Windows headers
 #include "targetver.h"
-#include <afxwin.h>         // MFC core and standard components
+#include <windows.h>
 #include <wininet.h>
 #pragma comment(lib, "Wininet")
 

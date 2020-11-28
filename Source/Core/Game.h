@@ -74,8 +74,6 @@ namespace BoardGamesCore
     virtual ~Game(void) noexcept;
 
     virtual void Serialize(Archive& ar) { pos->Serialize(ar); }
-    virtual void ReadFromWWW(const std::string& gameno);
-    virtual const std::unordered_map<std::string, const Piece&>& GetHTMLPieceMap(void) const noexcept { return Piece::GetHTMLPieceMap(); }
     virtual void AddToStock(const Location& l, const Piece& p) noexcept { pos->SetPiece(l, p); }
     virtual void AIAction(void) { while (!(_mode.IsSet(Mode::GameOver)) && CurrentPlayer()->IsAI()) if (!AIMove()) _mode = Mode::GameOver; }  // execute computer moves while it is its turn
 
@@ -99,6 +97,8 @@ namespace BoardGamesCore
     virtual void Select(const Point& point) override;
     virtual void Unselect(void) override { moves.clear(); _mode.Del(Mode::SelectTo); _mode.Set(Mode::SelectFr); }
     virtual void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist.callback = cb; }
+    virtual void SetPosition(std::vector<const Piece*>& list) override { pos->SetPosition(list); }
+
 
   protected:
     const PieceMapP& pMap_;                      // map of all pieces used in the game

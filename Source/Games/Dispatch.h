@@ -24,6 +24,7 @@ namespace BoardGamesCore
     void Unselect(void);
     void SetUpdateCallBack(std::function<void(void)> cb);
     void Serialize(Archive& ar);
+    void SetPosition(std::vector<const Piece*>& list);
 
   private:
     Game* p_;

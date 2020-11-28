@@ -32,7 +32,7 @@ namespace BoardGamesCore
   
   const Piece& Position::SetPiece(const Location& l, const Piece& p) noexcept { hash_ = 0; pieces_[l.Index(sizeX_, sizeY_)] = pMap_->GetIndex(p); return p; }
 
-  void Position::SetPosition(std::vector<const Piece*> list)
+  void Position::SetPosition(std::vector<const Piece*>& list)
   {
     unsigned int z{};
     for (const auto& p : list)

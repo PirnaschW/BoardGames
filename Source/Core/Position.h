@@ -24,7 +24,7 @@ namespace BoardGamesCore
     virtual std::size_t GetHash(void) const noexcept;
     virtual void Serialize(Archive& ar) const;
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
-    virtual void SetPosition(std::vector<const Piece*> list);
+    virtual void SetPosition(std::vector<const Piece*>& list);
 
   protected:
     const PieceMapP& pMap_;                                               // map of all potential pieces in this game

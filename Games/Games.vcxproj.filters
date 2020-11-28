@@ -243,6 +243,9 @@
     <ClCompile Include="..\Source\Games\Dispatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Games\Brainking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxGame.h">
@@ -346,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Games\Logik\res\LogikResource.h">
       <Filter>Game Logik\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Games\BrainKing.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

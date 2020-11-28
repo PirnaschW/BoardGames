@@ -56,48 +56,4 @@ namespace BoardGamesCore
     bmp_.Draw(dc, r);
   }
 
-  const std::unordered_map<std::string, const Piece&>& Piece::GetHTMLPieceMap(void) noexcept
-  {
-    static const std::unordered_map<std::string, const Piece&> map_{
-      { R"(blank35)",     Piece::NoPiece },
-      //{ R"(chess/wk35)",BoardGamesChessPieces::CorePiece::WK },
-      //{ R"(chess/wq35)",BoardGamesChessPieces::CorePiece::WQ },
-      //{ R"(chess/wr35)",BoardGamesChessPieces::CorePiece::WR },
-      //{ R"(chess/wb35)",BoardGamesChessPieces::CorePiece::WB },
-      //{ R"(chess/wn35)",BoardGamesChessPieces::CorePiece::WN },
-      //{ R"(chess/wp35)",BoardGamesChessPieces::CorePiece::WP },
-      //{ R"(chess/bk35)",BoardGamesChessPieces::CorePiece::BK },
-      //{ R"(chess/bq35)",BoardGamesChessPieces::CorePiece::BQ },
-      //{ R"(chess/br35)",BoardGamesChessPieces::CorePiece::BR },
-      //{ R"(chess/bb35)",BoardGamesChessPieces::CorePiece::BB },
-      //{ R"(chess/bn35)",BoardGamesChessPieces::CorePiece::BN },
-      //{ R"(chess/bp35)",BoardGamesChessPieces::CorePiece::BP },
-      //{ R"(hshogi/w35)",Hasami::HasamiPiece::HasamiPieceW },
-      //{ R"(hshogi/b35)",Hasami::HasamiPiece::HasamiPieceB },
-    };
-    return map_;
-  }
-
-  std::vector<const Piece*> Piece::ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece&>& map_)
-  {
-    static const std::string s0{ R"(<div id="game-board-section">)" };
-    static const std::string s1{ R"(<img src=https://i.brainking.com/)" };
-    static const std::string s2{ R"(.gif)" };
-    static const std::string s9{ R"(<div id="game-info-section">)" };
-
-    std::vector<const Piece*> list{};
-
-    std::string::size_type p1{ s.find(s0) };
-    std::string::size_type p9{ s.find(s9,p1) };
-    while ((p1 = s.find(s1, p1)) < p9)
-    {
-      p1 += s1.size();
-      auto p2 = s.find(s2, p1);
-      const auto& it{ map_.find(s.substr(p1, p2 - p1)) };
-      if (it != map_.end()) list.push_back(&(it->second));
-      else;// throw s.substr(p1, p2 - p1);
-    }
-    return list;
-  }
-
 }

@@ -30,9 +30,6 @@ namespace BoardGamesCore
     virtual const Piece& Promote(bool /*up*/) const noexcept { return *this; };             // by default: no promotions
     virtual void Draw(DC* pDC, const Rect& r) const;
 
-    static const std::unordered_map<std::string, const Piece&>& GetHTMLPieceMap(void) noexcept;
-    static std::vector<const Piece*> ListFromHTML(std::string s, const std::unordered_map<std::string, const Piece&>&);
-
   public:
     static const Piece NoTile;    // used to indicate 'not part of the board'
     static const Piece NoPiece;   // used to indicate 'empty field'

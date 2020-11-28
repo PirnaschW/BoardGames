@@ -16,7 +16,7 @@
 #include "Games\TicTacToe\TicTacToeGame.h"
 
 #include "Enum.h"
-//#include "Dispatch.h"
+#include "BrainKing.h"
 
 namespace BoardGamesCore
 {
@@ -82,6 +82,16 @@ namespace BoardGamesCore
     case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (c, Variants<TankB        ::TankBGame    >::GetPieces(c), TankB        ::TankBGame    ::GetDimensions(c, xSize, ySize));
     default:                      return nullptr;
     }
+  }
+
+  GameID LoadFromWWW(VariantCode& c, Coordinate& xSize, Coordinate& ySize, std::vector<const Piece*>& list)
+  {
+    char no[10] = "8569856";
+    int z = 8569856;
+    sprintf_s(no, "%7d", z);
+    BoardGamesBK::BKGame g(no);
+    GameID id = g.LoadGame(c, xSize, ySize, list);
+    return g.LoadGame(c, xSize, ySize, list);
   }
 
 }

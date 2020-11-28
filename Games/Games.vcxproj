@@ -36,7 +36,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -44,14 +44,14 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -59,7 +59,7 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -82,26 +82,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
-    <OutDir>$(SolutionDir)Output\x32 Debug\</OutDir>
-    <IntDir>$(SolutionDir)Output\x32 Debug\</IntDir>
+    <OutDir>$(SolutionDir)Output\x32 Debug\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)Output\x32 Debug\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
-    <OutDir>$(SolutionDir)Output\x32 Release\</OutDir>
-    <IntDir>$(SolutionDir)Output\x32 Release\</IntDir>
+    <OutDir>$(SolutionDir)Output\x32 Release\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)Output\x32 Release\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
-    <OutDir>$(SolutionDir)Output\x64 Debug\</OutDir>
-    <IntDir>$(SolutionDir)Output\x64 Debug\</IntDir>
+    <OutDir>$(SolutionDir)Output\x64 Debug\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)Output\x64 Debug\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
-    <OutDir>$(SolutionDir)Output\x64 Release\</OutDir>
-    <IntDir>$(SolutionDir)Output\x64 Release\</IntDir>
+    <OutDir>$(SolutionDir)Output\x64 Release\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)Output\x64 Release\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -187,6 +187,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Games.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="..\Source\Games\Brainking.cpp" />
     <ClCompile Include="..\Source\Games\Dispatch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Games.h</PrecompiledHeaderFile>
@@ -361,6 +362,7 @@
   <ItemGroup>
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxGame.h" />
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxResource.h" />
+    <ClInclude Include="..\Source\Games\BrainKing.h" />
     <ClInclude Include="..\Source\Games\Dispatch.h" />
     <ClInclude Include="..\Source\Games\Enum.h" />
     <ClInclude Include="..\Source\Games\Cam\CamGame.h" />
