@@ -31,28 +31,28 @@ namespace BoardGamesBK
       static const std::unordered_map<std::string, const Piece&> map_{
         { R"(blank35)",       Piece::NoPiece },
         { R"(blank50)",       Piece::NoPiece },
-        { R"(dot25)",         Piece::NoPiece },     // used in Battle boats
-        { R"(explode35)",     Piece::NoPiece },     // disallowed field in Cheshire Cat variants, for now: treat like blank
-        { R"(back/redo25)",   Piece::NoPiece },     // backgammon: red, down row - ignore for now
-        { R"(back/wredo25-1)",Piece::NoPiece },     // backgammon: red, down row, 1 white piece - ignore for now
-        { R"(back/wredo25-2)",Piece::NoPiece },     // backgammon: red, down row, 2 white pieces - ignore for now
-        { R"(back/wredo25-3)",Piece::NoPiece },     // backgammon: red, down row, 3 white pieces - ignore for now
-        { R"(back/wredo25-4)",Piece::NoPiece },     // backgammon: red, down row, 4 white pieces - ignore for now
-        { R"(back/bredo25-1)",Piece::NoPiece },     // backgammon: red, down row, 1 black piece - ignore for now
-        { R"(back/bredo25-2)",Piece::NoPiece },     // backgammon: red, down row, 2 black pieces - ignore for now
-        { R"(back/bredo25-3)",Piece::NoPiece },     // backgammon: red, down row, 3 black pieces - ignore for now
-        { R"(back/bredo25-4)",Piece::NoPiece },     // backgammon: red, down row, 4 black pieces - ignore for now
-        { R"(back/pudo25)",   Piece::NoPiece },     // backgammon: purple, up(per) row - ignore for now
-        { R"(back/wpudo25-1)",Piece::NoPiece },     // backgammon: purple, down row, 1 white piece - ignore for now
-        { R"(back/wpudo25-2)",Piece::NoPiece },     // backgammon: purple, down row, 2 white pieces - ignore for now
-        { R"(back/wpudo25-3)",Piece::NoPiece },     // backgammon: purple, down row, 2 white pieces - ignore for now
-        { R"(back/wpudo25-4)",Piece::NoPiece },     // backgammon: purple, down row, 2 white pieces - ignore for now
-        { R"(back/bpudo25-1)",Piece::NoPiece },     // backgammon: purple, down row, 1 black piece - ignore for now
-        { R"(back/bpudo25-2)",Piece::NoPiece },     // backgammon: purple, down row, 2 black pieces - ignore for now
-        { R"(back/bpudo25-3)",Piece::NoPiece },     // backgammon: purple, down row, 3 black pieces - ignore for now
-        { R"(back/bpudo25-4)",Piece::NoPiece },     // backgammon: purple, down row, 4 black pieces - ignore for now
-        { R"(back/reup25)",   Piece::NoPiece },     // backgammon: red, up(per) row - ignore for now
-        { R"(back/puup25)",   Piece::NoPiece },     // backgammon: purple, up(per) row - ignore for now
+        { R"(dot25)",         Piece::NoPiece },                      // used in Battle boats
+        { R"(explode35)",     Piece::NoPiece },                      // disallowed field in Cheshire Cat variants, for now: treat like blank
+        { R"(back/redo25)",   Piece::NoPiece },                      // backgammon: red, down row - ignore for now
+        { R"(back/wredo25-1)",Piece::NoPiece },                      // backgammon: red, down row, 1 white piece - ignore for now
+        { R"(back/wredo25-2)",Piece::NoPiece },                      // backgammon: red, down row, 2 white pieces - ignore for now
+        { R"(back/wredo25-3)",Piece::NoPiece },                      // backgammon: red, down row, 3 white pieces - ignore for now
+        { R"(back/wredo25-4)",Piece::NoPiece },                      // backgammon: red, down row, 4 white pieces - ignore for now
+        { R"(back/bredo25-1)",Piece::NoPiece },                      // backgammon: red, down row, 1 black piece - ignore for now
+        { R"(back/bredo25-2)",Piece::NoPiece },                      // backgammon: red, down row, 2 black pieces - ignore for now
+        { R"(back/bredo25-3)",Piece::NoPiece },                      // backgammon: red, down row, 3 black pieces - ignore for now
+        { R"(back/bredo25-4)",Piece::NoPiece },                      // backgammon: red, down row, 4 black pieces - ignore for now
+        { R"(back/pudo25)",   Piece::NoPiece },                      // backgammon: purple, up(per) row - ignore for now
+        { R"(back/wpudo25-1)",Piece::NoPiece },                      // backgammon: purple, down row, 1 white piece - ignore for now
+        { R"(back/wpudo25-2)",Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
+        { R"(back/wpudo25-3)",Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
+        { R"(back/wpudo25-4)",Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
+        { R"(back/bpudo25-1)",Piece::NoPiece },                      // backgammon: purple, down row, 1 black piece - ignore for now
+        { R"(back/bpudo25-2)",Piece::NoPiece },                      // backgammon: purple, down row, 2 black pieces - ignore for now
+        { R"(back/bpudo25-3)",Piece::NoPiece },                      // backgammon: purple, down row, 3 black pieces - ignore for now
+        { R"(back/bpudo25-4)",Piece::NoPiece },                      // backgammon: purple, down row, 4 black pieces - ignore for now
+        { R"(back/reup25)",   Piece::NoPiece },                      // backgammon: red, up(per) row - ignore for now
+        { R"(back/puup25)",   Piece::NoPiece },                      // backgammon: purple, up(per) row - ignore for now
         { R"(line4/w35)",     CorePiece::WC },
         { R"(line4/b35)",     CorePiece::BC },
         { R"(chess/wk35)",    CorePiece::WK },
@@ -67,6 +67,18 @@ namespace BoardGamesBK
         { R"(chess/bb35)",    CorePiece::BB },
         { R"(chess/bn35)",    CorePiece::BN },
         { R"(chess/bp35)",    CorePiece::BP },
+        { R"(chess/wk1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/wq1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/wr1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/wb1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/wn1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/wp1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/bk1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/bq1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/br1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/bb1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/bn1)",     Piece::NoPiece },                      // taken pieces - ignore for now
+        { R"(chess/bp1)",     Piece::NoPiece },                      // taken pieces - ignore for now
         { R"(shogi/i-p35d)",  Shogi::ShogiPiece::ShogiWP },
         { R"(shogi/i-b35d)",  Shogi::ShogiPiece::ShogiWB },
         { R"(shogi/i-r35d)",  Shogi::ShogiPiece::ShogiWR },
@@ -83,8 +95,8 @@ namespace BoardGamesBK
         { R"(shogi/i-k35u)",  Shogi::ShogiPiece::ShogiBK },
         { R"(shogi/i-r35u)",  Shogi::ShogiPiece::ShogiBR },
         { R"(shogi/i-b35u)",  Shogi::ShogiPiece::ShogiBB },
-        { R"(hshogi/b1)",     Piece::NoTile },
-        { R"(hshogi/w1)",     Piece::NoTile },
+        { R"(hshogi/b1)",     Piece::NoTile },                       // taken pieces - ignore for now
+        { R"(hshogi/w1)",     Piece::NoTile },                       // taken pieces - ignore for now
         { R"(hshogi/w35)",    Hasami::HasamiPiece::HasamiPieceW },
         { R"(hshogi/b35)",    Hasami::HasamiPiece::HasamiPieceB },
         //<a href="GameRules?tp=13&
@@ -231,9 +243,9 @@ namespace BoardGamesBK
       { 121, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Portuguese Checkers
       { 122, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Italian Checkers
       { 123, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dameo
-      { 124, IDR_GAMETYPE_CAMELOT,   '\0',  8,  8 },  // Camelot
+      { 124, IDR_GAMETYPE_CAMELOT,   'F',  12, 16 },  // Camelot
       { 125, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Racing Kings
-      { 126, IDR_GAMETYPE_CAMELOT,   '\0',  8,  8 },  // Cam
+      { 126, IDR_GAMETYPE_CAMELOT,   'M',   7, 13 },  // Cam
       { 127, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dice Chess 10x10
       { 128, IDR_GAMETYPE_MCHESS,    '\0',  8,  8 },  // Massacre Chess
     };

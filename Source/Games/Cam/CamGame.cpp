@@ -102,140 +102,143 @@ namespace Cam
 
   CamPosition::CamPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
   {
-    if (d[0].xCount_ == 12) // full Camelot
+    switch (c)
     {
+    case 'F': // full Camelot
       // Black Knights
-      SetPiece(Location( BoardPart::Main,  2U,  5U), CamPiece::BN);
-      SetPiece(Location( BoardPart::Main,  3U,  6U), CamPiece::BN);
-      SetPiece(Location( BoardPart::Main,  8U,  6U), CamPiece::BN);
-      SetPiece(Location( BoardPart::Main,  9U,  5U), CamPiece::BN);
-                                
+      SetPiece(Location(BoardPart::Main, 2U, 5U), CamPiece::BN);
+      SetPiece(Location(BoardPart::Main, 3U, 6U), CamPiece::BN);
+      SetPiece(Location(BoardPart::Main, 8U, 6U), CamPiece::BN);
+      SetPiece(Location(BoardPart::Main, 9U, 5U), CamPiece::BN);
+
       // Black Pawns          
-      SetPiece(Location( BoardPart::Main,  3U,  5U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  4U,  5U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  5U,  5U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  6U,  5U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  7U,  5U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  8U,  5U), CamPiece::BP);
-                            
-      SetPiece(Location( BoardPart::Main,  4U,  6U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  5U,  6U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  6U,  6U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  7U,  6U), CamPiece::BP);
-                          
+      SetPiece(Location(BoardPart::Main, 3U, 5U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 4U, 5U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 5U, 5U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 6U, 5U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 7U, 5U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 8U, 5U), CamPiece::BP);
+
+      SetPiece(Location(BoardPart::Main, 4U, 6U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 5U, 6U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 6U, 6U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 7U, 6U), CamPiece::BP);
+
       // White Knights    
-      SetPiece(Location( BoardPart::Main,  2U, 10U), CamPiece::WN);
-      SetPiece(Location( BoardPart::Main,  3U,  9U), CamPiece::WN);
-      SetPiece(Location( BoardPart::Main,  8U,  9U), CamPiece::WN);
-      SetPiece(Location( BoardPart::Main,  9U, 10U), CamPiece::WN);
-                           
+      SetPiece(Location(BoardPart::Main, 2U, 10U), CamPiece::WN);
+      SetPiece(Location(BoardPart::Main, 3U, 9U), CamPiece::WN);
+      SetPiece(Location(BoardPart::Main, 8U, 9U), CamPiece::WN);
+      SetPiece(Location(BoardPart::Main, 9U, 10U), CamPiece::WN);
+
       // White Pawns        
-      SetPiece(Location( BoardPart::Main,  3U, 10U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  4U, 10U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  5U, 10U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  6U, 10U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  7U, 10U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  8U, 10U), CamPiece::WP);
-                          
-      SetPiece(Location( BoardPart::Main,  4U,  9U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  5U,  9U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  6U,  9U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  7U,  9U), CamPiece::WP);
-                          
+      SetPiece(Location(BoardPart::Main, 3U, 10U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 4U, 10U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 5U, 10U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 6U, 10U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 7U, 10U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 8U, 10U), CamPiece::WP);
+
+      SetPiece(Location(BoardPart::Main, 4U, 9U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 5U, 9U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 6U, 9U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 7U, 9U), CamPiece::WP);
+
       // Illegal tiles     
-      SetPiece(Location( BoardPart::Main,  0U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  2U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  3U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  4U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  7U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  8U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  9U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 10U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 11U,  0U), Piece::NoTile);
-                          
-      SetPiece(Location( BoardPart::Main,  0U,  1U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U,  1U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 10U,  1U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 11U,  1U), Piece::NoTile);
-                          
-      SetPiece(Location( BoardPart::Main,  0U,  2U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 11U,  2U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 0U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 2U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 3U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 4U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 7U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 8U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 9U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 10U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 11U, 0U), Piece::NoTile);
 
-      SetPiece(Location( BoardPart::Main,  0U, 13U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 11U, 13U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 0U, 1U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 1U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 10U, 1U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 11U, 1U), Piece::NoTile);
 
-      SetPiece(Location( BoardPart::Main,  0U, 14U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U, 14U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 10U, 14U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 11U, 14U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 0U, 2U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 11U, 2U), Piece::NoTile);
 
-      SetPiece(Location( BoardPart::Main,  0U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  2U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  3U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  4U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  7U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  8U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  9U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 10U, 15U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main, 11U, 15U), Piece::NoTile);
-    }
+      SetPiece(Location(BoardPart::Main, 0U, 13U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 11U, 13U), Piece::NoTile);
 
-    else  // Mini Cam position
-    {
+      SetPiece(Location(BoardPart::Main, 0U, 14U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 14U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 10U, 14U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 11U, 14U), Piece::NoTile);
+
+      SetPiece(Location(BoardPart::Main, 0U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 2U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 3U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 4U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 7U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 8U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 9U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 10U, 15U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 11U, 15U), Piece::NoTile);
+      break;
+    case 'M': // Mini Cam position
       // Black Knights
-      SetPiece(Location( BoardPart::Main,  2U,  3U), CamPiece::BN);
-      SetPiece(Location( BoardPart::Main,  4U,  3U), CamPiece::BN);
-                         
+      SetPiece(Location(BoardPart::Main, 2U, 3U), CamPiece::BN);
+      SetPiece(Location(BoardPart::Main, 4U, 3U), CamPiece::BN);
+
       // Black Pawns      
-      SetPiece(Location( BoardPart::Main,  1U,  4U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  2U,  4U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  3U,  4U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  4U,  4U), CamPiece::BP);
-      SetPiece(Location( BoardPart::Main,  5U,  4U), CamPiece::BP);
-                         
+      SetPiece(Location(BoardPart::Main, 1U, 4U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 2U, 4U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 3U, 4U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 4U, 4U), CamPiece::BP);
+      SetPiece(Location(BoardPart::Main, 5U, 4U), CamPiece::BP);
+
       // White Knights   
-      SetPiece(Location( BoardPart::Main,  2U,  9U), CamPiece::WN);
-      SetPiece(Location( BoardPart::Main,  4U,  9U), CamPiece::WN);
-                          
+      SetPiece(Location(BoardPart::Main, 2U, 9U), CamPiece::WN);
+      SetPiece(Location(BoardPart::Main, 4U, 9U), CamPiece::WN);
+
       // White Pawns     
-      SetPiece(Location( BoardPart::Main,  1U,  8U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  2U,  8U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  3U,  8U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  4U,  8U), CamPiece::WP);
-      SetPiece(Location( BoardPart::Main,  5U,  8U), CamPiece::WP);
-                         
+      SetPiece(Location(BoardPart::Main, 1U, 8U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 2U, 8U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 3U, 8U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 4U, 8U), CamPiece::WP);
+      SetPiece(Location(BoardPart::Main, 5U, 8U), CamPiece::WP);
+
       // Illegal tiles    
-      SetPiece(Location( BoardPart::Main,  0U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  2U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  4U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  5U,  0U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  6U,  0U), Piece::NoTile);
-                              
-      SetPiece(Location( BoardPart::Main,  0U,  1U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U,  1U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  5U,  1U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  6U,  1U), Piece::NoTile);
-                               
-      SetPiece(Location( BoardPart::Main,  0U,  2U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  6U,  2U), Piece::NoTile);
-                          
-      SetPiece(Location( BoardPart::Main,  0U, 10U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  6U, 10U), Piece::NoTile);
-                         
-      SetPiece(Location( BoardPart::Main,  0U, 11U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U, 11U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  5U, 11U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  6U, 11U), Piece::NoTile);
-                           
-      SetPiece(Location( BoardPart::Main,  0U, 12U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  1U, 12U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  2U, 12U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  4U, 12U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  5U, 12U), Piece::NoTile);
-      SetPiece(Location( BoardPart::Main,  6U, 12U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 0U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 2U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 4U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 5U, 0U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 6U, 0U), Piece::NoTile);
+
+      SetPiece(Location(BoardPart::Main, 0U, 1U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 1U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 5U, 1U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 6U, 1U), Piece::NoTile);
+
+      SetPiece(Location(BoardPart::Main, 0U, 2U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 6U, 2U), Piece::NoTile);
+
+      SetPiece(Location(BoardPart::Main, 0U, 10U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 6U, 10U), Piece::NoTile);
+
+      SetPiece(Location(BoardPart::Main, 0U, 11U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 11U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 5U, 11U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 6U, 11U), Piece::NoTile);
+
+      SetPiece(Location(BoardPart::Main, 0U, 12U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 1U, 12U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 2U, 12U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 4U, 12U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 5U, 12U), Piece::NoTile);
+      SetPiece(Location(BoardPart::Main, 6U, 12U), Piece::NoTile);
+      break;
+
+    default:
+      assert(false); // illegal variant
     }
   }
 
@@ -270,8 +273,8 @@ namespace Cam
   const VariantList& CamGame::GetVariants(void) noexcept
   {
     static VariantList v{
-      { Variant{ "Camelot", 'A', 12, 16 } },
-      { Variant{ "Cam",     'B',  7, 13 } },
+      { Variant{ "Camelot", 'F', 12, 16 } },
+      { Variant{ "Cam",     'M',  7, 13 } },
     };
     return v;
   }
@@ -288,14 +291,19 @@ namespace Cam
   }
 
 
-  const Dimensions& CamGame::GetDimensions(VariantCode c, Coordinate x, Coordinate y) noexcept
+  const Dimensions& CamGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    static Dimensions d{
-       Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(3, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (y - 2), FieldSizeX, FieldSizeY),
-       Dimension(2 * x, 2, FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * y - FieldSizeSY * 4),
+    constexpr static Dimensions dF{  // Full Game ("Camelot")
+       Dimension(12, 16, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(3, 2, BoardStartX + FieldSizeX * (12 + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (16 - 2), FieldSizeX, FieldSizeY),
+       Dimension(24, 2, FieldSizeX * (12 + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * 16 - FieldSizeSY * 4),
     };
-    return d;
+    constexpr static Dimensions dM{  // Mini ("Cam")
+       Dimension(7, 13, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       Dimension(3, 2, BoardStartX + FieldSizeX * (7 + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (13 - 2), FieldSizeX, FieldSizeY),
+       Dimension(2 * 7, 2, FieldSizeX * (7 + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * 13 - FieldSizeSY * 4),
+    };
+    return v.c == 'F' ? dF : dM;
   }
 
 }

@@ -62,13 +62,13 @@ namespace UnitTestLogik
     {
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a layout works multiple times
       {
-        LogikLayout l{ LogikGame::GetDimensions(0, 5, 7) };
+        LogikLayout l{ LogikGame::GetDimensions(VariantChosen{0, '\0', 5U, 7U}) };
       }
     }
     
     TEST_METHOD(TestLogikPositionClone)
     {
-      LogikPosition l1{ 0, Variants<Logik::LogikGame>::GetPieces(0), LogikGame::GetDimensions(0, MaxPegs, MaxTries) };
+      LogikPosition l1{ 0, Variants<Logik::LogikGame>::GetPieces(0), LogikGame::GetDimensions(VariantChosen{0, '\0', MaxPegs, MaxTries}) };
       MainPosition* p2 = l1.Clone();
       Assert::IsTrue(p2 != nullptr);
 
@@ -79,7 +79,7 @@ namespace UnitTestLogik
 
     TEST_METHOD(TestLogikPositionPegsMarkers)
     {
-      LogikPosition l1{ 0, Variants<Logik::LogikGame>::GetPieces(0), LogikGame::GetDimensions(0, MaxPegs, MaxTries) };
+      LogikPosition l1{ 0, Variants<Logik::LogikGame>::GetPieces(0), LogikGame::GetDimensions(VariantChosen{0, '\0', MaxPegs, MaxTries}) };
       MainPosition* pm = &l1;
       Assert::IsTrue(pm != nullptr);
 
@@ -133,7 +133,7 @@ namespace UnitTestLogik
       std::unique_ptr<const Plays> plays = std::make_unique<const Plays>();
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a position works multiple times
       {
-        LogikPosition l{ 0, Variants<Logik::LogikGame>::GetPieces(0), LogikGame::GetDimensions(0U, MaxPegs, MaxTries) };
+        LogikPosition l{ 0, Variants<Logik::LogikGame>::GetPieces(0), LogikGame::GetDimensions(VariantChosen{0, '\0', MaxPegs, MaxTries}) };
         for (unsigned char j = 0; j < MaxTries; ++j)
         {
           PlayCode c = rand() % Plays::Max;
@@ -153,7 +153,7 @@ namespace UnitTestLogik
     {
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a game works multiple times
       {
-        LogikGame g{ 0, Variants<Logik::LogikGame>::GetPieces(0), Logik::LogikGame::GetDimensions(0U, 5U, 7U) };
+        LogikGame g{ 0, Variants<Logik::LogikGame>::GetPieces(0), Logik::LogikGame::GetDimensions(VariantChosen{0, '\0', 5, 7}) };
 
         bool set{ false };
         std::array<unsigned char, MaxPegs * MaxTries> p{};

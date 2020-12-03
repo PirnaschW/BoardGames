@@ -43,21 +43,21 @@ namespace BoardGamesCore
   {
     switch (id)
     {
-    case IDR_GAMETYPE_ATAXX:      return &Variants<Ataxx::AtaxxGame    >::GetVariants();
-    case IDR_GAMETYPE_CAMELOT:    return &Variants<Cam::CamGame      >::GetVariants();
-    case IDR_GAMETYPE_CFOUR:      return &Variants<CFour::CFourGame    >::GetVariants();
-    case IDR_GAMETYPE_CHECKERS:   return &Variants<Checkers::CheckersGame >::GetVariants();
-    case IDR_GAMETYPE_CHEVERSI:   return &Variants<Cheversi::CheversiGame >::GetVariants();
-    case IDR_GAMETYPE_ESPIONAGE:  return &Variants<Espionage::EspionageGame>::GetVariants();
-    case IDR_GAMETYPE_HASAMI:     return &Variants<Hasami::HasamiGame   >::GetVariants();
-    case IDR_GAMETYPE_KNIGHTF:    return &Variants<KnightF::KnightFGame  >::GetVariants();
-    case IDR_GAMETYPE_LOA:        return &Variants<LoA::LoAGame      >::GetVariants();
-    case IDR_GAMETYPE_LOGIK:      return &Variants<Logik::LogikGame    >::GetVariants();
+    case IDR_GAMETYPE_ATAXX:      return &Variants<Ataxx        ::AtaxxGame    >::GetVariants();
+    case IDR_GAMETYPE_CAMELOT:    return &Variants<Cam          ::CamGame      >::GetVariants();
+    case IDR_GAMETYPE_CFOUR:      return &Variants<CFour        ::CFourGame    >::GetVariants();
+    case IDR_GAMETYPE_CHECKERS:   return &Variants<Checkers     ::CheckersGame >::GetVariants();
+    case IDR_GAMETYPE_CHEVERSI:   return &Variants<Cheversi     ::CheversiGame >::GetVariants();
+    case IDR_GAMETYPE_ESPIONAGE:  return &Variants<Espionage    ::EspionageGame>::GetVariants();
+    case IDR_GAMETYPE_HASAMI:     return &Variants<Hasami       ::HasamiGame   >::GetVariants();
+    case IDR_GAMETYPE_KNIGHTF:    return &Variants<KnightF      ::KnightFGame  >::GetVariants();
+    case IDR_GAMETYPE_LOA:        return &Variants<LoA          ::LoAGame      >::GetVariants();
+    case IDR_GAMETYPE_LOGIK:      return &Variants<Logik        ::LogikGame    >::GetVariants();
     case IDR_GAMETYPE_MCHESS:     return &Variants<MassacreChess::MCGame       >::GetVariants();
-    case IDR_GAMETYPE_SHOGI:      return &Variants<Shogi::ShogiGame    >::GetVariants();
-    case IDR_GAMETYPE_TICTACTOE:  return &Variants<TicTacToe::TicTacToeGame>::GetVariants();
-    case IDR_GAMETYPE_TANKB:      return &Variants<TankB::TankBGame    >::GetVariants();
-    default:                      return &Variants<TicTacToe::TicTacToeGame>::GetVariants();
+    case IDR_GAMETYPE_SHOGI:      return &Variants<Shogi        ::ShogiGame    >::GetVariants();
+    case IDR_GAMETYPE_TICTACTOE:  return &Variants<TicTacToe    ::TicTacToeGame>::GetVariants();
+    case IDR_GAMETYPE_TANKB:      return &Variants<TankB        ::TankBGame    >::GetVariants();
+    default:                      return &Variants<TicTacToe    ::TicTacToeGame>::GetVariants();
     }
   }
 
@@ -66,20 +66,20 @@ namespace BoardGamesCore
   {
     switch (v.id)
     {
-    case IDR_GAMETYPE_ATAXX:      return new Ataxx        ::AtaxxGame     (v.c, Variants<Ataxx        ::AtaxxGame    >::GetPieces(v.c), Ataxx        ::AtaxxGame    ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_CAMELOT:    return new Cam          ::CamGame       (v.c, Variants<Cam          ::CamGame      >::GetPieces(v.c), Cam          ::CamGame      ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_CFOUR:      return new CFour        ::CFourGame     (v.c, Variants<CFour        ::CFourGame    >::GetPieces(v.c), CFour        ::CFourGame    ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_CHECKERS:   return new Checkers     ::CheckersGame  (v.c, Variants<Checkers     ::CheckersGame >::GetPieces(v.c), Checkers     ::CheckersGame ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_CHEVERSI:   return new Cheversi     ::CheversiGame  (v.c, Variants<Cheversi     ::CheversiGame >::GetPieces(v.c), Cheversi     ::CheversiGame ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_ESPIONAGE:  return new Espionage    ::EspionageGame (v.c, Variants<Espionage    ::EspionageGame>::GetPieces(v.c), Espionage    ::EspionageGame::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (v.c, Variants<Hasami       ::HasamiGame   >::GetPieces(v.c), Hasami       ::HasamiGame   ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (v.c, Variants<KnightF      ::KnightFGame  >::GetPieces(v.c), KnightF      ::KnightFGame  ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_LOA:        return new LoA          ::LoAGame       (v.c, Variants<LoA          ::LoAGame      >::GetPieces(v.c), LoA          ::LoAGame      ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (v.c, Variants<Logik        ::LogikGame    >::GetPieces(v.c), Logik        ::LogikGame    ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame        (v.c, Variants<MassacreChess::MCGame       >::GetPieces(v.c), MassacreChess::MCGame       ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_SHOGI:      return new Shogi        ::ShogiGame     (v.c, Variants<Shogi        ::ShogiGame    >::GetPieces(v.c), Shogi        ::ShogiGame    ::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe    ::TicTacToeGame (v.c, Variants<TicTacToe    ::TicTacToeGame>::GetPieces(v.c), TicTacToe    ::TicTacToeGame::GetDimensions(v.c, v.x, v.y));
-    case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (v.c, Variants<TankB        ::TankBGame    >::GetPieces(v.c), TankB        ::TankBGame    ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_ATAXX:      return new Ataxx        ::AtaxxGame     (v.c, Variants<class Ataxx        ::AtaxxGame    >::GetPieces(v.c), Ataxx        ::Variants<class Ataxx        ::AtaxxGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_CAMELOT:    return new Cam          ::CamGame       (v.c, Variants<class Cam          ::CamGame      >::GetPieces(v.c), Cam          ::Variants<class Cam          ::CamGame      >::GetDimensions(v));
+    case IDR_GAMETYPE_CFOUR:      return new CFour        ::CFourGame     (v.c, Variants<class CFour        ::CFourGame    >::GetPieces(v.c), CFour        ::Variants<class CFour        ::CFourGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_CHECKERS:   return new Checkers     ::CheckersGame  (v.c, Variants<class Checkers     ::CheckersGame >::GetPieces(v.c), Checkers     ::Variants<class Checkers     ::CheckersGame >::GetDimensions(v));
+    case IDR_GAMETYPE_CHEVERSI:   return new Cheversi     ::CheversiGame  (v.c, Variants<class Cheversi     ::CheversiGame >::GetPieces(v.c), Cheversi     ::Variants<class Cheversi     ::CheversiGame >::GetDimensions(v));
+    case IDR_GAMETYPE_ESPIONAGE:  return new Espionage    ::EspionageGame (v.c, Variants<class Espionage    ::EspionageGame>::GetPieces(v.c), Espionage    ::Variants<class Espionage    ::EspionageGame>::GetDimensions(v));
+    case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (v.c, Variants<class Hasami       ::HasamiGame   >::GetPieces(v.c), Hasami       ::Variants<class Hasami       ::HasamiGame   >::GetDimensions(v));
+    case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (v.c, Variants<class KnightF      ::KnightFGame  >::GetPieces(v.c), KnightF      ::Variants<class KnightF      ::KnightFGame  >::GetDimensions(v));
+    case IDR_GAMETYPE_LOA:        return new LoA          ::LoAGame       (v.c, Variants<class LoA          ::LoAGame      >::GetPieces(v.c), LoA          ::Variants<class LoA          ::LoAGame      >::GetDimensions(v));
+    case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (v.c, Variants<class Logik        ::LogikGame    >::GetPieces(v.c), Logik        ::Variants<class Logik        ::LogikGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame        (v.c, Variants<class MassacreChess::MCGame       >::GetPieces(v.c), MassacreChess::Variants<class MassacreChess::MCGame       >::GetDimensions(v));
+    case IDR_GAMETYPE_SHOGI:      return new Shogi        ::ShogiGame     (v.c, Variants<class Shogi        ::ShogiGame    >::GetPieces(v.c), Shogi        ::Variants<class Shogi        ::ShogiGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe    ::TicTacToeGame (v.c, Variants<class TicTacToe    ::TicTacToeGame>::GetPieces(v.c), TicTacToe    ::Variants<class TicTacToe    ::TicTacToeGame>::GetDimensions(v));
+    case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (v.c, Variants<class TankB        ::TankBGame    >::GetPieces(v.c), TankB        ::Variants<class TankB        ::TankBGame    >::GetDimensions(v));
     default:                      return nullptr;
     }
   }

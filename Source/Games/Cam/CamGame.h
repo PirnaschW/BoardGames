@@ -79,7 +79,7 @@ namespace Cam
     CamGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new CamPosition(c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(VariantCode c) noexcept;
-    static const Dimensions& GetDimensions(VariantCode c, Coordinate x, Coordinate y) noexcept;
+    static const Dimensions& GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }
