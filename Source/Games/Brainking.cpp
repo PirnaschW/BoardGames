@@ -21,9 +21,9 @@ namespace BoardGamesBK
 
     static const std::string GetBetween(const std::string& s, const std::string& s0, const std::string& s1)
     {
-      const std::string::size_type p0{ s.find(s0) };
+      const std::string::size_type p0{ s.find(s0) + s0.size() };
       const std::string::size_type p1{ s.find(s1,p0) };
-      return s.substr(p0 + s0.size(), p1 - p0);
+      return s.substr(p0, p1 - p0);
     }
 
     static std::vector<const Piece*> ListFromHTML(const std::string& s)
@@ -33,6 +33,26 @@ namespace BoardGamesBK
         { R"(blank50)",       Piece::NoPiece },
         { R"(dot25)",         Piece::NoPiece },     // used in Battle boats
         { R"(explode35)",     Piece::NoPiece },     // disallowed field in Cheshire Cat variants, for now: treat like blank
+        { R"(back/redo25)",   Piece::NoPiece },     // backgammon: red, down row - ignore for now
+        { R"(back/wredo25-1)",Piece::NoPiece },     // backgammon: red, down row, 1 white piece - ignore for now
+        { R"(back/wredo25-2)",Piece::NoPiece },     // backgammon: red, down row, 2 white pieces - ignore for now
+        { R"(back/wredo25-3)",Piece::NoPiece },     // backgammon: red, down row, 3 white pieces - ignore for now
+        { R"(back/wredo25-4)",Piece::NoPiece },     // backgammon: red, down row, 4 white pieces - ignore for now
+        { R"(back/bredo25-1)",Piece::NoPiece },     // backgammon: red, down row, 1 black piece - ignore for now
+        { R"(back/bredo25-2)",Piece::NoPiece },     // backgammon: red, down row, 2 black pieces - ignore for now
+        { R"(back/bredo25-3)",Piece::NoPiece },     // backgammon: red, down row, 3 black pieces - ignore for now
+        { R"(back/bredo25-4)",Piece::NoPiece },     // backgammon: red, down row, 4 black pieces - ignore for now
+        { R"(back/pudo25)",   Piece::NoPiece },     // backgammon: purple, up(per) row - ignore for now
+        { R"(back/wpudo25-1)",Piece::NoPiece },     // backgammon: purple, down row, 1 white piece - ignore for now
+        { R"(back/wpudo25-2)",Piece::NoPiece },     // backgammon: purple, down row, 2 white pieces - ignore for now
+        { R"(back/wpudo25-3)",Piece::NoPiece },     // backgammon: purple, down row, 2 white pieces - ignore for now
+        { R"(back/wpudo25-4)",Piece::NoPiece },     // backgammon: purple, down row, 2 white pieces - ignore for now
+        { R"(back/bpudo25-1)",Piece::NoPiece },     // backgammon: purple, down row, 1 black piece - ignore for now
+        { R"(back/bpudo25-2)",Piece::NoPiece },     // backgammon: purple, down row, 2 black pieces - ignore for now
+        { R"(back/bpudo25-3)",Piece::NoPiece },     // backgammon: purple, down row, 3 black pieces - ignore for now
+        { R"(back/bpudo25-4)",Piece::NoPiece },     // backgammon: purple, down row, 4 black pieces - ignore for now
+        { R"(back/reup25)",   Piece::NoPiece },     // backgammon: red, up(per) row - ignore for now
+        { R"(back/puup25)",   Piece::NoPiece },     // backgammon: purple, up(per) row - ignore for now
         { R"(line4/w35)",     CorePiece::WC },
         { R"(line4/b35)",     CorePiece::BC },
         { R"(chess/wk35)",    CorePiece::WK },
@@ -86,14 +106,6 @@ namespace BoardGamesBK
       return list;
     }
 
-    struct GameData {
-    public:
-      int tp;
-      GameID id;
-      VariantCode c;
-      Coordinate x;
-      Coordinate y;
-    };
     static constexpr GameData map[]{
       {   0, IDR_GAMETYPE_XXXXX,     '\0',  0,  0 },  // dummy for 'unknown game type'
       {   1, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Chess
@@ -233,30 +245,28 @@ namespace BoardGamesBK
     }
   }
 
-  GameID BKGame::LoadGame(BoardGamesCore::VariantCode& c, BoardGamesCore::Coordinate& xSize, BoardGamesCore::Coordinate& ySize, std::vector<const Piece*>& list) const
+  VariantChosen BKGame::LoadGame(std::vector<const Piece*>& list) const
   {
     // try to read a Current game
-    const std::wstring urlc = LR"(http://brainking.com/en/ShowGame?g=)" + std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(nr_);
+    
+    const std::wstring urlc = LR"(http://brainking.com/en/ShowGame?g=)" + std::to_wstring(no_);
     std::string html = URL::GetHTMLFromURL(urlc);
     if (strlen(html.c_str()) < 256)    // if this results in a redirect, try to read an Archived game
     {
-      const std::wstring urla = LR"(http://brainking.com/en/ArchivedGame?g=)" + std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(nr_);
+      const std::wstring urla = LR"(http://brainking.com/en/ArchivedGame?g=)" + std::to_wstring(no_);
       html = URL::GetHTMLFromURL(urla);
     }
 
     const std::string tp = Local::GetBetween(html, R"(<a href="GameRules?tp=)", R"(&)");
     int gametype = stoi(tp);
-    Local::GameData g = Local::GetGameData(gametype);
-    if (g.id == 0) return 0; // not a valid or recognized game type / variant
+    GameData g = Local::GetGameData(gametype);
+    if (g.v.id)  // if the game type is known, read the board
+    {
+      const std::string board = Local::GetBetween(html, R"(<div id="game-board-section">)", R"(<div id="game-info-section">)");
+      list = Local::ListFromHTML(board);
+    }
 
-    c = g.c;
-    xSize = g.x;
-    ySize = g.y;
-
-    const std::string board = Local::GetBetween(html, R"(<div id="game-board-section">)", R"(<div id="game-info-section">)");
-    list = Local::ListFromHTML(board);
-
-    return g.id;
+    return g.v;
   }
 
 }

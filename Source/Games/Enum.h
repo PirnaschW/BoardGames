@@ -4,12 +4,11 @@
 
 namespace BoardGamesCore
 {
-  using GameID = int;
   class Game;
   class Piece;
 
   void GetGames(std::vector<GameID>& v);
   const VariantList* GetVariants(GameID id);
-  Game* CreateGame(GameID id, VariantCode c, Coordinate xSize, Coordinate ySize);
-  GameID LoadFromWWW(VariantCode& c, Coordinate& xSize, Coordinate& ySize, std::vector<const Piece*>& list);
+  Game* CreateGame(const VariantChosen& v);
+  VariantChosen LoadFromWWW(int no, std::vector<const Piece*>& list);
 }

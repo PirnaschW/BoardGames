@@ -8,7 +8,7 @@ namespace BoardGamesCore
   class GameDispatch
   {
   public:
-    GameDispatch(GameID id, VariantCode c, Coordinate xSize, Coordinate ySize) : p_{ CreateGame(id, c, xSize, ySize) } {}
+    GameDispatch(const VariantChosen& v) : p_{ CreateGame(v) } {}
     ~GameDispatch(void);  // needed to allow unique_ptr to delete the object; default destructor is fine but must be in cpp
     Game* operator->(void) const noexcept;
 

@@ -62,36 +62,32 @@ namespace BoardGamesCore
   }
 
   // Creating the right game
-  Game* CreateGame(GameID id, VariantCode c, Coordinate xSize, Coordinate ySize)
+  Game* CreateGame(const VariantChosen& v)
   {
-    switch (id)
+    switch (v.id)
     {
-    case IDR_GAMETYPE_ATAXX:      return new Ataxx        ::AtaxxGame     (c, Variants<Ataxx        ::AtaxxGame    >::GetPieces(c), Ataxx        ::AtaxxGame    ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_CAMELOT:    return new Cam          ::CamGame       (c, Variants<Cam          ::CamGame      >::GetPieces(c), Cam          ::CamGame      ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_CFOUR:      return new CFour        ::CFourGame     (c, Variants<CFour        ::CFourGame    >::GetPieces(c), CFour        ::CFourGame    ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_CHECKERS:   return new Checkers     ::CheckersGame  (c, Variants<Checkers     ::CheckersGame >::GetPieces(c), Checkers     ::CheckersGame ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_CHEVERSI:   return new Cheversi     ::CheversiGame  (c, Variants<Cheversi     ::CheversiGame >::GetPieces(c), Cheversi     ::CheversiGame ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_ESPIONAGE:  return new Espionage    ::EspionageGame (c, Variants<Espionage    ::EspionageGame>::GetPieces(c), Espionage    ::EspionageGame::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (c, Variants<Hasami       ::HasamiGame   >::GetPieces(c), Hasami       ::HasamiGame   ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (c, Variants<KnightF      ::KnightFGame  >::GetPieces(c), KnightF      ::KnightFGame  ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_LOA:        return new LoA          ::LoAGame       (c, Variants<LoA          ::LoAGame      >::GetPieces(c), LoA          ::LoAGame      ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (c, Variants<Logik        ::LogikGame    >::GetPieces(c), Logik        ::LogikGame    ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame        (c, Variants<MassacreChess::MCGame       >::GetPieces(c), MassacreChess::MCGame       ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_SHOGI:      return new Shogi        ::ShogiGame     (c, Variants<Shogi        ::ShogiGame    >::GetPieces(c), Shogi        ::ShogiGame    ::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe    ::TicTacToeGame (c, Variants<TicTacToe    ::TicTacToeGame>::GetPieces(c), TicTacToe    ::TicTacToeGame::GetDimensions(c, xSize, ySize));
-    case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (c, Variants<TankB        ::TankBGame    >::GetPieces(c), TankB        ::TankBGame    ::GetDimensions(c, xSize, ySize));
+    case IDR_GAMETYPE_ATAXX:      return new Ataxx        ::AtaxxGame     (v.c, Variants<Ataxx        ::AtaxxGame    >::GetPieces(v.c), Ataxx        ::AtaxxGame    ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_CAMELOT:    return new Cam          ::CamGame       (v.c, Variants<Cam          ::CamGame      >::GetPieces(v.c), Cam          ::CamGame      ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_CFOUR:      return new CFour        ::CFourGame     (v.c, Variants<CFour        ::CFourGame    >::GetPieces(v.c), CFour        ::CFourGame    ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_CHECKERS:   return new Checkers     ::CheckersGame  (v.c, Variants<Checkers     ::CheckersGame >::GetPieces(v.c), Checkers     ::CheckersGame ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_CHEVERSI:   return new Cheversi     ::CheversiGame  (v.c, Variants<Cheversi     ::CheversiGame >::GetPieces(v.c), Cheversi     ::CheversiGame ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_ESPIONAGE:  return new Espionage    ::EspionageGame (v.c, Variants<Espionage    ::EspionageGame>::GetPieces(v.c), Espionage    ::EspionageGame::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (v.c, Variants<Hasami       ::HasamiGame   >::GetPieces(v.c), Hasami       ::HasamiGame   ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (v.c, Variants<KnightF      ::KnightFGame  >::GetPieces(v.c), KnightF      ::KnightFGame  ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_LOA:        return new LoA          ::LoAGame       (v.c, Variants<LoA          ::LoAGame      >::GetPieces(v.c), LoA          ::LoAGame      ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (v.c, Variants<Logik        ::LogikGame    >::GetPieces(v.c), Logik        ::LogikGame    ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_MCHESS:     return new MassacreChess::MCGame        (v.c, Variants<MassacreChess::MCGame       >::GetPieces(v.c), MassacreChess::MCGame       ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_SHOGI:      return new Shogi        ::ShogiGame     (v.c, Variants<Shogi        ::ShogiGame    >::GetPieces(v.c), Shogi        ::ShogiGame    ::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe    ::TicTacToeGame (v.c, Variants<TicTacToe    ::TicTacToeGame>::GetPieces(v.c), TicTacToe    ::TicTacToeGame::GetDimensions(v.c, v.x, v.y));
+    case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (v.c, Variants<TankB        ::TankBGame    >::GetPieces(v.c), TankB        ::TankBGame    ::GetDimensions(v.c, v.x, v.y));
     default:                      return nullptr;
     }
   }
 
-  GameID LoadFromWWW(VariantCode& c, Coordinate& xSize, Coordinate& ySize, std::vector<const Piece*>& list)
+  VariantChosen LoadFromWWW(int no, std::vector<const BoardGamesCore::Piece*>& list)
   {
-    char no[10] = "8569856";
-    int z = 8569856;
-    sprintf_s(no, "%7d", z);
     BoardGamesBK::BKGame g(no);
-    GameID id = g.LoadGame(c, xSize, ySize, list);
-    return g.LoadGame(c, xSize, ySize, list);
+    return g.LoadGame(list);
   }
 
 }
