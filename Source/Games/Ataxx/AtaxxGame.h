@@ -14,6 +14,7 @@ namespace Ataxx
 
   using namespace BoardGamesCore;
 
+  // TODO: replace with CorePiece Checkers
   class Checker : public Kind
   {
   private:

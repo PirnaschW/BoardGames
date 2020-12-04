@@ -72,7 +72,7 @@ namespace BoardGamesCore
     assert(p != nullptr);
 
     auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 12.0;  // run for n seconds
+    double limit = 4.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == PieceColor::White;
 
     for (unsigned int pl = 0; /*pl <= 4*/; pl++)                               // use iterative deepening
@@ -156,10 +156,12 @@ namespace BoardGamesCore
 
   PositionValue MainPosition::EvaluateBF(AIContext& plist, bool w, unsigned int plies) const noexcept
   {
-    if (plies == 0) return GetValue(w);
+    PositionValue v0 = GetValue(w);
+    if (plies == 0) return v0;
+    if (PositionValue::PValueType::Normal != v0) return v0;  // don't analyze won or lost position any further
 
     auto& movelist = GetMoveList(w);
-    if (movelist.empty()) return GetValue(w);
+    if (movelist.empty()) return v0;
 
     PositionValue best = PositionValue::PValueType::Lost;
     int z = 0;

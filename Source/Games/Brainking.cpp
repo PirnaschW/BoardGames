@@ -1,16 +1,17 @@
 #include "Games.h"
 
 #include "BrainKing.h"
+#include "CFour/CFourGame.h"
 #include "Hasami/HasamiGame.h"
 #include "Shogi/ShogiGame.h"
 
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
-#undef _CXX17_DEPRECATE_CODECVT_HEADER
-#define _CXX17_DEPRECATE_CODECVT_HEADER
-#include <xstring>
-#include <locale>
-#include <codecvt>
+//#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+//#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+//#undef _CXX17_DEPRECATE_CODECVT_HEADER
+//#define _CXX17_DEPRECATE_CODECVT_HEADER
+//#include <xstring>
+//#include <locale>
+//#include <codecvt>
 
 namespace BoardGamesBK
 {
@@ -120,120 +121,27 @@ namespace BoardGamesBK
 
     static constexpr GameData map[]{
       {   0, IDR_GAMETYPE_XXXXX,     '\0',  0,  0 },  // dummy for 'unknown game type'
-      {   1, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Chess
-      {   2, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Corner Chess
-      {   3, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Fortress Chess
-      {   4, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Horde Chess
-      {   5, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Five in Line
-      {   6, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Loop Chess
-      {   7, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Checkers
-      {   8, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Anti Checkers
-      {   9, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Reversi 6x6
-      {  10, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Reversi 8x8
-      {  11, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Reversi 10x10
-      {  12, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Anti Reversi
-      {  13, IDR_GAMETYPE_CFOUR,     'L',   8,  8 },  // Line4
-      {  14, IDR_GAMETYPE_CFOUR,     'A',   8,  8 },  // Anti Line4
-      {  15, IDR_GAMETYPE_CFOUR,     'T',   8,  8 },  // Linetris
-      {  16, IDR_GAMETYPE_CFOUR,     'S',   8,  8 },  // Spider Line4
-      {  17, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Anti Chess
-      {  18, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Extinction Chess
-      {  19, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Tablut
-      {  20, IDR_GAMETYPE_TANKB,     '\0',  8,  8 },  // Tank Battle
-      {  21, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Maharajah Chess
-      {  22, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Three Checks Chess
-      {  23, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Backgammon
-      {  24, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Nackgammon
-      {  25, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Anti Backgammon
-      {  26, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Backgammon Race
-      {  27, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dark Chess
-      {  28, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Atomic Chess
+
+      {  89, IDR_GAMETYPE_ATAXX,     '\0',  8,  8 },  // Assimilation
+      {  90, IDR_GAMETYPE_ATAXX,     '\0',  8,  8 },  // Ataxx
+
+      { 124, IDR_GAMETYPE_CAMELOT,   'F',  12, 16 },  // Camelot
+      { 126, IDR_GAMETYPE_CAMELOT,   'M',   7, 13 },  // Cam
+
+      {  13, IDR_GAMETYPE_CFOUR,     CFour::Classic,          6,  7 },  // Line4
+      {  14, IDR_GAMETYPE_CFOUR,     CFour::Anti,             8,  8 },  // Anti Line4
+      {  15, IDR_GAMETYPE_CFOUR,     CFour::Linetris,         8,  8 },  // Linetris
+      {  16, IDR_GAMETYPE_CFOUR,     CFour::Spider,           8,  8 },  // Spider Line4
+      {  61, IDR_GAMETYPE_CFOUR,     CFour::SpiderLinetris,   8,  8 },  // Spider Linetris
+
+      {   7, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Checkers
+      {   8, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Anti Checkers
       {  29, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Czech Checkers
       {  30, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Corner Checkers
       {  31, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // One Way Checkers
       {  32, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Parachute Checkers
-      {  33, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Halma 8x8
-      {  34, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Halma 10x10
       {  35, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Gothic Checkers
       {  36, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Turkish Checkers< / select>
-      {  37, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Crowded Backgammon
-      {  38, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Pente
-      {  39, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Keryo Pente
-      {  40, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Janus Chess
-      {  41, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Embassy Chess
-      {  42, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Small Pente
-      {  43, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Small Keryo Pente
-      {  44, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Open Pente
-      {  45, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Open Keryo Pente
-      {  46, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Battleboats
-      {  47, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Screen Chess
-      {  48, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Crazy Screen Chess
-      {  49, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Amazons
-      {  50, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Battleboats Plus
-      {  51, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dark Battleboats
-      {  52, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Jarmo
-      {  53, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Alquerque
-      {  54, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Froglet
-      {  55, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Espionage
-      {  56, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Jungle
-      {  57, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Cylinder Chess
-      {  58, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Amazon Chess
-      {  59, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Berolina Chess
-      {  60, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Anti Froglet
-      {  61, IDR_GAMETYPE_CFOUR,     'X',   8,  8 },  // Spider Linetris
-      {  62, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Small Espionage
-      {  63, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Fast Espionage
-      {  64, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Pro Five in Line
-      {  65, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Swap Five in Line
-      {  66, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Hyper Backgammon
-      {  67, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Fischer Random Chess
-      {  68, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Chinese Chess
-      {  69, IDR_GAMETYPE_SHOGI,     '\0',  8,  8 },  // Japanese Chess
-      {  70, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Legan Chess
-      {  71, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Knight Relay Chess
-      {  72, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // PahTum
-      {  73, IDR_GAMETYPE_HASAMI,    '\0',  8,  8 },  // Hasami Shogi
-      {  74, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Grand Chess
-      {  75, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Capablanca Random Chess
-      {  76, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Los Alamos Chess
-      {  77, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Sphere Froglet
-      {  78, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Ludo
-      {  79, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Go
-      {  80, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Go 9x9
-      {  81, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Go 13x13
-      {  82, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Connect6
-      {  83, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Lines of Action
-      {  84, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Breakthrough
-      {  85, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Ambiguous Chess
-      {  86, IDR_GAMETYPE_LOA,       '\0',  8,  8 },  // Scrambled Eggs
-      {  87, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Open Fast Espionage
-      {  88, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Small Fast Espionage
-      {  89, IDR_GAMETYPE_ATAXX,     '\0',  8,  8 },  // Assimilation
-      {  90, IDR_GAMETYPE_ATAXX,     '\0',  8,  8 },  // Ataxx
-      {  91, IDR_GAMETYPE_SHOGI,     'M',   8,  8 },  // Minishogi
-      {  92, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Cloning Backgammon
-      {  93, IDR_GAMETYPE_CHEVERSI,  '\0',  8,  8 },  // Cheversi
-      {  94, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Hawaiian Checkers
-      {  95, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dice Chess
-      {  96, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Grasshopper
-      {  97, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dice Poker
-      {  98, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Recycle Chess
-      {  99, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Triple Dice Poker
-      { 100, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Ice Age Chess
-      { 101, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Frog Finder
-      { 102, IDR_GAMETYPE_LOGIK,     '\0',  8,  8 },  // Logik
-      { 103, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Mancala
-      { 104, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Behemoth Chess
-      { 105, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Frog Legs
-      { 106, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dice Poker 6D
-      { 107, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Triple Dice Poker 6D
-      { 108, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Big Jungle
-      { 109, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Plakoto
-      { 110, IDR_GAMETYPE_KNIGHTF,   '\0',  8,  8 },  // Knight Fight
-      { 111, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Fevga
-      { 112, IDR_GAMETYPE_LOA,       '\0',  8,  8 },  // Parachute Lines of Action
-      { 113, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Cheshire Cat Chess
-      { 114, IDR_GAMETYPE_LOA,       '\0',  8,  8 },  // Cheshire Cat Lines of Action
       { 115, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // International Checkers
       { 116, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Knightmate Chess
       { 117, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Russian Checkers
@@ -242,12 +150,120 @@ namespace BoardGamesBK
       { 120, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Brazilian Checkers
       { 121, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Portuguese Checkers
       { 122, IDR_GAMETYPE_CHECKERS,  '\0',  8,  8 },  // Italian Checkers
-      { 123, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dameo
-      { 124, IDR_GAMETYPE_CAMELOT,   'F',  12, 16 },  // Camelot
-      { 125, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Racing Kings
-      { 126, IDR_GAMETYPE_CAMELOT,   'M',   7, 13 },  // Cam
+
+      {   1, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Chess
+      {   2, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Corner Chess
+      {   3, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Fortress Chess
+      {   4, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Horde Chess
+      {   6, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Loop Chess
+      {  17, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Anti Chess
+      {  18, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Extinction Chess
+      {  21, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Maharajah Chess
+      {  22, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Three Checks Chess
+      {  27, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dark Chess
+      {  28, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Atomic Chess
+      {  40, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Janus Chess
+      {  41, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Embassy Chess
+      {  47, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Screen Chess
+      {  48, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Crazy Screen Chess
+      {  57, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Cylinder Chess
+      {  58, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Amazon Chess
+      {  59, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Berolina Chess
+      {  67, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Fischer Random Chess
+      {  70, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Legan Chess
+      {  71, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Knight Relay Chess
+      {  74, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Grand Chess
+      {  75, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Capablanca Random Chess
+      {  76, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Los Alamos Chess
+      {  85, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Ambiguous Chess
+      {  95, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dice Chess
+      {  98, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Recycle Chess
+      { 100, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Ice Age Chess
+      { 104, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Behemoth Chess
+      { 113, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Cheshire Cat Chess
+      { 125, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Racing Kings
       { 127, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dice Chess 10x10
+
+      {  93, IDR_GAMETYPE_CHEVERSI,  '\0',  8,  8 },  // Cheversi
+
+      {  55, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Espionage
+      {  62, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Small Espionage
+      {  63, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Fast Espionage
+      {  87, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Open Fast Espionage
+      {  88, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Small Fast Espionage
+
+      {  73, IDR_GAMETYPE_HASAMI,    '\0',  8,  8 },  // Hasami Shogi
+
+      { 110, IDR_GAMETYPE_KNIGHTF,   '\0',  8,  8 },  // Knight Fight
+
+      {  83, IDR_GAMETYPE_LOA,       '\0',  8,  8 },  // Lines of Action
+      {  86, IDR_GAMETYPE_LOA,       '\0',  8,  8 },  // Scrambled Eggs
+      { 112, IDR_GAMETYPE_LOA,       '\0',  8,  8 },  // Parachute Lines of Action
+      { 114, IDR_GAMETYPE_LOA,       '\0',  8,  8 },  // Cheshire Cat Lines of Action
+
+      { 102, IDR_GAMETYPE_LOGIK,     '\0',  8,  8 },  // Logik
+
       { 128, IDR_GAMETYPE_MCHESS,    '\0',  8,  8 },  // Massacre Chess
+
+      {  69, IDR_GAMETYPE_SHOGI,     '\0',  8,  8 },  // Japanese Chess
+      {  91, IDR_GAMETYPE_SHOGI,     'M',   8,  8 },  // Minishogi
+
+      {  20, IDR_GAMETYPE_TANKB,     '\0',  8,  8 },  // Tank Battle
+
+      {   5, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Five in Line
+      {   9, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Reversi 6x6
+      {  10, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Reversi 8x8
+      {  11, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Reversi 10x10
+      {  12, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Anti Reversi
+      {  19, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Tablut
+      {  23, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Backgammon
+      {  24, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Nackgammon
+      {  25, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Anti Backgammon
+      {  26, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Backgammon Race
+      {  33, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Halma 8x8
+      {  34, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Halma 10x10
+      {  37, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Crowded Backgammon
+      {  38, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Pente
+      {  39, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Keryo Pente
+      {  42, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Small Pente
+      {  43, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Small Keryo Pente
+      {  44, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Open Pente
+      {  45, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Open Keryo Pente
+      {  46, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Battleboats
+      {  49, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Amazons
+      {  50, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Battleboats Plus
+      {  51, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dark Battleboats
+      {  52, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Jarmo
+      {  53, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Alquerque
+      {  54, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Froglet
+      {  56, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Jungle
+      {  60, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Anti Froglet
+      {  64, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Pro Five in Line
+      {  65, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Swap Five in Line
+      {  66, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Hyper Backgammon
+      {  68, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Chinese Chess
+      {  72, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // PahTum
+      {  77, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Sphere Froglet
+      {  78, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Ludo
+      {  79, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Go
+      {  80, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Go 9x9
+      {  81, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Go 13x13
+      {  82, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Connect6
+      {  84, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Breakthrough
+      {  92, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Cloning Backgammon
+      {  94, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Hawaiian Checkers
+      {  96, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Grasshopper
+      {  97, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dice Poker
+      {  99, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Triple Dice Poker
+      { 101, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Frog Finder
+      { 103, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Mancala
+      { 105, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Frog Legs
+      { 106, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dice Poker 6D
+      { 107, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Triple Dice Poker 6D
+      { 108, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Big Jungle
+      { 109, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Plakoto
+      { 111, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Fevga
+      { 123, IDR_GAMETYPE_XXXXX,     '\0',  8,  8 },  // Dameo
     };
     constexpr GameData GetGameData(int tp)
     {

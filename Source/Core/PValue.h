@@ -43,6 +43,7 @@ namespace BoardGamesCore
     constexpr bool operator< (const PositionValue& p) const noexcept { return (*this != p) && (!(*this > p)); }
     constexpr bool operator>= (const PositionValue& p) const noexcept { return !(*this < p); }
     constexpr bool operator<= (const PositionValue& p) const noexcept { return !(*this > p); }
+    constexpr const PositionValue operator+ (void) const noexcept { return *this; }
     constexpr const PositionValue operator- (void) const noexcept
     {
       switch (type_)

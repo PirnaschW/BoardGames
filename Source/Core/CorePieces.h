@@ -99,12 +99,14 @@ namespace BoardGamesCore
   public:
     static const CorePiece WC;  // White Checker
     static const CorePiece BC;  // Black Checker
+
     static const CorePiece WP;  // White Pawn
     static const CorePiece WB;  // White Bishop
     static const CorePiece WN;  // White Knight
     static const CorePiece WR;  // White Rook 
     static const CorePiece WQ;  // White Queen
     static const CorePiece WK;  // White King 
+
     static const CorePiece BP;  // Black Pawn 
     static const CorePiece BB;  // Black Bishop
     static const CorePiece BN;  // Black Knight
