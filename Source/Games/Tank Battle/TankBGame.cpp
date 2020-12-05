@@ -173,7 +173,7 @@ namespace TankB
     return v;
   }
 
-  const PieceMapP& TankBGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& TankBGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();

@@ -79,7 +79,7 @@ namespace TicTacToe
         if (p.IsColor(PieceColor::NoColor)) continue;  // nothing here, so no chain can start
         const bool w = p.IsColor(PieceColor::White);
 
-        for (const Offset& d : Offset::Qdirection)
+        for (const Offset& d : Offset::QDirection)
         {
           const Piece* pp{ &GetPiece(l + d * -1) };
           if (pp != &Piece::NoTile && pp->IsColor(p.GetColor())) continue;    // if same color is that direction, we counted it already, so move on
@@ -124,7 +124,7 @@ namespace TicTacToe
     return v;
   }
 
-  const PieceMapP& TicTacToeGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& TicTacToeGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();

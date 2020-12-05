@@ -11,7 +11,7 @@ namespace Hasami
 
   void Checker::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept
   {
-    for (auto& d : Offset::Rdirection)
+    for (auto& d : Offset::RDirection)
     {
       const Piece& p1 = pos.GetPiece(l + d);
       if (p1 != Piece::NoTile)                    // on the board
@@ -54,7 +54,7 @@ namespace Hasami
     Actions a{};
     a.push_back(std::make_shared<ActionLift>(fr, p));                     // pick piece up
 
-    for (auto& d : Offset::Rdirection)
+    for (auto& d : Offset::RDirection)
     {
       Actions ad{};
       Location l = to;
@@ -101,7 +101,7 @@ namespace Hasami
         {
           if (k == 1) continue; // horizontal is not allowed
 
-          const Offset& d = Offset::Qdirection[k];
+          const Offset& d = Offset::QDirection[k];
           const Piece* pp{ &GetPiece(l + d * -1) };
           if (*pp != Piece::NoTile && pp->IsColor(p.GetColor())) continue;    // if same color is that direction, we counted it already, so move on
           Location ll{ BoardPart::Main,  i,j };
@@ -152,7 +152,7 @@ namespace Hasami
     return v;
   }
 
-  const PieceMapP& HasamiGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& HasamiGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Add(HasamiPiece::HasamiPieceW);

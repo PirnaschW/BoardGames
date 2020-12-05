@@ -214,7 +214,7 @@ namespace LoA
     return v;
   }
 
-  const PieceMapP& LoAGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& LoAGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Add(LoAPiece::LoAPieceW);

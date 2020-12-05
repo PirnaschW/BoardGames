@@ -47,7 +47,7 @@ namespace Espionage
 
   void EKind::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (auto& d : Offset::Rdirection)
+    for (auto& d : Offset::RDirection)
       p.AddIfLegal(moves, l, l + d);
   }
 
@@ -221,7 +221,7 @@ namespace Espionage
     return v;
   }
 
-  const PieceMapP& EspionageGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& EspionageGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();

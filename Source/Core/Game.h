@@ -125,7 +125,7 @@ namespace BoardGamesCore
   public:
     constexpr static const VariantList& GetVariants(void) noexcept { return TClass::GetVariants(); }
     constexpr static const Dimensions& GetDimensions(const VariantChosen& v) noexcept { return TClass::GetDimensions(v); }
-    constexpr static const PieceMapP& GetPieces(VariantCode c) noexcept { const PieceMapP& p{ TClass::GetPieces(c) }; p->Add(Piece::NoPiece); p->Add(Piece::NoTile); return p; }
+    constexpr static const PieceMapP& GetPieces(const VariantChosen& v) noexcept { const PieceMapP& p{ TClass::GetPieces(v) }; p->Add(Piece::NoPiece); p->Add(Piece::NoTile); return p; }
   };
 
 }

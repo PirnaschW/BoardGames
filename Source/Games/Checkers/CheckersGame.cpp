@@ -29,7 +29,7 @@ namespace Checkers
   void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    for (auto& d : Offset::Bdirection)
+    for (auto& d : Offset::BDirection)
       pos.AddIfLegal(moves, l, l + d);                                    // check for slide moves
     pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);              // check for jump moves
   }
@@ -38,7 +38,7 @@ namespace Checkers
   void Queen::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    for (auto& d : Offset::Bdirection)
+    for (auto& d : Offset::BDirection)
       for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
     pos.AddIfLegalJump(moves, true, Actions{}, Piece::NoTile, l);               // check for jump moves
   }
@@ -83,7 +83,7 @@ namespace Checkers
 
     bool any{ false };                                                    // were any more jumps possible?
 
-    for (const auto& d : Offset::Bdirection)                              // jumps are allowed in any diagonal direction, including backwards
+    for (const auto& d : Offset::BDirection)                              // jumps are allowed in any diagonal direction, including backwards
     {
       for (int z1 = 1; longjumps || z1 == 1; z1++)                        // for longjumps, allow any z, otherwise only 1 step
       {
@@ -166,7 +166,7 @@ namespace Checkers
     return v;
   }
 
-  const PieceMapP& CheckersGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& CheckersGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();

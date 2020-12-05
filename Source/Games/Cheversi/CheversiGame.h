@@ -34,7 +34,7 @@ namespace Cheversi
   public:
     CheversiGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new CheversiPosition(c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
-    static const PieceMapP& GetPieces(VariantCode c) noexcept;
+    static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions& GetDimensions(const VariantChosen& v) noexcept;
   };
 

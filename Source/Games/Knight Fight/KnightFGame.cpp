@@ -61,7 +61,7 @@ namespace KnightF
     return v;
   }
 
-  const PieceMapP& KnightFGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& KnightFGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();

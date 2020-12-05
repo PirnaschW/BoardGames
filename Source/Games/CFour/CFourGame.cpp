@@ -5,6 +5,7 @@
 namespace CFour
 {
 
+  // TODO: handle LineTris fucntionality (disappearing complete lines)
   void CFourPosition::GetAllMoves(void) const noexcept // collect all moves
   {
     assert(movesW_.empty());
@@ -14,9 +15,9 @@ namespace CFour
     const auto hash = [](const Location& l) { return (l.x_<<8)+l.y_; };  // simple hash to differentiate the locations
     std::unordered_set<Location,decltype(hash)> m{};
 
-    for (Coordinate i = 0; i < sizeX_; ++i)                                                        // vertical ('for all columns')
+    for (Coordinate i = 0; i < sizeX_; ++i)                               // vertical ('for all columns')
     {
-      for (Coordinate z = sizeY_ - 1, j = 0; j < sizeY_; ++j,--z)                                  //   bottom -> top
+      for (Coordinate z = sizeY_ - 1, j = 0; j < sizeY_; ++j,--z)         //   bottom -> top
       {
         const Location l{ BoardPart::Main, i, z };
         const Piece& p = GetPiece(l);
@@ -28,7 +29,7 @@ namespace CFour
       }
       if (vCode_ && Spider) // non-spider versions don't allow placement on other sides
       {
-        for (Coordinate j = 0; j < sizeY_; ++j)                                                  //   top -> bottom
+        for (Coordinate j = 0; j < sizeY_; ++j)                           //   top -> bottom
         {
           const Location l{ BoardPart::Main, i, j };
           const Piece& p = GetPiece(l);
@@ -42,9 +43,9 @@ namespace CFour
     }
     if (vCode_ && Spider) // non-spider versions don't allow placement on other sides
     {
-      for (Coordinate j = 0; j < sizeY_; ++j)                                                    // horizontal ('for all rows')
+      for (Coordinate j = 0; j < sizeY_; ++j)                             // horizontal ('for all rows')
       {
-        for (Coordinate i = 0; i < sizeX_; ++i)                                                  //   left -> right
+        for (Coordinate i = 0; i < sizeX_; ++i)                           //   left -> right
         {
           const Location l{ BoardPart::Main, i, j };
           const Piece& p = GetPiece(l);
@@ -55,7 +56,7 @@ namespace CFour
           }
         }
         Coordinate z = sizeX_ - 1;
-        for (Coordinate i = 0; i < sizeX_; ++i, --z)                                              //   right -> left
+        for (Coordinate i = 0; i < sizeX_; ++i, --z)                      //   right -> left
         {
           const Location l{ BoardPart::Main, z, j };
           const Piece& p = GetPiece(l);
@@ -77,27 +78,27 @@ namespace CFour
     for (const Location& l : m)
     {
       Actions aw{};
-      aw.push_back(std::make_shared<ActionLift>(w, CorePiece::WC));                                // pick new piece up
-      aw.push_back(std::make_shared<ActionDrop>(l, CorePiece::WC));                                // and place it on target
-      movesW_.push_back(std::make_shared<Move>(aw));                                               // add move to move list
-                                                                                                            
-      Actions ab{};                                                                                         
-      ab.push_back(std::make_shared<ActionLift>(b, CorePiece::BC));                                // pick new piece up
-      ab.push_back(std::make_shared<ActionDrop>(l, CorePiece::BC));                                // and place it on target
-      movesB_.push_back(std::make_shared<Move>(ab));                                               // add move to move list
+      aw.push_back(std::make_shared<ActionLift>(w, CorePiece::WC));       // pick new piece up
+      aw.push_back(std::make_shared<ActionDrop>(l, CorePiece::WC));       // and place it on target
+      movesW_.push_back(std::make_shared<Move>(aw));                      // add move to move list
+                                                                                   
+      Actions ab{};                                                                
+      ab.push_back(std::make_shared<ActionLift>(b, CorePiece::BC));       // pick new piece up
+      ab.push_back(std::make_shared<ActionDrop>(l, CorePiece::BC));       // and place it on target
+      movesB_.push_back(std::make_shared<Move>(ab));                      // add move to move list
     }
   }
 
-  PositionValue CFourPosition::EvaluateStatically(void) const noexcept   // as seen from White
+  PositionValue CFourPosition::EvaluateStatically(void) const noexcept    // as seen from White
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
 
-    GetAllMoves();                                                                                 // fill the move lists
+    GetAllMoves();                                                        // fill the move lists
     depth_ = 1;
 
-    if (onTurn_ == &PieceColor::White && movesW_.empty()) return vCode_ & Anti ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;     // if no more moves, game over
-    if (onTurn_ == &PieceColor::Black && movesB_.empty()) return vCode_ & Anti ? PositionValue::PValueType::Lost : PositionValue::PValueType::Won;
+    if (movesW_.empty()) return PositionValue::PValueType::Tie;           // if no more moves, game over.
+                                                                          // Note that B has the same moves as W; enough to check W
     return vCode_ & Anti ? -EvaluateChainLengths(4) : +EvaluateChainLengths(4);
   }
 
@@ -117,7 +118,7 @@ namespace CFour
 
   const VariantList& CFourGame::GetVariants(void) noexcept
   {
-    static VariantList v{
+    static const VariantList v{
       { Variant{ "Classic Connect Four", CFour::Classic,        7, 6, 4, 20 } },
       { Variant{ "Linetris",             CFour::Linetris,       8, 8, 4, 20 } },
       { Variant{ "Spider Line Four",     CFour::Spider,         8, 8, 4, 20 } },
@@ -127,10 +128,10 @@ namespace CFour
     return v;
   }
 
-  const PieceMapP& CFourGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& CFourGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
-    p->Empty();
+    p->Empty();   // the map is reused, but not its content - need to rebuild it every time
     p->Add(CorePiece::WC);
     p->Add(CorePiece::BC);
     return p;
@@ -138,6 +139,7 @@ namespace CFour
 
   const Dimensions& CFourGame::GetDimensions(const VariantChosen& v) noexcept
   {
+    // TODO: fix Dimensions: (for ALL games) cannot be static - if called with another x/y, it will return the old data!
     static Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(2, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),

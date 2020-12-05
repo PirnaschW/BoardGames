@@ -86,7 +86,7 @@ namespace Cheversi
     return v;
   }
 
-  const PieceMapP& CheversiGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& CheversiGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();

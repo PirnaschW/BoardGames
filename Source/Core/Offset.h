@@ -11,7 +11,7 @@ namespace BoardGamesCore
     constexpr Offset(int dx, int dy) noexcept : dx_{ dx }, dy_{ dy } {}
     Offset(const Location& l1, const Location& l2) noexcept;
     constexpr bool operator==(const Offset& o) const noexcept { return o.dx_ == dx_ && o.dy_ == dy_; }
-    const Offset operator*(int i) const noexcept;
+    constexpr Offset operator*(int i) const noexcept { return Offset(dx_ * i, dy_ * i); }
     constexpr bool IsParallel(const Offset& o) const noexcept { return dx_ * o.dy_ == o.dx_ * dy_; }  // 2-dim cross product is 0 when parallel
 
   private:
@@ -19,9 +19,10 @@ namespace BoardGamesCore
     const int dy_;
 
   public:
-    static const Offset Rdirection[4];   // standard 4 'Rook'   directions
-    static const Offset Bdirection[4];   // standard 4 'Bishop' directions
-    static const Offset Qdirection[8];   // standard 8 'Queen'  directions
+    static const Offset RDirection[4];   // standard 4 'Rook'   directions
+    static const Offset BDirection[4];   // standard 4 'Bishop' directions
+    static const Offset QDirection[8];   // standard 8 'Queen'  directions
+    static const Offset NJumps[8];       // standard 8 'Night'  jumps
   };
 
 }

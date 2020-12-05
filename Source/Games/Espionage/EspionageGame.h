@@ -161,7 +161,7 @@ namespace Espionage
   public:
     EspionageGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new EspionagePosition(c, m, d), new EspionageLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
-    static const PieceMapP& GetPieces(VariantCode c) noexcept;
+    static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions& GetDimensions(const VariantChosen& v) noexcept;
   };
 

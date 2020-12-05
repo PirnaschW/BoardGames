@@ -29,7 +29,7 @@ namespace BoardGamesCore
 
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (const Offset& o : Offset::Qdirection) p.AddIfLegal(moves, l, l + o);
+    for (const Offset& o : Offset::QDirection) p.AddIfLegal(moves, l, l + o);
   }
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
@@ -50,19 +50,19 @@ namespace BoardGamesCore
   }
   void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (const Offset& o : Offset::Bdirection) for (int z = 1; p.AddIfLegal(moves, l, l + o); z++);
+    for (const Offset& o : Offset::BDirection) for (int z = 1; p.AddIfLegal(moves, l, l + o); z++);
   }
   void Rook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (const Offset& o : Offset::Rdirection) for (int z = 1; p.AddIfLegal(moves, l, l + o); z++);
+    for (const Offset& o : Offset::RDirection) for (int z = 1; p.AddIfLegal(moves, l, l + o); z++);
   }
   void Queen::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (const Offset& o : Offset::Qdirection) for (int z = 1; p.AddIfLegal(moves, l, l + o); z++);
+    for (const Offset& o : Offset::QDirection) for (int z = 1; p.AddIfLegal(moves, l, l + o); z++);
   }
   void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (const Offset& o : Offset::Qdirection) p.AddIfLegal(moves, l, l + o);
+    for (const Offset& o : Offset::QDirection) p.AddIfLegal(moves, l, l + o);
   }
 
 }

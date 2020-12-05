@@ -65,7 +65,7 @@ namespace MassacreChess
     return v;
   }
 
-  const PieceMapP& MCGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& MCGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Add(CorePiece::WQ);

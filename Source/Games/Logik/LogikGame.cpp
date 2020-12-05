@@ -353,7 +353,7 @@ namespace Logik
     return d;
   }
 
-  const PieceMapP& LogikGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& LogikGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP p = std::make_shared<PieceMap>();
     p->Empty();

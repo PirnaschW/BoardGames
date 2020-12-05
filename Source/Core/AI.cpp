@@ -71,16 +71,16 @@ namespace BoardGamesCore
     MainPosition* p{ pos->GetPosition(plist) };                           // retrieve position from list
     assert(p != nullptr);
 
-    auto t_start = std::chrono::high_resolution_clock::now();
-    double limit = 4.0;  // run for n seconds
+    const auto t_start = std::chrono::high_resolution_clock::now();
+    const double limit = 4.0;  // run for n seconds
     bool w = CurrentPlayer()->GetColor() == PieceColor::White;
 
     for (unsigned int pl = 0; /*pl <= 4*/; pl++)                               // use iterative deepening
     {
       try
       {
-//      PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
-        PositionValue value_ = p->EvaluateBF(plist, w, pl);
+        PositionValue value_ = p->Evaluate(plist, w, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, pl);
+//      PositionValue value_ = p->EvaluateBF(plist, w, pl);
         pos->SetValue(w, value_);
         pos->SetDepth(pl);
         plist.callback();
@@ -108,8 +108,8 @@ namespace BoardGamesCore
       if (plist.size() > 4500000)
         break;
 
-      auto t_now = std::chrono::high_resolution_clock::now();
-      std::chrono::duration<double> elapsed = t_now - t_start;
+      const auto t_now = std::chrono::high_resolution_clock::now();
+      const std::chrono::duration<double> elapsed = t_now - t_start;
       if (elapsed.count() > limit) break;
       if (p->GetMoveList(CurrentPlayer()->GetColor() == PieceColor::White).size() == 1) break;          // if there is only one move, don't spend time evaluating it
 //      plist->callback();
@@ -122,10 +122,12 @@ namespace BoardGamesCore
 
   PositionValue MainPosition::Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies) const noexcept
   {
-    if (plies == 0) return GetValue(w);
+    const PositionValue v0 = GetValue(w);
+    if (plies == 0) return v0;
+    if (PositionValue::PValueType::Normal != v0) return v0;               // don't analyze won or lost position any further
 
     auto& movelist = GetMoveList(w);
-    if (movelist.empty()) return GetValue(w);
+    if (movelist.empty()) return v0;
 
     const auto l = [](MoveP a, MoveP b) { return *b < *a; };              // define sort predicate
 
@@ -138,25 +140,25 @@ namespace BoardGamesCore
 
       // apply alpha/beta pruning
       if (v >= beta)                                                      // cut branch off, use current value
-      { 
+      {
         std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth)
-        //SetValue(w, v);                                                   // save top value in current position
-        //depth_ = plies;                                                   // save evaluation depth
+        SetValue(w, v);                                                   // save top value in current position
+        depth_ = plies;                                                   // save evaluation depth
         return beta;
       }
       if (v > alpha) { alpha = v; }                                       // reduce range for alpha, continue
     }
 
     std::sort(movelist.begin(), movelist.end(), l);                       // sort the moves by their value (for the next level of depth)
-    //SetValue(w, alpha);                                                   // save top value in current position
-    //depth_ = plies;                                                       // save evaluation depth
+    SetValue(w, alpha);                                                   // save top value in current position
+    depth_ = plies;                                                       // save evaluation depth
     return alpha;                                                         // return best value
   }
 
 
   PositionValue MainPosition::EvaluateBF(AIContext& plist, bool w, unsigned int plies) const noexcept
   {
-    PositionValue v0 = GetValue(w);
+    const PositionValue v0 = GetValue(w);
     if (plies == 0) return v0;
     if (PositionValue::PValueType::Normal != v0) return v0;  // don't analyze won or lost position any further
 
@@ -236,7 +238,7 @@ namespace BoardGamesCore
     if (p->IsColor(PieceColor::NoColor)) return 0;                                                 // nothing here, so no chain can start
     const bool w = p->IsColor(PieceColor::White);
 
-    for (const Offset& d : Offset::Qdirection)
+    for (const Offset& d : Offset::QDirection)
     {
       const Piece* pp{ &GetPiece(l + d * -1) };
       if (pp != &Piece::NoTile && pp->IsColor(p->GetColor())) continue;                            // if same color is that direction, we counted it already, so move on

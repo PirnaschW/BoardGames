@@ -19,7 +19,7 @@ namespace Cam
     const Piece& p0 = pos.GetPiece(l);                                    // piece that is moving
     CollectJumps(p, l, Actions{}, false, PieceColor::NoColor, m);                // collect all jumps
 
-    for (const auto& d : Offset::Qdirection)                              // try slides all eight directions
+    for (const auto& d : Offset::QDirection)                              // try slides all eight directions
     {
       const Location to{ l + d };                                         // location to move to
       const Piece& p1 = pos.GetPiece(to);                                 // what is on the target location?
@@ -42,7 +42,7 @@ namespace Cam
     const PieceColor& c0 = p0.GetColor();                                     // color of the piece moving
     bool any{ false };                                                    // were any more jumps possible?
 
-    for (auto& d : Offset::Qdirection)                                    // try all eight directions
+    for (auto& d : Offset::QDirection)                                    // try all eight directions
     {
       Actions a1{ a };                                                    // copy the previous jump sequence, so we can extend it
       const Location l1{ fr + d };                                        // location to jump over
@@ -279,7 +279,7 @@ namespace Cam
     return v;
   }
 
-  const PieceMapP& CamGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& CamGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();

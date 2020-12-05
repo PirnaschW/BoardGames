@@ -91,13 +91,13 @@ namespace Shogi
 
   void Bishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (auto& d : Offset::Bdirection)
+    for (auto& d : Offset::BDirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
   void Rook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (auto& d : Offset::Rdirection)
+    for (auto& d : Offset::RDirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
   }
 
@@ -128,7 +128,7 @@ namespace Shogi
 
   void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (auto& d : Offset::Qdirection)
+    for (auto& d : Offset::QDirection)
       p.AddIfLegal(moves, l, l + d);
   }
 
@@ -149,17 +149,17 @@ namespace Shogi
 
   void PBishop::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (auto& d : Offset::Bdirection)
+    for (auto& d : Offset::BDirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
-    for (auto& d : Offset::Rdirection)
+    for (auto& d : Offset::RDirection)
       p.AddIfLegal(moves, l, l + d);
   }
 
   void PRook::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    for (auto& d : Offset::Rdirection)
+    for (auto& d : Offset::RDirection)
       for (int z = 1; p.AddIfLegal(moves, l, l + d * z); z++);
-    for (auto& d : Offset::Bdirection)
+    for (auto& d : Offset::BDirection)
       p.AddIfLegal(moves, l, l + d);
   }
 
@@ -343,7 +343,7 @@ namespace Shogi
     return v;
   }
 
-  const PieceMapP& ShogiGame::GetPieces(VariantCode c) noexcept
+  const PieceMapP& ShogiGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();
@@ -358,7 +358,7 @@ namespace Shogi
     p->Add(ShogiPiece::ShogiWR);
     p->Add(ShogiPiece::ShogiBR);
 
-    if (c == 'F')  // Full Shogi
+    if (v.c == 'F')  // Full Shogi
     {
       p->Add(ShogiPiece::ShogiWN);
       p->Add(ShogiPiece::ShogiBN);
@@ -374,7 +374,7 @@ namespace Shogi
     p->Add(ShogiPiece::ShogiBBP);
     p->Add(ShogiPiece::ShogiWRP);
     p->Add(ShogiPiece::ShogiBRP);
-    if (c == 'F')  // Full Shogi
+    if (v.c == 'F')  // Full Shogi
     {
       p->Add(ShogiPiece::ShogiWNP);
       p->Add(ShogiPiece::ShogiBNP);

@@ -20,7 +20,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(Clone)
     {
-      CFourPosition p1{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+      const VariantChosen v{ 0, '\0', 7U, 6U };
+      CFourPosition p1{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       MainPosition* pm = p1.Clone();
       Assert::IsTrue(pm != nullptr);
 
@@ -32,7 +33,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(EvaluateChain)
     {
-      CFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0,'\0', 7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      CFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -51,17 +53,17 @@ namespace UnitTestCFour
       Assert::IsTrue(pos.GetValue(true) == PositionValue(1800));  // 6 directions * (100 + 100) + 2 directions * (100 + 100 + 100)
 
       Put(3, 5, CorePiece::WC);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(4400));  // 2 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 800 + 100)
+      Assert::IsTrue(pos.GetValue(true) == PositionValue(4800));  // 2 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 1000 + 100)
 
       Put(4, 5, CorePiece::WC);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(22000));  // 3 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 9000 + 100)
+      Assert::IsTrue(pos.GetValue(true) == PositionValue(24000));  // 3 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 10000 + 100)
 
       Put(4, 4, CorePiece::WC);
-      //  1 Pieces * 6 directions * (100 + 100) + 1 direction  * (100 + 9000 + 100) + 1 direction  * (  0) +
-      //  1 pieces * 4 directions * (100 + 100) + 2 directions * (100)              + 2 directions * (  0) +
-      //  1 pieces * 4 directions * (100 + 100) + 1 direction  * (100 + 9000 + 100) + 2 directions * (100) +
+      //  1 Pieces * 6 directions * (100 + 100) + 1 direction  * (100 + 10000 + 100) + 1 direction  * (  0) +
+      //  1 pieces * 4 directions * (100 + 100) + 2 directions * (100)               + 2 directions * (  0) +
+      //  1 pieces * 4 directions * (100 + 100) + 1 direction  * (100 + 10000 + 100) + 2 directions * (100) +
       //-(1 pieces * 4 directions * (100 + 100) + 4 direction  * (100 +  100 + 100))
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(19600)); // 104 + 10 + 102 - 20
+      Assert::IsTrue(pos.GetValue(true) == PositionValue(21600)); // 104 + 10 + 102 - 20
 
       Put(3, 4, CorePiece::BC);
       //  1 Pieces * ( 4 directions * (100 + 100) + 2 directions * (100) + 1 directions * (100 + 9000 + 100) + 1 directions * (0) ) +
@@ -536,7 +538,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(Eval4inaRow)
     {
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0',7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -545,7 +548,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(BruteForceMove0)
     {
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -570,7 +574,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(BruteForceMove1)
     {
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -579,7 +584,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(BruteForceWinIn2)
     {
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -588,7 +594,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(BruteForceWinIn3)
     {
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -597,7 +604,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(BruteForceNoWinIn3)
     {
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -606,7 +614,8 @@ namespace UnitTestCFour
 
     TEST_METHOD(BruteForceWinIn1)
     {
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+      const VariantChosen v{ 0,'\0', 7U, 6U };
+      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -615,9 +624,10 @@ namespace UnitTestCFour
 
     TEST_METHOD(Game)
     {
+      const VariantChosen v{ 0,'\0', 7U, 6U };
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a game works multiple times
       {
-        CFourGame g{ 0, Variants<CFourGame>::GetPieces(0), CFourGame::GetDimensions(VariantChosen{0, '\0', 7U, 6U}) };
+        TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       }
     }
 

@@ -14,13 +14,18 @@ namespace Ataxx
 
   using namespace BoardGamesCore;
 
-  // TODO: replace with CorePiece Checkers
-  class Checker : public Kind
+  enum AtaxxVariant : VariantCode   // recognized variants of Ataxx
+  {
+    Ataxx = 0x00,
+    KnightJumps = 0x01,
+    Assimilation = Ataxx | KnightJumps,
+  };
+
+  class Checker : public BoardGamesCore::Checker
   {
   private:
-    constexpr Checker(void) noexcept : Kind('0') {}
+    constexpr Checker(void) noexcept {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
     virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
 
   public:
@@ -58,7 +63,7 @@ namespace Ataxx
   public:
     AtaxxGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new AtaxxPosition(c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
-    static const PieceMapP& GetPieces(VariantCode c) noexcept;
+    static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions& GetDimensions(const VariantChosen& v) noexcept;
   };
 
