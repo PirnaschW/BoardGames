@@ -103,9 +103,9 @@ namespace Cheversi
     return p;
   }
 
-  const Dimensions& CheversiGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions CheversiGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    static Dimensions d{
+    Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(6, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
        Dimension(8, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),

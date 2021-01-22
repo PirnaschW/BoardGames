@@ -343,9 +343,9 @@ namespace Logik
     return v;
   }
 
-  const Dimensions& LogikGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions LogikGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    static Dimensions d{
+    Dimensions d{
        Dimension(4 * v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(15, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
        Dimension(v.x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * v.y - v.x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * MaxTries + 1) / 2, FieldSizeX, FieldSizeY),

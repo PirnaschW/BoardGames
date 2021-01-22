@@ -52,9 +52,9 @@ namespace Template
     return p;
   }
 
-  const Dimensions& TemplateGame::GetDimensions(Coordinate x, Coordinate y) noexcept
+  const Dimensions TemplateGame::GetDimensions(Coordinate x, Coordinate y) noexcept
   {
-    static Dimensions d{
+    Dimensions d{
        Dimension(x, y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(15, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
        Dimension(3 * x, 2, BoardStartX + FieldSizeX * (x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * x - FieldSizeSY * 4),

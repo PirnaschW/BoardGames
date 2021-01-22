@@ -291,14 +291,14 @@ namespace Cam
   }
 
 
-  const Dimensions& CamGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions CamGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    constexpr static Dimensions dF{  // Full Game ("Camelot")
+    constexpr Dimensions dF{  // Full Game ("Camelot")
        Dimension(12, 16, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(3, 2, BoardStartX + FieldSizeX * (12 + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (16 - 2), FieldSizeX, FieldSizeY),
        Dimension(24, 2, FieldSizeX * (12 + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * 16 - FieldSizeSY * 4),
     };
-    constexpr static Dimensions dM{  // Mini ("Cam")
+    constexpr Dimensions dM{  // Mini ("Cam")
        Dimension(7, 13, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(3, 2, BoardStartX + FieldSizeX * (7 + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (13 - 2), FieldSizeX, FieldSizeY),
        Dimension(2 * 7, 2, FieldSizeX * (7 + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * 13 - FieldSizeSY * 4),

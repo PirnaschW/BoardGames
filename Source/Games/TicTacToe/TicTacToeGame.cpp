@@ -133,9 +133,9 @@ namespace TicTacToe
     return p;
   }
 
-  const Dimensions& TicTacToeGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions TicTacToeGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    static Dimensions d{
+    Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(2, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
        Dimension(1, 1, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),

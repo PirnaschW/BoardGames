@@ -255,9 +255,9 @@ namespace Espionage
     return p;
   }
 
-  const Dimensions& EspionageGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions EspionageGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    static Dimensions d{
+    Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(15, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
        Dimension(3 * v.x, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),

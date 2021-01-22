@@ -63,7 +63,7 @@ namespace KnightF
     KnightFGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new KnightFPosition(c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions& GetDimensions(const VariantChosen& v) noexcept;
+    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

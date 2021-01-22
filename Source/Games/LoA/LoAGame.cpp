@@ -222,9 +222,9 @@ namespace LoA
     return p;
   }
 
-  const Dimensions& LoAGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions LoAGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    static Dimensions d{
+    Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(3, 1, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
        Dimension(2 * v.x, 2, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),

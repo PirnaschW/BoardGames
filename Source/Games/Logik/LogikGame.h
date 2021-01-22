@@ -231,7 +231,7 @@ namespace Logik
 
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions& GetDimensions(const VariantChosen& v) noexcept;
+    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

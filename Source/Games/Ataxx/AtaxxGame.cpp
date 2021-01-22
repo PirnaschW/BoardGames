@@ -127,10 +127,9 @@ namespace Ataxx
     return p;
   }
 
-  const Dimensions& AtaxxGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions AtaxxGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    // TODO: fix Dimensions: (for ALL games) cannot be static - if called with another x/y, it will return the old data!
-    static Dimensions d{
+    Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        Dimension(2, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
        Dimension(0, 0, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
