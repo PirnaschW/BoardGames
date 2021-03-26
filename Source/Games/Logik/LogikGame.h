@@ -1,3 +1,12 @@
+
+#ifdef MSVC_ERROR
+class A { friend class B; constexpr A() {} };
+class B { public: constexpr B() { A a; } };
+B b;
+#endif // MSVC_ERROR
+
+
+
 #include <mutex>
 namespace Logik
 {
@@ -83,9 +92,9 @@ namespace Logik
     static const LogikPiece LPiece8;
   };
 
-
   using PlayCode = unsigned int;                                          // code that contains a complete play (sequence of Pegs)
   using PlayCfg = std::array<unsigned char, MaxPegs>;                     // array that contains a complete play (sequence of Pegs)
+
   class Play final                                                        // holds a Play / 'move' = a set of pegs
   {
     friend class Plays;                                                   // Plays are only created from within class Plays
@@ -127,7 +136,7 @@ namespace Logik
   class Plays final
   {
   public:
-    constexpr inline Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) plays_[c] = new Play(c); }
+    /*constexpr*/ inline Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) plays_[c] = new Play(c); }
     inline ~Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) delete plays_[c]; }
     constexpr inline const Play& operator[](const PlayCode& c) const noexcept { return *plays_[c]; }
     constexpr inline const Play& operator[](const PlayCfg& p) const noexcept { return *plays_[Play::Convert(p)]; }
