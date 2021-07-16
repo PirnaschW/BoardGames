@@ -233,7 +233,7 @@ namespace Logik
   private:
     LogikGame(void) = delete;
   public:
-    inline LogikGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new LogikPosition(c, m, d), new LogikLayout(d)) {}
+    inline LogikGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new LogikPosition(v.c, m, d), new LogikLayout(d)) {}
 
     virtual bool React(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;

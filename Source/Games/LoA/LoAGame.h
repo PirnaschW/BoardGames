@@ -82,7 +82,7 @@ namespace LoA
     LoAGame(void) = delete;
 
   public:
-    LoAGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new LoAPosition(c, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
+    LoAGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new LoAPosition(v.c, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

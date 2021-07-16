@@ -34,7 +34,7 @@ namespace MassacreChess
     MCGame(void) = delete;
 
   public:
-    MCGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new MCPosition(c, m, d), new MainLayout(d)) {}
+    MCGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new MCPosition(v.c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

@@ -56,7 +56,7 @@ namespace Hasami
   private:
     HasamiGame(void) = delete;
   public:
-    HasamiGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new HasamiPosition(c, m,d), new MainLayout(d)) {}
+    HasamiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new HasamiPosition(v.c, m,d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

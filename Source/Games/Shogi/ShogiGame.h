@@ -271,7 +271,7 @@ namespace Shogi
     ShogiGame(void) = delete;
 
   public:
-    ShogiGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new ShogiPosition(c, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
+    ShogiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new ShogiPosition(v.c, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
     constexpr static bool IsFull(Coordinate x, Coordinate /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;

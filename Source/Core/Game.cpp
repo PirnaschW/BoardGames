@@ -3,7 +3,7 @@
 namespace BoardGamesCore
 {
 
-  Game::Game(const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept : pMap_{ m }, pos {p}, lay{ l }
+  Game::Game(const VariantChosen& v, const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept : v_{ v }, pMap_ { m }, pos{ p }, lay{ l }
   {
     // create the standard two players
     AddPlayer(new Player(&PlayerType::Human, PieceColor::White));
@@ -29,5 +29,13 @@ namespace BoardGamesCore
     pos->Execute(m);                                                      // execute move (includes setting pos to next player)
     NextPlayer();                                                         // the game has also a pointer to the current player
   }
+
+
+  void Game::Serialize(Archive& ar)
+  {
+    if (ar.IsStoring()) ar.Serialize(v_);  // when loading, game type was already read to create this object
+    pos->Serialize(ar);
+  }
+
 
 }

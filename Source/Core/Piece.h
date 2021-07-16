@@ -60,6 +60,7 @@ namespace BoardGamesCore
     constexpr void Empty(void) noexcept { used_ = 0; }
     constexpr PieceIndex GetCount(void) const noexcept { return used_; }
     constexpr const Piece& GetPiece(PieceIndex i) const noexcept { return *map_[i]; }
+    constexpr PieceIndex Find(const Kind& k, const PieceColor& c) const { for (PieceIndex z = 0; z < used_; z++) if (map_[z]->IsKind(k) && map_[z]->IsColor(c)) return z; throw; }
 
   private:
     constexpr static const PieceIndex max_{ 32 };                         // no game has more than 32 different Pieces

@@ -32,7 +32,7 @@ namespace Cheversi
     CheversiGame(void) = delete;
 
   public:
-    CheversiGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new CheversiPosition(c, m, d), new MainLayout(d)) {}
+    CheversiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CheversiPosition(v.c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

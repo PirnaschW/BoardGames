@@ -109,9 +109,9 @@ namespace Ataxx
     SetPiece(Location(BoardPart::Main, d[0].xCount_-1, d[0].yCount_-1), AtaxxPiece::AtaxxPieceB);
   }
 
-  consteval const VariantList& AtaxxGame::GetVariants(void) noexcept
+  const VariantList& AtaxxGame::GetVariants(void) noexcept
   {
-    static VariantList v{
+    static const VariantList v{
       { Variant{ "Ataxx",        Ataxx::Ataxx,        8, 8, 2, 20 } },
       { Variant{ "Assimilation", Ataxx::Assimilation, 8, 8, 2, 20 } },
     };

@@ -28,7 +28,20 @@ namespace BoardGamesCore
     return hash_ = z;
   }
 
-  void Position::Serialize(Archive& ar) const { for (auto& p : pieces_) pMap_->GetPiece(p).Serialize(ar); }
+  void Position::Serialize(Archive& ar) const
+  {
+    if (ar.IsLoading())
+    {
+      for (auto& p : pieces_)
+      {
+        //const Kind k(ar);
+        //const PieceColor c(ar);
+        //p = pMap_->Find(k,c);
+      }
+    }
+    else
+      for (const auto& p : pieces_) pMap_->GetPiece(p).Serialize(ar);
+  }
   
   const Piece& Position::SetPiece(const Location& l, const Piece& p) noexcept { hash_ = 0; pieces_[l.Index(sizeX_, sizeY_)] = pMap_->GetIndex(p); return p; }
 

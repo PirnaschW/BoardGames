@@ -157,7 +157,7 @@ namespace UnitTestLogik
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a game works multiple times
       {
         const VariantChosen v{ 0,'\0', 5, 7 };
-        LogikGame g{ 0, Variants<Logik::LogikGame>::GetPieces(v), Logik::LogikGame::GetDimensions(v) };
+        LogikGame g{ v, Variants<Logik::LogikGame>::GetPieces(v), Logik::LogikGame::GetDimensions(v) };
 
         bool set{ false };
         std::array<unsigned char, MaxPegs * MaxTries> p{};

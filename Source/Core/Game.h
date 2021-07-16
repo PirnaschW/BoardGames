@@ -70,10 +70,10 @@ namespace BoardGamesCore
     Game(Game&&) = delete;                  // move constructor
     Game& operator=(Game&&) = delete;       // move assignment
   public:
-    Game(const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept;
+    Game(const VariantChosen& v, const PieceMapP& m, MainPosition* p, MainLayout* l) noexcept;
     virtual ~Game(void) noexcept;
 
-    virtual void Serialize(Archive& ar) { pos->Serialize(ar); }
+    virtual void Serialize(Archive& ar);
     virtual void AddToStock(const Location& l, const Piece& p) noexcept { pos->SetPiece(l, p); }
     virtual void AIAction(void) { while (!(_mode.IsSet(Mode::GameOver)) && CurrentPlayer()->IsAI()) if (!AIMove()) _mode = Mode::GameOver; }  // execute computer moves while it is its turn
 
@@ -101,6 +101,7 @@ namespace BoardGamesCore
 
 
   protected:
+    VariantChosen v_;                            // Game ID and Variant
     const PieceMapP& pMap_;                      // map of all pieces used in the game
     MainPosition* pos;                           // logical position on the main playing board
     MainLayout* lay;                             // physical layout of the main playing board

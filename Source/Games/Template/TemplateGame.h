@@ -56,7 +56,7 @@ namespace Template
     TemplateGame(void) = delete;
 
   public:
-    TemplateGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new TemplatePosition(c, m, d), new MainLayout(d)) {}
+    TemplateGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TemplatePosition(v.c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(void) noexcept;
     static const Dimensions GetDimensions(Coordinate x, Coordinate y) noexcept;

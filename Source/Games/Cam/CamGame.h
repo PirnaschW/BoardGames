@@ -76,7 +76,7 @@ namespace Cam
   private:
     CamGame(void) = delete;
   public:
-    CamGame(VariantCode c, const PieceMapP& m, const Dimensions& d) noexcept : Game(m, new CamPosition(c, m, d), new MainLayout(d)) {}
+    CamGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CamPosition(v.c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
