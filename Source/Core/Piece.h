@@ -21,6 +21,7 @@ namespace BoardGamesCore
     void CollectMoves(const MainPosition& p, const Location& l, Moves& m) const;
     bool IsKind(const Kind& k) const noexcept;
     bool IsColor(const PieceColor& c) const noexcept;
+    bool IsPiece(const char kind, const char color) const noexcept;
     constexpr const PieceColor& GetColor(void) const noexcept { return color_; }
 
     virtual void Serialize(Archive& ar) const;
@@ -60,7 +61,7 @@ namespace BoardGamesCore
     constexpr void Empty(void) noexcept { used_ = 0; }
     constexpr PieceIndex GetCount(void) const noexcept { return used_; }
     constexpr const Piece& GetPiece(PieceIndex i) const noexcept { return *map_[i]; }
-    constexpr PieceIndex Find(const Kind& k, const PieceColor& c) const { for (PieceIndex z = 0; z < used_; z++) if (map_[z]->IsKind(k) && map_[z]->IsColor(c)) return z; throw; }
+    PieceIndex Find(Archive& ar) const;                         // find a piece from its serialization
 
   private:
     constexpr static const PieceIndex max_{ 32 };                         // no game has more than 32 different Pieces

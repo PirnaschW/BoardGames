@@ -22,7 +22,7 @@ namespace BoardGamesCore
     bool operator !=(const Position* p) const noexcept;
 
     virtual std::size_t GetHash(void) const noexcept;
-    virtual void Serialize(Archive& ar) const;
+    virtual void Serialize(Archive& ar);
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
     virtual void SetPosition(std::vector<const Piece*>& list);
 

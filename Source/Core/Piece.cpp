@@ -30,6 +30,11 @@ namespace BoardGamesCore
     return c == color_;
   }
 
+  bool Piece::IsPiece(const char kind, const char color) const noexcept
+  {
+    return kind_ == kind && color_ == color;
+  }
+
   bool Piece::IsBlank(void) const noexcept
   {
     return color_ == PieceColor::NoColor && kind_ == noKind::NoKind;
@@ -37,8 +42,8 @@ namespace BoardGamesCore
 
   void Piece::Serialize(Archive& ar) const
   { 
-    color_.Serialize(ar);
     kind_.Serialize(ar);
+    color_.Serialize(ar);
   }
   
   unsigned int Piece::GetValue(const MainPosition& p, const Location& l) const noexcept
@@ -54,6 +59,17 @@ namespace BoardGamesCore
   void Piece::Draw(DC* dc, const Rect& r) const
   {
     bmp_.Draw(dc, r);
+  }
+
+
+  PieceIndex PieceMap::Find(Archive& ar) const
+  {
+    char kind;
+    char color;
+    ar >> kind >> color;
+    for (PieceIndex z = 0; z < used_; z++)
+      if (map_[z]->IsPiece(kind,color)) return z;
+    throw;
   }
 
 }

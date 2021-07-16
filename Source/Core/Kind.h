@@ -18,6 +18,7 @@ namespace BoardGamesCore
     Kind& operator=(const Kind&) = delete;          // delete assignment operator
 
     constexpr bool operator==(const Kind& k) const noexcept { return k.kind_ == kind_; }
+    constexpr bool operator==(const char k) const noexcept { return k == kind_; }
     size_t GetHash(void) const noexcept { return std::hash<char>()(kind_); }
 
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept = 0;                             // no useful default implementation provided!
