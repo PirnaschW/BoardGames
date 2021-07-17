@@ -1,10 +1,11 @@
 #include "Games.h"
 
 #include "BrainKing.h"
-#include "Ataxx/AtaxxGame.h"     // needed for the game-specific Pieces / Variants
-#include "CFour/CFourGame.h"     // needed for the game-specific Pieces / Variants
-#include "Hasami/HasamiGame.h"   // needed for the game-specific Pieces / Variants
-#include "Shogi/ShogiGame.h"     // needed for the game-specific Pieces / Variants
+#include "Ataxx/AtaxxGame.h"           // needed for the game-specific Pieces / Variants
+#include "CFour/CFourGame.h"           // needed for the game-specific Pieces / Variants
+#include "Espionage/EspionageGame.h"   // needed for the game-specific Pieces / Variants
+#include "Hasami/HasamiGame.h"         // needed for the game-specific Pieces / Variants
+#include "Shogi/ShogiGame.h"           // needed for the game-specific Pieces / Variants
 
 namespace BoardGamesBK
 {
@@ -80,10 +81,10 @@ namespace BoardGamesBK
 
       {  93, IDR_GAMETYPE_CHEVERSI,  '\0',  8,  8 },  // Cheversi
       // TODO: variants for Espionage
-      {  55, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Espionage
+      {  55, IDR_GAMETYPE_ESPIONAGE, '\0', 10, 10 },  // Espionage
       {  62, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Small Espionage
-      {  63, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Fast Espionage
-      {  87, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Open Fast Espionage
+      {  63, IDR_GAMETYPE_ESPIONAGE, '\0', 10, 10 },  // Fast Espionage
+      {  87, IDR_GAMETYPE_ESPIONAGE, '\0', 10, 10 },  // Open Fast Espionage
       {  88, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Small Fast Espionage
 
       {  73, IDR_GAMETYPE_HASAMI,    '\0',  8,  8 },  // Hasami Shogi
@@ -162,76 +163,97 @@ namespace BoardGamesBK
 
     static const std::unordered_map<std::string, const Piece&> map_
     {
-      { R"(blank35)",       Piece::NoPiece },
-      { R"(blank50)",       Piece::NoPiece },
-      { R"(dot25)",         Piece::NoPiece },                      // used in Battle boats
-      { R"(explode35)",     Piece::NoPiece },                      // disallowed field in Cheshire Cat variants, for now: treat like blank
-      { R"(back/redo25)",   Piece::NoPiece },                      // backgammon: red, down row - ignore for now
-      { R"(back/wredo25-1)",Piece::NoPiece },                      // backgammon: red, down row, 1 white piece - ignore for now
-      { R"(back/wredo25-2)",Piece::NoPiece },                      // backgammon: red, down row, 2 white pieces - ignore for now
-      { R"(back/wredo25-3)",Piece::NoPiece },                      // backgammon: red, down row, 3 white pieces - ignore for now
-      { R"(back/wredo25-4)",Piece::NoPiece },                      // backgammon: red, down row, 4 white pieces - ignore for now
-      { R"(back/bredo25-1)",Piece::NoPiece },                      // backgammon: red, down row, 1 black piece - ignore for now
-      { R"(back/bredo25-2)",Piece::NoPiece },                      // backgammon: red, down row, 2 black pieces - ignore for now
-      { R"(back/bredo25-3)",Piece::NoPiece },                      // backgammon: red, down row, 3 black pieces - ignore for now
-      { R"(back/bredo25-4)",Piece::NoPiece },                      // backgammon: red, down row, 4 black pieces - ignore for now
-      { R"(back/pudo25)",   Piece::NoPiece },                      // backgammon: purple, up(per) row - ignore for now
-      { R"(back/wpudo25-1)",Piece::NoPiece },                      // backgammon: purple, down row, 1 white piece - ignore for now
-      { R"(back/wpudo25-2)",Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
-      { R"(back/wpudo25-3)",Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
-      { R"(back/wpudo25-4)",Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
-      { R"(back/bpudo25-1)",Piece::NoPiece },                      // backgammon: purple, down row, 1 black piece - ignore for now
-      { R"(back/bpudo25-2)",Piece::NoPiece },                      // backgammon: purple, down row, 2 black pieces - ignore for now
-      { R"(back/bpudo25-3)",Piece::NoPiece },                      // backgammon: purple, down row, 3 black pieces - ignore for now
-      { R"(back/bpudo25-4)",Piece::NoPiece },                      // backgammon: purple, down row, 4 black pieces - ignore for now
-      { R"(back/reup25)",   Piece::NoPiece },                      // backgammon: red, up(per) row - ignore for now
-      { R"(back/puup25)",   Piece::NoPiece },                      // backgammon: purple, up(per) row - ignore for now
-      { R"(line4/w35)",     CorePiece::WC },
-      { R"(line4/b35)",     CorePiece::BC },
-      { R"(chess/wk35)",    CorePiece::WK },
-      { R"(chess/wq35)",    CorePiece::WQ },
-      { R"(chess/wr35)",    CorePiece::WR },
-      { R"(chess/wb35)",    CorePiece::WB },
-      { R"(chess/wn35)",    CorePiece::WN },
-      { R"(chess/wp35)",    CorePiece::WP },
-      { R"(chess/bk35)",    CorePiece::BK },
-      { R"(chess/bq35)",    CorePiece::BQ },
-      { R"(chess/br35)",    CorePiece::BR },
-      { R"(chess/bb35)",    CorePiece::BB },
-      { R"(chess/bn35)",    CorePiece::BN },
-      { R"(chess/bp35)",    CorePiece::BP },
-      { R"(chess/wk1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/wq1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/wr1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/wb1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/wn1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/wp1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/bk1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/bq1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/br1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/bb1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/bn1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(chess/bp1)",     Piece::NoPiece },                      // taken pieces - ignore for now
-      { R"(shogi/i-p35d)",  Shogi::ShogiPiece::ShogiWP },
-      { R"(shogi/i-b35d)",  Shogi::ShogiPiece::ShogiWB },
-      { R"(shogi/i-r35d)",  Shogi::ShogiPiece::ShogiWR },
-      { R"(shogi/i-l35d)",  Shogi::ShogiPiece::ShogiWL },
-      { R"(shogi/i-n35d)",  Shogi::ShogiPiece::ShogiWN },
-      { R"(shogi/i-sg35d)", Shogi::ShogiPiece::ShogiWS },
-      { R"(shogi/i-gg35d)", Shogi::ShogiPiece::ShogiWG },
-      { R"(shogi/i-k35d)",  Shogi::ShogiPiece::ShogiWK },
-      { R"(shogi/i-p35u)",  Shogi::ShogiPiece::ShogiBP },
-      { R"(shogi/i-l35u)",  Shogi::ShogiPiece::ShogiBL },
-      { R"(shogi/i-n35u)",  Shogi::ShogiPiece::ShogiBN },
-      { R"(shogi/i-sg35u)", Shogi::ShogiPiece::ShogiBS },
-      { R"(shogi/i-gg35u)", Shogi::ShogiPiece::ShogiBG },
-      { R"(shogi/i-k35u)",  Shogi::ShogiPiece::ShogiBK },
-      { R"(shogi/i-r35u)",  Shogi::ShogiPiece::ShogiBR },
-      { R"(shogi/i-b35u)",  Shogi::ShogiPiece::ShogiBB },
-      { R"(hshogi/b1)",     Piece::NoTile },                       // taken pieces - ignore for now
-      { R"(hshogi/w1)",     Piece::NoTile },                       // taken pieces - ignore for now
-      { R"(hshogi/w35)",    Hasami::HasamiPiece::HasamiPieceW },
-      { R"(hshogi/b35)",    Hasami::HasamiPiece::HasamiPieceB },
+      { R"(blank35)",                 Piece::NoPiece },
+      { R"(blank50)",                 Piece::NoPiece },
+      { R"(dot25)",                   Piece::NoPiece },                      // used in Battle boats
+      { R"(explode35)",               Piece::NoPiece },                      // disallowed field in Cheshire Cat variants, for now: treat like blank
+      { R"(back/redo25)",             Piece::NoPiece },                      // backgammon: red, down row - ignore for now
+      { R"(back/wredo25-1)",          Piece::NoPiece },                      // backgammon: red, down row, 1 white piece - ignore for now
+      { R"(back/wredo25-2)",          Piece::NoPiece },                      // backgammon: red, down row, 2 white pieces - ignore for now
+      { R"(back/wredo25-3)",          Piece::NoPiece },                      // backgammon: red, down row, 3 white pieces - ignore for now
+      { R"(back/wredo25-4)",          Piece::NoPiece },                      // backgammon: red, down row, 4 white pieces - ignore for now
+      { R"(back/bredo25-1)",          Piece::NoPiece },                      // backgammon: red, down row, 1 black piece - ignore for now
+      { R"(back/bredo25-2)",          Piece::NoPiece },                      // backgammon: red, down row, 2 black pieces - ignore for now
+      { R"(back/bredo25-3)",          Piece::NoPiece },                      // backgammon: red, down row, 3 black pieces - ignore for now
+      { R"(back/bredo25-4)",          Piece::NoPiece },                      // backgammon: red, down row, 4 black pieces - ignore for now
+      { R"(back/pudo25)",             Piece::NoPiece },                      // backgammon: purple, up(per) row - ignore for now
+      { R"(back/wpudo25-1)",          Piece::NoPiece },                      // backgammon: purple, down row, 1 white piece - ignore for now
+      { R"(back/wpudo25-2)",          Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
+      { R"(back/wpudo25-3)",          Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
+      { R"(back/wpudo25-4)",          Piece::NoPiece },                      // backgammon: purple, down row, 2 white pieces - ignore for now
+      { R"(back/bpudo25-1)",          Piece::NoPiece },                      // backgammon: purple, down row, 1 black piece - ignore for now
+      { R"(back/bpudo25-2)",          Piece::NoPiece },                      // backgammon: purple, down row, 2 black pieces - ignore for now
+      { R"(back/bpudo25-3)",          Piece::NoPiece },                      // backgammon: purple, down row, 3 black pieces - ignore for now
+      { R"(back/bpudo25-4)",          Piece::NoPiece },                      // backgammon: purple, down row, 4 black pieces - ignore for now
+      { R"(back/reup25)",             Piece::NoPiece },                      // backgammon: red, up(per) row - ignore for now
+      { R"(back/puup25)",             Piece::NoPiece },                      // backgammon: purple, up(per) row - ignore for now
+      { R"(line4/w35)",               CorePiece::WC },
+      { R"(line4/b35)",               CorePiece::BC },
+      { R"(chess/wk35)",              CorePiece::WK },
+      { R"(chess/wq35)",              CorePiece::WQ },
+      { R"(chess/wr35)",              CorePiece::WR },
+      { R"(chess/wb35)",              CorePiece::WB },
+      { R"(chess/wn35)",              CorePiece::WN },
+      { R"(chess/wp35)",              CorePiece::WP },
+      { R"(chess/bk35)",              CorePiece::BK },
+      { R"(chess/bq35)",              CorePiece::BQ },
+      { R"(chess/br35)",              CorePiece::BR },
+      { R"(chess/bb35)",              CorePiece::BB },
+      { R"(chess/bn35)",              CorePiece::BN },
+      { R"(chess/bp35)",              CorePiece::BP },
+      { R"(chess/wk1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/wq1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/wr1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/wb1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/wn1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/wp1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/bk1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/bq1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/br1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/bb1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/bn1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+      { R"(chess/bp1)",               Piece::NoPiece },                      // taken pieces - ignore for now
+
+      { R"(espionage/wg135)",         Espionage::EPiece::WGeneral1 },
+      { R"(espionage/wg235)",         Espionage::EPiece::WGeneral2 },
+      { R"(espionage/wg335)",         Espionage::EPiece::WGeneral3 },
+      { R"(espionage/wg435)",         Espionage::EPiece::WGeneral4 },
+      { R"(espionage/wg535)",         Espionage::EPiece::WGeneral5 },
+      { R"(espionage/wy35)",          Espionage::EPiece::WSpy },
+      { R"(espionage/ws35)",          Espionage::EPiece::WSapper },
+      { R"(espionage/wm35)",          Espionage::EPiece::WMine },
+      { R"(espionage/wh35)",          Espionage::EPiece::WHeadquarter },
+      { R"(espionage/bg135)",         Espionage::EPiece::BGeneral1 },
+      { R"(espionage/bg235)",         Espionage::EPiece::BGeneral2 },
+      { R"(espionage/bg335)",         Espionage::EPiece::BGeneral3 },
+      { R"(espionage/bg435)",         Espionage::EPiece::BGeneral4 },
+      { R"(espionage/bg535)",         Espionage::EPiece::BGeneral5 },
+      { R"(espionage/by35)",          Espionage::EPiece::BSpy },
+      { R"(espionage/bs35)",          Espionage::EPiece::BSapper },
+      { R"(espionage/bm35)",          Espionage::EPiece::BMine },
+      { R"(espionage/bh35)",          Espionage::EPiece::BHeadquarter },
+      { R"(espionage/volcano35)",     Espionage::EPiece::Volcano },
+
+      { R"(shogi/i-p35d)",            Shogi::ShogiPiece::ShogiWP },
+      { R"(shogi/i-b35d)",            Shogi::ShogiPiece::ShogiWB },
+      { R"(shogi/i-r35d)",            Shogi::ShogiPiece::ShogiWR },
+      { R"(shogi/i-l35d)",            Shogi::ShogiPiece::ShogiWL },
+      { R"(shogi/i-n35d)",            Shogi::ShogiPiece::ShogiWN },
+      { R"(shogi/i-sg35d)",           Shogi::ShogiPiece::ShogiWS },
+      { R"(shogi/i-gg35d)",           Shogi::ShogiPiece::ShogiWG },
+      { R"(shogi/i-k35d)",            Shogi::ShogiPiece::ShogiWK },
+      { R"(shogi/i-p35u)",            Shogi::ShogiPiece::ShogiBP },
+      { R"(shogi/i-l35u)",            Shogi::ShogiPiece::ShogiBL },
+      { R"(shogi/i-n35u)",            Shogi::ShogiPiece::ShogiBN },
+      { R"(shogi/i-sg35u)",           Shogi::ShogiPiece::ShogiBS },
+      { R"(shogi/i-gg35u)",           Shogi::ShogiPiece::ShogiBG },
+      { R"(shogi/i-k35u)",            Shogi::ShogiPiece::ShogiBK },
+      { R"(shogi/i-r35u)",            Shogi::ShogiPiece::ShogiBR },
+      { R"(shogi/i-b35u)",            Shogi::ShogiPiece::ShogiBB },
+      { R"(hshogi/b1)",               Piece::NoTile },                       // taken pieces - ignore for now
+      { R"(hshogi/w1)",               Piece::NoTile },                       // taken pieces - ignore for now
+      { R"(hshogi/w35)",              Hasami::HasamiPiece::HasamiPieceW },
+      { R"(hshogi/b35)",              Hasami::HasamiPiece::HasamiPieceB },
     };
 
     constexpr GameData GetGameData(int tp)
@@ -287,6 +309,7 @@ namespace BoardGamesBK
     if (g.v.id)  // if the game type is known, read the board
     {
       const std::string board = GetBetween(html, R"(<div id="game-board-section">)", R"(<div id="game-info-section">)");
+      // TODO: recognize and skip/treat Captured Pieces
       list = ListFromHTML(board);
     }
 

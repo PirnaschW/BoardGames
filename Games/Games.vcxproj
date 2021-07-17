@@ -411,7 +411,7 @@
     <None Include="..\Source\Games\CFour\res\CFour.rc2" />
     <None Include="..\Source\Games\Checkers\res\Checkers.rc2" />
     <None Include="..\Source\Games\Cheversi\res\Cheversi.rc2" />
-    <None Include="..\Source\Games\Espionage\res\Espionage.rc2" />
+    <None Include="..\Source\Games\Espionage\Espionage.rc2" />
     <None Include="..\Source\Games\Hasami\res\Hasami.rc2" />
     <None Include="..\Source\Games\Knight Fight\res\KnightF.rc2" />
     <None Include="..\Source\Games\LoA\res\LoA.rc2" />

@@ -12,8 +12,6 @@ namespace URL
 
   const std::string GetHTMLFromURL(const std::wstring& url)
   {
-    constexpr static const int len{ 2 << 16 };
-
     HINTERNET connect = InternetOpen(L"Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
     assert(connect);
 
@@ -21,11 +19,31 @@ namespace URL
     assert(OpenAddress);
 
     std::string DataReceived{};
-    DataReceived.resize(len);
-    DWORD NumberOfBytesRead = 0;
-    InternetReadFile(OpenAddress, DataReceived.data(), len, &NumberOfBytesRead);
-    assert(NumberOfBytesRead > 0 && NumberOfBytesRead < len);
-    DataReceived.resize(NumberOfBytesRead);
+
+    constexpr static const DWORD len{ 2UL << 12 };
+    char buffer[len];
+    bool success{ false };
+    DWORD NumberOfBytesRead = 0UL;
+    do
+    {
+      success = InternetReadFile(OpenAddress, buffer, len, &NumberOfBytesRead);
+      if (success && NumberOfBytesRead > 0UL)
+      {
+        assert(NumberOfBytesRead > 0UL && NumberOfBytesRead <= len);
+        DataReceived.append(buffer, NumberOfBytesRead);
+      }
+      else
+      {
+        DWORD ErrorCode = GetLastError();
+        switch (ErrorCode)
+        {
+        case ERROR_INSUFFICIENT_BUFFER:
+          throw;
+        default:
+          break;
+        }
+      }
+    } while (success && NumberOfBytesRead > 0UL);
 
     InternetCloseHandle(OpenAddress);
     InternetCloseHandle(connect);

@@ -370,9 +370,6 @@
     <None Include="..\Source\Games\Cheversi\res\Cheversi.rc2">
       <Filter>Game Cheversi\Source Files</Filter>
     </None>
-    <None Include="..\Source\Games\Espionage\res\Espionage.rc2">
-      <Filter>Game Espionage\Source Files</Filter>
-    </None>
     <None Include="..\Source\Games\Hasami\res\Hasami.rc2">
       <Filter>Game Hasami\Source Files</Filter>
     </None>
@@ -400,6 +397,9 @@
     <None Include="..\Source\Games\TicTacToe\res\TicTacToe.rc2">
       <Filter>Game TicTacToe\Source Files</Filter>
     </None>
+    <None Include="..\Source\Games\Espionage\Espionage.rc2">
+      <Filter>Game Espionage\Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Source\Games\Cam\res\CamDoc.ico">
@@ -416,15 +416,6 @@
     </Image>
     <Image Include="..\Source\Games\Cheversi\res\CheversiDoc.ico">
       <Filter>Game Cheversi\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier3.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier4.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier5.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
     </Image>
     <Image Include="..\Source\Games\Espionage\res\EspionageBSpy.bmp">
       <Filter>Game Espionage\Resource Files</Filter>
@@ -447,21 +438,6 @@
     <Image Include="..\Source\Games\Espionage\res\EspionageWSapper.bmp">
       <Filter>Game Espionage\Resource Files</Filter>
     </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier1.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier2.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier3.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier4.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier5.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
     <Image Include="..\Source\Games\Espionage\res\EspionageWSpy.bmp">
       <Filter>Game Espionage\Resource Files</Filter>
     </Image>
@@ -472,12 +448,6 @@
       <Filter>Game Espionage\Resource Files</Filter>
     </Image>
     <Image Include="..\Source\Games\Espionage\res\EspionageBSapper.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier1.bmp">
-      <Filter>Game Espionage\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier2.bmp">
       <Filter>Game Espionage\Resource Files</Filter>
     </Image>
     <Image Include="..\Source\Games\Hasami\res\HasamiB.bmp">
@@ -741,6 +711,16 @@
     <Image Include="..\Source\Games\Ataxx\res\AtaxxDoc.ico">
       <Filter>Game Ataxx\Resources</Filter>
     </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier1.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier2.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier3.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier4.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier5.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier1.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier2.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier3.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier4.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier5.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Source\Games\New Game Instructions.txt" />

@@ -8,42 +8,44 @@ namespace Espionage
   const ETileColor ETileColor::Volcano{ 'V', IDB_ESPIONAGEVOLCANO };
 
   template <unsigned char z>
-  const Soldier<z>  Soldier<z> ::TheSoldier    {};
+  const General<z>  General<z> ::TheGeneral    {};
   const Spy         Spy        ::TheSpy        {};
   const Sapper      Sapper     ::TheSapper     {};
   const Mine        Mine       ::TheMine       {};
   const Headquarter Headquarter::TheHeadquarter{};
+  const Volcano     Volcano    ::TheVolcano    {};
 
-  const EPiece EPiece::WSoldier1   { Soldier<'1'>::TheSoldier,     PieceColor::White, IDB_ESPIONAGEWSOLDIER1    };
-  const EPiece EPiece::WSoldier2   { Soldier<'2'>::TheSoldier,     PieceColor::White, IDB_ESPIONAGEWSOLDIER2    };
-  const EPiece EPiece::WSoldier3   { Soldier<'3'>::TheSoldier,     PieceColor::White, IDB_ESPIONAGEWSOLDIER3    };
-  const EPiece EPiece::WSoldier4   { Soldier<'4'>::TheSoldier,     PieceColor::White, IDB_ESPIONAGEWSOLDIER4    };
-  const EPiece EPiece::WSoldier5   { Soldier<'5'>::TheSoldier,     PieceColor::White, IDB_ESPIONAGEWSOLDIER5    };
+  const EPiece EPiece::WGeneral1   { General<'1'>::TheGeneral,     PieceColor::White, IDB_ESPIONAGEWGENERAL1    };
+  const EPiece EPiece::WGeneral2   { General<'2'>::TheGeneral,     PieceColor::White, IDB_ESPIONAGEWGENERAL2    };
+  const EPiece EPiece::WGeneral3   { General<'3'>::TheGeneral,     PieceColor::White, IDB_ESPIONAGEWGENERAL3    };
+  const EPiece EPiece::WGeneral4   { General<'4'>::TheGeneral,     PieceColor::White, IDB_ESPIONAGEWGENERAL4    };
+  const EPiece EPiece::WGeneral5   { General<'5'>::TheGeneral,     PieceColor::White, IDB_ESPIONAGEWGENERAL5    };
   const EPiece EPiece::WSpy        { Spy         ::TheSpy,         PieceColor::White, IDB_ESPIONAGEWSPY         };
   const EPiece EPiece::WSapper     { Sapper      ::TheSapper,      PieceColor::White, IDB_ESPIONAGEWSAPPER      };
   const EPiece EPiece::WMine       { Mine        ::TheMine,        PieceColor::White, IDB_ESPIONAGEWMINE        };
   const EPiece EPiece::WHeadquarter{ Headquarter ::TheHeadquarter, PieceColor::White, IDB_ESPIONAGEWHEADQUARTER };
 
-  const EPiece EPiece::BSoldier1   { Soldier<'1'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEBSOLDIER1    };
-  const EPiece EPiece::BSoldier2   { Soldier<'2'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEBSOLDIER2    };
-  const EPiece EPiece::BSoldier3   { Soldier<'3'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEBSOLDIER3    };
-  const EPiece EPiece::BSoldier4   { Soldier<'4'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEBSOLDIER4    };
-  const EPiece EPiece::BSoldier5   { Soldier<'5'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEBSOLDIER5    };
+  const EPiece EPiece::BGeneral1   { General<'1'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEBGENERAL1    };
+  const EPiece EPiece::BGeneral2   { General<'2'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEBGENERAL2    };
+  const EPiece EPiece::BGeneral3   { General<'3'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEBGENERAL3    };
+  const EPiece EPiece::BGeneral4   { General<'4'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEBGENERAL4    };
+  const EPiece EPiece::BGeneral5   { General<'5'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEBGENERAL5    };
   const EPiece EPiece::BSpy        { Spy         ::TheSpy,         PieceColor::Black, IDB_ESPIONAGEBSPY         };
   const EPiece EPiece::BSapper     { Sapper      ::TheSapper,      PieceColor::Black, IDB_ESPIONAGEBSAPPER      };
   const EPiece EPiece::BMine       { Mine        ::TheMine,        PieceColor::Black, IDB_ESPIONAGEBMINE        };
   const EPiece EPiece::BHeadquarter{ Headquarter ::TheHeadquarter, PieceColor::Black, IDB_ESPIONAGEBHEADQUARTER };
 
-  const EPiece EPiece::USoldier1   { Soldier<'1'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
-  const EPiece EPiece::USoldier2   { Soldier<'2'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
-  const EPiece EPiece::USoldier3   { Soldier<'3'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
-  const EPiece EPiece::USoldier4   { Soldier<'4'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
-  const EPiece EPiece::USoldier5   { Soldier<'5'>::TheSoldier,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
+  const EPiece EPiece::UGeneral1   { General<'1'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
+  const EPiece EPiece::UGeneral2   { General<'2'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
+  const EPiece EPiece::UGeneral3   { General<'3'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
+  const EPiece EPiece::UGeneral4   { General<'4'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
+  const EPiece EPiece::UGeneral5   { General<'5'>::TheGeneral,     PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
   const EPiece EPiece::USpy        { Spy         ::TheSpy,         PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
   const EPiece EPiece::USapper     { Sapper      ::TheSapper,      PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
   const EPiece EPiece::UMine       { Mine        ::TheMine,        PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
   const EPiece EPiece::UHeadquarter{ Headquarter ::TheHeadquarter, PieceColor::Black, IDB_ESPIONAGEUNKNOWN      };
 
+  const EPiece EPiece::Volcano     { Volcano     ::TheVolcano,     PieceColor::Black, IDB_ESPIONAGEVOLCANO      };
 
   void EKind::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
@@ -59,22 +61,22 @@ namespace Espionage
         (p == Spy::TheSpy)                 ) return true;                                          // anybody can take those
     if (p == Mine::TheMine) return *this == Sapper::TheSapper;
 
-    if (p == Soldier<'5'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
+    if (p == General<'5'>::TheGeneral) return *this == General<'5'>::TheGeneral ||
                                               *this == Sapper::TheSapper;                          // Sapper and 5 takes 5
-    if (p == Soldier<'4'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
-                                              *this == Soldier<'4'>::TheSoldier;                   // 4 and 5 takes 4
-    if (p == Soldier<'3'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
-                                              *this == Soldier<'4'>::TheSoldier ||
-                                              *this == Soldier<'3'>::TheSoldier;                   // 3 to 5 takes 3
-    if (p == Soldier<'2'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
-                                              *this == Soldier<'4'>::TheSoldier ||
-                                              *this == Soldier<'3'>::TheSoldier ||
-                                              *this == Soldier<'2'>::TheSoldier;                   // 2 to 5 takes 2
-    if (p == Soldier<'1'>::TheSoldier) return *this == Soldier<'5'>::TheSoldier ||
-                                              *this == Soldier<'4'>::TheSoldier ||
-                                              *this == Soldier<'3'>::TheSoldier ||
-                                              *this == Soldier<'2'>::TheSoldier ||
-                                              *this == Soldier<'1'>::TheSoldier;                   // 1 to 5 takes 1
+    if (p == General<'4'>::TheGeneral) return *this == General<'5'>::TheGeneral ||
+                                              *this == General<'4'>::TheGeneral;                   // 4 and 5 takes 4
+    if (p == General<'3'>::TheGeneral) return *this == General<'5'>::TheGeneral ||
+                                              *this == General<'4'>::TheGeneral ||
+                                              *this == General<'3'>::TheGeneral;                   // 3 to 5 takes 3
+    if (p == General<'2'>::TheGeneral) return *this == General<'5'>::TheGeneral ||
+                                              *this == General<'4'>::TheGeneral ||
+                                              *this == General<'3'>::TheGeneral ||
+                                              *this == General<'2'>::TheGeneral;                   // 2 to 5 takes 2
+    if (p == General<'1'>::TheGeneral) return *this == General<'5'>::TheGeneral ||
+                                              *this == General<'4'>::TheGeneral ||
+                                              *this == General<'3'>::TheGeneral ||
+                                              *this == General<'2'>::TheGeneral ||
+                                              *this == General<'1'>::TheGeneral;                   // 1 to 5 takes 1
     return false;
   }
 
@@ -108,11 +110,11 @@ namespace Espionage
   EspionagePosition::EspionagePosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
   {
     std::vector<const Piece*> pp;
-    for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::USoldier1);
-    for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::USoldier2);
-    for (Coordinate z = 0U; z < 3U; ++z) pp.push_back(&EPiece::USoldier3);
-    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::USoldier4);
-    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::USoldier5);
+    for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::UGeneral1);
+    for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::UGeneral2);
+    for (Coordinate z = 0U; z < 3U; ++z) pp.push_back(&EPiece::UGeneral3);
+    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::UGeneral4);
+    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::UGeneral5);
     for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::USpy);
     for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::USapper);
     for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::UMine);
@@ -128,11 +130,11 @@ namespace Espionage
       }
     assert(pp.size() == 0);
 
-    for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::WSoldier1);
-    for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::WSoldier2);
-    for (Coordinate z = 0U; z < 3U; ++z) pp.push_back(&EPiece::WSoldier3);
-    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::WSoldier4);
-    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::WSoldier5);
+    for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::WGeneral1);
+    for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::WGeneral2);
+    for (Coordinate z = 0U; z < 3U; ++z) pp.push_back(&EPiece::WGeneral3);
+    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::WGeneral4);
+    for (Coordinate z = 0U; z < 2U; ++z) pp.push_back(&EPiece::WGeneral5);
     for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::WSpy);
     for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::WSapper);
     for (Coordinate z = 0U; z < 4U; ++z) pp.push_back(&EPiece::WMine);
@@ -225,16 +227,16 @@ namespace Espionage
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();
-    p->Add(EPiece::WSoldier1);
-    p->Add(EPiece::BSoldier1);
-    p->Add(EPiece::WSoldier2);
-    p->Add(EPiece::BSoldier2);
-    p->Add(EPiece::WSoldier3);
-    p->Add(EPiece::BSoldier3);
-    p->Add(EPiece::WSoldier4);
-    p->Add(EPiece::BSoldier4);
-    p->Add(EPiece::WSoldier5);
-    p->Add(EPiece::BSoldier5);
+    p->Add(EPiece::WGeneral1);
+    p->Add(EPiece::BGeneral1);
+    p->Add(EPiece::WGeneral2);
+    p->Add(EPiece::BGeneral2);
+    p->Add(EPiece::WGeneral3);
+    p->Add(EPiece::BGeneral3);
+    p->Add(EPiece::WGeneral4);
+    p->Add(EPiece::BGeneral4);
+    p->Add(EPiece::WGeneral5);
+    p->Add(EPiece::BGeneral5);
     p->Add(EPiece::WSpy);
     p->Add(EPiece::BSpy);
     p->Add(EPiece::WSapper);
@@ -243,15 +245,16 @@ namespace Espionage
     p->Add(EPiece::BMine);
     p->Add(EPiece::WHeadquarter);
     p->Add(EPiece::BHeadquarter);
-    p->Add(EPiece::USoldier1);
-    p->Add(EPiece::USoldier2);
-    p->Add(EPiece::USoldier3);
-    p->Add(EPiece::USoldier4);
-    p->Add(EPiece::USoldier5);
+    p->Add(EPiece::UGeneral1);
+    p->Add(EPiece::UGeneral2);
+    p->Add(EPiece::UGeneral3);
+    p->Add(EPiece::UGeneral4);
+    p->Add(EPiece::UGeneral5);
     p->Add(EPiece::USpy);
     p->Add(EPiece::USapper);
     p->Add(EPiece::UMine);
     p->Add(EPiece::UHeadquarter);
+    p->Add(EPiece::Volcano);
     return p;
   }
 

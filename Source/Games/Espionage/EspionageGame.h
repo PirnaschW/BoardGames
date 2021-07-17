@@ -34,16 +34,16 @@ namespace Espionage
     virtual bool CanTake(const Kind&) const noexcept override;
   };
 
-  template <unsigned char z> // standard Soldiers 1 to 5
-  class Soldier : public EKind
+  template <unsigned char z> // standard Generals 1 to 5
+  class General : public EKind
   {
   private:
-    constexpr Soldier(void) noexcept : EKind(z) {}
+    constexpr General(void) noexcept : EKind(z) {}
   public:
     virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100 * (z - '0'); }
 
   public:
-    static const Soldier TheSoldier;
+    static const General TheGeneral;
   };
 
   class Spy : public EKind
@@ -90,6 +90,17 @@ namespace Espionage
     static const Headquarter TheHeadquarter;
   };
 
+  class Volcano : public Kind
+  {
+  private:
+    constexpr Volcano(void) noexcept : Kind('V') {}
+  public:
+    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
+
+  public:
+    static const Volcano TheVolcano;
+  };
+
 
   class EPiece : public Piece
   {
@@ -99,34 +110,37 @@ namespace Espionage
     EPiece& operator=(const EPiece&) = delete;
 
   public:
-    static const EPiece WSoldier1;
-    static const EPiece BSoldier1;
-    static const EPiece WSoldier2;
-    static const EPiece BSoldier2;
-    static const EPiece WSoldier3;
-    static const EPiece BSoldier3;
-    static const EPiece WSoldier4;
-    static const EPiece BSoldier4;
-    static const EPiece WSoldier5;
-    static const EPiece BSoldier5;
+    static const EPiece WGeneral1;
+    static const EPiece WGeneral2;
+    static const EPiece WGeneral3;
+    static const EPiece WGeneral4;
+    static const EPiece WGeneral5;
     static const EPiece WSpy;
-    static const EPiece BSpy;
     static const EPiece WSapper;
-    static const EPiece BSapper;
     static const EPiece WMine;
-    static const EPiece BMine;
     static const EPiece WHeadquarter;
+
+    static const EPiece BGeneral1;
+    static const EPiece BGeneral2;
+    static const EPiece BGeneral3;
+    static const EPiece BGeneral4;
+    static const EPiece BGeneral5;
+    static const EPiece BSpy;
+    static const EPiece BSapper;
+    static const EPiece BMine;
     static const EPiece BHeadquarter;
 
-    static const EPiece USoldier1;
-    static const EPiece USoldier2;
-    static const EPiece USoldier3;
-    static const EPiece USoldier4;
-    static const EPiece USoldier5;
+    static const EPiece UGeneral1;
+    static const EPiece UGeneral2;
+    static const EPiece UGeneral3;
+    static const EPiece UGeneral4;
+    static const EPiece UGeneral5;
     static const EPiece USpy;
     static const EPiece USapper;
     static const EPiece UMine;
     static const EPiece UHeadquarter;
+
+    static const EPiece Volcano;
   };
 
   class EspionageLayout final : public MainLayout
