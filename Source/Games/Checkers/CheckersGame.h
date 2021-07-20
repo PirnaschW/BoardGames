@@ -14,6 +14,31 @@ namespace Checkers
 
   using namespace BoardGamesCore;
 
+
+  enum CheckerVariant : VariantCode   // recognized variants of Checkers
+  {
+    Standard      = '\0',
+    International = '*',
+
+    Brazilian     = 'B',
+    Canadian      = 'C',
+    Czech         = 'Z',
+    Italian       = 'I',
+    Portuguese    = 'P',
+    Russian       = 'R',
+    Thai          = 'H',
+    Turkish       = 'T',
+
+    Anti          = 'a',
+    Corner        = 'c',
+    Hawaiian      = 'h',
+    OneWay        = 'o',
+    Parachute     = 'p',
+    Gothic        = 'g',
+    Dameo         = 'd',
+  };
+
+
   class Checker final : public Kind
   {
   private:
@@ -72,19 +97,29 @@ namespace Checkers
   };
 
 
-  class CheckersPosition final : public MainPosition
+  class CheckersPosition : public MainPosition
   {
   public:
-    CheckersPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    CheckersPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new CheckersPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
+    void SetStartingPosition(const VariantChosen& v) noexcept override;
 // extensions
   public:
     bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept;
   private:
     inline bool CanPromote(const Location& l, const Piece& p) const noexcept;
+  };
+
+
+  // Testing: use derived classes for different versions
+  class AntiCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline AntiCheckersPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(c, p, d) {}
+    void SetStartingPosition(const VariantChosen& v) noexcept override;
   };
 
 
@@ -94,10 +129,11 @@ namespace Checkers
     CheckersGame(void) = delete;
 
   public:
-    inline CheckersGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CheckersPosition(v.c, m, d), new MainLayout(d)) {}
+    inline CheckersGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new AntiCheckersPosition(v.c, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
   };
+
 
 }

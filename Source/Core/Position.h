@@ -24,7 +24,6 @@ namespace BoardGamesCore
     virtual std::size_t GetHash(void) const noexcept;
     virtual void Serialize(Archive& ar);
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
-    virtual void SetPosition(std::vector<const Piece*>& list);
 
   protected:
     const PieceMapP& pMap_;                                               // map of all potential pieces in this game
@@ -75,6 +74,9 @@ namespace BoardGamesCore
     virtual MainPosition* Clone(void) const noexcept = 0;
     virtual bool operator ==(const MainPosition& p) const noexcept;
     virtual std::size_t GetHash(void) const noexcept;
+
+    virtual void SetStartingPosition(const VariantChosen& v) noexcept {}; // TODO: add this for each game, then make base member abstract
+    virtual void SetPosition(std::vector<const Piece*>& list);
 
     void SetOnTurn(const PieceColor& c) noexcept;
     const PieceColor& OnTurn(void) const noexcept;

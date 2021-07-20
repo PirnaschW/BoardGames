@@ -36,16 +36,6 @@ namespace BoardGamesCore
   
   const Piece& Position::SetPiece(const Location& l, const Piece& p) noexcept { hash_ = 0; pieces_[l.Index(sizeX_, sizeY_)] = pMap_->GetIndex(p); return p; }
 
-  void Position::SetPosition(std::vector<const Piece*>& list)
-  {
-    unsigned int z{};
-    for (const auto& p : list)
-    {
-      while (pieces_[z] == pMap_->GetIndex(Piece::NoTile)) z++; // skip non-existing fields
-      pieces_[z++] = pMap_->GetIndex(*p);
-    }
-  }
-
   
   MainPosition::MainPosition(const MainPosition& m) noexcept : Position(m),
     vCode_(m.vCode_), sequence_(m.sequence_), stock_(m.stock_), taken_(m.taken_), onTurn_(m.onTurn_), depth_(m.depth_),
@@ -57,6 +47,21 @@ namespace BoardGamesCore
   bool MainPosition::operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
 
   std::size_t MainPosition::GetHash(void) const noexcept { return Position::GetHash() + taken_.GetHash() + std::hash<const PieceColor*>()(onTurn_); }
+
+  void MainPosition::SetPosition(std::vector<const Piece*>& list)
+  {
+    unsigned int z{};
+    auto iList = list.cbegin();
+    for (Coordinate j = 0; j < sizeY_; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        const Location& l{ BoardPart::Main, i, j };
+        if (GetPiece(l) != Piece::NoTile) SetPiece(l, **iList++);
+      }
+    }
+    assert(iList == list.cend());  // should have exactly used all pieces in list
+  }
 
   void  MainPosition::SetOnTurn(const PieceColor& c) noexcept { onTurn_ = &c; }
 
