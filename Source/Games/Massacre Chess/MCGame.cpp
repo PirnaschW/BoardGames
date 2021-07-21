@@ -4,7 +4,7 @@
 
 namespace MassacreChess
 {
-  MCPosition::MCPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  MCPosition::MCPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     for (Coordinate z = 0; z < d[0].xCount_*d[0].yCount_ / 8; z++)
     {

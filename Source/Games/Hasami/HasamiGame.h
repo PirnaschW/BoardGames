@@ -42,7 +42,7 @@ namespace Hasami
   class HasamiPosition : public MainPosition
   {
   public:
-    HasamiPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    HasamiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
     virtual MainPosition* Clone(void) const noexcept override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
@@ -56,7 +56,7 @@ namespace Hasami
   private:
     HasamiGame(void) = delete;
   public:
-    HasamiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new HasamiPosition(v.c, m,d), new MainLayout(d)) {}
+    HasamiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new HasamiPosition(v, m,d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

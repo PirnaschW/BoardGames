@@ -169,7 +169,7 @@ namespace Shogi
   }
 
 
-  ShogiPosition::ShogiPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  ShogiPosition::ShogiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     assert((d[0].xCount_ == 9 && d[0].yCount_ == 9) || (d[0].xCount_ == 5 && d[0].yCount_ == 5));
     if (ShogiGame::IsFull(d[0].xCount_, d[0].yCount_))

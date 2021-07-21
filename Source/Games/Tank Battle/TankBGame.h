@@ -81,7 +81,7 @@ namespace TankB
   class TankBPosition : public MainPosition
   {
   public:
-    TankBPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    TankBPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
     virtual MainPosition* Clone(void) const noexcept override { return new TankBPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
@@ -101,7 +101,7 @@ namespace TankB
     const static std::vector<Location> walls_;
 
   public:
-    TankBGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TankBPosition(v.c, m, d), new TankBLayout(d)) {}
+    TankBGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TankBPosition(v, m, d), new TankBLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

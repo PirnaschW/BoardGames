@@ -494,7 +494,7 @@ namespace UnitTestCore
       class TestPosition : public MainPosition
       {
       public:
-        TestPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d) {}
+        TestPosition(VariantChosen v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
         virtual MainPosition* Clone(void) const noexcept override { return new TestPosition(*this); }
         unsigned int GetChainValue(unsigned int z) const noexcept override {
           switch (z) { case 0: return 1; case 1: return 10; case 2: return 100; case 3: return 1000; case 4: return 10000; case 5: return 100000; case 6: return 1000000; } return 0;
@@ -502,7 +502,8 @@ namespace UnitTestCore
       };
 
       { // create a test position and run test for white 1, 2, 3 ,4
-        TestPosition p(0, map, dim);
+        VariantChosen v_{ 0,0,0,0 };
+        TestPosition p(v_, map, dim);
         PositionValue v(PositionValue::PValueType::Undefined);
 
         v = p.EvaluateChainLengths(3);
@@ -547,7 +548,8 @@ namespace UnitTestCore
       }
 
       { // create a test position and run test for white 1, black 1, white 2, black 2, 
-        TestPosition p(0, map, dim);
+        VariantChosen v_{ 0,0,0,0 };
+        TestPosition p(v_, map, dim);
         PositionValue v(PositionValue::PValueType::Undefined);
 
         p.SetPiece(Location{ BoardPart::Main,7,7 }, CorePiece::WP);

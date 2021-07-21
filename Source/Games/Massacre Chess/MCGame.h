@@ -18,7 +18,7 @@ namespace MassacreChess
   class MCPosition : public MainPosition
   {
   public:
-    MCPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    MCPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
     virtual MainPosition* Clone(void) const noexcept override { return new MCPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual unsigned int GetMoveCountFactor(void) const noexcept override { return 1000; }
@@ -34,7 +34,7 @@ namespace MassacreChess
     MCGame(void) = delete;
 
   public:
-    MCGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new MCPosition(v.c, m, d), new MainLayout(d)) {}
+    MCGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new MCPosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

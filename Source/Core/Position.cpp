@@ -38,11 +38,11 @@ namespace BoardGamesCore
 
   
   MainPosition::MainPosition(const MainPosition& m) noexcept : Position(m),
-    vCode_(m.vCode_), sequence_(m.sequence_), stock_(m.stock_), taken_(m.taken_), onTurn_(m.onTurn_), depth_(m.depth_),
+    v_(m.v_), sequence_(m.sequence_), stock_(m.stock_), taken_(m.taken_), onTurn_(m.onTurn_), depth_(m.depth_),
     value_(m.value_), movesW_(m.movesW_), movesB_(m.movesB_) {}
 
-  MainPosition::MainPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept :
-    Position(p, d[0].xCount_, d[0].yCount_), vCode_(c), stock_(p, d[1].xCount_, d[1].yCount_), taken_(p, d[2].xCount_, d[2].yCount_) {}
+  MainPosition::MainPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept :
+    Position(p, d[0].xCount_, d[0].yCount_), v_(v), stock_(p, d[1].xCount_, d[1].yCount_), taken_(p, d[2].xCount_, d[2].yCount_) {}
 
   bool MainPosition::operator ==(const MainPosition& p) const noexcept { return OnTurn() == p.OnTurn() && Position::operator==(&p); }
 

@@ -353,6 +353,9 @@
     <ClInclude Include="..\Source\Games\BrainKing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\BGResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\Games\Cam\Cam.rc2">
@@ -363,9 +366,6 @@
     </None>
     <None Include="..\Source\Games\CFour\res\CFour.rc2">
       <Filter>Game CFour\Source Files</Filter>
-    </None>
-    <None Include="..\Source\Games\Checkers\res\Checkers.rc2">
-      <Filter>Game Checkers\Source Files</Filter>
     </None>
     <None Include="..\Source\Games\Cheversi\res\Cheversi.rc2">
       <Filter>Game Cheversi\Source Files</Filter>
@@ -399,6 +399,9 @@
     </None>
     <None Include="..\Source\Games\Espionage\Espionage.rc2">
       <Filter>Game Espionage\Source Files</Filter>
+    </None>
+    <None Include="..\Source\Games\Checkers\Checkers.rc2">
+      <Filter>Game Checkers\Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -711,16 +714,42 @@
     <Image Include="..\Source\Games\Ataxx\res\AtaxxDoc.ico">
       <Filter>Game Ataxx\Resources</Filter>
     </Image>
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier1.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier2.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier3.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier4.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier5.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier1.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier2.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier3.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier4.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier5.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral1.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral2.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral3.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral4.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral5.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral1.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral2.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral3.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral4.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral5.bmp">
+      <Filter>Game Espionage\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Checkers\res\CheckersBPara.bmp">
+      <Filter>Game Checkers\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Checkers\res\CheckersWPara.bmp">
+      <Filter>Game Checkers\Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Source\Games\New Game Instructions.txt" />

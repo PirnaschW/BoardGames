@@ -66,13 +66,25 @@ namespace Checkers
   class Queen final : public Kind
   {
   private:
-    constexpr inline Queen(void) noexcept : Kind('K') {}
+    constexpr inline Queen(void) noexcept : Kind('Q') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 800; }
     virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
     static const Queen TheQueen;
+  };
+
+  class Para final : public Kind
+  {
+  private:
+    constexpr inline Para(void) noexcept : Kind('P') {}
+  public:
+    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+
+  public:
+    static const Para ThePara;
   };
 
   class CheckersPiece final : public Piece
@@ -94,18 +106,19 @@ namespace Checkers
     static const CheckersPiece CheckersKingB;
     static const CheckersPiece CheckersQueenW;
     static const CheckersPiece CheckersQueenB;
+    static const CheckersPiece CheckersParaW;
+    static const CheckersPiece CheckersParaB;
   };
 
 
   class CheckersPosition : public MainPosition
   {
   public:
-    CheckersPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d) {}
+    CheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new CheckersPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
-    void SetStartingPosition(const VariantChosen& v) noexcept override;
 // extensions
   public:
     bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept;
@@ -114,22 +127,14 @@ namespace Checkers
   };
 
 
-  // Testing: use derived classes for different versions
-  class AntiCheckersPosition : public CheckersPosition
-  {
-  public:
-    inline AntiCheckersPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(c, p, d) {}
-    void SetStartingPosition(const VariantChosen& v) noexcept override;
-  };
-
-
   class CheckersGame final : public Game
   {
   private:
     CheckersGame(void) = delete;
+    static MainPosition* GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept;
 
   public:
-    inline CheckersGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new AntiCheckersPosition(v.c, m, d), new MainLayout(d)) {}
+    inline CheckersGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, GetNewPosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

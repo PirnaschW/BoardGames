@@ -34,7 +34,7 @@ namespace Hasami
   }
 
 
-  HasamiPosition::HasamiPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  HasamiPosition::HasamiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     for (Coordinate i = 0; i < d[0].xCount_; i++)
     {

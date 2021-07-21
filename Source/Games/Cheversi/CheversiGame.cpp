@@ -4,7 +4,7 @@
 
 namespace Cheversi
 {
-  CheversiPosition::CheversiPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  CheversiPosition::CheversiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     SetPiece(Location{ BoardPart::Taken, 0, 1 }, CorePiece::WK);
     SetPiece(Location{ BoardPart::Taken, 1, 1 }, CorePiece::WQ);

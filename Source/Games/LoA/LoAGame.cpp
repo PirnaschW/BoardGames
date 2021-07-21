@@ -70,7 +70,7 @@ namespace LoA
   }
 
 
-  LoAPosition::LoAPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  LoAPosition::LoAPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     for (Coordinate i = 0; i < d[0].xCount_; i++)
       for (Coordinate j = 0; j < d[0].yCount_; j++)

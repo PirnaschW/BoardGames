@@ -369,6 +369,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\BGResource.h" />
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxGame.h" />
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxResource.h" />
     <ClInclude Include="..\Source\Games\BrainKing.h" />
@@ -409,7 +410,7 @@
     <None Include="..\Source\Games\Ataxx\Ataxx.rc2" />
     <None Include="..\Source\Games\Cam\Cam.rc2" />
     <None Include="..\Source\Games\CFour\res\CFour.rc2" />
-    <None Include="..\Source\Games\Checkers\res\Checkers.rc2" />
+    <None Include="..\Source\Games\Checkers\Checkers.rc2" />
     <None Include="..\Source\Games\Cheversi\res\Cheversi.rc2" />
     <None Include="..\Source\Games\Espionage\Espionage.rc2" />
     <None Include="..\Source\Games\Hasami\res\Hasami.rc2" />
@@ -427,28 +428,30 @@
     <Image Include="..\Source\Games\Cam\res\CamDoc.ico" />
     <Image Include="..\Source\Games\Cam\res\CamelotDoc.ico" />
     <Image Include="..\Source\Games\CFour\res\CFourDoc.ico" />
+    <Image Include="..\Source\Games\Checkers\res\CheckersBPara.bmp" />
     <Image Include="..\Source\Games\Checkers\res\CheckersDoc.ico" />
+    <Image Include="..\Source\Games\Checkers\res\CheckersWPara.bmp" />
     <Image Include="..\Source\Games\Cheversi\res\CheversiDoc.ico" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral1.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral2.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral3.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral4.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral5.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageBHeadquarter.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageBMine.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageBSapper.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier1.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier2.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier3.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier4.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageBSoldier5.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageBSpy.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageDoc.ico" />
     <Image Include="..\Source\Games\Espionage\res\EspionageUnknown.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageVolcano.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral1.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral2.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral3.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral4.bmp" />
+    <Image Include="..\Source\Games\Espionage\res\EspionageWGeneral5.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageWHeadquarter.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageWMine.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageWSapper.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier1.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier2.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier3.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier4.bmp" />
-    <Image Include="..\Source\Games\Espionage\res\EspionageWSoldier5.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageWSpy.bmp" />
     <Image Include="..\Source\Games\Hasami\res\HasamiB.bmp" />
     <Image Include="..\Source\Games\Hasami\res\HasamiBs.bmp" />

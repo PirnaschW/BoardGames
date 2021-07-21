@@ -107,7 +107,7 @@ namespace Espionage
   }
 
 
-  EspionagePosition::EspionagePosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  EspionagePosition::EspionagePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     std::vector<const Piece*> pp;
     for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::UGeneral1);

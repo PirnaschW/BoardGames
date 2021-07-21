@@ -50,7 +50,7 @@ namespace Ataxx
   class AtaxxPosition : public MainPosition
   {
   public:
-    AtaxxPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    AtaxxPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
     virtual MainPosition* Clone(void) const noexcept override { return new AtaxxPosition(*this); }
   };
 
@@ -61,7 +61,7 @@ namespace Ataxx
     AtaxxGame(void) = delete;
 
   public:
-    AtaxxGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new AtaxxPosition(v.c, m, d), new MainLayout(d)) {}
+    AtaxxGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new AtaxxPosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

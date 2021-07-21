@@ -27,7 +27,7 @@ namespace CFour
           break;
         }
       }
-      if (vCode_ && Spider) // non-spider versions don't allow placement on other sides
+      if (v_.c && Spider) // non-spider versions don't allow placement on other sides
       {
         for (Coordinate j = 0; j < sizeY_; ++j)                           //   top -> bottom
         {
@@ -41,7 +41,7 @@ namespace CFour
         }
       }
     }
-    if (vCode_ && Spider) // non-spider versions don't allow placement on other sides
+    if (v_.c && Spider) // non-spider versions don't allow placement on other sides
     {
       for (Coordinate j = 0; j < sizeY_; ++j)                             // horizontal ('for all rows')
       {
@@ -99,7 +99,7 @@ namespace CFour
 
     if (movesW_.empty()) return PositionValue::PValueType::Tie;           // if no more moves, game over.
                                                                           // Note that B has the same moves as W; enough to check W
-    return vCode_ & Anti ? -EvaluateChainLengths(4) : +EvaluateChainLengths(4);
+    return v_.c & Anti ? -EvaluateChainLengths(4) : +EvaluateChainLengths(4);
   }
 
 

@@ -69,7 +69,7 @@ namespace UnitTestLogik
     TEST_METHOD(TestLogikPositionClone)
     {
       const VariantChosen v{ 0,'\0', MaxPegs, MaxTries };
-      LogikPosition l1{ 0, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
+      LogikPosition l1{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
       MainPosition* p2 = l1.Clone();
       Assert::IsTrue(p2 != nullptr);
 
@@ -81,7 +81,7 @@ namespace UnitTestLogik
     TEST_METHOD(TestLogikPositionPegsMarkers)
     {
       const VariantChosen v{ 0,'\0', MaxPegs, MaxTries };
-      LogikPosition l1{ 0, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
+      LogikPosition l1{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
       MainPosition* pm = &l1;
       Assert::IsTrue(pm != nullptr);
 
@@ -136,7 +136,7 @@ namespace UnitTestLogik
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a position works multiple times
       {
         const VariantChosen v{ 0,'\0', MaxPegs, MaxTries };
-        LogikPosition l{ 0, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
+        LogikPosition l{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
         for (unsigned char j = 0; j < MaxTries; ++j)
         {
           PlayCode c = rand() % Plays::Max;

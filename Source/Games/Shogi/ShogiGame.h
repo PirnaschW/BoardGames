@@ -250,7 +250,7 @@ namespace Shogi
   class ShogiPosition : public MainPosition
   {
   public:
-    ShogiPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    ShogiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
     virtual MainPosition* Clone(void) const noexcept override { return new ShogiPosition(*this); };
     virtual void GetAllMoves(void) const noexcept;                              // generate all moves and save list
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
@@ -271,7 +271,7 @@ namespace Shogi
     ShogiGame(void) = delete;
 
   public:
-    ShogiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new ShogiPosition(v.c, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
+    ShogiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new ShogiPosition(v, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
     constexpr static bool IsFull(Coordinate x, Coordinate /*y*/) noexcept { return x == 9; } //only check for x == 9 -> full Shogi game, all others are Mini
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;

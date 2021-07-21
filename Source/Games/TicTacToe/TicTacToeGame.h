@@ -41,7 +41,7 @@ namespace TicTacToe
   class TicTacToePosition : public MainPosition
   {
   public:
-    TicTacToePosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d) {}
+    TicTacToePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
 
     virtual MainPosition* Clone(void) const noexcept override { return new TicTacToePosition(*this); }
     virtual void GetAllMoves(void) const noexcept override;
@@ -58,7 +58,7 @@ namespace TicTacToe
     TicTacToeGame(void) = delete;
 
   public:
-    TicTacToeGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TicTacToePosition(v.c, m, d), new MainLayout(d)) {}
+    TicTacToeGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TicTacToePosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

@@ -26,7 +26,7 @@ namespace CFour
   class CFourPosition : public MainPosition
   {
   public:
-    inline CFourPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d) {}
+    inline CFourPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new CFourPosition(*this); }
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
@@ -40,7 +40,7 @@ namespace CFour
     CFourGame(void) = delete;
 
   public:
-    inline CFourGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CFourPosition(v.c, m, d), new MainLayout(d)) {}
+    inline CFourGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CFourPosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

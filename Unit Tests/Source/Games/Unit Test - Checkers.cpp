@@ -25,7 +25,7 @@ namespace UnitTestCheckers
       Assert::IsTrue(CheckersPiece::CheckersPieceB.Promote(true) == CheckersPiece::CheckersQueenB);
 
       const VariantChosen v{ 0,'\0', 8U, 8U };
-      const CheckersPosition p{ 0, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+      const CheckersPosition p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
       Moves m{};
 
       m.clear();
@@ -62,7 +62,7 @@ namespace UnitTestCheckers
     TEST_METHOD(TestCheckersPositionClone)
     {
       const VariantChosen v{ 0,'\0', 8U, 8U };
-      const CheckersPosition p1{ 0, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+      const CheckersPosition p1{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
       MainPosition* pm = p1.Clone();
       Assert::IsTrue(pm != nullptr);
 
@@ -77,7 +77,7 @@ namespace UnitTestCheckers
       const VariantChosen v{ 0,'\0', 8U, 8U };
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a game works multiple times
       {
-        CheckersPosition p{ 0, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+        CheckersPosition p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
       }
     }
 
@@ -87,7 +87,7 @@ namespace UnitTestCheckers
       for (unsigned int z = 0; z < 100; ++z)
       {
         const VariantChosen v{ 0,'\0', MaxX, MaxY };
-        CheckersPosition pos{ 0, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+        CheckersPosition pos{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
 
         for (Coordinate i = 0; i < MaxX; ++i)                             // create a random position
         {
@@ -221,7 +221,7 @@ namespace UnitTestCheckers
       for (unsigned int z = 0; z < 100; ++z)  // for now, only 1 time
       {
         const VariantChosen v{ 0,'\0', MaxX, MaxY };
-        CheckersPosition pos{ 0, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+        CheckersPosition pos{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
 
 
         for (Coordinate i = 0; i < MaxX; ++i)                             // create a random position

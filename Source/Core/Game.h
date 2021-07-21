@@ -97,7 +97,7 @@ namespace BoardGamesCore
     virtual void Select(const Point& point) override;
     virtual void Unselect(void) override { moves.clear(); _mode.Del(Mode::SelectTo); _mode.Set(Mode::SelectFr); }
     virtual void SetUpdateCallBack(std::function<void(void)> cb) override { assert(cb != nullptr); plist.callback = cb; }
-    virtual void SetPosition(std::vector<const Piece*>& list) override { if (list.empty()) pos->SetStartingPosition(v_); else pos->SetPosition(list); }
+    virtual void SetPosition(std::vector<const Piece*>& list) override { if (list.empty()) pos->SetStartingPosition(); else pos->SetPosition(list); }
 
 
   protected:

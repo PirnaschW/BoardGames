@@ -69,13 +69,13 @@ namespace BoardGamesCore
     MainPosition(const MainPosition& m) noexcept;
 
   public:
-    MainPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    MainPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
     ~MainPosition(void) noexcept override {}
     virtual MainPosition* Clone(void) const noexcept = 0;
     virtual bool operator ==(const MainPosition& p) const noexcept;
     virtual std::size_t GetHash(void) const noexcept;
 
-    virtual void SetStartingPosition(const VariantChosen& v) noexcept {}; // TODO: add this for each game, then make base member abstract
+    virtual void SetStartingPosition() noexcept {}; // TODO: add this for each game, then make base member abstract
     virtual void SetPosition(std::vector<const Piece*>& list);
 
     void SetOnTurn(const PieceColor& c) noexcept;
@@ -83,7 +83,7 @@ namespace BoardGamesCore
     virtual void NextPlayer(void) noexcept;
     virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
-    VariantCode GetVariant(void) const { return vCode_; }
+    VariantChosen GetVariant(void) const { return v_; }
     constexpr Moves& GetMoveList(bool w) const noexcept { return w ? movesW_ : movesB_; }
     virtual bool AddIfLegal(Moves&, const Location&, const Location&) const noexcept { return false; };
     [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept;       // calculate position value
@@ -113,7 +113,7 @@ namespace BoardGamesCore
 
 
   public:
-    VariantCode vCode_;                                                   // rule variant of the game
+    VariantChosen v_;                                                     // variant of the game
     Moves sequence_{};                                                    // list of historic moves that led to this position
     Position stock_;                                                      // associated Stock position
     Position taken_;                                                      // associated Taken position

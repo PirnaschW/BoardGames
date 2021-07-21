@@ -21,7 +21,7 @@ namespace UnitTestCFour
     TEST_METHOD(Clone)
     {
       const VariantChosen v{ 0, '\0', 7U, 6U };
-      CFourPosition p1{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      CFourPosition p1{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       MainPosition* pm = p1.Clone();
       Assert::IsTrue(pm != nullptr);
 
@@ -34,7 +34,7 @@ namespace UnitTestCFour
     TEST_METHOD(EvaluateChain)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      CFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      CFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -89,7 +89,7 @@ namespace UnitTestCFour
     class TestCFourPosition : public CFourPosition
     {
     public:
-      TestCFourPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : CFourPosition(c, p, d) {}
+      TestCFourPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CFourPosition(v, p, d) {}
       virtual MainPosition* Clone(void) const noexcept override { return new TestCFourPosition(*this); }
       void  Eval4inaRow(void)
       {
@@ -539,7 +539,7 @@ namespace UnitTestCFour
     TEST_METHOD(Eval4inaRow)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -549,7 +549,7 @@ namespace UnitTestCFour
     TEST_METHOD(BruteForceMove0)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -575,7 +575,7 @@ namespace UnitTestCFour
     TEST_METHOD(BruteForceMove1)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -585,7 +585,7 @@ namespace UnitTestCFour
     TEST_METHOD(BruteForceWinIn2)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -595,7 +595,7 @@ namespace UnitTestCFour
     TEST_METHOD(BruteForceWinIn3)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -605,7 +605,7 @@ namespace UnitTestCFour
     TEST_METHOD(BruteForceNoWinIn3)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -615,7 +615,7 @@ namespace UnitTestCFour
     TEST_METHOD(BruteForceWinIn1)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
       pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
 
@@ -627,7 +627,7 @@ namespace UnitTestCFour
       const VariantChosen v{ 0,'\0', 7U, 6U };
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a game works multiple times
       {
-        TestCFourPosition pos{ 0, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+        TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       }
     }
 

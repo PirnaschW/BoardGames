@@ -61,7 +61,7 @@ namespace TankB
   }
 
 
-  TankBPosition::TankBPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  TankBPosition::TankBPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     SetPiece(Location(BoardPart::Main, 10U,  6U), NTankPiece::NTankW);
     SetPiece(Location(BoardPart::Main, 10U,  7U), NTankPiece::NTankW);

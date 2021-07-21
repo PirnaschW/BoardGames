@@ -6,14 +6,17 @@ namespace Checkers
 {
   const Checker Checker::TheChecker{};
   const King    King   ::TheKing   {};
-  const Queen   Queen  ::TheQueen  {};
+  const Queen   Queen  ::TheQueen{};
+  const Para    Para   ::ThePara{};
 
-  const CheckersPiece CheckersPiece::CheckersPieceW{ Checker::TheChecker, PieceColor::White, &CheckersQueenW, IDB_WCL };
-  const CheckersPiece CheckersPiece::CheckersPieceB{ Checker::TheChecker, PieceColor::Black, &CheckersQueenB, IDB_BCL };
-  const CheckersPiece CheckersPiece::CheckersKingW { King::TheKing,       PieceColor::White, &CheckersKingW,  IDB_WKL };
-  const CheckersPiece CheckersPiece::CheckersKingB { King::TheKing,       PieceColor::Black, &CheckersKingB,  IDB_BKL };
-  const CheckersPiece CheckersPiece::CheckersQueenW{ Queen::TheQueen,     PieceColor::White, &CheckersQueenW, IDB_WQL };
-  const CheckersPiece CheckersPiece::CheckersQueenB{ Queen::TheQueen,     PieceColor::Black, &CheckersQueenB, IDB_BQL };
+  const CheckersPiece CheckersPiece::CheckersPieceW{ Checker::TheChecker, PieceColor::White, &CheckersQueenW, IDB_WPL };
+  const CheckersPiece CheckersPiece::CheckersPieceB{ Checker::TheChecker, PieceColor::Black, &CheckersQueenB, IDB_BPL };
+  const CheckersPiece CheckersPiece::CheckersKingW { King   ::TheKing,    PieceColor::White, &CheckersKingW,  IDB_WKL };
+  const CheckersPiece CheckersPiece::CheckersKingB { King   ::TheKing,    PieceColor::Black, &CheckersKingB,  IDB_BKL };
+  const CheckersPiece CheckersPiece::CheckersQueenW{ Queen  ::TheQueen,   PieceColor::White, &CheckersQueenW, IDB_WQL };
+  const CheckersPiece CheckersPiece::CheckersQueenB{ Queen  ::TheQueen,   PieceColor::Black, &CheckersQueenB, IDB_BQL };
+  const CheckersPiece CheckersPiece::CheckersParaW { Para   ::ThePara,    PieceColor::White, &CheckersPieceW, IDB_CHECKERSWPARA };
+  const CheckersPiece CheckersPiece::CheckersParaB { Para   ::ThePara,    PieceColor::Black, &CheckersPieceB, IDB_CHECKERSBPARA };
 
 
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
@@ -22,7 +25,7 @@ namespace Checkers
     const int dy = pos.GetPiece(l).IsColor(PieceColor::White) ? -1 : 1;
     pos.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
     pos.AddIfLegal(moves, l, l + Offset(-1, dy));
-    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);              // check for jump moves
+    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);        // check for jump moves
   }
 
 
@@ -31,7 +34,7 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::BDirection)
       pos.AddIfLegal(moves, l, l + d);                                    // check for slide moves
-    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);              // check for jump moves
+    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);        // check for jump moves
   }
 
 
@@ -40,187 +43,15 @@ namespace Checkers
     const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
     for (auto& d : Offset::BDirection)
       for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
-    pos.AddIfLegalJump(moves, true, Actions{}, Piece::NoTile, l);               // check for jump moves
+    pos.AddIfLegalJump(moves, true, Actions{}, Piece::NoTile, l);         // check for jump moves
   }
 
 
-  void CheckersPosition::SetStartingPosition(const VariantChosen& v) noexcept
+  void Para::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    // Starting Position Setup
-    switch (v.c)
-    {
-      case CheckerVariant::Standard:                                           // Checkers                
-        [[fallthrough]];                                                       
-      //case CheckerVariant::Anti:                                               // Anti Checkers
-      //  [[fallthrough]];                                                       
-      case CheckerVariant::Czech:                                              // Czech Checkers
-        [[fallthrough]];                                                       
-      case CheckerVariant::Russian:                                            // Russian Checkers
-        [[fallthrough]];                                                       
-      case CheckerVariant::Brazilian:                                          // Brazilian Checkers
-        [[fallthrough]];                                                       
-      case CheckerVariant::International:                                      // International Checkers
-        [[fallthrough]];                                                       
-      case CheckerVariant::Canadian:                                           // Canadian Checkers
-        for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            if ((i + j) % 2)
-              SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-            else
-              SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-          }
-        }
-        break;
-
-      case CheckerVariant::Portuguese:                                         // Portuguese Checkers
-        [[fallthrough]];
-      case 'I':                                        // Italian Checkers
-        for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            if ((i + j) % 2)
-              SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-            else
-              SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-          }
-        }
-        break;
-
-      case CheckerVariant::Corner:                                             // Corner Checkers
-        for (Coordinate j = 0; j < sizeY_; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            if ((i + j) % 2)
-            {
-              if ((i + j + 1) < sizeX_)
-                SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-              else if ((i + j) > sizeX_)
-                SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
-            }
-          }
-        }
-        break;
-
-      case CheckerVariant::OneWay:                                             // One Way Checkers
-        for (Coordinate j = 2; j < sizeY_; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            if ((i + j) % 2)
-            {
-              if (i < sizeX_ / 2)
-                SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-              else
-                SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
-            }
-          }
-        }
-        break;
-
-
-      case CheckerVariant::Gothic:                                             // Gothic Checkers
-        for (Coordinate j = 0; j < sizeY_ / 4; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-            SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-          }
-        }
-        break;
-
-      case CheckerVariant::Turkish:                                            // Turkish Checkers
-        for (Coordinate j = 1; j < sizeY_ / 4 + 1; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-            SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-          }
-        }
-        break;
-
-      case CheckerVariant::Thai:                                               // Thai Checkers
-        for (Coordinate j = 0; j < sizeY_ / 4; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            if ((i + j) % 2)
-              SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-            else
-              SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-          }
-        }
-        break;
-
-      case CheckerVariant::Dameo:                                              // Dameo
-        for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-        {
-          for (Coordinate i = j; i < sizeX_ - j; i++)
-          {
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-            SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-          }
-        }
-        break;
-
-      case CheckerVariant::Hawaiian:                                           // Hawaiian Checkers
-        for (Coordinate j = 0; j < sizeY_; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            if ((i + j) % 2)
-              SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
-            else
-              SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-          }
-        }
-        break;
-
-      case CheckerVariant::Parachute:                                          // Parachute Checkers
-        for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-        {
-          for (Coordinate i = 0; i < sizeX_; i++)
-          {
-            if ((i + j) % 2)
-            {
-              if (j == 0)
-                SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
-              else
-                SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-            }
-            else
-            {
-              if (j == 0)
-                SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceB);
-              else
-                SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-            }
-          }
-        }
-        break;
-    }
-
-  }
-
-// Testing: use derived classes for different versions
-  void AntiCheckersPosition::SetStartingPosition(const VariantChosen& v) noexcept
-  {
-    // Starting Position Setup
-    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-        else
-          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-      }
-    }
+    const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
+    const int dy = pos.GetPiece(l).IsColor(PieceColor::White) ? -1 : 1;
+    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);        // check only for (back-)jump moves
   }
 
 
@@ -322,6 +153,7 @@ namespace Checkers
 
   bool CheckersPosition::CanPromote(const Location& l, const Piece& p) const noexcept
   {
+    if (p.IsKind(Checkers::Para::ThePara)) return true; // Para can always promotes when jumping
     return (p.IsColor(PieceColor::White) && l.y_ == 0) || (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 1);
   }
 
@@ -361,6 +193,8 @@ namespace Checkers
     p->Add(CheckersPiece::CheckersKingB);
     p->Add(CheckersPiece::CheckersQueenW);
     p->Add(CheckersPiece::CheckersQueenB);
+    p->Add(CheckersPiece::CheckersParaW);
+    p->Add(CheckersPiece::CheckersParaB);
     return p;
   }
 
@@ -374,4 +208,271 @@ namespace Checkers
     return d;
   }
 
+
+  // Testing: use derived classes for different versions
+  class StandardCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline StandardCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class PortugueseCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline PortugueseCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class CornerCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline CornerCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class ThaiCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline ThaiCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class TurkishCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline TurkishCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class DameoCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline DameoCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class GothicCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline GothicCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class HawaiianCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline HawaiianCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class OneWayCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline OneWayCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+  class ParachuteCheckersPosition : public CheckersPosition
+  {
+  public:
+    inline ParachuteCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override;
+  };
+
+
+  
+  void StandardCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        else
+          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+      }
+    }
+  }
+
+  void PortugueseCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+        else
+          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+      }
+    }
+  }
+
+
+  void CornerCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+        {
+          if ((i + j + 1) < sizeX_)
+            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+          else if ((i + j) > sizeX_)
+            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
+        }
+      }
+    }
+  }
+
+  void OneWayCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 2; j < sizeY_; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+        {
+          if (i < sizeX_ / 2)
+            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+          else
+            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
+        }
+      }
+    }
+  }
+
+  void GothicCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_ / 4; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+      }
+    }
+  }
+
+  void TurkishCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 1; j < sizeY_ / 4 + 1; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+      }
+    }
+  }
+
+  void ThaiCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_ / 4; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        else
+          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+      }
+    }
+  }
+
+  void DameoCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    {
+      for (Coordinate i = j; i < sizeX_ - j; i++)
+      {
+        SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+      }
+    }
+  }
+
+  void HawaiianCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
+        else
+          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+      }
+    }
+  }
+
+  void ParachuteCheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+        {
+          if (j == 0)
+            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersParaW);
+          else
+            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        }
+        else
+        {
+          if (j == 0)
+            SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersParaB);
+          else
+            SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+        }
+      }
+    }
+  }
+
+
+  MainPosition* CheckersGame::GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept
+  {
+    switch (v.c)
+    {
+      case CheckerVariant::Standard:      [[fallthrough]];                                    // Checkers                
+      case CheckerVariant::International: [[fallthrough]];                                    // International Checkers
+      case CheckerVariant::Brazilian:     [[fallthrough]];                                    // Brazilian Checkers
+      case CheckerVariant::Canadian:      [[fallthrough]];                                    // Canadian Checkers
+      case CheckerVariant::Czech:         [[fallthrough]];                                    // Czech Checkers
+      case CheckerVariant::Russian:       [[fallthrough]];                                    // Russian Checkers
+      case CheckerVariant::Anti:          return new StandardCheckersPosition  (v, m, d);     // Anti Checkers
+
+      case CheckerVariant::Italian:       [[fallthrough]];                                    // Italian Checkers
+      case CheckerVariant::Portuguese:    return new PortugueseCheckersPosition(v, m, d);     // Portuguese Checkers
+
+      case CheckerVariant::Thai:          return new ThaiCheckersPosition      (v, m, d);     // Thai Checkers
+      case CheckerVariant::Turkish:       return new TurkishCheckersPosition   (v, m, d);     // Turkish Checkers
+      case CheckerVariant::Corner:        return new CornerCheckersPosition    (v, m, d);     // Corner Checkers
+      case CheckerVariant::Dameo:         return new DameoCheckersPosition     (v, m, d);     // Dameo
+      case CheckerVariant::Gothic:        return new GothicCheckersPosition    (v, m, d);     // Gothis Checkers
+      case CheckerVariant::Hawaiian:      return new HawaiianCheckersPosition  (v, m, d);     // Hawaiian Checkers
+      case CheckerVariant::OneWay:        return new OneWayCheckersPosition    (v, m, d);     // One Way Checkers
+      case CheckerVariant::Parachute:     return new ParachuteCheckersPosition (v, m, d);     // Parachute Checkers
+      default: return nullptr; // must not happen
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+

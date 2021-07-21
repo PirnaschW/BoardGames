@@ -203,7 +203,7 @@ namespace Logik
   class LogikPosition final : public MainPosition
   {
   public:
-    inline LogikPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d) {}
+    inline LogikPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new LogikPosition(*this); }
 
     bool SetFirstFreePeg(const Piece& p) noexcept;                        // returns if it could successfully set the Peg
@@ -233,7 +233,7 @@ namespace Logik
   private:
     LogikGame(void) = delete;
   public:
-    inline LogikGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new LogikPosition(v.c, m, d), new LogikLayout(d)) {}
+    inline LogikGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new LogikPosition(v, m, d), new LogikLayout(d)) {}
 
     virtual bool React(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
     virtual bool AIMove(void) override;

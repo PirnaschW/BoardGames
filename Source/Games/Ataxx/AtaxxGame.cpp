@@ -69,7 +69,7 @@ namespace Ataxx
       a.push_back(std::make_shared<ActionDrop>(to, p0));                  // and place it on target
       m.push_back(std::make_shared<Move>(a));                             // add move to move list
     }
-    if (pos.vCode_ & Ataxx::KnightJumps)
+    if (pos.v_.c & Ataxx::KnightJumps)
     {
       for (const auto& d : Offset::NJumps)                                // try knight jumps in all eight directions
       {
@@ -100,7 +100,7 @@ namespace Ataxx
   }
 
 
-  AtaxxPosition::AtaxxPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(c, p, d)
+  AtaxxPosition::AtaxxPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     // put one piece in each corner:
     SetPiece(Location(BoardPart::Main, 0U,             d[0].yCount_-1), AtaxxPiece::AtaxxPieceW);

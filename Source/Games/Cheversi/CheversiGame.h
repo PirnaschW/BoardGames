@@ -18,7 +18,7 @@ namespace Cheversi
   {
 
   public:
-    CheversiPosition(VariantCode c, const PieceMapP& p, const Dimensions& d) noexcept;
+    CheversiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
     virtual MainPosition* Clone(void) const noexcept override { return new CheversiPosition(*this); }
     virtual void GetAllMoves(void) const noexcept;              // generate all moves and save list
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
@@ -32,7 +32,7 @@ namespace Cheversi
     CheversiGame(void) = delete;
 
   public:
-    CheversiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CheversiPosition(v.c, m, d), new MainLayout(d)) {}
+    CheversiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CheversiPosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
