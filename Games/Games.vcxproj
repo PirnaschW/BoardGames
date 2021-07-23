@@ -197,6 +197,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Games.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\Source\Games\Brainking.cpp" />
+    <ClCompile Include="..\Source\Games\Chess\ChessGame.cpp" />
     <ClCompile Include="..\Source\Games\Dispatch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Games.h</PrecompiledHeaderFile>
@@ -317,16 +318,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Games.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\Source\Games\Massacre Chess\MCGame.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Games.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Games.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Games.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Games.h</PrecompiledHeaderFile>
-    </ClCompile>
     <ClCompile Include="..\Source\Games\Shogi\ShogiGame.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Games.h</PrecompiledHeaderFile>
@@ -373,6 +364,7 @@
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxGame.h" />
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxResource.h" />
     <ClInclude Include="..\Source\Games\BrainKing.h" />
+    <ClInclude Include="..\Source\Games\Chess\ChessResource.h" />
     <ClInclude Include="..\Source\Games\Dispatch.h" />
     <ClInclude Include="..\Source\Games\Enum.h" />
     <ClInclude Include="..\Source\Games\Cam\CamGame.h" />
@@ -395,8 +387,7 @@
     <ClInclude Include="..\Source\Games\Logik\LogikGame.h" />
     <ClInclude Include="..\Source\Games\Logik\LogikResource.h" />
     <ClInclude Include="..\Source\Games\Logik\res\LogikResource.h" />
-    <ClInclude Include="..\Source\Games\Massacre Chess\MCGame.h" />
-    <ClInclude Include="..\Source\Games\Massacre Chess\MCResource.h" />
+    <ClInclude Include="..\Source\Games\Massacre Chess\ChessGame.h" />
     <ClInclude Include="..\Source\Games\Shogi\ShogiGame.h" />
     <ClInclude Include="..\Source\Games\Shogi\ShogiResource.h" />
     <ClInclude Include="..\Source\Games\Tank Battle\TankBGame.h" />
@@ -417,7 +408,7 @@
     <None Include="..\Source\Games\Knight Fight\res\KnightF.rc2" />
     <None Include="..\Source\Games\LoA\res\LoA.rc2" />
     <None Include="..\Source\Games\Logik\res\Logik.rc2" />
-    <None Include="..\Source\Games\Massacre Chess\res\Massacre Chess.rc2" />
+    <None Include="..\Source\Games\Massacre Chess\res\Chess.rc2" />
     <None Include="..\Source\Games\Shogi\res\Shogi.rc2" />
     <None Include="..\Source\Games\Tank Battle\res\TankB.rc2" />
     <None Include="..\Source\Games\Template\res\Template.rc2" />
@@ -481,7 +472,7 @@
     <Image Include="..\Source\Games\Logik\res\LogikPegBf.bmp" />
     <Image Include="..\Source\Games\Logik\res\LogikPegW.bmp" />
     <Image Include="..\Source\Games\Logik\res\LogikPegWf.bmp" />
-    <Image Include="..\Source\Games\Massacre Chess\res\Massacre ChessDoc.ico" />
+    <Image Include="..\Source\Games\Massacre Chess\res\ChessDoc.ico" />
     <Image Include="..\Source\Games\Shogi\res\FullShogiDoc.ico" />
     <Image Include="..\Source\Games\Shogi\res\MiniShogiDoc.ico" />
     <Image Include="..\Source\Games\Shogi\res\Shogi_BBP_L.bmp" />

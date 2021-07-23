@@ -103,7 +103,7 @@ namespace BoardGamesBK
 
       { 102, IDR_GAMETYPE_LOGIK,     '\0',  8,  8 },  // Logik
 
-      { 128, IDR_GAMETYPE_MCHESS,    '\0',  8,  8 },  // Massacre Chess
+      { 128, IDR_GAMETYPE_CHESS,    '\0',  8,  8 },  // Chess
       // TODO: variants for Shogi
       {  69, IDR_GAMETYPE_SHOGI,     '\0',  8,  8 },  // Japanese Chess
       {  91, IDR_GAMETYPE_SHOGI,     'M',   8,  8 },  // Minishogi

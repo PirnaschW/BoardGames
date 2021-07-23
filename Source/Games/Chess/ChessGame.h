@@ -1,6 +1,6 @@
 
 
-namespace MassacreChess
+namespace Chess
 {
 
   // Display Dimensions
@@ -15,11 +15,11 @@ namespace MassacreChess
 
   using namespace BoardGamesCore;
 
-  class MCPosition : public MainPosition
+  class ChessPosition : public MainPosition
   {
   public:
-    MCPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
-    virtual MainPosition* Clone(void) const noexcept override { return new MCPosition(*this); }
+    ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    virtual MainPosition* Clone(void) const noexcept override { return new ChessPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual unsigned int GetMoveCountFactor(void) const noexcept override { return 1000; }
 
@@ -28,13 +28,13 @@ namespace MassacreChess
     virtual bool PlaceRandomly(const Piece& p);
   };
 
-  class MCGame : public Game
+  class ChessGame : public Game
   {
   private:
-    MCGame(void) = delete;
+    ChessGame(void) = delete;
 
   public:
-    MCGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new MCPosition(v, m, d), new MainLayout(d)) {}
+    ChessGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new ChessPosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

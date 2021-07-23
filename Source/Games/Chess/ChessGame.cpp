@@ -1,10 +1,10 @@
 #include "Games.h"
 
-#include "MCGame.h"
+#include "ChessGame.h"
 
-namespace MassacreChess
+namespace Chess
 {
-  MCPosition::MCPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
+  ChessPosition::ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
   {
     for (Coordinate z = 0; z < d[0].xCount_*d[0].yCount_ / 8; z++)
     {
@@ -19,7 +19,7 @@ namespace MassacreChess
     }
   }
 
-  bool MCPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  bool ChessPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     const Piece& pf = GetPiece(fr);
     assert(pf != Piece::NoTile);                                                // start field must exist
@@ -41,7 +41,7 @@ namespace MassacreChess
     return false;                                                         // don't keep trying this direction
   };
 
-  bool MCPosition::PlaceRandomly(const Piece& p)
+  bool ChessPosition::PlaceRandomly(const Piece& p)
   {
     std::vector<Location> ll;
     for (Coordinate i = 0; i < sizeX_; i++)
@@ -57,7 +57,7 @@ namespace MassacreChess
   }
 
 
-  const VariantList& MCGame::GetVariants(void) noexcept
+  const VariantList& ChessGame::GetVariants(void) noexcept
   {
     static VariantList v{
       { Variant{ nullptr, 'A', 8, 8, 2, 20 } },
@@ -65,7 +65,7 @@ namespace MassacreChess
     return v;
   }
 
-  const PieceMapP& MCGame::GetPieces(const VariantChosen& v) noexcept
+  const PieceMapP& ChessGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Add(CorePiece::WQ);
@@ -80,7 +80,7 @@ namespace MassacreChess
   }
 
 
-  const Dimensions MCGame::GetDimensions(const VariantChosen& v) noexcept
+  const Dimensions ChessGame::GetDimensions(const VariantChosen& v) noexcept
   {
     Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
