@@ -24,34 +24,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Source\Core\res\bbl.bmp" />
-    <Image Include="..\Source\Core\res\bbs.bmp" />
-    <Image Include="..\Source\Core\res\bkl.bmp" />
-    <Image Include="..\Source\Core\res\bks.bmp" />
-    <Image Include="..\Source\Core\res\bnl.bmp" />
-    <Image Include="..\Source\Core\res\bns.bmp" />
-    <Image Include="..\Source\Core\res\bpl.bmp" />
-    <Image Include="..\Source\Core\res\bps.bmp" />
-    <Image Include="..\Source\Core\res\bql.bmp" />
-    <Image Include="..\Source\Core\res\bqs.bmp" />
-    <Image Include="..\Source\Core\res\brl.bmp" />
-    <Image Include="..\Source\Core\res\brs.bmp" />
-    <Image Include="..\Source\Core\res\bcl.bmp" />
-    <Image Include="..\Source\Core\res\bcs.bmp" />
-    <Image Include="..\Source\Core\res\wcl.bmp" />
-    <Image Include="..\Source\Core\res\wcs.bmp" />
-    <Image Include="..\Source\Core\res\wbl.bmp" />
-    <Image Include="..\Source\Core\res\wbs.bmp" />
-    <Image Include="..\Source\Core\res\wkl.bmp" />
-    <Image Include="..\Source\Core\res\wks.bmp" />
-    <Image Include="..\Source\Core\res\wnl.bmp" />
-    <Image Include="..\Source\Core\res\wns.bmp" />
-    <Image Include="..\Source\Core\res\wpl.bmp" />
-    <Image Include="..\Source\Core\res\wps.bmp" />
-    <Image Include="..\Source\Core\res\wql.bmp" />
-    <Image Include="..\Source\Core\res\wqs.bmp" />
-    <Image Include="..\Source\Core\res\wrl.bmp" />
-    <Image Include="..\Source\Core\res\wrs.bmp" />
+    <Image Include="..\Source\Core\res\b0l.bmp" />
+    <Image Include="..\Source\Core\res\b0s.bmp" />
+    <Image Include="..\Source\Core\res\w0l.bmp" />
+    <Image Include="..\Source\Core\res\w0s.bmp" />
     <Image Include="..\Source\Core\res\xxd.bmp" />
     <Image Include="..\Source\Core\res\xxl.bmp" />
     <Image Include="..\Source\Core\res\xxs.bmp" />

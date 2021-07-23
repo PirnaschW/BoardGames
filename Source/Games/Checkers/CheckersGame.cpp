@@ -174,24 +174,24 @@ namespace Checkers
   const VariantList& CheckersGame::GetVariants(void) noexcept
   {
     static VariantList v{
-      { Variant{ "Checkers",               Checkers::Standard     ,   8,  8,  8,  8 } },
-      { Variant{ "International Checkers", Checkers::International,  10, 10, 10, 10 } },
-      { Variant{ "Brazilian Checkers",     Checkers::Brazilian    ,   8,  8,  8,  8 } },
-      { Variant{ "Canadian Checkers",      Checkers::Canadian     ,  12, 12, 12, 12 } },
-      { Variant{ "Czech Checkers",         Checkers::Czech        ,   8,  8,  8,  8 } },
-      { Variant{ "Italian Checkers",       Checkers::Italian      ,   8,  8,  8,  8 } },
-      { Variant{ "Portuguese Checkers",    Checkers::Portuguese   ,   8,  8,  8,  8 } },
-      { Variant{ "Russian Checkers",       Checkers::Russian      ,   8,  8,  8,  8 } },
-      { Variant{ "Thai Checkers",          Checkers::Thai         ,   8,  8,  8,  8 } },
-      { Variant{ "Turkish Checkers",       Checkers::Turkish      ,   8,  8,  8,  8 } },
-
-      { Variant{ "Anti Checkers",          Checkers::Anti         ,   8,  8,  8,  8 } },
-      { Variant{ "Dameo",                  Checkers::Dameo        ,   8,  8,  8,  8 } },
-      { Variant{ "Corner Checkers",        Checkers::Corner       ,   8,  8,  8,  8 } },
-      { Variant{ "Gothic Checkers",        Checkers::Gothic       ,   8,  8,  8,  8 } },
-      { Variant{ "Hawaiian Checkers",      Checkers::Hawaiian     ,   8,  8,  8,  8 } },
-      { Variant{ "One Way Checkers",       Checkers::OneWay       ,   8,  8,  8,  8 } },
-      { Variant{ "Parachute Checkers",     Checkers::Parachute    ,   8,  8,  8,  8 } },
+      { Variant{ "Checkers",               Checkers::Standard     ,   8,  8,  2, 20 } },
+      { Variant{ "International Checkers", Checkers::International,  10, 10         } },
+      { Variant{ "Brazilian Checkers",     Checkers::Brazilian    ,   8,  8         } },
+      { Variant{ "Canadian Checkers",      Checkers::Canadian     ,  12, 12         } },
+      { Variant{ "Czech Checkers",         Checkers::Czech        ,   8,  8         } },
+      { Variant{ "Italian Checkers",       Checkers::Italian      ,   8,  8         } },
+      { Variant{ "Portuguese Checkers",    Checkers::Portuguese   ,   8,  8         } },
+      { Variant{ "Russian Checkers",       Checkers::Russian      ,   8,  8         } },
+      { Variant{ "Thai Checkers",          Checkers::Thai         ,   8,  8         } },
+      { Variant{ "Turkish Checkers",       Checkers::Turkish      ,   8,  8         } },
+                                                                                    
+      { Variant{ "Anti Checkers",          Checkers::Anti         ,   8,  8         } },
+      { Variant{ "Dameo",                  Checkers::Dameo        ,   8,  8         } },
+      { Variant{ "Corner Checkers",        Checkers::Corner       ,   8,  8         } },
+      { Variant{ "Gothic Checkers",        Checkers::Gothic       ,   8,  8         } },
+      { Variant{ "Hawaiian Checkers",      Checkers::Hawaiian     ,   8,  8         } },
+      { Variant{ "One Way Checkers",       Checkers::OneWay       ,   8,  8         } },
+      { Variant{ "Parachute Checkers",     Checkers::Parachute    ,   8,  8         } },
     };
     return v;
   }

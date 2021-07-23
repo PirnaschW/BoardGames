@@ -311,9 +311,6 @@
     <ClInclude Include="..\Source\Games\Logik\LogikResource.h">
       <Filter>Game Logik\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Games\Massacre Chess\ChessGame.h">
-      <Filter>Game Chess\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Games\Shogi\ShogiGame.h">
       <Filter>Game Shogi\Header Files</Filter>
     </ClInclude>
@@ -356,6 +353,9 @@
     <ClInclude Include="..\Source\Games\Chess\ChessResource.h">
       <Filter>Game Chess\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Games\Chess\ChessGame.h">
+      <Filter>Game Chess\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\Games\Cam\Cam.rc2">
@@ -382,9 +382,6 @@
     <None Include="..\Source\Games\Logik\res\Logik.rc2">
       <Filter>Game Logik\Source Files</Filter>
     </None>
-    <None Include="..\Source\Games\Massacre Chess\res\Chess.rc2">
-      <Filter>Game Chess\Source Files</Filter>
-    </None>
     <None Include="..\Source\Games\Shogi\res\Shogi.rc2">
       <Filter>Game Shogi\Source Files</Filter>
     </None>
@@ -402,6 +399,9 @@
     </None>
     <None Include="..\Source\Games\Checkers\Checkers.rc2">
       <Filter>Game Checkers\Source Files</Filter>
+    </None>
+    <None Include="..\Source\Games\Chess\Chess.rc2">
+      <Filter>Game Chess\Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -749,6 +749,114 @@
     </Image>
     <Image Include="..\Source\Games\Checkers\res\CheckersWPara.bmp">
       <Filter>Game Checkers\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bal.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bas.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bbl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bbs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bcl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bcs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bkl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bks.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bml.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bms.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bnl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bns.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bpl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bps.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bql.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\bqs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\brl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\brs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wal.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\was.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wbl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wbs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wcl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wcs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wkl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wks.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wml.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wms.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wnl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wns.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wpl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wps.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wql.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wqs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wrl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\wrs.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

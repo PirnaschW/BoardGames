@@ -14,78 +14,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Source\Core\res\bbl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bbs.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bkl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bks.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bnl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bns.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bpl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bps.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bql.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\bqs.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\brl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\brs.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wbl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wbs.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wkl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wks.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wnl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wns.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wpl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wps.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wql.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wqs.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wrl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Core\res\wrs.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="..\Source\Core\res\xxd.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -95,16 +23,16 @@
     <Image Include="..\Source\Core\res\xxs.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\Source\Core\res\bcl.bmp">
+    <Image Include="..\Source\Core\res\b0l.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\Source\Core\res\bcs.bmp">
+    <Image Include="..\Source\Core\res\b0s.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\Source\Core\res\wcl.bmp">
+    <Image Include="..\Source\Core\res\w0l.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\Source\Core\res\wcs.bmp">
+    <Image Include="..\Source\Core\res\w0s.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

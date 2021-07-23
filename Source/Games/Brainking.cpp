@@ -4,8 +4,9 @@
 
 // needed for the game-specific Pieces / Variants:
 #include "Ataxx/AtaxxGame.h"        
-#include "CFour/CFourGame.h"        
-#include "Checkers/CheckersGame.h"  
+#include "CFour/CFourGame.h"
+#include "Checkers/CheckersGame.h"
+#include "Chess/ChessGame.h"
 #include "Espionage/EspionageGame.h"
 #include "Hasami/HasamiGame.h"      
 #include "Shogi/ShogiGame.h"        
@@ -49,42 +50,44 @@ namespace BoardGamesBK
       { 121, IDR_GAMETYPE_CHECKERS,  Checkers::Portuguese,      8,  8 },  // Portuguese Checkers
       { 122, IDR_GAMETYPE_CHECKERS,  Checkers::Italian,         8,  8 },  // Italian Checkers
       { 123, IDR_GAMETYPE_CHECKERS,  Checkers::Dameo,           8,  8 },  // Dameo
-      // TODO: variants for Chess
-      {   1, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Chess
-      {   2, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Corner Chess
-      {   3, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Fortress Chess
-      {   4, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Horde Chess
-      {   6, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Loop Chess
-      {  17, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Anti Chess
-      {  18, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Extinction Chess
-      {  21, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Maharajah Chess
-      {  22, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Three Checks Chess
-      {  27, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dark Chess
-      {  28, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Atomic Chess
-      {  40, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Janus Chess
-      {  41, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Embassy Chess
-      {  47, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Screen Chess
-      {  48, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Crazy Screen Chess
-      {  57, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Cylinder Chess
-      {  58, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Amazon Chess
-      {  59, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Berolina Chess
-      {  67, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Fischer Random Chess
-      {  70, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Legan Chess
-      {  71, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Knight Relay Chess
-      {  74, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Grand Chess
-      {  75, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Capablanca Random Chess
-      {  76, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Los Alamos Chess
-      {  85, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Ambiguous Chess
-      {  95, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dice Chess
-      {  98, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Recycle Chess
-      { 100, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Ice Age Chess
-      { 104, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Behemoth Chess
-      { 113, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Cheshire Cat Chess
-      { 116, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Knightmate Chess
-      { 125, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Racing Kings
-      { 127, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Dice Chess 10x10
+      // variants for Chess
+      {   1, IDR_GAMETYPE_CHESS,     Chess::Standard,           8,  8 },  // Chess
+      {   2, IDR_GAMETYPE_CHESS,     Chess::Corner,             8,  8 },  // Corner Chess
+      {   3, IDR_GAMETYPE_CHESS,     Chess::Fortress,           8,  8 },  // Fortress Chess
+      {   4, IDR_GAMETYPE_CHESS,     Chess::Horde,              8,  8 },  // Horde Chess
+      {   6, IDR_GAMETYPE_CHESS,     Chess::Loop,               8,  8 },  // Loop Chess
+      {  17, IDR_GAMETYPE_CHESS,     Chess::Anti,               8,  8 },  // Anti Chess
+      {  18, IDR_GAMETYPE_CHESS,     Chess::Extinction,         8,  8 },  // Extinction Chess
+      {  21, IDR_GAMETYPE_CHESS,     Chess::Maharajah,          8,  8 },  // Maharajah Chess
+      {  22, IDR_GAMETYPE_CHESS,     Chess::ThreeChecks,        8,  8 },  // Three Checks Chess
+      {  27, IDR_GAMETYPE_CHESS,     Chess::Dark,               8,  8 },  // Dark Chess
+      {  28, IDR_GAMETYPE_CHESS,     Chess::Atomic,             8,  8 },  // Atomic Chess
+      {  40, IDR_GAMETYPE_CHESS,     Chess::Janus,             10,  8 },  // Janus Chess
+      {  41, IDR_GAMETYPE_CHESS,     Chess::Embassy,           10,  8 },  // Embassy Chess
+      {  47, IDR_GAMETYPE_CHESS,     Chess::Screen,             8,  8 },  // Screen Chess
+      {  48, IDR_GAMETYPE_CHESS,     Chess::CrazyScreen,        8,  8 },  // Crazy Screen Chess
+      {  57, IDR_GAMETYPE_CHESS,     Chess::Cylinder,           8,  8 },  // Cylinder Chess
+      {  58, IDR_GAMETYPE_CHESS,     Chess::Amazons,            8,  8 },  // Amazon Chess
+      {  59, IDR_GAMETYPE_CHESS,     Chess::Berolina,           8,  8 },  // Berolina Chess
+      {  67, IDR_GAMETYPE_CHESS,     Chess::FischerRandom,      8,  8 },  // Fischer Random Chess
+      {  70, IDR_GAMETYPE_CHESS,     Chess::Legan,              8,  8 },  // Legan Chess
+      {  71, IDR_GAMETYPE_CHESS,     Chess::KnightRelay,        8,  8 },  // Knight Relay Chess
+      {  74, IDR_GAMETYPE_CHESS,     Chess::Grand,             10, 10 },  // Grand Chess
+      {  75, IDR_GAMETYPE_CHESS,     Chess::CapablancaRandom,  10,  8 },  // Capablanca Random Chess
+      {  76, IDR_GAMETYPE_CHESS,     Chess::LosAlamos,          6,  6 },  // Los Alamos Chess
+      {  85, IDR_GAMETYPE_CHESS,     Chess::Ambiguous,          8,  8 },  // Ambiguous Chess
+      {  93, IDR_GAMETYPE_CHESS,     Chess::Cheversi,           8,  8 },  // Cheversi
+      {  95, IDR_GAMETYPE_CHESS,     Chess::Dice,               8,  8 },  // Dice Chess
+      {  98, IDR_GAMETYPE_CHESS,     Chess::Recycle,            8,  8 },  // Recycle Chess
+      { 100, IDR_GAMETYPE_CHESS,     Chess::IceAge,             8,  8 },  // Ice Age Chess
+      { 104, IDR_GAMETYPE_CHESS,     Chess::Behemoth,           8,  8 },  // Behemoth Chess
+      { 113, IDR_GAMETYPE_CHESS,     Chess::CheshireCat,        8,  8 },  // Cheshire Cat Chess
+      { 116, IDR_GAMETYPE_CHESS,     Chess::Knightmate,         8,  8 },  // Knightmate Chess
+      { 125, IDR_GAMETYPE_CHESS,     Chess::RacingKings,        8,  8 },  // Racing Kings
+      { 127, IDR_GAMETYPE_CHESS,     Chess::Dice10x10,         10, 10 },  // Dice Chess 10x10
+      { 128, IDR_GAMETYPE_CHESS,     Chess::Massacre,           8,  8 },  // Massacre Chess
 
-      {  93, IDR_GAMETYPE_CHEVERSI,  '\0',  8,  8 },  // Cheversi
+      //{  93, IDR_GAMETYPE_CHEVERSI,  '\0',  8,  8 },  // Cheversi
       // TODO: variants for Espionage
       {  55, IDR_GAMETYPE_ESPIONAGE, '\0', 10, 10 },  // Espionage
       {  62, IDR_GAMETYPE_ESPIONAGE, '\0',  8,  8 },  // Small Espionage
@@ -192,18 +195,18 @@ namespace BoardGamesBK
       { R"(back/puup25)",             Piece::NoPiece },                      // backgammon: purple, up(per) row - ignore for now
       { R"(line4/w35)",               CorePiece::WC },
       { R"(line4/b35)",               CorePiece::BC },
-      { R"(chess/wk35)",              CorePiece::WK },
-      { R"(chess/wq35)",              CorePiece::WQ },
-      { R"(chess/wr35)",              CorePiece::WR },
-      { R"(chess/wb35)",              CorePiece::WB },
-      { R"(chess/wn35)",              CorePiece::WN },
-      { R"(chess/wp35)",              CorePiece::WP },
-      { R"(chess/bk35)",              CorePiece::BK },
-      { R"(chess/bq35)",              CorePiece::BQ },
-      { R"(chess/br35)",              CorePiece::BR },
-      { R"(chess/bb35)",              CorePiece::BB },
-      { R"(chess/bn35)",              CorePiece::BN },
-      { R"(chess/bp35)",              CorePiece::BP },
+      { R"(chess/wk35)",              Chess::ChessPiece::WK },
+      { R"(chess/wq35)",              Chess::ChessPiece::WQ },
+      { R"(chess/wr35)",              Chess::ChessPiece::WR },
+      { R"(chess/wb35)",              Chess::ChessPiece::WB },
+      { R"(chess/wn35)",              Chess::ChessPiece::WN },
+      { R"(chess/wp35)",              Chess::ChessPiece::WP },
+      { R"(chess/bk35)",              Chess::ChessPiece::BK },
+      { R"(chess/bq35)",              Chess::ChessPiece::BQ },
+      { R"(chess/br35)",              Chess::ChessPiece::BR },
+      { R"(chess/bb35)",              Chess::ChessPiece::BB },
+      { R"(chess/bn35)",              Chess::ChessPiece::BN },
+      { R"(chess/bp35)",              Chess::ChessPiece::BP },
       { R"(chess/wk1)",               Piece::NoPiece },                      // taken pieces - ignore for now
       { R"(chess/wq1)",               Piece::NoPiece },                      // taken pieces - ignore for now
       { R"(chess/wr1)",               Piece::NoPiece },                      // taken pieces - ignore for now

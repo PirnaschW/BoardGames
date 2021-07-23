@@ -1,5 +1,7 @@
 #include "Unit Test - Core.h"
 
+#include "../../../Source/Games/Chess/ChessGame.h"
+
 namespace Microsoft
 {
   namespace VisualStudio
@@ -103,19 +105,19 @@ namespace UnitTestCore
       Location l2{ BoardPart::Main, 3U, 2U };
       Location l3{ BoardPart::Main, 4U, 1U };
 
-      ActionP a1{ std::make_shared<ActionLift>(l1,CorePiece::WQ) };
+      ActionP a1{ std::make_shared<ActionLift>(l1,Chess::ChessPiece::WQ) };
       ActionP a2{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a3{ std::make_shared<ActionDrop>(l3,CorePiece::WQ) };
-      ActionP a4{ std::make_shared<ActionLift>(l1,CorePiece::WQ) };
+      ActionP a3{ std::make_shared<ActionDrop>(l3,Chess::ChessPiece::WQ) };
+      ActionP a4{ std::make_shared<ActionLift>(l1,Chess::ChessPiece::WQ) };
       ActionP a5{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a6{ std::make_shared<ActionDrop>(l3,CorePiece::WQ) };
+      ActionP a6{ std::make_shared<ActionDrop>(l3,Chess::ChessPiece::WQ) };
 
       Assert::IsTrue(a1->GetLocation() == l1);
       Assert::IsTrue(a2->GetLocation() == l2);
       Assert::IsTrue(a3->GetLocation() == l3);
-      Assert::IsTrue(a1->GetPiece() == CorePiece::WQ);
+      Assert::IsTrue(a1->GetPiece() == Chess::ChessPiece::WQ);
       Assert::IsTrue(a2->GetPiece() == Piece::NoPiece);
-      Assert::IsTrue(a3->GetPiece() == CorePiece::WQ);
+      Assert::IsTrue(a3->GetPiece() == Chess::ChessPiece::WQ);
 
       Assert::IsFalse(a1->IsJump());
       Assert::IsTrue(a2->IsJump());
@@ -208,16 +210,16 @@ namespace UnitTestCore
       Location l2{ BoardPart::Main, 3U, 2U };
       Location l3{ BoardPart::Main, 4U, 1U };
 
-      ActionP a11{ std::make_shared<ActionLift>(l1,CorePiece::WQ) };
+      ActionP a11{ std::make_shared<ActionLift>(l1,Chess::ChessPiece::WQ) };
       ActionP a12{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a13{ std::make_shared<ActionDrop>(l3,CorePiece::WQ) };
+      ActionP a13{ std::make_shared<ActionDrop>(l3,Chess::ChessPiece::WQ) };
 
-      ActionP a21{ std::make_shared<ActionLift>(l1,CorePiece::WQ) };
-      ActionP a22{ std::make_shared<ActionDrop>(l3,CorePiece::WQ) };
+      ActionP a21{ std::make_shared<ActionLift>(l1,Chess::ChessPiece::WQ) };
+      ActionP a22{ std::make_shared<ActionDrop>(l3,Chess::ChessPiece::WQ) };
 
-      ActionP a31{ std::make_shared<ActionLift>(l1,CorePiece::WQ) };
+      ActionP a31{ std::make_shared<ActionLift>(l1,Chess::ChessPiece::WQ) };
       ActionP a32{ std::make_shared<ActionJump>(l2,Piece::NoPiece) };
-      ActionP a33{ std::make_shared<ActionDrop>(l3,CorePiece::WQ) };
+      ActionP a33{ std::make_shared<ActionDrop>(l3,Chess::ChessPiece::WQ) };
 
       Actions a1{};
       a1.push_back(a11);
@@ -472,8 +474,8 @@ namespace UnitTestCore
     {
       const PieceMapP& map = std::make_shared<PieceMap>();
       map->Empty();
-      map->Add(CorePiece::WP);
-      map->Add(CorePiece::BP);
+      map->Add(Chess::ChessPiece::WP);
+      map->Add(Chess::ChessPiece::BP);
       map->Add(Piece::NoPiece);
 
       constexpr unsigned int FieldSizeX = 50;   // pixels per tile
@@ -514,7 +516,7 @@ namespace UnitTestCore
         Assert::IsTrue(v == PositionValue(0));
 
         // values are calculated: directions * ( free open ends + free open opposite ends ) + 1-chains + 2-chains + ...
-        p.SetPiece(Location{ BoardPart::Main,7,7 }, CorePiece::WP);
+        p.SetPiece(Location{ BoardPart::Main,7,7 }, Chess::ChessPiece::WP);
         v = p.EvaluateChainLengths(3);
         Assert::IsTrue(v == PositionValue(96)); // 8 * (1 + 1) + 8 * 10
         v = p.EvaluateChainLengths(4);
@@ -522,7 +524,7 @@ namespace UnitTestCore
         v = p.EvaluateChainLengths(5);
         Assert::IsTrue(v == PositionValue(96)); // 8 * (1 + 1) + 8 * 10
 
-        p.SetPiece(Location{ BoardPart::Main,6,7 }, CorePiece::WP);
+        p.SetPiece(Location{ BoardPart::Main,6,7 }, Chess::ChessPiece::WP);
         v = p.EvaluateChainLengths(3);
         Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
         v = p.EvaluateChainLengths(4);
@@ -530,7 +532,7 @@ namespace UnitTestCore
         v = p.EvaluateChainLengths(5);
         Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
 
-        p.SetPiece(Location{ BoardPart::Main,8,7 }, CorePiece::WP);
+        p.SetPiece(Location{ BoardPart::Main,8,7 }, Chess::ChessPiece::WP);
         v = p.EvaluateChainLengths(3);
         Assert::IsTrue(v == PositionValue(PositionValue::PValueType::Won));
         v = p.EvaluateChainLengths(4);
@@ -538,7 +540,7 @@ namespace UnitTestCore
         v = p.EvaluateChainLengths(5);
         Assert::IsTrue(v == PositionValue(2220)); // (7+6+7) * (1+1) + 6+6+6 * 10 + 2 * 1000
 
-        p.SetPiece(Location{ BoardPart::Main,5,7 }, CorePiece::WP);
+        p.SetPiece(Location{ BoardPart::Main,5,7 }, Chess::ChessPiece::WP);
         v = p.EvaluateChainLengths(3);
         Assert::IsTrue(v == PositionValue(PositionValue::PValueType::Won));
         v = p.EvaluateChainLengths(4);
@@ -552,8 +554,8 @@ namespace UnitTestCore
         TestPosition p(v_, map, dim);
         PositionValue v(PositionValue::PValueType::Undefined);
 
-        p.SetPiece(Location{ BoardPart::Main,7,7 }, CorePiece::WP);
-        p.SetPiece(Location{ BoardPart::Main,6,7 }, CorePiece::BP);
+        p.SetPiece(Location{ BoardPart::Main,7,7 }, Chess::ChessPiece::WP);
+        p.SetPiece(Location{ BoardPart::Main,6,7 }, Chess::ChessPiece::BP);
         v = p.EvaluateChainLengths(3);
         Assert::IsTrue(v == PositionValue(0)); // symmetry!
         v = p.EvaluateChainLengths(4);
@@ -561,7 +563,7 @@ namespace UnitTestCore
         v = p.EvaluateChainLengths(5);
         Assert::IsTrue(v == PositionValue(0));
 
-        p.SetPiece(Location{ BoardPart::Main,7,6 }, CorePiece::WP);
+        p.SetPiece(Location{ BoardPart::Main,7,6 }, Chess::ChessPiece::WP);
         v = p.EvaluateChainLengths(3);
         Assert::IsTrue(v == PositionValue(252)); // 12 * 2 + 10 * 10 + 2 * 100 - 6 * 2 - 6 * 10
         v = p.EvaluateChainLengths(4);
@@ -569,7 +571,7 @@ namespace UnitTestCore
         v = p.EvaluateChainLengths(5);
         Assert::IsTrue(v == PositionValue(252)); // 12 * 2 + 10 * 10 + 2 * 100 - 6 * 2 - 6 * 10
 
-        p.SetPiece(Location{ BoardPart::Main,6,6 }, CorePiece::BP);
+        p.SetPiece(Location{ BoardPart::Main,6,6 }, Chess::ChessPiece::BP);
         v = p.EvaluateChainLengths(3);
         Assert::IsTrue(v == PositionValue(0)); // symmetry!
         v = p.EvaluateChainLengths(4);

@@ -196,6 +196,9 @@
     <ProjectReference Include="..\..\Core\Core.vcxproj">
       <Project>{7844194a-56a5-4023-8296-3808a889ac6d}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Games\Games.vcxproj">
+      <Project>{080c3877-7574-4a97-83ee-18e0b32889cc}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Util\Util.vcxproj">
       <Project>{afd4c612-6ec5-4d52-bed2-2263914f959e}</Project>
     </ProjectReference>
