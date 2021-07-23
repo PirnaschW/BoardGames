@@ -38,6 +38,22 @@ namespace Checkers
     Dameo         = 'd',
   };
 
+  enum Rule : unsigned int // multi-use rule variants
+  {
+    None                  = 0x0000,                // none of these rules
+    JumpFurther           = 0x0001,                // promoted pieces can jump further than behind opponent's piece
+    BackJump              = 0x0002,                // checkers can jump backwards
+    MaxCapture            = 0x0004,                // must capture the maximum possible number of pieces
+    MaxPromotedCapture    = 0x0008,                // must capture the maximum possible number of promoted pieces
+    PromotedJump          = 0x0010,                // must capture with promoted piece
+    ContinueJumping       = 0x0020,                // checkers can continue jumping after being promoted
+    NoPromotedCapture     = 0x0040,                // checkers cannot capture promoted pieces
+    CapturePromotedFirst  = 0x0080,                // capture promoted pieces first
+    PromoteToQueen        = 0x0100,                // pieces promote to Queens (not Kings)
+  };
+  inline constexpr Rule operator | (Rule a, Rule b) { return static_cast<Rule>(static_cast<unsigned char>(a) | static_cast<unsigned char>(b)); }
+  inline constexpr Rule operator & (Rule a, Rule b) { return static_cast<Rule>(static_cast<unsigned char>(a) & static_cast<unsigned char>(b)); }
+  inline constexpr bool operator >= (Rule rule, Rule test) { return rule & test; }
 
   class Checker final : public Kind
   {
@@ -95,7 +111,7 @@ namespace Checkers
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:
     virtual inline bool IsPromotable(void) const noexcept override { return up_ != this; }          // is this a promotable piece?
-    virtual inline const Piece& Promote(bool /*u*/) const noexcept override { return *up_; }         // promote this piece up/down
+    virtual inline const Piece& Promote(bool /*u*/) const noexcept override { return *up_; }        // promote this piece up/down
   private:
     const CheckersPiece* up_;                                                                       // what this piece promotes up to
 
@@ -116,14 +132,16 @@ namespace Checkers
   public:
     CheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new CheckersPosition(*this); }
+    virtual void SetStartingPosition() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
 // extensions
   public:
     bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept;
-  private:
-    inline bool CanPromote(const Location& l, const Piece& p) const noexcept;
+  protected:
+    virtual bool CanPromote(const Location& l, const Piece& p) const noexcept;
+    virtual Rule GetRule() const noexcept { return PromotedJump; }
   };
 
 
@@ -139,6 +157,5 @@ namespace Checkers
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
   };
-
 
 }

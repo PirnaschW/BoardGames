@@ -55,6 +55,20 @@ namespace Checkers
   }
 
 
+  void CheckersPosition::SetStartingPosition() noexcept
+  {
+    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    {
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        if ((i + j) % 2)
+          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
+        else
+          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+      }
+    }
+  }
+
   bool CheckersPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     const Piece& pf = GetPiece(fr);
@@ -153,7 +167,6 @@ namespace Checkers
 
   bool CheckersPosition::CanPromote(const Location& l, const Piece& p) const noexcept
   {
-    if (p.IsKind(Checkers::Para::ThePara)) return true; // Para can always promotes when jumping
     return (p.IsColor(PieceColor::White) && l.y_ == 0) || (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 1);
   }
 
@@ -210,18 +223,13 @@ namespace Checkers
 
 
   // Testing: use derived classes for different versions
-  class StandardCheckersPosition : public CheckersPosition
-  {
-  public:
-    inline StandardCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
-  };
-
   class PortugueseCheckersPosition : public CheckersPosition
   {
   public:
     inline PortugueseCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | MaxPromotedCapture; }
   };
 
   class CornerCheckersPosition : public CheckersPosition
@@ -229,6 +237,16 @@ namespace Checkers
   public:
     inline CornerCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | PromotedJump; }
+    bool CanPromote(const Location& l, const Piece& p) const noexcept override
+    {
+      return
+        (p.IsColor(PieceColor::White) && l.y_ == 0 && l.x_ == 1) ||
+        (p.IsColor(PieceColor::White) && l.y_ == 1 && l.x_ == 0) ||
+        (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 1 && l.x_ == sizeX_ - 2) ||
+        (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 2 && l.x_ == sizeX_ - 1);
+    }
   };
 
   class ThaiCheckersPosition : public CheckersPosition
@@ -236,6 +254,8 @@ namespace Checkers
   public:
     inline ThaiCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return PromoteToQueen; }
   };
 
   class TurkishCheckersPosition : public CheckersPosition
@@ -243,6 +263,8 @@ namespace Checkers
   public:
     inline TurkishCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther; }
   };
 
   class DameoCheckersPosition : public CheckersPosition
@@ -250,6 +272,8 @@ namespace Checkers
   public:
     inline DameoCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | ContinueJumping; }
   };
 
   class GothicCheckersPosition : public CheckersPosition
@@ -257,6 +281,8 @@ namespace Checkers
   public:
     inline GothicCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return PromotedJump; }
   };
 
   class HawaiianCheckersPosition : public CheckersPosition
@@ -264,6 +290,8 @@ namespace Checkers
   public:
     inline HawaiianCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return BackJump; }
   };
 
   class OneWayCheckersPosition : public CheckersPosition
@@ -271,6 +299,8 @@ namespace Checkers
   public:
     inline OneWayCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return MaxCapture; }
   };
 
   class ParachuteCheckersPosition : public CheckersPosition
@@ -278,23 +308,15 @@ namespace Checkers
   public:
     inline ParachuteCheckersPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CheckersPosition(v, p, d) {}
     void SetStartingPosition() noexcept override;
+  protected:
+    Rule GetRule() const noexcept override { return BackJump; }
+    bool CanPromote(const Location& l, const Piece& p) const noexcept override
+    {
+      if (p.IsKind(Checkers::Para::ThePara)) return true; // Para can always promotes (to normal piece) when jumping
+      return CheckersPosition::CanPromote(l, p);
+    }
   };
 
-
-  
-  void StandardCheckersPosition::SetStartingPosition() noexcept
-  {
-    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-        else
-          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-      }
-    }
-  }
 
   void PortugueseCheckersPosition::SetStartingPosition() noexcept
   {
@@ -436,15 +458,15 @@ namespace Checkers
 
   MainPosition* CheckersGame::GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept
   {
-    switch (v.c)
+    switch (static_cast<CheckerVariant>(v.c))
     {
-      case CheckerVariant::Standard:      [[fallthrough]];                                    // Checkers                
       case CheckerVariant::International: [[fallthrough]];                                    // International Checkers
       case CheckerVariant::Brazilian:     [[fallthrough]];                                    // Brazilian Checkers
       case CheckerVariant::Canadian:      [[fallthrough]];                                    // Canadian Checkers
       case CheckerVariant::Czech:         [[fallthrough]];                                    // Czech Checkers
       case CheckerVariant::Russian:       [[fallthrough]];                                    // Russian Checkers
-      case CheckerVariant::Anti:          return new StandardCheckersPosition  (v, m, d);     // Anti Checkers
+      case CheckerVariant::Anti:          [[fallthrough]];                                    // Anti Checkers
+      case CheckerVariant::Standard:      return new CheckersPosition          (v, m, d);     // Checkers
 
       case CheckerVariant::Italian:       [[fallthrough]];                                    // Italian Checkers
       case CheckerVariant::Portuguese:    return new PortugueseCheckersPosition(v, m, d);     // Portuguese Checkers

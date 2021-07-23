@@ -19,36 +19,36 @@ namespace BoardGamesBK
 
     static constexpr GameData map[]{
       {   0, IDR_GAMETYPE_XXXXX,     '\0',  0,  0 },  // dummy for "unknown game type"
-      // TODO: variants for Ataxx
+      // variants for Ataxx
       {  89, IDR_GAMETYPE_ATAXX,     Ataxx::Assimilation,     8,  8 },  // Assimilation
       {  90, IDR_GAMETYPE_ATAXX,     Ataxx::Ataxx,            8,  8 },  // Ataxx
-      // TODO: variants for Cam
+      // variants for Cam
       { 124, IDR_GAMETYPE_CAMELOT,   'F',  12, 16 },  // Camelot
       { 126, IDR_GAMETYPE_CAMELOT,   'M',   7, 13 },  // Cam
-
-      {  13, IDR_GAMETYPE_CFOUR,     CFour::Classic,          8,  8 },  // Line4
-      {  14, IDR_GAMETYPE_CFOUR,     CFour::Anti,             8,  8 },  // Anti Line4
-      {  15, IDR_GAMETYPE_CFOUR,     CFour::Linetris,         8,  8 },  // Linetris
-      {  16, IDR_GAMETYPE_CFOUR,     CFour::Spider,           8,  8 },  // Spider Line4
-      {  61, IDR_GAMETYPE_CFOUR,     CFour::SpiderLinetris,   8,  8 },  // Spider Linetris
-      // TODO: variants for Checkers
-      {   7, IDR_GAMETYPE_CHECKERS,  Checkers::Standard     ,   8,  8 },  // Checkers                         
-      {   8, IDR_GAMETYPE_CHECKERS,  Checkers::Anti         ,   8,  8 },  // Anti Checkers
-      {  29, IDR_GAMETYPE_CHECKERS,  Checkers::Czech        ,   8,  8 },  // Czech Checkers
-      {  30, IDR_GAMETYPE_CHECKERS,  Checkers::Corner       ,   8,  8 },  // Corner Checkers
-      {  31, IDR_GAMETYPE_CHECKERS,  Checkers::OneWay       ,   8,  8 },  // One Way Checkers
-      {  32, IDR_GAMETYPE_CHECKERS,  Checkers::Parachute    ,   8,  8 },  // Parachute Checkers
-      {  35, IDR_GAMETYPE_CHECKERS,  Checkers::Gothic       ,   8,  8 },  // Gothic Checkers
-      {  36, IDR_GAMETYPE_CHECKERS,  Checkers::Turkish      ,   8,  8 },  // Turkish Checkers
-      {  94, IDR_GAMETYPE_CHECKERS,  Checkers::Hawaiian     ,   8,  8 },  // Hawaiian Checkers
+      // variants for Connect Four
+      {  13, IDR_GAMETYPE_CFOUR,     CFour::Classic,            8,  8 },  // Line4
+      {  14, IDR_GAMETYPE_CFOUR,     CFour::Anti,               8,  8 },  // Anti Line4
+      {  15, IDR_GAMETYPE_CFOUR,     CFour::Linetris,           8,  8 },  // Linetris
+      {  16, IDR_GAMETYPE_CFOUR,     CFour::Spider,             8,  8 },  // Spider Line4
+      {  61, IDR_GAMETYPE_CFOUR,     CFour::SpiderLinetris,     8,  8 },  // Spider Linetris
+      // variants for Checkers
+      {   7, IDR_GAMETYPE_CHECKERS,  Checkers::Standard,        8,  8 },  // Checkers                         
+      {   8, IDR_GAMETYPE_CHECKERS,  Checkers::Anti,            8,  8 },  // Anti Checkers
+      {  29, IDR_GAMETYPE_CHECKERS,  Checkers::Czech,           8,  8 },  // Czech Checkers
+      {  30, IDR_GAMETYPE_CHECKERS,  Checkers::Corner,          8,  8 },  // Corner Checkers
+      {  31, IDR_GAMETYPE_CHECKERS,  Checkers::OneWay,          8,  8 },  // One Way Checkers
+      {  32, IDR_GAMETYPE_CHECKERS,  Checkers::Parachute,       8,  8 },  // Parachute Checkers
+      {  35, IDR_GAMETYPE_CHECKERS,  Checkers::Gothic,          8,  8 },  // Gothic Checkers
+      {  36, IDR_GAMETYPE_CHECKERS,  Checkers::Turkish,         8,  8 },  // Turkish Checkers
+      {  94, IDR_GAMETYPE_CHECKERS,  Checkers::Hawaiian,        8,  8 },  // Hawaiian Checkers
       { 115, IDR_GAMETYPE_CHECKERS,  Checkers::International,  10, 10 },  // International Checkers
-      { 117, IDR_GAMETYPE_CHECKERS,  Checkers::Russian      ,   8,  8 },  // Russian Checkers
-      { 118, IDR_GAMETYPE_CHECKERS,  Checkers::Canadian     ,  12, 12 },  // Canadian Checkers
-      { 119, IDR_GAMETYPE_CHECKERS,  Checkers::Thai         ,   8,  8 },  // Thai Checkers
-      { 120, IDR_GAMETYPE_CHECKERS,  Checkers::Brazilian    ,   8,  8 },  // Brazilian Checkers
-      { 121, IDR_GAMETYPE_CHECKERS,  Checkers::Portuguese   ,   8,  8 },  // Portuguese Checkers
-      { 122, IDR_GAMETYPE_CHECKERS,  Checkers::Italian      ,   8,  8 },  // Italian Checkers
-      { 123, IDR_GAMETYPE_CHECKERS,  Checkers::Dameo        ,   8,  8 },  // Dameo
+      { 117, IDR_GAMETYPE_CHECKERS,  Checkers::Russian,         8,  8 },  // Russian Checkers
+      { 118, IDR_GAMETYPE_CHECKERS,  Checkers::Canadian,       12, 12 },  // Canadian Checkers
+      { 119, IDR_GAMETYPE_CHECKERS,  Checkers::Thai,            8,  8 },  // Thai Checkers
+      { 120, IDR_GAMETYPE_CHECKERS,  Checkers::Brazilian,       8,  8 },  // Brazilian Checkers
+      { 121, IDR_GAMETYPE_CHECKERS,  Checkers::Portuguese,      8,  8 },  // Portuguese Checkers
+      { 122, IDR_GAMETYPE_CHECKERS,  Checkers::Italian,         8,  8 },  // Italian Checkers
+      { 123, IDR_GAMETYPE_CHECKERS,  Checkers::Dameo,           8,  8 },  // Dameo
       // TODO: variants for Chess
       {   1, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Chess
       {   2, IDR_GAMETYPE_CHESS,     '\0',  8,  8 },  // Corner Chess
