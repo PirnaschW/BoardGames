@@ -14,10 +14,4 @@ namespace BoardGamesCore
   };
   static_assert(std::is_trivial<VariantChosen>::value, "must be a trivial structure");
 
-  struct GameData {                    // collection of all data that defines a game: (BK ID), internal ID, variant code, board size
-  public:
-    int tp;
-    VariantChosen v;
-  };
-  static_assert(std::is_trivial<GameData>::value, "must be a trivial structure");
 }

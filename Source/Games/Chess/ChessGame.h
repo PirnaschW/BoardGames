@@ -176,23 +176,22 @@ namespace Chess
     static const ChessPiece WN;  // White Knight
     static const ChessPiece WB;  // White Bishop
     static const ChessPiece WR;  // White Rook 
-    static const ChessPiece WC;  // White Cardinal
-    static const ChessPiece WM;  // White Marshall
+    static const ChessPiece WC;  // White Cardinal = Bishop + Knight (also: Archbishop, Princess, Janus)
+    static const ChessPiece WM;  // White Marshall = Rook + Knight
     static const ChessPiece WQ;  // White Queen
-    static const ChessPiece WA;  // White Amazon
+    static const ChessPiece WA;  // White Amazon   = Queen + Knight
     static const ChessPiece WK;  // White King 
 
     static const ChessPiece BP;  // Black Pawn 
     static const ChessPiece BN;  // Black Knight
     static const ChessPiece BB;  // Black Bishop
     static const ChessPiece BR;  // Black Rook 
-    static const ChessPiece BC;  // Black Cardinal
-    static const ChessPiece BM;  // Black Marshall
+    static const ChessPiece BC;  // Black Cardinal = Bishop + Knight (also: Archbishop, Princess, Janus)
+    static const ChessPiece BM;  // Black Marshall = Rook + Knight
     static const ChessPiece BQ;  // Black Queen
-    static const ChessPiece BA;  // Black Amazon
+    static const ChessPiece BA;  // Black Amazon   = Queen + Knight
     static const ChessPiece BK;  // Black King 
   };
-
 
 
   class ChessPosition : public MainPosition
