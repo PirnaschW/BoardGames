@@ -246,6 +246,12 @@
     <ClCompile Include="..\Source\Games\Chess\ChessGame.cpp">
       <Filter>Game Chess\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Games\Checkers\CheckersVariants.cpp">
+      <Filter>Game Checkers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Games\Chess\ChessVariants.cpp">
+      <Filter>Game Chess\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxGame.h">

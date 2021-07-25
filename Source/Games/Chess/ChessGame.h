@@ -197,23 +197,25 @@ namespace Chess
   class ChessPosition : public MainPosition
   {
   public:
-    ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
     virtual MainPosition* Clone(void) const noexcept override { return new ChessPosition(*this); }
+    virtual void SetStartingPosition() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual unsigned int GetMoveCountFactor(void) const noexcept override { return 1000; }
 
 // extensions
-  private:
-    virtual bool PlaceRandomly(const Piece& p);
+  protected:
+    void SetPawns(Coordinate row, const PieceColor& c) noexcept;
   };
 
   class ChessGame : public Game
   {
   private:
     ChessGame(void) = delete;
+    static MainPosition* GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept;
 
   public:
-    ChessGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new ChessPosition(v, m, d), new MainLayout(d)) {}
+    ChessGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, GetNewPosition(v, m, d), new MainLayout(d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

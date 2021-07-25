@@ -17,25 +17,25 @@ namespace Checkers
 
   enum CheckerVariant : VariantCode   // recognized variants of Checkers
   {
-    Standard      = '\0',
-    International = '*',
+    Standard      = '\0',          // Checkers
+    International = '*',           // International Checkers
+                                        
+    Brazilian     = 'B',           // Brazilian Checkers
+    Canadian      = 'C',           // Canadian Checkers
+    Czech         = 'Z',           // Czech Checkers
+    Italian       = 'I',           // Italian Checkers
+    Portuguese    = 'P',           // Portuguese Checkers
+    Russian       = 'R',           // Russian Checkers
+    Thai          = 'H',           // Thai Checkers
+    Turkish       = 'T',           // Turkish Checkers
 
-    Brazilian     = 'B',
-    Canadian      = 'C',
-    Czech         = 'Z',
-    Italian       = 'I',
-    Portuguese    = 'P',
-    Russian       = 'R',
-    Thai          = 'H',
-    Turkish       = 'T',
-
-    Anti          = 'a',
-    Corner        = 'c',
-    Hawaiian      = 'h',
-    OneWay        = 'o',
-    Parachute     = 'p',
-    Gothic        = 'g',
-    Dameo         = 'd',
+    Anti          = 'a',           // Anti Checkers
+    Corner        = 'c',           // Corner Checkers
+    Hawaiian      = 'h',           // Hawaiian Checkers
+    OneWay        = 'o',           // One Way Checkers
+    Parachute     = 'p',           // Parachute Checkers
+    Gothic        = 'g',           // Gothis Checkers
+    Dameo         = 'd',           // Dameo
   };
 
   enum Rule : unsigned int // multi-use rule variants

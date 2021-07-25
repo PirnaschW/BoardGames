@@ -1,5 +1,8 @@
 
 #include <string>
+#include <algorithm>
+#include <random>
+
 #include <assert.h>
 
 namespace ClipBoard
@@ -28,5 +31,16 @@ namespace Math
     return exp < 1 ? result : ipow(base * base, exp / 2, (exp % 2) ? result * base : result);
   }
 
+  namespace
+  {
+    static auto rnd = std::mt19937();
+  }
+  
+  template<class T>
+  void Shuffle(std::vector<T>& v)
+  {
+    
+    std::ranges::shuffle(v, rnd);
+  }
 
 }

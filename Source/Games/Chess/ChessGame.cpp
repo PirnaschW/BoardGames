@@ -105,20 +105,38 @@ namespace Chess
     for (const Offset& o : Offset::QDirection) p.AddIfLegal(moves, l, l + o);
   }
 
-
-  ChessPosition::ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
+  void ChessPosition::SetPawns(Coordinate row, const PieceColor& c) noexcept
   {
-    for (Coordinate z = 0; z < d[0].xCount_*d[0].yCount_ / 8; z++)
+    const Piece& p{ c == PieceColor::White ? ChessPiece::WP : ChessPiece::BP };
+    for (Coordinate i = 0; i < sizeX_; i++)
     {
-      PlaceRandomly(ChessPiece::WQ);
-      PlaceRandomly(ChessPiece::BQ);
-      PlaceRandomly(ChessPiece::WR);
-      PlaceRandomly(ChessPiece::BR);
-      PlaceRandomly(ChessPiece::WB);
-      PlaceRandomly(ChessPiece::BB);
-      PlaceRandomly(ChessPiece::WN);
-      PlaceRandomly(ChessPiece::BN);
+      const Location& l{ BoardPart::Main, i, row };
+      SetPiece(l, p);
     }
+  }
+
+  void ChessPosition::SetStartingPosition() noexcept
+  {
+    SetPawns(1U, PieceColor::Black);
+    SetPawns(sizeY_ - 2U, PieceColor::White);
+
+    SetPiece({ BoardPart::Main,          0U,          0U }, ChessPiece::BR);
+    SetPiece({ BoardPart::Main,          1U,          0U }, ChessPiece::BN);
+    SetPiece({ BoardPart::Main,          2U,          0U }, ChessPiece::BB);
+    SetPiece({ BoardPart::Main,          3U,          0U }, ChessPiece::BQ);
+    SetPiece({ BoardPart::Main, sizeX_ - 4U,          0U }, ChessPiece::BK);
+    SetPiece({ BoardPart::Main, sizeX_ - 3U,          0U }, ChessPiece::BB);
+    SetPiece({ BoardPart::Main, sizeX_ - 2U,          0U }, ChessPiece::BN);
+    SetPiece({ BoardPart::Main, sizeX_ - 1U,          0U }, ChessPiece::BR);
+
+    SetPiece({ BoardPart::Main,          0U, sizeY_ - 1U }, ChessPiece::WR);
+    SetPiece({ BoardPart::Main,          1U, sizeY_ - 1U }, ChessPiece::WN);
+    SetPiece({ BoardPart::Main,          2U, sizeY_ - 1U }, ChessPiece::WB);
+    SetPiece({ BoardPart::Main,          3U, sizeY_ - 1U }, ChessPiece::WQ);
+    SetPiece({ BoardPart::Main, sizeX_ - 4U, sizeY_ - 1U }, ChessPiece::WK);
+    SetPiece({ BoardPart::Main, sizeX_ - 3U, sizeY_ - 1U }, ChessPiece::WB);
+    SetPiece({ BoardPart::Main, sizeX_ - 2U, sizeY_ - 1U }, ChessPiece::WN);
+    SetPiece({ BoardPart::Main, sizeX_ - 1U, sizeY_ - 1U }, ChessPiece::WR);
   }
 
   bool ChessPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
@@ -142,21 +160,6 @@ namespace Chess
 
     return false;                                                         // don't keep trying this direction
   };
-
-  bool ChessPosition::PlaceRandomly(const Piece& p)
-  {
-    std::vector<Location> ll;
-    for (Coordinate i = 0; i < sizeX_; i++)
-      for (Coordinate j = 0; j < sizeY_; j++)
-      {
-        const Location l{ BoardPart::Main,  i,j };
-        if (GetPiece(l) == Piece::NoPiece) ll.push_back(l);
-      }
-    if (ll.empty()) return false;
-    const unsigned int z = rand() % ll.size();
-    SetPiece(ll[z], p);
-    return true;
-  }
 
 
   const VariantList& ChessGame::GetVariants(void) noexcept
@@ -204,6 +207,7 @@ namespace Chess
   const PieceMapP& ChessGame::GetPieces(const VariantChosen& v) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
     p->Add(ChessPiece::WP);    p->Add(ChessPiece::BP);
     p->Add(ChessPiece::WN);    p->Add(ChessPiece::BN);
     p->Add(ChessPiece::WB);    p->Add(ChessPiece::BB);

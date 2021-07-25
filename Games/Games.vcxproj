@@ -197,7 +197,9 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Games.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\Source\Games\Brainking.cpp" />
+    <ClCompile Include="..\Source\Games\Checkers\CheckersVariants.cpp" />
     <ClCompile Include="..\Source\Games\Chess\ChessGame.cpp" />
+    <ClCompile Include="..\Source\Games\Chess\ChessVariants.cpp" />
     <ClCompile Include="..\Source\Games\Dispatch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Games.h</PrecompiledHeaderFile>
