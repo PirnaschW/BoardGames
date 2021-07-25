@@ -366,7 +366,14 @@ namespace Chess
     inline IceAgeChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
     void SetStartingPosition() noexcept override
     {
-      // TODO: IceAgeChessPosition::SetStartingPosition
+      ChessPosition::SetStartingPosition();
+      for (Coordinate i = 0U; i < sizeX_; i++)
+      {
+        for (Coordinate j = 2U; j < sizeY_/2; j++)
+        {
+          SetPiecesHSymmetrical(i, j, ChessPiece::GI, ChessPiece::GI);
+        }
+      }
     }
   protected:
   };
@@ -378,7 +385,7 @@ namespace Chess
     void SetStartingPosition() noexcept override
     {
       ChessPosition::SetStartingPosition();
-      SetPiece({ BoardPart::Main,3U, 4U }, ChessPiece::WA);
+      SetPiece({ BoardPart::Main,3U, 4U }, ChessPiece::RB);
     }
   protected:
   };
@@ -469,6 +476,27 @@ namespace Chess
         SetPiece(*it++, ChessPiece::BN);
       }
       assert(it == ll.end());
+    }
+    virtual bool AddIfLegal(Moves & m, const Location & fr, const Location & to) const noexcept override
+    {
+      const Piece& pf = GetPiece(fr);
+      assert(pf != Piece::NoTile);                                         // start field must exist
+      assert(!pf.IsBlank());                                               // start field must be a piece
+
+      const Piece& pt = GetPiece(to);
+      if (pt == Piece::NoTile) return false;                               // out of board
+      if (pt.IsBlank()) return true;                                       // not a move, but keep trying this direction
+      if (pt.GetColor() == pf.GetColor()) return false;                    // own piece; don't keep trying this direction
+
+      // valid move, save into collection
+      Actions a{};
+      a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
+      a.push_back(std::make_shared<ActionLift>(to, pt));                    // pick opponent piece up
+      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+      a.push_back(std::make_shared<ActionDrop>(to, pf));                    // and place it on target
+      m.push_back(std::make_shared<Move>(a));                               // add move to move list
+
+      return false;                                                         // don't keep trying this direction
     }
 
   protected:

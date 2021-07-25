@@ -15,7 +15,7 @@ namespace Chess
 
   using namespace BoardGamesCore;
 
-  enum ChessVariant : VariantCode   // recognized variants of Chess
+  enum class ChessVariant : VariantCode   // recognized variants of Chess
   {
     Standard,                               // Standard Chess            
     Corner,                                 // Corner Chess            
@@ -53,7 +53,7 @@ namespace Chess
     Dice10x10,                              // Dice Chess 10x10         
     Massacre,                               // Massacre Chess
   };
-
+  inline VariantCode VC(ChessVariant v) { return static_cast<VariantCode>(v); }
 
   class Pawn : public Kind
   {
@@ -163,6 +163,29 @@ namespace Chess
     static const King TheKing;
   };
 
+  class Behemoth : public Kind
+  {
+  private:
+    Behemoth(void) noexcept : Kind('b') {}
+  public:
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override {};
+    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
+
+  public:
+    static const Behemoth TheBehemoth;
+  };
+
+  class Ice : public Kind
+  {
+  private:
+    Ice(void) noexcept : Kind('i') {}
+  public:
+    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override {};
+    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
+
+  public:
+    static const Ice TheIce;
+  };
 
   class ChessPiece : public Piece
   {
@@ -191,6 +214,9 @@ namespace Chess
     static const ChessPiece BQ;  // Black Queen
     static const ChessPiece BA;  // Black Amazon   = Queen + Knight
     static const ChessPiece BK;  // Black King 
+
+    static const ChessPiece RB;  // (Red) Behemoth 
+    static const ChessPiece GI;  // (Gray) Ice
   };
 
 

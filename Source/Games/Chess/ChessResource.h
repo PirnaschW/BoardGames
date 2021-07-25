@@ -38,3 +38,5 @@
 #define IDB_BAS                         468
 #define IDB_BKS                         469
 
+#define IDB_RBL                         471
+#define IDB_GIL                         472

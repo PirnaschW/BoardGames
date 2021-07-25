@@ -39,3 +39,6 @@ IDB_BMS                 BITMAP     "Games\\Chess\\res\\bms.bmp"
 IDB_BQS                 BITMAP     "Games\\Chess\\res\\bql.bmp"
 IDB_BAS                 BITMAP     "Games\\Chess\\res\\bal.bmp"
 IDB_BKS                 BITMAP     "Games\\Chess\\res\\bkl.bmp"
+
+IDB_RBL                 BITMAP     "Games\\Chess\\res\\rbl.bmp"
+IDB_GIL                 BITMAP     "Games\\Chess\\res\\gil.bmp"

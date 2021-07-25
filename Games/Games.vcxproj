@@ -442,6 +442,8 @@
     <Image Include="..\Source\Games\Chess\res\bqs.bmp" />
     <Image Include="..\Source\Games\Chess\res\brl.bmp" />
     <Image Include="..\Source\Games\Chess\res\brs.bmp" />
+    <Image Include="..\Source\Games\Chess\res\gil.bmp" />
+    <Image Include="..\Source\Games\Chess\res\rbl.bmp" />
     <Image Include="..\Source\Games\Chess\res\wal.bmp" />
     <Image Include="..\Source\Games\Chess\res\was.bmp" />
     <Image Include="..\Source\Games\Chess\res\wbl.bmp" />

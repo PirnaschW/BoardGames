@@ -54,41 +54,41 @@ namespace BoardGamesBK
       { 122, { IDR_GAMETYPE_CHECKERS,  Checkers::Italian,         8,  8 } },  // Italian Checkers
       { 123, { IDR_GAMETYPE_CHECKERS,  Checkers::Dameo,           8,  8 } },  // Dameo
       // variants for Chess                                             }
-      {   1, { IDR_GAMETYPE_CHESS,     Chess::Standard,           8,  8 } },  // Chess
-      {   2, { IDR_GAMETYPE_CHESS,     Chess::Corner,             8,  8 } },  // Corner Chess
-      {   3, { IDR_GAMETYPE_CHESS,     Chess::Fortress,           8,  8 } },  // Fortress Chess
-      {   4, { IDR_GAMETYPE_CHESS,     Chess::Horde,              8,  8 } },  // Horde Chess
-      {   6, { IDR_GAMETYPE_CHESS,     Chess::Loop,               8,  8 } },  // Loop Chess
-      {  17, { IDR_GAMETYPE_CHESS,     Chess::Anti,               8,  8 } },  // Anti Chess
-      {  18, { IDR_GAMETYPE_CHESS,     Chess::Extinction,         8,  8 } },  // Extinction Chess
-      {  21, { IDR_GAMETYPE_CHESS,     Chess::Maharajah,          8,  8 } },  // Maharajah Chess
-      {  22, { IDR_GAMETYPE_CHESS,     Chess::ThreeChecks,        8,  8 } },  // Three Checks Chess
-      {  27, { IDR_GAMETYPE_CHESS,     Chess::Dark,               8,  8 } },  // Dark Chess
-      {  28, { IDR_GAMETYPE_CHESS,     Chess::Atomic,             8,  8 } },  // Atomic Chess
-      {  40, { IDR_GAMETYPE_CHESS,     Chess::Janus,             10,  8 } },  // Janus Chess
-      {  41, { IDR_GAMETYPE_CHESS,     Chess::Embassy,           10,  8 } },  // Embassy Chess
-      {  47, { IDR_GAMETYPE_CHESS,     Chess::Screen,             8,  8 } },  // Screen Chess
-      {  48, { IDR_GAMETYPE_CHESS,     Chess::CrazyScreen,        8,  8 } },  // Crazy Screen Chess
-      {  57, { IDR_GAMETYPE_CHESS,     Chess::Cylinder,           8,  8 } },  // Cylinder Chess
-      {  58, { IDR_GAMETYPE_CHESS,     Chess::Amazons,            8,  8 } },  // Amazon Chess
-      {  59, { IDR_GAMETYPE_CHESS,     Chess::Berolina,           8,  8 } },  // Berolina Chess
-      {  67, { IDR_GAMETYPE_CHESS,     Chess::FischerRandom,      8,  8 } },  // Fischer Random Chess
-      {  70, { IDR_GAMETYPE_CHESS,     Chess::Legan,              8,  8 } },  // Legan Chess
-      {  71, { IDR_GAMETYPE_CHESS,     Chess::KnightRelay,        8,  8 } },  // Knight Relay Chess
-      {  74, { IDR_GAMETYPE_CHESS,     Chess::Grand,             10, 10 } },  // Grand Chess
-      {  75, { IDR_GAMETYPE_CHESS,     Chess::CapablancaRandom,  10,  8 } },  // Capablanca Random Chess
-      {  76, { IDR_GAMETYPE_CHESS,     Chess::LosAlamos,          6,  6 } },  // Los Alamos Chess
-      {  85, { IDR_GAMETYPE_CHESS,     Chess::Ambiguous,          8,  8 } },  // Ambiguous Chess
-      {  93, { IDR_GAMETYPE_CHESS,     Chess::Cheversi,           8,  8 } },  // Cheversi
-      {  95, { IDR_GAMETYPE_CHESS,     Chess::Dice,               8,  8 } },  // Dice Chess
-      {  98, { IDR_GAMETYPE_CHESS,     Chess::Recycle,            8,  8 } },  // Recycle Chess
-      { 100, { IDR_GAMETYPE_CHESS,     Chess::IceAge,             8,  8 } },  // Ice Age Chess
-      { 104, { IDR_GAMETYPE_CHESS,     Chess::Behemoth,           8,  8 } },  // Behemoth Chess
-      { 113, { IDR_GAMETYPE_CHESS,     Chess::CheshireCat,        8,  8 } },  // Cheshire Cat Chess
-      { 116, { IDR_GAMETYPE_CHESS,     Chess::Knightmate,         8,  8 } },  // Knightmate Chess
-      { 125, { IDR_GAMETYPE_CHESS,     Chess::RacingKings,        8,  8 } },  // Racing Kings
-      { 127, { IDR_GAMETYPE_CHESS,     Chess::Dice10x10,         10, 10 } },  // Dice Chess 10x10
-      { 128, { IDR_GAMETYPE_CHESS,     Chess::Massacre,           8,  8 } },  // Massacre Chess
+      {   1, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Standard),           8,  8 } },  // Chess
+      {   2, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Corner),             8,  8 } },  // Corner Chess
+      {   3, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Fortress),           8,  8 } },  // Fortress Chess
+      {   4, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Horde),              8,  8 } },  // Horde Chess
+      {   6, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Loop),               8,  8 } },  // Loop Chess
+      {  17, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Anti),               8,  8 } },  // Anti Chess
+      {  18, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Extinction),         8,  8 } },  // Extinction Chess
+      {  21, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Maharajah),          8,  8 } },  // Maharajah Chess
+      {  22, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::ThreeChecks),        8,  8 } },  // Three Checks Chess
+      {  27, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Dark),               8,  8 } },  // Dark Chess
+      {  28, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Atomic),             8,  8 } },  // Atomic Chess
+      {  40, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Janus),             10,  8 } },  // Janus Chess
+      {  41, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Embassy),           10,  8 } },  // Embassy Chess
+      {  47, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Screen),             8,  8 } },  // Screen Chess
+      {  48, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::CrazyScreen),        8,  8 } },  // Crazy Screen Chess
+      {  57, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Cylinder),           8,  8 } },  // Cylinder Chess
+      {  58, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Amazons),            8,  8 } },  // Amazon Chess
+      {  59, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Berolina),           8,  8 } },  // Berolina Chess
+      {  67, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::FischerRandom),      8,  8 } },  // Fischer Random Chess
+      {  70, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Legan),              8,  8 } },  // Legan Chess
+      {  71, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::KnightRelay),        8,  8 } },  // Knight Relay Chess
+      {  74, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Grand),             10, 10 } },  // Grand Chess
+      {  75, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::CapablancaRandom),  10,  8 } },  // Capablanca Random Chess
+      {  76, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::LosAlamos),          6,  6 } },  // Los Alamos Chess
+      {  85, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Ambiguous),          8,  8 } },  // Ambiguous Chess
+      {  93, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Cheversi),           8,  8 } },  // Cheversi
+      {  95, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Dice),               8,  8 } },  // Dice Chess
+      {  98, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Recycle),            8,  8 } },  // Recycle Chess
+      { 100, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::IceAge),             8,  8 } },  // Ice Age Chess
+      { 104, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Behemoth),           8,  8 } },  // Behemoth Chess
+      { 113, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::CheshireCat),        8,  8 } },  // Cheshire Cat Chess
+      { 116, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Knightmate),         8,  8 } },  // Knightmate Chess
+      { 125, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::RacingKings),        8,  8 } },  // Racing Kings
+      { 127, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Dice10x10),         10, 10 } },  // Dice Chess 10x10
+      { 128, { IDR_GAMETYPE_CHESS,     VC(Chess::ChessVariant::Massacre),           8,  8 } },  // Massacre Chess
  
     //{  93, { IDR_GAMETYPE_CHEVERSI,  '\0',                      8,  8 } },  // Cheversi
  
@@ -198,26 +198,30 @@ namespace BoardGamesBK
       { R"(chess/bz35)",              Chess::ChessPiece::BA },               // Black Amazon   = Queen + Knight
       { R"(chess/bk35)",              Chess::ChessPiece::BK },               // Black King 
 
+      { R"(chess/behemoth35)",        Chess::ChessPiece::RB },               // (Red) Behemoth
+      { R"(chess/ice35)",             Chess::ChessPiece::GI },               // (Gray) Ice
+
+
        // taken pieces - ignore for now
       { R"(chess/wp1)",               Piece::NoTile },                      // White Pawn
-      { R"(chess/wn1)",               Piece::NoTile },                      // White Knight// 
-      { R"(chess/wb1)",               Piece::NoTile },                      // White Bishop// 
-      { R"(chess/wr1)",               Piece::NoTile },                      // White Rook // 
-      { R"(chess/wa1)",               Piece::NoTile },                      // White Cardinal = Bishop + Knight (also: Archbishop, Princess, Janus)// 
-      { R"(chess/wc1)",               Piece::NoTile },                      // White Marshall = Rook + Knight// 
-      { R"(chess/wq1)",               Piece::NoTile },                      // White Queen// 
-      { R"(chess/wz1)",               Piece::NoTile },                      // White Amazon   = Queen + Knight// 
-      { R"(chess/wk1)",               Piece::NoTile },                      // White King // 
+      { R"(chess/wn1)",               Piece::NoTile },                      // White Knight
+      { R"(chess/wb1)",               Piece::NoTile },                      // White Bishop
+      { R"(chess/wr1)",               Piece::NoTile },                      // White Rook
+      { R"(chess/wa1)",               Piece::NoTile },                      // White Cardinal = Bishop + Knight (also: Archbishop, Princess, Janus) 
+      { R"(chess/wc1)",               Piece::NoTile },                      // White Marshall = Rook + Knight 
+      { R"(chess/wq1)",               Piece::NoTile },                      // White Queen 
+      { R"(chess/wz1)",               Piece::NoTile },                      // White Amazon   = Queen + Knight 
+      { R"(chess/wk1)",               Piece::NoTile },                      // White King  
                                                
-      { R"(chess/bp1)",               Piece::NoTile },                      // Black Pawn // 
-      { R"(chess/bn1)",               Piece::NoTile },                      // Black Knight// 
-      { R"(chess/bb1)",               Piece::NoTile },                      // Black Bishop// 
-      { R"(chess/br1)",               Piece::NoTile },                      // Black Rook // 
-      { R"(chess/ba1)",               Piece::NoTile },                      // Black Cardinal = Bishop + Knight (also: Archbishop, Princess, Janus)// 
-      { R"(chess/bc1)",               Piece::NoTile },                      // Black Marshall = Rook + Knight// 
-      { R"(chess/bq1)",               Piece::NoTile },                      // Black Queen// 
-      { R"(chess/bz1)",               Piece::NoTile },                      // Black Amazon   = Queen + Knight// 
-      { R"(chess/bk1)",               Piece::NoTile },                      // Black King // 
+      { R"(chess/bp1)",               Piece::NoTile },                      // Black Pawn  
+      { R"(chess/bn1)",               Piece::NoTile },                      // Black Knight 
+      { R"(chess/bb1)",               Piece::NoTile },                      // Black Bishop 
+      { R"(chess/br1)",               Piece::NoTile },                      // Black Rook 
+      { R"(chess/ba1)",               Piece::NoTile },                      // Black Cardinal = Bishop + Knight (also: Archbishop, Princess, Janus) 
+      { R"(chess/bc1)",               Piece::NoTile },                      // Black Marshall = Rook + Knight 
+      { R"(chess/bq1)",               Piece::NoTile },                      // Black Queen 
+      { R"(chess/bz1)",               Piece::NoTile },                      // Black Amazon   = Queen + Knight 
+      { R"(chess/bk1)",               Piece::NoTile },                      // Black King 
 
       // ##############################################
       // Checkers

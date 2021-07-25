@@ -864,6 +864,12 @@
     <Image Include="..\Source\Games\Chess\res\wrs.bmp">
       <Filter>Game Chess\Resource Files</Filter>
     </Image>
+    <Image Include="..\Source\Games\Chess\res\gil.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
+    <Image Include="..\Source\Games\Chess\res\rbl.bmp">
+      <Filter>Game Chess\Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Source\Games\New Game Instructions.txt" />
