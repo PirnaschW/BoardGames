@@ -206,6 +206,8 @@ namespace Chess
 // extensions
   protected:
     void SetPawns(Coordinate row, const PieceColor& c) noexcept;
+    void SetPiecesPSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use point symmetry
+    void SetPiecesHSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use horizontal mirror symmetry
   };
 
   class ChessGame : public Game

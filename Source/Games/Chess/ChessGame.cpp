@@ -115,28 +115,39 @@ namespace Chess
     }
   }
 
+  void ChessPosition::SetPiecesPSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept
+  {
+    SetPiece({ BoardPart::Main,               x,               y }, b);
+    SetPiece({ BoardPart::Main, sizeX_ - 1U - x, sizeY_ - 1U - y }, w);
+  }
+  void ChessPosition::SetPiecesHSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept
+  {
+    SetPiece({ BoardPart::Main,               x,               y }, b);
+    SetPiece({ BoardPart::Main,               x, sizeY_ - 1U - y }, w);
+  }
+
   void ChessPosition::SetStartingPosition() noexcept
   {
     SetPawns(1U, PieceColor::Black);
     SetPawns(sizeY_ - 2U, PieceColor::White);
 
-    SetPiece({ BoardPart::Main,          0U,          0U }, ChessPiece::BR);
-    SetPiece({ BoardPart::Main,          1U,          0U }, ChessPiece::BN);
-    SetPiece({ BoardPart::Main,          2U,          0U }, ChessPiece::BB);
-    SetPiece({ BoardPart::Main,          3U,          0U }, ChessPiece::BQ);
-    SetPiece({ BoardPart::Main, sizeX_ - 4U,          0U }, ChessPiece::BK);
-    SetPiece({ BoardPart::Main, sizeX_ - 3U,          0U }, ChessPiece::BB);
-    SetPiece({ BoardPart::Main, sizeX_ - 2U,          0U }, ChessPiece::BN);
-    SetPiece({ BoardPart::Main, sizeX_ - 1U,          0U }, ChessPiece::BR);
+    SetPiece({ BoardPart::Main,               0U,          0U }, ChessPiece::BR);
+    SetPiece({ BoardPart::Main,               1U,          0U }, ChessPiece::BN);
+    SetPiece({ BoardPart::Main,               2U,          0U }, ChessPiece::BB);
+    SetPiece({ BoardPart::Main, sizeX_      - 3U,          0U }, ChessPiece::BB);
+    SetPiece({ BoardPart::Main, sizeX_      - 2U,          0U }, ChessPiece::BN);
+    SetPiece({ BoardPart::Main, sizeX_      - 1U,          0U }, ChessPiece::BR);
+    SetPiece({ BoardPart::Main, sizeX_ / 2U - 1U,          0U }, ChessPiece::BQ);  // set Queen and King last!
+    SetPiece({ BoardPart::Main, sizeX_ / 2U     ,          0U }, ChessPiece::BK);  // this is useful for smaller boards
 
-    SetPiece({ BoardPart::Main,          0U, sizeY_ - 1U }, ChessPiece::WR);
-    SetPiece({ BoardPart::Main,          1U, sizeY_ - 1U }, ChessPiece::WN);
-    SetPiece({ BoardPart::Main,          2U, sizeY_ - 1U }, ChessPiece::WB);
-    SetPiece({ BoardPart::Main,          3U, sizeY_ - 1U }, ChessPiece::WQ);
-    SetPiece({ BoardPart::Main, sizeX_ - 4U, sizeY_ - 1U }, ChessPiece::WK);
-    SetPiece({ BoardPart::Main, sizeX_ - 3U, sizeY_ - 1U }, ChessPiece::WB);
-    SetPiece({ BoardPart::Main, sizeX_ - 2U, sizeY_ - 1U }, ChessPiece::WN);
-    SetPiece({ BoardPart::Main, sizeX_ - 1U, sizeY_ - 1U }, ChessPiece::WR);
+    SetPiece({ BoardPart::Main,               0U, sizeY_ - 1U }, ChessPiece::WR);
+    SetPiece({ BoardPart::Main,               1U, sizeY_ - 1U }, ChessPiece::WN);
+    SetPiece({ BoardPart::Main,               2U, sizeY_ - 1U }, ChessPiece::WB);
+    SetPiece({ BoardPart::Main, sizeX_ -      3U, sizeY_ - 1U }, ChessPiece::WB);
+    SetPiece({ BoardPart::Main, sizeX_ -      2U, sizeY_ - 1U }, ChessPiece::WN);
+    SetPiece({ BoardPart::Main, sizeX_ -      1U, sizeY_ - 1U }, ChessPiece::WR);
+    SetPiece({ BoardPart::Main, sizeX_ / 2U - 1U, sizeY_ - 1U }, ChessPiece::WQ);  // set Queen and King last!
+    SetPiece({ BoardPart::Main, sizeX_ / 2U     , sizeY_ - 1U }, ChessPiece::WK);  // this is useful for smaller boards
   }
 
   bool ChessPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept

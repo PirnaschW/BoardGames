@@ -14,37 +14,36 @@ namespace Chess
       SetPawns(1U, PieceColor::Black);
       SetPawns(sizeY_ - 2U, PieceColor::White);
 
-      SetPiece({ BoardPart::Main,          0U,          0U }, ChessPiece::BK);
-      SetPiece({ BoardPart::Main, sizeX_ - 1U, sizeY_ - 1U }, ChessPiece::WK);
+      SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
 
       std::vector<Coordinate> c;
       for (Coordinate i = 1; i < sizeX_; i++) c.push_back(i);
       do Math::Shuffle(c);
-      while (!((c[3] + c[4]) % 2));  // keep shuffling until the bishops are on different color fields
+      while (!ValidPosition(c));  // keep shuffling until the position is valid
 
-      SetPiece(Location{ BoardPart::Main, sizeX_ - 1U - c[0], sizeY_ - 1U }, ChessPiece::WQ);
-      SetPiece(Location{ BoardPart::Main,               c[0], 0U          }, ChessPiece::BQ);
-      SetPiece(Location{ BoardPart::Main, sizeX_ - 1U - c[1], sizeY_ - 1U }, ChessPiece::WR);
-      SetPiece(Location{ BoardPart::Main,               c[1], 0U          }, ChessPiece::BR);
-      SetPiece(Location{ BoardPart::Main, sizeX_ - 1U - c[2], sizeY_ - 1U }, ChessPiece::WR);
-      SetPiece(Location{ BoardPart::Main,               c[2], 0U          }, ChessPiece::BR);
-      SetPiece(Location{ BoardPart::Main, sizeX_ - 1U - c[3], sizeY_ - 1U }, ChessPiece::WB);
-      SetPiece(Location{ BoardPart::Main,               c[3], 0U          }, ChessPiece::BB);
-      SetPiece(Location{ BoardPart::Main, sizeX_ - 1U - c[4], sizeY_ - 1U }, ChessPiece::WB);
-      SetPiece(Location{ BoardPart::Main,               c[4], 0U          }, ChessPiece::BB);
-      SetPiece(Location{ BoardPart::Main, sizeX_ - 1U - c[5], sizeY_ - 1U }, ChessPiece::WN);
-      SetPiece(Location{ BoardPart::Main,               c[5], 0U          }, ChessPiece::BN);
-      SetPiece(Location{ BoardPart::Main, sizeX_ - 1U - c[6], sizeY_ - 1U }, ChessPiece::WN);
-      SetPiece(Location{ BoardPart::Main,               c[6], 0U          }, ChessPiece::BN);
+      SetPiecesPSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
+      SetPiecesPSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesPSymmetrical(c[2], 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesPSymmetrical(c[3], 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesPSymmetrical(c[4], 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesPSymmetrical(c[5], 0U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesPSymmetrical(c[6], 0U, ChessPiece::BN, ChessPiece::WN);
     }
-  protected:
+  private:
+    static bool ValidPosition(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
   };
   
-  class FortressChessPosition : public ChessPosition
+  class FortressChessPosition : public CornerChessPosition
   {
   public:
-    inline FortressChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    inline FortressChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CornerChessPosition(v, p, d) {}
+    void SetStartingPosition() noexcept override
+    {
+      CornerChessPosition::SetStartingPosition();
+      SetPiecesPSymmetrical(0U, 2U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(1U, 2U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(2U, 2U, ChessPiece::BP, ChessPiece::WP);
+    }
   protected:
   };
   
@@ -52,7 +51,17 @@ namespace Chess
   {
   public:
     inline HordeChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      ChessPosition::SetStartingPosition();
+      SetPawns(0U, PieceColor::Black);
+      SetPawns(2U, PieceColor::Black);
+      SetPawns(3U, PieceColor::Black);
+      SetPiece({ BoardPart::Main, 3U, 4U }, ChessPiece::BP);
+      SetPiece({ BoardPart::Main, 4U, 4U }, ChessPiece::BP);
+      SetPiece({ BoardPart::Main, 3U, 0U }, Piece::NoPiece);
+      SetPiece({ BoardPart::Main, 4U, 0U }, Piece::NoPiece);
+    }
   protected:
   };
   
@@ -81,7 +90,16 @@ namespace Chess
   {
   public:
     inline MaharajahChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      ChessPosition::SetStartingPosition();
+      for (Coordinate i = 0; i < sizeX_; i++)
+      {
+        SetPiece({ BoardPart::Main, i, sizeY_ - 2U }, Piece::NoPiece);
+        SetPiece({ BoardPart::Main, i, sizeY_ - 1U }, Piece::NoPiece);
+      }
+      SetPiece({ BoardPart::Main, 4U, sizeY_ - 1U }, ChessPiece::WA);
+    }
   protected:
   };
   
@@ -110,7 +128,16 @@ namespace Chess
   {
   public:
     inline JanusChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      ChessPosition::SetStartingPosition();
+      SetPiecesHSymmetrical(1U, 0U, ChessPiece::BC, ChessPiece::WC);
+      SetPiecesHSymmetrical(2U, 0U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(3U, 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(6U, 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(7U, 0U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(8U, 0U, ChessPiece::BC, ChessPiece::WC);
+    }
   protected:
   };
   
@@ -118,7 +145,14 @@ namespace Chess
   {
   public:
     inline EmbassyChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      ChessPosition::SetStartingPosition();
+      SetPiecesHSymmetrical(3U, 0U, ChessPiece::BQ, ChessPiece::WQ);
+      SetPiecesHSymmetrical(4U, 0U, ChessPiece::BK, ChessPiece::WK);
+      SetPiecesHSymmetrical(5U, 0U, ChessPiece::BM, ChessPiece::WM);
+      SetPiecesHSymmetrical(6U, 0U, ChessPiece::BC, ChessPiece::WC);
+    }
   protected:
   };
   
@@ -126,7 +160,7 @@ namespace Chess
   {
   public:
     inline ScreenChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override {}  // start blank
   protected:
   };
   
@@ -134,7 +168,7 @@ namespace Chess
   {
   public:
     inline CrazyScreenChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override {}  // start blank
   protected:
   };
   
@@ -149,7 +183,11 @@ namespace Chess
   {
   public:
     inline AmazonsChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      ChessPosition::SetStartingPosition();
+      SetPiecesHSymmetrical(3U, 0U, ChessPiece::BA, ChessPiece::WA);
+    }
   protected:
   };
   
@@ -164,15 +202,59 @@ namespace Chess
   {
   public:
     inline FischerRandomChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
-  protected:
+    void SetStartingPosition() noexcept override
+    {
+      SetPawns(1U, PieceColor::Black);
+      SetPawns(sizeY_ - 2U, PieceColor::White);
+
+      std::vector<Coordinate> c;
+      for (Coordinate i = 0; i < sizeX_; i++) c.push_back(i);
+      
+      do Math::Shuffle(c); while (!ValidPosition(c));   // keep shuffling until position is valid
+
+      SetPiecesHSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
+      SetPiecesHSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesHSymmetrical(c[2], 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesHSymmetrical(c[3], 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(c[4], 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(c[5], 0U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(c[6], 0U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(c[7], 0U, ChessPiece::BK, ChessPiece::WK);
+    }
+  private:
+    static bool ValidPosition(const std::vector<Coordinate>& c) noexcept
+    {
+      if (c[3] % 2 == c[4] % 2) return false;       // bishops not on differently colored fields
+      if (c[7] > c[1] && c[7] < c[2]) return true;  // king is between the rooks
+      if (c[7] > c[2] && c[7] < c[1]) return true;  // king is between the rooks
+      return false;
+    }
   };
   
   class LeganChessPosition : public ChessPosition
   {
   public:
     inline LeganChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
+      SetPiecesPSymmetrical(1U, 1U, ChessPiece::BQ, ChessPiece::WQ);
+      SetPiecesPSymmetrical(0U, 3U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesPSymmetrical(3U, 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesPSymmetrical(0U, 1U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesPSymmetrical(2U, 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesPSymmetrical(0U, 2U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesPSymmetrical(1U, 0U, ChessPiece::BN, ChessPiece::WN);
+
+      SetPiecesPSymmetrical(1U, 2U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(2U, 1U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(4U, 0U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(3U, 1U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(2U, 2U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(1U, 3U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(0U, 4U, ChessPiece::BP, ChessPiece::WP);
+      SetPiecesPSymmetrical(3U, 3U, ChessPiece::BP, ChessPiece::WP);
+    }
   protected:
   };
   
@@ -187,7 +269,22 @@ namespace Chess
   {
   public:
     inline GrandChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      SetPawns(2U, PieceColor::Black);
+      SetPawns(sizeY_ - 3U, PieceColor::White);
+
+      SetPiecesHSymmetrical(0U, 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesHSymmetrical(1U, 1U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(2U, 1U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(3U, 1U, ChessPiece::BQ, ChessPiece::WQ);
+      SetPiecesHSymmetrical(4U, 1U, ChessPiece::BK, ChessPiece::WK);
+      SetPiecesHSymmetrical(5U, 1U, ChessPiece::BM, ChessPiece::WM);
+      SetPiecesHSymmetrical(6U, 1U, ChessPiece::BC, ChessPiece::WC);
+      SetPiecesHSymmetrical(7U, 1U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(8U, 1U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(9U, 0U, ChessPiece::BR, ChessPiece::WR);
+    }
   protected:
   };
   
@@ -195,7 +292,35 @@ namespace Chess
   {
   public:
     inline CapablancaRandomChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      SetPawns(1U, PieceColor::Black);
+      SetPawns(sizeY_ - 2U, PieceColor::White);
+
+      std::vector<Coordinate> c;
+      for (Coordinate i = 0; i < sizeX_; i++) c.push_back(i);
+
+      do Math::Shuffle(c); while (!ValidPosition(c));   // keep shuffling until position is valid
+
+      SetPiecesHSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
+      SetPiecesHSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesHSymmetrical(c[2], 0U, ChessPiece::BR, ChessPiece::WR);
+      SetPiecesHSymmetrical(c[3], 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(c[4], 0U, ChessPiece::BB, ChessPiece::WB);
+      SetPiecesHSymmetrical(c[5], 0U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(c[6], 0U, ChessPiece::BN, ChessPiece::WN);
+      SetPiecesHSymmetrical(c[7], 0U, ChessPiece::BK, ChessPiece::WK);
+      SetPiecesHSymmetrical(c[8], 0U, ChessPiece::BC, ChessPiece::WC);
+      SetPiecesHSymmetrical(c[9], 0U, ChessPiece::BM, ChessPiece::WM);
+    }
+  private:
+    static bool ValidPosition(const std::vector<Coordinate>& c) noexcept
+    {
+      if (c[3] % 2 == c[4] % 2) return false;       // bishops not on differently colored fields
+      if (c[7] > c[1] && c[7] < c[2]) return true;  // king is between the rooks
+      if (c[7] > c[2] && c[7] < c[1]) return true;  // king is between the rooks
+      return false;
+    }
   protected:
   };
   
@@ -203,7 +328,6 @@ namespace Chess
   {
   public:
     inline LosAlamosChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
   protected:
   };
   
@@ -240,7 +364,10 @@ namespace Chess
   {
   public:
     inline IceAgeChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      // TODO: IceAgeChessPosition::SetStartingPosition
+    }
   protected:
   };
   
@@ -248,7 +375,11 @@ namespace Chess
   {
   public:
     inline BehemothChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      ChessPosition::SetStartingPosition();
+      SetPiece({ BoardPart::Main,3U, 4U }, ChessPiece::WA);
+    }
   protected:
   };
   
@@ -270,7 +401,27 @@ namespace Chess
   {
   public:
     inline RacingKingsChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      SetPiece({ BoardPart::Main,              0U,sizeY_ - 1U }, ChessPiece::BQ);
+      SetPiece({ BoardPart::Main,              0U,sizeY_ - 2U }, ChessPiece::BK);
+      SetPiece({ BoardPart::Main,              1U,sizeY_ - 1U }, ChessPiece::BR);
+      SetPiece({ BoardPart::Main,              1U,sizeY_ - 2U }, ChessPiece::BR);
+      SetPiece({ BoardPart::Main,              2U,sizeY_ - 1U }, ChessPiece::BB);
+      SetPiece({ BoardPart::Main,              2U,sizeY_ - 2U }, ChessPiece::BB);
+      SetPiece({ BoardPart::Main,              3U,sizeY_ - 1U }, ChessPiece::BN);
+      SetPiece({ BoardPart::Main,              3U,sizeY_ - 2U }, ChessPiece::BN);
+
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 0U,sizeY_ - 1U }, ChessPiece::WQ);
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 0U,sizeY_ - 2U }, ChessPiece::WK);
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 1U,sizeY_ - 1U }, ChessPiece::WR);
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 1U,sizeY_ - 2U }, ChessPiece::WR);
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 2U,sizeY_ - 1U }, ChessPiece::WB);
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 2U,sizeY_ - 2U }, ChessPiece::WB);
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 3U,sizeY_ - 1U }, ChessPiece::WN);
+      SetPiece({ BoardPart::Main,sizeX_ - 1U - 3U,sizeY_ - 2U }, ChessPiece::WN);
+
+    }
   protected:
   };
   
@@ -278,7 +429,14 @@ namespace Chess
   {
   public:
     inline Dice10x10ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    void SetStartingPosition() noexcept override;
+    void SetStartingPosition() noexcept override
+    {
+      ChessPosition::SetStartingPosition();
+      SetPiecesHSymmetrical(              3U, 0U, ChessPiece::BQ, ChessPiece::WQ);
+      SetPiecesHSymmetrical(              4U, 0U, ChessPiece::BK, ChessPiece::WK);
+      SetPiecesHSymmetrical(sizeX_ - 1U - 3U, 0U, ChessPiece::BK, ChessPiece::WK);
+      SetPiecesHSymmetrical(sizeX_ - 1U - 4U, 0U, ChessPiece::BK, ChessPiece::WK);
+    }
   protected:
   };
   
@@ -316,28 +474,6 @@ namespace Chess
   protected:
   };
   
-
-  void FortressChessPosition::SetStartingPosition(void) noexcept {}          // TODO: FortressChessPosition::SetStartingPosition(void) {}        
-  void HordeChessPosition::SetStartingPosition(void) noexcept {}             // TODO: HordeChessPosition::SetStartingPosition(void) {}           
-  void MaharajahChessPosition::SetStartingPosition(void) noexcept {}         // TODO: MaharajahChessPosition::SetStartingPosition(void) {}       
-  void JanusChessPosition::SetStartingPosition(void) noexcept {}             // TODO: JanusChessPosition::SetStartingPosition(void) {}           
-  void EmbassyChessPosition::SetStartingPosition(void) noexcept {}           // TODO: EmbassyChessPosition::SetStartingPosition(void) {}         
-  void ScreenChessPosition::SetStartingPosition(void) noexcept {}            // TODO: ScreenChessPosition::SetStartingPosition(void) {}          
-  void CrazyScreenChessPosition::SetStartingPosition(void) noexcept {}       // TODO: CrazyScreenChessPosition::SetStartingPosition(void) {}     
-  void AmazonsChessPosition::SetStartingPosition(void) noexcept {}           // TODO: AmazonsChessPosition::SetStartingPosition(void) {}         
-  void FischerRandomChessPosition::SetStartingPosition(void) noexcept {}     // TODO: FischerRandomChessPosition::SetStartingPosition(void) {}   
-  void LeganChessPosition::SetStartingPosition(void) noexcept {}             // TODO: LeganChessPosition::SetStartingPosition(void) {}           
-  void GrandChessPosition::SetStartingPosition(void) noexcept {}             // TODO: GrandChessPosition::SetStartingPosition(void) {}           
-  void CapablancaRandomChessPosition::SetStartingPosition(void) noexcept {}  // TODO: CapablancaRandomChessPosition::SetStartingPosition(void) {}
-  void LosAlamosChessPosition::SetStartingPosition(void) noexcept {}         // TODO: LosAlamosChessPosition::SetStartingPosition(void) {}       
-  void IceAgeChessPosition::SetStartingPosition(void) noexcept {}            // TODO: IceAgeChessPosition::SetStartingPosition(void) {}          
-  void BehemothChessPosition::SetStartingPosition(void) noexcept {}          // TODO: BehemothChessPosition::SetStartingPosition(void) {}        
-  void RacingKingsChessPosition::SetStartingPosition(void) noexcept {}       // TODO: RacingKingsChessPosition::SetStartingPosition(void) {}     
-  void Dice10x10ChessPosition::SetStartingPosition(void) noexcept {}         // TODO: Dice10x10ChessPosition::SetStartingPosition(void) {}       
-
-
-
-
 
   MainPosition* ChessGame::GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept
   {
