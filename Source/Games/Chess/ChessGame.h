@@ -55,6 +55,21 @@ namespace Chess
   };
   inline VariantCode VC(ChessVariant v) { return static_cast<VariantCode>(v); }
 
+  enum ChessRule : Rule // multi-use rule variants
+  {
+    None                 = 0x0000,                         // none of these rules
+    CastlingShort        = 0x0001,                         // King side (short) castling is allowed
+    CastlingLong         = 0x0002,                         // Queen side (long) castling is allowed
+    Castling             = CastlingShort | CastlingLong,   // any castling is allowed
+    AllowMoves           = 0x0004,                         // normal moves are allowed
+    AllowTakes           = 0x0008,                         // take moves are allowed
+    MustTake             = 0x0010,                         // must take if possible
+    TakeKing             = 0x0020,                         // King can be taken
+    TakeOwn              = 0x0040,                         // own pieces can be taken
+    PawnsPromote         = 0x0080,                         // Pawns can promote
+    PawnsDoubleStep      = 0x0100,                         // Pawns can make a double-step
+  };
+
   class Pawn : public Kind
   {
   private:
@@ -220,11 +235,10 @@ namespace Chess
   };
 
 
-  class ChessPosition : public MainPosition
+  class ChessPosition abstract: public MainPosition
   {
   public:
     ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
-    virtual MainPosition* Clone(void) const noexcept override { return new ChessPosition(*this); }
     virtual void SetStartingPosition() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual unsigned int GetMoveCountFactor(void) const noexcept override { return 1000; }

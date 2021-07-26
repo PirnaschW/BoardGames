@@ -42,6 +42,15 @@ namespace Chess
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
+    const MainPosition* pp = &p;
+    static bool t1 = p.HasRule(PawnsDoubleStep);
+    static bool t2 = pp->HasRule(PawnsDoubleStep);
+    const ChessPosition& cp = dynamic_cast<const ChessPosition&>(p);
+    const ChessPosition* cpp = &cp;
+    static bool tc1 = cp.HasRule(PawnsDoubleStep);
+    static bool tc2 = cpp->HasRule(PawnsDoubleStep);
+
+
     const PieceColor& c{ p.GetPiece(l).GetColor()};
     const int dy = c == PieceColor::White ? -1 : 1;
 
@@ -53,7 +62,7 @@ namespace Chess
     if (p.GetPiece(l + Offset(0, dy)).IsBlank())
     {
       bool step = p.AddIfLegal(moves, l, l + Offset(0, dy));
-      if (step)
+      if (step && pp->HasRule(PawnsDoubleStep))
       {
         Coordinate z = c == PieceColor::White ? p.GetSizeY() - 2U : 1U;
         // if the next field ahead is free too, pawn can move there too

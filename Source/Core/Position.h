@@ -84,6 +84,7 @@ namespace BoardGamesCore
     virtual void PreviousPlayer(void) noexcept;  // needed for Undo
 
     VariantChosen GetVariant(void) const { return v_; }
+    bool HasRule(Rule r) const noexcept { return GetRule() & r; }
     constexpr Moves& GetMoveList(bool w) const noexcept { return w ? movesW_ : movesB_; }
     virtual bool AddIfLegal(Moves&, const Location&, const Location&) const noexcept { return false; };
     [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept;       // calculate position value
@@ -107,6 +108,9 @@ namespace BoardGamesCore
 
     virtual void GetAllMoves(void) const noexcept;              // generate all moves and save list
     void JumpsOnly(Moves& moves) const noexcept;          // if there are any jumps, remove all non-jumps - jumping is mandatory
+
+  protected:
+    virtual Rule GetRule(void) const noexcept { return 0; }
 
   private:
     [[ nodiscard ]] PositionValue EvaluateChainLength(Location l, unsigned int max) const noexcept;  // chain length for one location

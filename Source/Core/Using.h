@@ -1,9 +1,10 @@
 namespace BoardGamesCore
 {
 
-  using Coordinate = unsigned char;    // board coordinates - never negative, never larger than ~20
-  using VariantCode = unsigned char;   // code for different variants of one 'game'
-  using GameID = unsigned char;        // internal ID of the game
+  using Coordinate  = unsigned char;    // board coordinates - never negative, never larger than ~20
+  using VariantCode = unsigned char;    // code for different variants of one 'game'
+  using GameID      = unsigned char;    // internal ID of the game
+  using Rule        = unsigned int;     // game specific multi-variant rule codes (can be enums)
 
   struct VariantChosen
   {

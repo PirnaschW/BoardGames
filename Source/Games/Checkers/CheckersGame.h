@@ -38,7 +38,7 @@ namespace Checkers
     Dameo         = 'd',           // Dameo
   };
 
-  enum Rule : unsigned int // multi-use rule variants
+  enum CheckerRule : Rule // multi-use rule variants
   {
     None                  = 0x0000,                // none of these rules
     JumpFurther           = 0x0001,                // promoted pieces can jump further than behind opponent's piece
@@ -51,9 +51,6 @@ namespace Checkers
     CapturePromotedFirst  = 0x0080,                // capture promoted pieces first
     PromoteToQueen        = 0x0100,                // pieces promote to Queens (not Kings)
   };
-  inline constexpr Rule operator | (Rule a, Rule b) { return static_cast<Rule>(static_cast<unsigned char>(a) | static_cast<unsigned char>(b)); }
-  inline constexpr Rule operator & (Rule a, Rule b) { return static_cast<Rule>(static_cast<unsigned char>(a) & static_cast<unsigned char>(b)); }
-  inline constexpr bool operator >= (Rule rule, Rule test) { return rule & test; }
 
   class Checker final : public Kind
   {
@@ -142,6 +139,7 @@ namespace Checkers
   protected:
     virtual bool CanPromote(const Location& l, const Piece& p) const noexcept;
     virtual Rule GetRule() const noexcept { return PromotedJump; }
+    bool HasRule(Rule r) const noexcept { return GetRule() & r; }
   };
 
 
