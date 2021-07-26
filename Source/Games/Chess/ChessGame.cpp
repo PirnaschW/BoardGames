@@ -42,11 +42,24 @@ namespace Chess
 
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
-    int dy = p.OnTurn() == PieceColor::White ? -1 : 1;
-    p.AddIfLegal(moves, l, l + Offset( 1, dy));
-    p.AddIfLegal(moves, l, l + Offset( 0, dy));
-    p.AddIfLegal(moves, l, l + Offset( 0, dy*2));
-    p.AddIfLegal(moves, l, l + Offset(-1, dy));
+    const PieceColor& c{ p.GetPiece(l).GetColor()};
+    const int dy = c == PieceColor::White ? -1 : 1;
+
+    // if there is an opponent's piece there, allow the pawn to take diagonally
+    if (p.GetPiece(l + Offset(+1, dy)).IsColor(~c)) p.AddIfLegal(moves, l, l + Offset(+1, dy));
+    if (p.GetPiece(l + Offset(-1, dy)).IsColor(~c)) p.AddIfLegal(moves, l, l + Offset(-1, dy));
+
+    // if the field ahead is free, pawn can move there
+    if (p.GetPiece(l + Offset(0, dy)).IsBlank())
+    {
+      bool step = p.AddIfLegal(moves, l, l + Offset(0, dy));
+      if (step)
+      {
+        Coordinate z = c == PieceColor::White ? p.GetSizeY() - 2U : 1U;
+        // if the next field ahead is free too, pawn can move there too
+        if (l.y_ == z) if (p.GetPiece(l + Offset(0, dy * 2)).IsBlank()) p.AddIfLegal(moves, l, l + Offset(0, dy * 2));
+      }
+    }
   }
   void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {

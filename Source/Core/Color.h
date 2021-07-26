@@ -14,6 +14,7 @@ namespace BoardGamesCore
     constexpr bool operator ==(const PieceColor& c) const noexcept { return c.color_ == color_; }
     constexpr bool operator !=(const PieceColor& c) const noexcept { return !(*this == c); }
     constexpr bool operator ==(const char c) const noexcept { return c == color_; }
+    constexpr PieceColor operator ~(void) const noexcept { return *this == White ? Black : (*this == Black ? White : Void); }
     size_t GetHash(void) const noexcept { return std::hash<char>()(color_); }
     void Serialize(Archive& ar) const;
 
