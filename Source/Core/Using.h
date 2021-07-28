@@ -1,10 +1,14 @@
+#include <limits>
+#include <type_traits>
+
 namespace BoardGamesCore
 {
 
   using Coordinate  = unsigned char;    // board coordinates - never negative, never larger than ~20
   using VariantCode = unsigned char;    // code for different variants of one 'game'
   using GameID      = unsigned char;    // internal ID of the game
-  using Rule        = unsigned int;     // game specific multi-variant rule codes (can be enums)
+  using Rule        = unsigned short;   // game specific multi-variant rule codes (can be enums)
+  static_assert((std::numeric_limits<Rule>::max)() >= 0xFFFF, "Rule type is defined too small");
 
   struct VariantChosen
   {

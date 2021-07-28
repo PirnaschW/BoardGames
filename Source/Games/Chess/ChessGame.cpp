@@ -16,17 +16,22 @@ namespace Chess
     {
       for (Coordinate j = 0; j < sizeY_; j++)
       {
-        const Piece& p = GetPiece(Location(BoardPart::Main, i, j));
-        if (!p.IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
-        {
-          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(PieceColor::White) ? movesW_ : movesB_);
+        const Location& l{ Location(BoardPart::Main, i, j) };
+        const Piece& p = GetPiece(l);
+        if (!p.IsBlank()) p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(PieceColor::White) ? movesW_ : movesB_);
+        else if (HasRule(DropTakenPieces))
+        { // loop through all taken pieces and try to drop them here
+          for (Coordinate i1 = 0; i1 < taken_.GetSizeX(); i1++)
+          {
+            for (Coordinate j1 = 0; j1 < taken_.GetSizeY(); j1++)
+            {
+              const Location& l1{ Location(BoardPart::Taken, i1, j1) };
+              const Piece& p1 = GetPiece(l1);
+              if (!p1.IsBlank()) AddIfLegal(p1.IsColor(PieceColor::White) ? movesW_ : movesB_, l1, l);
+            }
+          }
         }
       }
-    }
-
-    if (HasRule(DropTakenPieces))
-    {
-      // TODO: add drop moves
     }
   }
 

@@ -59,6 +59,7 @@ namespace Chess
     DropTakenPieces      = 0x0200,                         // taken pieces can be dropped as a move
     LeganPawns           = 0x0400,                         // Pawns move diagonal left and hit left and up
     BerolinaPawns        = 0x0800,                         // Pawns move diagonal and take straight
+    EnPassant            = 0x1000,                         // taking en passant allowed
   };
 
 }

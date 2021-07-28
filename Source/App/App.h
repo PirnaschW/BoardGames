@@ -1,4 +1,4 @@
-// BG-MFC.h : precompiled header include file for MFC related code
+// App.h : precompiled header include file for MFC related code
 
 #pragma warning( push, 2 )  // compile Windows includes with level 3 only
 

@@ -19,7 +19,8 @@ namespace Chess
     [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept override { return ChessPosition::EvaluateStatically(); }
 
   private:
-    virtual Rule GetRule() const noexcept override { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
+    virtual Rule GetRule() const noexcept override { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
+// TODO: add (or not) EnPassant to all rules
     static bool ValidPosition(const std::vector<Coordinate>& c) noexcept { return true; }
   };
 
