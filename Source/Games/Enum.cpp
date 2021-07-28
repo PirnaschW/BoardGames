@@ -5,7 +5,6 @@
 #include "Games\CFour\CFourGame.h"
 #include "Games\Checkers\CheckersGame.h"
 #include "Games\Chess\ChessGame.h"
-#include "Games\Cheversi\CheversiGame.h"
 #include "Games\Espionage\EspionageGame.h"
 #include "Games\Hasami\HasamiGame.h"
 #include "Games\Knight Fight\KnightFGame.h"
@@ -28,7 +27,6 @@ namespace BoardGamesCore
     v.push_back(IDR_GAMETYPE_CFOUR);
     v.push_back(IDR_GAMETYPE_CHECKERS);
     v.push_back(IDR_GAMETYPE_CHESS);
-    v.push_back(IDR_GAMETYPE_CHEVERSI);
     v.push_back(IDR_GAMETYPE_ESPIONAGE);
     v.push_back(IDR_GAMETYPE_HASAMI);
     v.push_back(IDR_GAMETYPE_KNIGHTF);
@@ -48,7 +46,6 @@ namespace BoardGamesCore
     case IDR_GAMETYPE_CFOUR:      return &Variants<CFour        ::CFourGame    >::GetVariants();
     case IDR_GAMETYPE_CHECKERS:   return &Variants<Checkers     ::CheckersGame >::GetVariants();
     case IDR_GAMETYPE_CHESS:      return &Variants<Chess        ::ChessGame    >::GetVariants();
-    case IDR_GAMETYPE_CHEVERSI:   return &Variants<Cheversi     ::CheversiGame >::GetVariants();
     case IDR_GAMETYPE_ESPIONAGE:  return &Variants<Espionage    ::EspionageGame>::GetVariants();
     case IDR_GAMETYPE_HASAMI:     return &Variants<Hasami       ::HasamiGame   >::GetVariants();
     case IDR_GAMETYPE_KNIGHTF:    return &Variants<KnightF      ::KnightFGame  >::GetVariants();
@@ -71,7 +68,6 @@ namespace BoardGamesCore
     case IDR_GAMETYPE_CFOUR:      return new CFour        ::CFourGame     (v, Variants<class CFour        ::CFourGame    >::GetPieces(v), CFour        ::Variants<class CFour        ::CFourGame    >::GetDimensions(v));
     case IDR_GAMETYPE_CHECKERS:   return new Checkers     ::CheckersGame  (v, Variants<class Checkers     ::CheckersGame >::GetPieces(v), Checkers     ::Variants<class Checkers     ::CheckersGame >::GetDimensions(v));
     case IDR_GAMETYPE_CHESS:      return new Chess        ::ChessGame     (v, Variants<class Chess        ::ChessGame    >::GetPieces(v), Chess        ::Variants<class Chess        ::ChessGame    >::GetDimensions(v));
-    case IDR_GAMETYPE_CHEVERSI:   return new Cheversi     ::CheversiGame  (v, Variants<class Cheversi     ::CheversiGame >::GetPieces(v), Cheversi     ::Variants<class Cheversi     ::CheversiGame >::GetDimensions(v));
     case IDR_GAMETYPE_ESPIONAGE:  return new Espionage    ::EspionageGame (v, Variants<class Espionage    ::EspionageGame>::GetPieces(v), Espionage    ::Variants<class Espionage    ::EspionageGame>::GetDimensions(v));
     case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (v, Variants<class Hasami       ::HasamiGame   >::GetPieces(v), Hasami       ::Variants<class Hasami       ::HasamiGame   >::GetDimensions(v));
     case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (v, Variants<class KnightF      ::KnightFGame  >::GetPieces(v), KnightF      ::Variants<class KnightF      ::KnightFGame  >::GetDimensions(v));

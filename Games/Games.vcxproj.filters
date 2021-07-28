@@ -46,18 +46,6 @@
     <Filter Include="Game Checkers\Source Files">
       <UniqueIdentifier>{4456643d-d08b-4cc9-88d2-3b5dd509f123}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Cheversi">
-      <UniqueIdentifier>{53c035e3-ec38-4125-bfed-62d42b2f6d5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Cheversi\Source Files">
-      <UniqueIdentifier>{3440260c-8217-40ef-9f5d-1b1577384b3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Cheversi\Header Files">
-      <UniqueIdentifier>{0a0c7bdb-369e-4bc3-a96b-4d08e66ab51f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Cheversi\Resource Files">
-      <UniqueIdentifier>{3863fdcf-e272-48cc-b88b-b2e620960d2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Espionage">
       <UniqueIdentifier>{ef9e51f9-28eb-49c0-8d25-50fc50fa1b39}</UniqueIdentifier>
     </Filter>
@@ -204,9 +192,6 @@
     <ClCompile Include="..\Source\Games\Games.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Games\Cheversi\CheversiGame.cpp">
-      <Filter>Game Cheversi\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Games\Espionage\EspionageGame.cpp">
       <Filter>Game Espionage\Source Files</Filter>
     </ClCompile>
@@ -252,6 +237,9 @@
     <ClCompile Include="..\Source\Games\Chess\ChessVariants.cpp">
       <Filter>Game Chess\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Games\Chess\ChessPieces.cpp">
+      <Filter>Game Chess\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxGame.h">
@@ -280,12 +268,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Games\Games.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Games\Cheversi\CheversiGame.h">
-      <Filter>Game Cheversi\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Games\Cheversi\CheversiResource.h">
-      <Filter>Game Cheversi\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Games\Espionage\EspionageGame.h">
       <Filter>Game Espionage\Header Files</Filter>
@@ -362,6 +344,12 @@
     <ClInclude Include="..\Source\Games\Chess\ChessGame.h">
       <Filter>Game Chess\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Games\Chess\ChessPieces.h">
+      <Filter>Game Chess\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Games\Chess\ChessVariants.h">
+      <Filter>Game Chess\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\Games\Cam\Cam.rc2">
@@ -372,9 +360,6 @@
     </None>
     <None Include="..\Source\Games\CFour\res\CFour.rc2">
       <Filter>Game CFour\Source Files</Filter>
-    </None>
-    <None Include="..\Source\Games\Cheversi\res\Cheversi.rc2">
-      <Filter>Game Cheversi\Source Files</Filter>
     </None>
     <None Include="..\Source\Games\Hasami\res\Hasami.rc2">
       <Filter>Game Hasami\Source Files</Filter>
@@ -422,9 +407,6 @@
     </Image>
     <Image Include="..\Source\Games\Checkers\res\CheckersDoc.ico">
       <Filter>Game Checkers\Resource Files</Filter>
-    </Image>
-    <Image Include="..\Source\Games\Cheversi\res\CheversiDoc.ico">
-      <Filter>Game Cheversi\Resource Files</Filter>
     </Image>
     <Image Include="..\Source\Games\Espionage\res\EspionageBSpy.bmp">
       <Filter>Game Espionage\Resource Files</Filter>

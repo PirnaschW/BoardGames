@@ -13,6 +13,7 @@ namespace Chess
     inline ChessVariantPosition<V>(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
     virtual MainPosition* Clone(void) const noexcept override { return new ChessVariantPosition<V>(*this); }
     virtual void SetStartingPosition() noexcept override { ChessPosition::SetStartingPosition(); }
+    virtual void GetAllMoves(void) const noexcept { ChessPosition::GetAllMoves(); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override { return ChessPosition::AddIfLegal(m, fr, to); }
   private:
     virtual Rule GetRule() const noexcept override { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
@@ -282,6 +283,50 @@ namespace Chess
   // specializations for ChessVariant::Cheversi
   template <> inline Rule ChessVariantPosition<ChessVariant::Cheversi>::GetRule() const noexcept { return None; }
   template <> inline void ChessVariantPosition<ChessVariant::Cheversi>::SetStartingPosition() noexcept {}  // start empty
+  template <> inline void ChessVariantPosition<ChessVariant::Cheversi>::GetAllMoves(void) const noexcept // collect all moves for all pieces
+  {
+    assert(movesW_.empty());
+    assert(movesB_.empty());
+
+    movesW_.reserve(20);
+    movesB_.reserve(20);
+
+    if (sequence_.size() == 0)  // first move?
+    {
+    }
+
+    for (Coordinate i = 0; i < sizeX_; i++)
+    {
+      for (Coordinate j = 0; j < sizeY_; j++)
+      {
+        const Piece& p = GetPiece(Location(BoardPart::Main, i, j));
+        if (!p.IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
+        {
+          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(PieceColor::White) ? movesW_ : movesB_);
+        }
+      }
+    }
+  }
+  template <> inline bool ChessVariantPosition<ChessVariant::Cheversi>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  {
+    const Piece& pf = GetPiece(fr);                                       // piece to move
+    if (pf == Piece::NoTile) return false;                               // out of board
+    if (pf.IsBlank()) return false;                                      // tile not occupied
+
+    const Piece& pt = GetPiece(to);                                       // piece on target field
+    if (pt == Piece::NoTile) return false;                               // out of board
+
+    Actions a{};
+    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
+    if (!pt.IsBlank())
+    {
+      a.push_back(std::make_shared<ActionLift>(to, pt));                    // pick opponent piece up
+      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+    }
+    a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
+    m.push_back(std::make_shared<Move>(a));                               // add move to move list
+    return false;
+  }
 
 
   // specializations for ChessVariant::DiceChess

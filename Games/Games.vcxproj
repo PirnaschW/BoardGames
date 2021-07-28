@@ -199,6 +199,7 @@
     <ClCompile Include="..\Source\Games\Brainking.cpp" />
     <ClCompile Include="..\Source\Games\Checkers\CheckersVariants.cpp" />
     <ClCompile Include="..\Source\Games\Chess\ChessGame.cpp" />
+    <ClCompile Include="..\Source\Games\Chess\ChessPieces.cpp" />
     <ClCompile Include="..\Source\Games\Chess\ChessVariants.cpp" />
     <ClCompile Include="..\Source\Games\Dispatch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -241,16 +242,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Games.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\Source\Games\Checkers\CheckersGame.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Games.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Games.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Games.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Games.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="..\Source\Games\Cheversi\CheversiGame.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Games.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
@@ -367,7 +358,9 @@
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxResource.h" />
     <ClInclude Include="..\Source\Games\BrainKing.h" />
     <ClInclude Include="..\Source\Games\Chess\ChessGame.h" />
+    <ClInclude Include="..\Source\Games\Chess\ChessPieces.h" />
     <ClInclude Include="..\Source\Games\Chess\ChessResource.h" />
+    <ClInclude Include="..\Source\Games\Chess\ChessVariants.h" />
     <ClInclude Include="..\Source\Games\Dispatch.h" />
     <ClInclude Include="..\Source\Games\Enum.h" />
     <ClInclude Include="..\Source\Games\Cam\CamGame.h" />
@@ -376,8 +369,6 @@
     <ClInclude Include="..\Source\Games\CFour\CFourResource.h" />
     <ClInclude Include="..\Source\Games\Checkers\CheckersGame.h" />
     <ClInclude Include="..\Source\Games\Checkers\CheckersResource.h" />
-    <ClInclude Include="..\Source\Games\Cheversi\CheversiGame.h" />
-    <ClInclude Include="..\Source\Games\Cheversi\CheversiResource.h" />
     <ClInclude Include="..\Source\Games\Espionage\EspionageGame.h" />
     <ClInclude Include="..\Source\Games\Espionage\EspionageResource.h" />
     <ClInclude Include="..\Source\Games\Games.h" />
@@ -405,7 +396,6 @@
     <None Include="..\Source\Games\CFour\res\CFour.rc2" />
     <None Include="..\Source\Games\Checkers\Checkers.rc2" />
     <None Include="..\Source\Games\Chess\Chess.rc2" />
-    <None Include="..\Source\Games\Cheversi\res\Cheversi.rc2" />
     <None Include="..\Source\Games\Espionage\Espionage.rc2" />
     <None Include="..\Source\Games\Hasami\res\Hasami.rc2" />
     <None Include="..\Source\Games\Knight Fight\res\KnightF.rc2" />
@@ -462,7 +452,6 @@
     <Image Include="..\Source\Games\Chess\res\wqs.bmp" />
     <Image Include="..\Source\Games\Chess\res\wrl.bmp" />
     <Image Include="..\Source\Games\Chess\res\wrs.bmp" />
-    <Image Include="..\Source\Games\Cheversi\res\CheversiDoc.ico" />
     <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral1.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral2.bmp" />
     <Image Include="..\Source\Games\Espionage\res\EspionageBGeneral3.bmp" />
