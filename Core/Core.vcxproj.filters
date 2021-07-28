@@ -37,16 +37,13 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Source\BGResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Core\Variant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\Resource.h">
+    <ClInclude Include="..\Source\Core\CoreResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\PValue.h">

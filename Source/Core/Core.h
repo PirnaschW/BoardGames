@@ -13,8 +13,8 @@
 
 #include "Util\Util.h"
 #include "MFC\MFC.h"
-#include "BGResource.h"
 
+#include "Core\CoreResource.h"
 #include "Core\Using.h"
 #include "Core\Offset.h"
 #include "Core\Location.h"

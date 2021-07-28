@@ -89,7 +89,7 @@ namespace BoardGamesCore
     virtual bool AddIfLegal(Moves&, const Location&, const Location&) const noexcept { return false; };
     [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept;       // calculate position value
     [[ nodiscard ]] virtual PositionValue EvaluateChainLengths(unsigned int max) const noexcept;        // calculate position value by chain lengths
-    virtual unsigned int GetChainValue(unsigned int z) const noexcept { return 0; }
+    virtual unsigned int GetChainValue(unsigned int /*z*/) const noexcept { return 0; }
     virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies) const noexcept;
     virtual PositionValue EvaluateBF(AIContext& plist, bool w, unsigned int plies) const noexcept;
     PositionValue GetValue(bool w) const noexcept;

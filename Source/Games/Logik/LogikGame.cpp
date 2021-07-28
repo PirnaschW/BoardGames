@@ -359,14 +359,14 @@ namespace Logik
     p->Empty();
     p->Add(LogikPiece::LPieceB);
     p->Add(LogikPiece::LPieceW);
-    if (MaxColors > 0) p->Add(LogikPiece::LPiece1);
-    if (MaxColors > 1) p->Add(LogikPiece::LPiece2);
-    if (MaxColors > 2) p->Add(LogikPiece::LPiece3);
-    if (MaxColors > 3) p->Add(LogikPiece::LPiece4);
-    if (MaxColors > 4) p->Add(LogikPiece::LPiece5);
-    if (MaxColors > 5) p->Add(LogikPiece::LPiece6);
-    if (MaxColors > 6) p->Add(LogikPiece::LPiece7);
-    if (MaxColors > 7) p->Add(LogikPiece::LPiece8);
+    if constexpr (MaxColors > 0) p->Add(LogikPiece::LPiece1);
+    if constexpr (MaxColors > 1) p->Add(LogikPiece::LPiece2);
+    if constexpr (MaxColors > 2) p->Add(LogikPiece::LPiece3);
+    if constexpr (MaxColors > 3) p->Add(LogikPiece::LPiece4);
+    if constexpr (MaxColors > 4) p->Add(LogikPiece::LPiece5);
+    if constexpr (MaxColors > 5) p->Add(LogikPiece::LPiece6);
+    if constexpr (MaxColors > 6) p->Add(LogikPiece::LPiece7);
+    if constexpr (MaxColors > 7) p->Add(LogikPiece::LPiece8);
     return p;
   }
 

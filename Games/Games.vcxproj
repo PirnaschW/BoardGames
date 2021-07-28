@@ -117,6 +117,7 @@
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x32 Debug\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +138,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x32 Release\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,6 +159,7 @@
       <OmitFramePointers>false</OmitFramePointers>
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x64 Debug\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,6 +180,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x64 Release\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -353,7 +357,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Source\BGResource.h" />
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxGame.h" />
     <ClInclude Include="..\Source\Games\Ataxx\AtaxxResource.h" />
     <ClInclude Include="..\Source\Games\BrainKing.h" />
@@ -381,6 +384,7 @@
     <ClInclude Include="..\Source\Games\Logik\LogikGame.h" />
     <ClInclude Include="..\Source\Games\Logik\LogikResource.h" />
     <ClInclude Include="..\Source\Games\Logik\res\LogikResource.h" />
+    <ClInclude Include="..\Source\Games\GamesResource.h" />
     <ClInclude Include="..\Source\Games\Shogi\ShogiGame.h" />
     <ClInclude Include="..\Source\Games\Shogi\ShogiResource.h" />
     <ClInclude Include="..\Source\Games\Tank Battle\TankBGame.h" />

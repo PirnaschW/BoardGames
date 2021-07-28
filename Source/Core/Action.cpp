@@ -86,7 +86,6 @@ namespace BoardGamesCore
           return;
         }
       }
-      assert(1 == 0); // must not happen - Taken is full??
     }
     else
     {

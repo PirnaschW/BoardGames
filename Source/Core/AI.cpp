@@ -166,7 +166,6 @@ namespace BoardGamesCore
     if (movelist.empty()) return v0;
 
     PositionValue best = PositionValue::PValueType::Lost;
-    int z = 0;
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
       MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list

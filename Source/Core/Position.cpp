@@ -50,7 +50,6 @@ namespace BoardGamesCore
 
   void MainPosition::SetPosition(std::vector<const Piece*>& list)
   {
-    unsigned int z{};
     auto iList = list.cbegin();
     for (Coordinate j = 0; j < sizeY_; j++)
     {
@@ -160,7 +159,7 @@ namespace BoardGamesCore
     NextPlayer();                                                         // after the move, it's the next player's turn
   }
 
-  void MainPosition::Undo(const Move& m) noexcept
+  void MainPosition::Undo(const Move& /*m*/) noexcept
   {
     assert(1 == 0);
   }

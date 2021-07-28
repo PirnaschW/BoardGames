@@ -123,6 +123,7 @@
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x32 Debug\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,6 +150,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x32 Release\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,7 +159,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ResourceCompile>
-      <ShowProgress>true</ShowProgress>
+      <ShowProgress>false</ShowProgress>
       <AdditionalIncludeDirectories>;D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
@@ -175,6 +177,7 @@
       <OmitFramePointers>false</OmitFramePointers>
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x64 Debug\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -201,6 +204,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <PrecompiledHeaderOutputFile>$(SolutionDir)Output\x64 Release\$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -209,7 +213,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ResourceCompile>
-      <ShowProgress>true</ShowProgress>
+      <ShowProgress>false</ShowProgress>
       <AdditionalIncludeDirectories>;D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
@@ -221,6 +225,7 @@
     <ClInclude Include="..\Source\App\BGView.h" />
     <ClInclude Include="..\Source\App\ChildFrm.h" />
     <ClInclude Include="..\Source\App\MainFrm.h" />
+    <ClInclude Include="..\Source\BGResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\App\App.cpp">

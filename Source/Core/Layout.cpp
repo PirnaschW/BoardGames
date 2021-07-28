@@ -41,7 +41,7 @@ namespace BoardGamesCore
     }
   }
 
-  void Layout::Draw(DC* dc, const Position* pos, _Mode mode) const
+  void Layout::Draw(DC* dc, const Position* pos, _Mode /*mode*/) const
   {
     for (const auto& t : tiles_)
       t->Draw(dc, pos->GetPiece(t->GetLocation()));
@@ -178,12 +178,12 @@ namespace BoardGamesCore
     return false;  // no view update needed
   }
 
-  bool Game::React(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags)     // react to keyboard input (not menu shortcuts, but keyboard typing)
+  bool Game::React(unsigned int /*nChar*/, unsigned int /*nRepCnt*/, unsigned int /*nFlags*/)     // react to keyboard input (not menu shortcuts, but keyboard typing)
   {
     return false;  // no view update needed
   }
 
-  bool Game::React(unsigned int event, unsigned int nFlags, const Point& p)          // react to mouse events
+  bool Game::React(unsigned int event, unsigned int /*nFlags*/, const Point& p)          // react to mouse events
   {
     switch (event)
     {

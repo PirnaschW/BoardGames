@@ -335,9 +335,6 @@
     <ClInclude Include="..\Source\Games\BrainKing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\BGResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Games\Chess\ChessResource.h">
       <Filter>Game Chess\Header Files</Filter>
     </ClInclude>
@@ -349,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Games\Chess\ChessVariants.h">
       <Filter>Game Chess\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Games\GamesResource.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

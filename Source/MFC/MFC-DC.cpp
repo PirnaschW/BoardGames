@@ -21,7 +21,7 @@ namespace BoardGamesMFC
   {
     CPen pen{ nPenStyle, nWidth, crColor };
     return GdiObjectRAII(cdc_, (CGdiObject*) cdc_->SelectObject(&pen));
-    pen.Detach();
+//    pen.Detach();
   }
 
   void DC::Rectangle(const Rect& r)

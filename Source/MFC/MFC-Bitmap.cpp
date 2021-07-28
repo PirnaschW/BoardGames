@@ -22,7 +22,7 @@ namespace BoardGamesMFC
     }
 
     // Create monochrome (1 bit) mask bitmap.  
-    auto b = bmM_->CreateBitmap(bm.bmWidth, bm.bmHeight, 1U, 1U, NULL);
+    /*auto b = */  bmM_->CreateBitmap(bm.bmWidth, bm.bmHeight, 1U, 1U, NULL);
 
     CDC* const pCDC = *pDC;
 

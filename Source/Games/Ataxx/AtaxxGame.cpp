@@ -5,8 +5,8 @@
 namespace Ataxx
 {
   const Checker Checker::TheChecker{};
-  const AtaxxPiece AtaxxPiece::AtaxxPieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
-  const AtaxxPiece AtaxxPiece::AtaxxPieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
+  const AtaxxPiece AtaxxPiece::AtaxxPieceW{ Checker::TheChecker, PieceColor::White, IDB_W0L };
+  const AtaxxPiece AtaxxPiece::AtaxxPieceB{ Checker::TheChecker, PieceColor::Black, IDB_B0L };
 
   void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& m) const noexcept
   {
@@ -118,7 +118,7 @@ namespace Ataxx
     return v;
   }
 
-  const PieceMapP& AtaxxGame::GetPieces(const VariantChosen& v) noexcept
+  const PieceMapP& AtaxxGame::GetPieces(const VariantChosen& /*v*/) noexcept
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();  // the map is reused, but not its content - need to rebuild it every time
