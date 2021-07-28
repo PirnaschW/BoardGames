@@ -26,6 +26,7 @@ namespace Chess
   public:
     ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
     virtual void SetStartingPosition() noexcept override;
+    virtual void GetAllMoves(void) const noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     constexpr virtual unsigned int GetMoveCountFactor(void) const noexcept override { return 20; }
     [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept override;

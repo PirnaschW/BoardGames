@@ -56,6 +56,9 @@ namespace Chess
     TakeOwn              = 0x0040,                         // own pieces can be taken
     PawnsPromote         = 0x0080,                         // Pawns can promote
     PawnsDoubleStep      = 0x0100,                         // Pawns can make a double-step
+    DropTakenPieces      = 0x0200,                         // taken pieces can be dropped as a move
+    LeganPawns           = 0x0400,                         // Pawns move diagonal left and hit left and up
+    BerolinaPawns        = 0x0800,                         // Pawns move diagonal and take straight
   };
 
 }

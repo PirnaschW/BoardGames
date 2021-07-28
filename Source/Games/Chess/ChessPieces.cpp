@@ -65,6 +65,9 @@ namespace Chess
     const PieceColor& c{ p.GetPiece(l).GetColor()};
     const int dy = c == PieceColor::White ? -1 : 1;
 
+ // TODO: Legan Pawns movement
+ // TODO: Berolina Pawns movement
+
     if (p.HasRule(AllowTakes))
     {
       const Location& lr{ l + Offset(+1, dy) };  // right forward
@@ -153,6 +156,8 @@ namespace Chess
   void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     for (const Offset& o : Offset::QDirection) p.AddIfLegal(moves, l, l + o);
+
+    // TODO: implement castling rules
   }
 
 }

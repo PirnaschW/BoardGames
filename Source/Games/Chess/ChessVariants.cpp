@@ -24,6 +24,12 @@ namespace Chess
   };
 
 
+  //#########################################
+  // Specializations - those contain thh variant specific code
+  // note that sequence DOES matter in defining method specializations!
+  // each method specialization must be defined BEFORE it is used / called
+
+
   // specializations for ChessVariant::Corner
   template <> inline Rule ChessVariantPosition<ChessVariant::Corner>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
   template <> inline bool ChessVariantPosition<ChessVariant::Corner>::ValidPosition(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
@@ -90,16 +96,32 @@ namespace Chess
     SetPiece({ BoardPart::Main, 3U, 0U }, Piece::NoPiece);
     SetPiece({ BoardPart::Main, 4U, 0U }, Piece::NoPiece);
   }
+  template <> inline PositionValue ChessVariantPosition<ChessVariant::Horde>::EvaluateStatically(void) const noexcept
+  {
+    // TODO: evaluate Horde positions
+    return ChessPosition::EvaluateStatically(); // temporary
+  }
 
 
   // specializations for ChessVariant::Loop
+  template <> inline Rule ChessVariantPosition<ChessVariant::Loop>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | DropTakenPieces; }
 
 
   // specializations for ChessVariant::Anti
-  template <> inline Rule ChessVariantPosition<ChessVariant::Anti>::GetRule() const noexcept { return AllowMoves | AllowTakes | MustTake | PawnsDoubleStep; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Anti>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | MustTake | PawnsDoubleStep; }
+  template <> inline PositionValue ChessVariantPosition<ChessVariant::Anti>::EvaluateStatically(void) const noexcept
+  {
+    // TODO: evaluate Anti positions
+    return ChessPosition::EvaluateStatically(); // temporary
+  }
 
 
   // specializations for ChessVariant::Extinction
+  template <> inline PositionValue ChessVariantPosition<ChessVariant::Extinction>::EvaluateStatically(void) const noexcept
+  {
+    // TODO: evaluate Extinction positions
+    return ChessPosition::EvaluateStatically(); // temporary
+  }
 
   
   // specializations for ChessVariant::Maharajah
@@ -117,12 +139,22 @@ namespace Chess
 
 
   // specializations for ChessVariant::ThreeChecks
+  template <> inline PositionValue ChessVariantPosition<ChessVariant::ThreeChecks>::EvaluateStatically(void) const noexcept
+  {
+    // TODO: evaluate ThreeChecks positions
+    return ChessPosition::EvaluateStatically(); // temporary
+  }
 
 
   // specializations for ChessVariant::Dark
-  
+// TODO: Dark Chess
 
   // specializations for ChessVariant::Atomic
+  template <> inline bool ChessVariantPosition<ChessVariant::Atomic>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  {
+    // TODO: AddifLegal Atomic chess
+    return ChessPosition::AddIfLegal(m, fr, to);  // temporary
+  }
 
 
   // specializations for ChessVariant::Janus
@@ -151,14 +183,21 @@ namespace Chess
 
   // specializations for ChessVariant::Screen
   template <> inline void ChessVariantPosition<ChessVariant::Screen>::SetStartingPosition() noexcept {} // start blank
-  
+  // TODO: Screen chess
+
 
   // specializations for ChessVariant::CrazyScreen
   template <> inline void ChessVariantPosition<ChessVariant::CrazyScreen>::SetStartingPosition() noexcept {} // start blank
+  // TODO: CrazyScreen chess
 
   
   // specializations for ChessVariant::Cylinder
-  
+  template <> inline bool ChessVariantPosition<ChessVariant::Cylinder>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  {
+    // TODO: AddifLegal Cylinder chess
+    return ChessPosition::AddIfLegal(m, fr, to);  // temporary
+  }
+
 
   // specializations for ChessVariant::Amazons
   template <> inline void ChessVariantPosition<ChessVariant::Amazons>::SetStartingPosition() noexcept
@@ -169,6 +208,7 @@ namespace Chess
 
 
   // specializations for ChessVariant::Berolina
+  template <> inline Rule ChessVariantPosition<ChessVariant::Berolina>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | BerolinaPawns; }
 
 
   // specializations for ChessVariant::FischerRandom
@@ -201,6 +241,7 @@ namespace Chess
   
 
   // specializations for ChessVariant::Legan
+  template <> inline Rule ChessVariantPosition<ChessVariant::Legan>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | LeganPawns; }
   template <> inline void ChessVariantPosition<ChessVariant::Legan>::SetStartingPosition() noexcept
   {
     SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
@@ -224,7 +265,8 @@ namespace Chess
 
 
   // specializations for ChessVariant::KnightRelay
-  
+ // TODO: add KnightRelay chess
+
 
   // specializations for ChessVariant::Grand
   template <> inline void ChessVariantPosition<ChessVariant::Grand>::SetStartingPosition() noexcept
@@ -277,10 +319,11 @@ namespace Chess
 
 
   // specializations for ChessVariant::LosAlamos
-  template <> inline Rule ChessVariantPosition<ChessVariant::LosAlamos>::GetRule() const noexcept { return AllowMoves | AllowTakes; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::LosAlamos>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote; }
 
 
   // specializations for ChessVariant::Ambiguous
+  // TODO: add Ambiguous chess
 
 
   // specializations for ChessVariant::Cheversi
@@ -294,49 +337,25 @@ namespace Chess
     movesW_.reserve(20);
     movesB_.reserve(20);
 
+  // TODO: add GetAllMoves for Cheversi
     if (sequence_.size() == 0)  // first move?
     {
     }
-
-    for (Coordinate i = 0; i < sizeX_; i++)
-    {
-      for (Coordinate j = 0; j < sizeY_; j++)
-      {
-        const Piece& p = GetPiece(Location(BoardPart::Main, i, j));
-        if (!p.IsKind(noKind::NoKind))  // skip blank fields as well as nonexisting tiles
-        {
-          p.CollectMoves(*this, Location(BoardPart::Main, i, j), p.IsColor(PieceColor::White) ? movesW_ : movesB_);
-        }
-      }
-    }
   }
-  template <> inline bool ChessVariantPosition<ChessVariant::Cheversi>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  
+
+  // specializations for ChessVariant::Dice
+  template <> inline void ChessVariantPosition<ChessVariant::Dice>::GetAllMoves(void) const noexcept // collect all moves for all pieces
   {
-    const Piece& pf = GetPiece(fr);                                       // piece to move
-    if (pf == Piece::NoTile) return false;                               // out of board
-    if (pf.IsBlank()) return false;                                      // tile not occupied
+    // TODO: roll dice for Dice
+    // TODO: GetAllMoves for Dice
 
-    const Piece& pt = GetPiece(to);                                       // piece on target field
-    if (pt == Piece::NoTile) return false;                               // out of board
-
-    Actions a{};
-    a.push_back(std::make_shared<ActionLift>(fr, pf));                    // pick piece up
-    if (!pt.IsBlank())
-    {
-      a.push_back(std::make_shared<ActionLift>(to, pt));                    // pick opponent piece up
-      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
-    }
-    a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
-    m.push_back(std::make_shared<Move>(a));                               // add move to move list
-    return false;
+    ChessPosition::GetAllMoves();  // temporary
   }
-
-
-  // specializations for ChessVariant::DiceChess
 
 
   // specializations for ChessVariant::Recycle
-  template <> inline Rule ChessVariantPosition<ChessVariant::Recycle>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | TakeOwn | PawnsPromote | PawnsDoubleStep; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Recycle>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | TakeOwn | PawnsPromote | PawnsDoubleStep | DropTakenPieces; }
 
 
   // specializations for ChessVariant::IceAge
@@ -351,6 +370,8 @@ namespace Chess
       }
     }
   }
+  // TODO: add IceAge post-move freezing
+  // note: freezing is known to AI / player
 
 
   // specializations for ChessVariant::Behemoth
@@ -359,13 +380,21 @@ namespace Chess
     ChessPosition::SetStartingPosition();
     SetPiece({ BoardPart::Main,3U, 4U }, ChessPiece::RB);
   }
+  // TODO: add Behemoth post-move killing
+  // note: killing is NOT known to AI / player
 
 
   // specializations for ChessVariant::CheshireCat
+ // TODO: add CheshireCat field removal
 
 
   // specializations for ChessVariant::Knightmate
   template <> inline Rule ChessVariantPosition<ChessVariant::Knightmate>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | TakeKing; }
+  template <> inline PositionValue ChessVariantPosition<ChessVariant::Knightmate>::EvaluateStatically(void) const noexcept
+  {
+    // TODO: evaluate Knightmate positions
+    return ChessPosition::EvaluateStatically(); // temporary
+  }
 
 
   // specializations for ChessVariant::RacingKings
@@ -390,6 +419,11 @@ namespace Chess
     SetPiece({ BoardPart::Main,sizeX_ - 1U - 3U,sizeY_ - 1U }, ChessPiece::WN);
     SetPiece({ BoardPart::Main,sizeX_ - 1U - 3U,sizeY_ - 2U }, ChessPiece::WN);
   }
+  template <> inline PositionValue ChessVariantPosition<ChessVariant::RacingKings>::EvaluateStatically(void) const noexcept
+  {
+    // TODO: evaluate RacingKings positions
+    return ChessPosition::EvaluateStatically(); // temporary
+  }
 
   
   // specializations for ChessVariant::Dice10x10
@@ -401,11 +435,18 @@ namespace Chess
     SetPiecesHSymmetrical(sizeX_ - 1U - 3U, 0U, ChessPiece::BK, ChessPiece::WK);
     SetPiecesHSymmetrical(sizeX_ - 1U - 4U, 0U, ChessPiece::BK, ChessPiece::WK);
   }
+  template <> inline void ChessVariantPosition<ChessVariant::Dice10x10>::GetAllMoves(void) const noexcept // collect all moves for all pieces
+  {
+    // TODO: roll dice for Dice10x10
+    // TODO: GetAllMoves for Dice10x10
+
+    ChessPosition::GetAllMoves();  // temporary
+  }
 
 
   // specializations for ChessVariant::Massacre
-  template <> inline Rule ChessVariantPosition<ChessVariant::Massacre>::GetRule() const noexcept { return AllowTakes;; }
-  template <> inline constexpr virtual unsigned int ChessVariantPosition<ChessVariant::Massacre>::GetMoveCountFactor(void) const noexcept override { return 1000; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Massacre>::GetRule() const noexcept { return AllowTakes; }
+  template <> inline constexpr virtual unsigned int ChessVariantPosition<ChessVariant::Massacre>::GetMoveCountFactor(void) const noexcept { return 1000; }
   template <> inline void ChessVariantPosition<ChessVariant::Massacre>::SetStartingPosition() noexcept
   {
     std::vector<Location> ll;
@@ -471,7 +512,7 @@ namespace Chess
       { Variant{ "Knightmate Chess",        VC(ChessVariant::Knightmate),         8,  8 } },
       { Variant{ "Racing Kings",            VC(ChessVariant::RacingKings),        8,  8 } },
       { Variant{ "Dice Chess 10x10",        VC(ChessVariant::Dice10x10),         10, 10 } },
-      { Variant{ "Massacre Chess",          VC(ChessVariant::Massacre),           8,  8, 2, 20 } },
+      { Variant{ "Massacre Chess",          VC(ChessVariant::Massacre),           8,  8,  2, 20 } },
     };
     return v;
   }
