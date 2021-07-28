@@ -193,7 +193,7 @@ namespace BoardGamesCore
     assert(movesW_.empty());
     assert(movesB_.empty());
 
-    // default evaluation: count all material, and add 20 * difference of move count. Overwrite for each game as needed
+    // default evaluation: count all material, and add difference of move count. Overwrite for each game as needed
     GetAllMoves();                                                             // fill the move lists
     depth_ = 1;
     if (onTurn_ == &PieceColor::White && movesW_.empty()) return PositionValue::PValueType::Lost;     // if no more moves, game over

@@ -40,6 +40,26 @@ namespace Chess
   const ChessPiece ChessPiece::RB{ Behemoth::TheBehemoth,PieceColor::NoColor, IDB_RBL };  // (Red) Behemoth
   const ChessPiece ChessPiece::GI{ Ice     ::TheIce,     PieceColor::NoColor, IDB_GIL };  // (Gray) Ice
 
+  const PieceMapP& ChessGame::GetPieces(const VariantChosen& v) noexcept
+  {
+    static const PieceMapP& p = std::make_shared<PieceMap>();
+    p->Empty();
+    p->Add(ChessPiece::WP);    p->Add(ChessPiece::BP);    // Pawn
+    p->Add(ChessPiece::WN);    p->Add(ChessPiece::BN);    // Knight
+    p->Add(ChessPiece::WB);    p->Add(ChessPiece::BB);    // Bishop
+    p->Add(ChessPiece::WR);    p->Add(ChessPiece::BR);    // Rook
+    p->Add(ChessPiece::WC);    p->Add(ChessPiece::BC);    // Cardinal = Bishop + Knight (also: Archbishop, Princess, Janus)
+    p->Add(ChessPiece::WM);    p->Add(ChessPiece::BM);    // Marshall = Rook + Knight 
+    p->Add(ChessPiece::WQ);    p->Add(ChessPiece::BQ);    // Queen 
+    p->Add(ChessPiece::WA);    p->Add(ChessPiece::BA);    // Amazon   = Queen + Knight 
+    p->Add(ChessPiece::WK);    p->Add(ChessPiece::BK);    // King  
+
+    p->Add(ChessPiece::RB);                                // (Red) Behemoth
+    p->Add(ChessPiece::GI);                                // (Gray) Ice
+    return p;
+  }
+
+
   void Pawn::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
   {
     const PieceColor& c{ p.GetPiece(l).GetColor()};
