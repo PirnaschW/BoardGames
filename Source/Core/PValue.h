@@ -68,16 +68,16 @@ namespace BoardGamesCore
     constexpr PositionValue Relative(bool w) const noexcept { return (w ? *this : -*this); }
 
     constexpr operator int(void) const { if (type_ != PValueType::Normal) throw std::exception("undefined PValue"); return value_; }
-    operator const char* (void) const {
-      static std::string s{};
+    operator const wchar_t* (void) const {
+      static std::wstring s{};
       switch (type_)
       {
-        case PValueType::Normal:    s = std::to_string(value_);   break;
-        case PValueType::Won:       s = "Won";                    break;
-        case PValueType::Lost:      s = "Lost";                   break;
-        case PValueType::Tie:       s = "Tie";                    break;
-        case PValueType::Undefined: s = "Undefined!";             break;
-        default:                    s = "huh?";                   break;
+        case PValueType::Normal:    s = std::to_wstring(value_);   break;
+        case PValueType::Won:       s = L"Won";                    break;
+        case PValueType::Lost:      s = L"Lost";                   break;
+        case PValueType::Tie:       s = L"Tie";                    break;
+        case PValueType::Undefined: s = L"Undefined!";             break;
+        default:                    s = L"huh?";                   break;
       }
       return s.c_str();
     }

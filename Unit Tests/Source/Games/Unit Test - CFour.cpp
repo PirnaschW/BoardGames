@@ -199,7 +199,7 @@ namespace UnitTestCFour
           MainPosition* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
-          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const char*)p1->GetValue(true));
+          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
           OutputDebugString(buffer);
           Assert::IsTrue(p1->GetValue(true) == val1[i1]);
 
@@ -209,7 +209,7 @@ namespace UnitTestCFour
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
-            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const char*)p2->GetValue(true));
+            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const wchar_t*)p2->GetValue(true));
             OutputDebugString(buffer);
             Assert::IsTrue(p2->GetValue(true) == val2[i1][i2]);
             delete p2;
@@ -261,7 +261,7 @@ namespace UnitTestCFour
           MainPosition* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
-          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const char*)p1->GetValue(true));
+          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
           OutputDebugString(buffer);
           Assert::IsTrue(p1->GetValue(true) == val1[i1]);
 
@@ -271,7 +271,7 @@ namespace UnitTestCFour
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
-            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const char*)p2->GetValue(true));
+            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const wchar_t*)p2->GetValue(true));
             OutputDebugString(buffer);
             Assert::IsTrue(p2->GetValue(true) == val2[i1][i2]);
             delete p2;
@@ -324,7 +324,7 @@ namespace UnitTestCFour
           MainPosition* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
-          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const char*)p1->GetValue(true));
+          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
           OutputDebugString(buffer);
           Assert::IsTrue(p1->GetValue(true) == val1[i1]);
 
@@ -334,7 +334,7 @@ namespace UnitTestCFour
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
-            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const char*)p2->GetValue(true));
+            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const wchar_t*)p2->GetValue(true));
             OutputDebugString(buffer);
             Assert::IsTrue(p2->GetValue(true) == val2[i1][i2]);
             delete p2;
@@ -413,7 +413,7 @@ namespace UnitTestCFour
           MainPosition* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
-          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const char*)p1->GetValue(true));
+          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
           OutputDebugString(buffer);
           Assert::IsTrue(p1->GetValue(true) == val1[i1]);
 
@@ -423,7 +423,7 @@ namespace UnitTestCFour
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
-            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const char*)p2->GetValue(true));
+            wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const wchar_t*)p2->GetValue(true));
             OutputDebugString(buffer);
             Assert::IsTrue(p2->GetValue(true) == val2[i1][i2]);
             delete p2;
@@ -505,7 +505,7 @@ namespace UnitTestCFour
           MainPosition* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
-          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const char*)p1->GetValue(true));
+          wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
           OutputDebugString(buffer);
           Assert::IsTrue(p1->GetValue(true) == val1[i1]);
 
@@ -515,7 +515,7 @@ namespace UnitTestCFour
           //  p2->Execute(*(p1->GetMoveList(false)[i2]));
           //  p2->SetValue(true, p2->EvaluateStatically());
 
-          //  wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const char*)p2->GetValue(true));
+          //  wsprintfW(buffer, L"%3d %3d: %10.10S\n", i1, i2, (const wchar_t*)p2->GetValue(true));
           //  OutputDebugString(buffer);
           //  Assert::IsTrue(p2->GetValue(true) == val2[i1][i2]);
           //  delete p2;

@@ -1,31 +1,49 @@
 
 class CDC;
-class CGdiObject;
+class CBrush;
+class CPen;
 
 namespace BoardGamesMFC
 {
-  class GdiObjectRAII
+ 
+  class Pen
   {
   public:
-    GdiObjectRAII(CDC* cdc, CGdiObject* gdi);
-    ~GdiObjectRAII(void);
+    constexpr Pen(int nPenStyle, int nWidth, unsigned char r, unsigned char g, unsigned char b) noexcept;
+    constexpr ~Pen() noexcept;
 
-  private:
-    CDC* cdc_;
-    CGdiObject* gdi_; // const, but the SelectObject interface doesn't support this
+  public:
+    const CPen* const pen_;
+
+  public:
+    static const Pen PenBlack;
+    static const Pen PenSelected;
   };
+
+  class Brush
+  {
+  public:
+    constexpr Brush(unsigned char r, unsigned char g, unsigned char b) noexcept;
+    Brush(unsigned int style) noexcept;
+    Brush(unsigned int style, unsigned char r, unsigned char g, unsigned char b, unsigned long hatch) noexcept;
+    constexpr ~Brush() noexcept;
+
+  public:
+    const CBrush* const brush_;
+
+  public:
+    static const Brush BrushNull;
+    static const Brush Brushxxx;
+  };
+
 
   class DC
   {
   public:
     constexpr DC(CDC* cdc) noexcept : cdc_{ cdc } {};
     constexpr operator CDC* (void) const noexcept { return cdc_; }
-    [[nodiscard]] const GdiObjectRAII SelectStockObject(int nIndex);
-    [[nodiscard]] const GdiObjectRAII SelectPen(int nPenStyle, int nWidth, unsigned long crColor);
-    [[nodiscard]] const GdiObjectRAII SelectPen(int nPenStyle, int nWidth, unsigned char r, unsigned char g, unsigned char b);
-    void Rectangle(const Rect& r);
-    void Rectangle(int l, int t, int r, int b);
-    bool Text(int x, int y, std::string s);
+    void Rectangle(const Rect& r, const Pen& p = Pen::PenBlack, const Brush& brush = Brush::BrushNull);
+    bool Text(int x, int y, std::wstring s);
 
   private:
     CDC* const cdc_{ nullptr };

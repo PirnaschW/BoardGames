@@ -250,23 +250,22 @@ namespace Logik
   {
     MainLayout::Draw(dc, pos, mode);       // let the (generic) parent draw the board itself
 
-    auto oldB = dc->SelectStockObject(No_Brush);  // use No_Brush to leave Rect's interior transparent
     // frame around the complete board (corrected, as Layout:: wouldn't know about extra pixels)
     for (unsigned int z = 4; z > 0; z--)
     {
       if (z != 2)
-        dc->Rectangle((int)(dim_.lEdge_ - z), (int)(dim_.tEdge_ - z), (int)(dim_.lEdge_ + dim_.xCount_ * (dim_.xDim_ + dim_.xSkip_) + 2 * BoardFrameX + 1 + z), (int)(dim_.tEdge_ + dim_.yCount_ * (dim_.yDim_ + dim_.ySkip_) + z));
+        dc->Rectangle(Rect{ (int) (dim_.lEdge_ - z), (int) (dim_.tEdge_ - z), (int) (dim_.lEdge_ + dim_.xCount_ * (dim_.xDim_ + dim_.xSkip_) + 2 * BoardFrameX + 1 + z), (int) (dim_.tEdge_ + dim_.yCount_ * (dim_.yDim_ + dim_.ySkip_) + z) });
     }
 
     // frame around the inner board
     for (unsigned int z = BoardFrameX; z > 0; z--)
     {
       if (z != 2)
-        dc->Rectangle(
+        dc->Rectangle(Rect{
           static_cast<int>(dim_.lEdge_ + (1 * MaxPegs) * (dim_.xDim_ + dim_.xSkip_) + 0 + BoardFrameX - z),
           static_cast<int>(dim_.tEdge_ - z),
           static_cast<int>(dim_.lEdge_ + (3 * MaxPegs) * (dim_.xDim_ + dim_.xSkip_) + 1 + BoardFrameX + z),
-          static_cast<int>(dim_.tEdge_ + (MaxTries * (dim_.yDim_ + dim_.ySkip_)) + z));
+          static_cast<int>(dim_.tEdge_ + (MaxTries * (dim_.yDim_ + dim_.ySkip_)) + z) });
     }
   }
 
@@ -325,7 +324,7 @@ namespace Logik
     try { e = lpos->GetBestMove(); }
     catch (int) // no possible move found
     {
-      BoardGamesMFC::AfxMessageBox("No moves are possible - input is contradictory");
+      BoardGamesMFC::AfxMessageBox(L"No moves are possible - input is contradictory");
       return false;
     }
     lpos->Execute(e);

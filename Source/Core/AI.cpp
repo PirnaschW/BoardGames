@@ -86,17 +86,17 @@ namespace BoardGamesCore
         plist.callback();
         if (value_ == PositionValue::PValueType::Lost)
         {
-          BoardGamesMFC::AfxMessageBox("Computer resigns - Player wins!");
+          BoardGamesMFC::AfxMessageBox(L"Computer resigns - Player wins!");
           _mode.Set(Mode::GameOver);
           return false;
         }
         if (value_ == PositionValue::PValueType::Won) {
-          BoardGamesMFC::AfxMessageBox("You might as well resign - Computer will win!");
+          BoardGamesMFC::AfxMessageBox(L"You might as well resign - Computer will win!");
           break;
         }
 
         if (value_ == PositionValue::PValueType::Tie) {
-          BoardGamesMFC::AfxMessageBox("Computer will hold a Draw.");
+          BoardGamesMFC::AfxMessageBox(L"Computer will hold a Draw.");
           break;
         }
       }

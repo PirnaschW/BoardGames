@@ -53,10 +53,8 @@ namespace BoardGamesCore
       if (t->GetLocation() == l)
       {
         Rect r = t->GetRect();
-        r.DeflateRect(-1, -1, -1, -1);
-        auto oldB = dc->SelectStockObject(No_Brush);
-        auto oldP = dc->SelectPen(PenStyle_Solid, 2, 0, 128, 255);
-        dc->Rectangle(r);
+        r.DeflateRect(1, 1, 1, 1);
+        dc->Rectangle(r, Pen::PenSelected);
       }
   }
 
@@ -76,7 +74,7 @@ namespace BoardGamesCore
     for (unsigned int z = 4; z > 0; z--)
     {
       if (z != 2)
-        dc->Rectangle((int)(dim_.lEdge_ - z), (int)(dim_.tEdge_ - z), (int)(dim_.lEdge_ + dim_.xCount_ * (dim_.xDim_ + dim_.xSkip_) + z), (int)(dim_.tEdge_ + dim_.yCount_ * (dim_.yDim_ + dim_.ySkip_) + z));
+        dc->Rectangle(Rect{ (int) (dim_.lEdge_ - z), (int) (dim_.tEdge_ - z), (int) (dim_.lEdge_ + dim_.xCount_ * (dim_.xDim_ + dim_.xSkip_) + z), (int) (dim_.tEdge_ + dim_.yCount_ * (dim_.yDim_ + dim_.ySkip_) + z) });
     }
     Layout::Draw(dc, pos, mode);
 
@@ -110,21 +108,21 @@ namespace BoardGamesCore
     }
 
     if (pos->GetDepth() >= 0U) {
-      char s[1000];
+      wchar_t s[1000];
       int h = 10;
-      const char* v = static_cast<const char*>(pos->GetValue(pos->OnTurn() == PieceColor::White));
-      strcpy_s(s,"Depth"               ); dc->Text(800, h += 20, s);  sprintf_s(s,"%u", pos->GetDepth());        dc->Text(1000, h, s);
-      strcpy_s(s,"Value"               ); dc->Text(800, h += 20, s);  sprintf_s(s,"%s",v);                       dc->Text(1000, h, s);
-      strcpy_s(s,"PList size"          ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", plist.size());          dc->Text(1000, h, s);
-      strcpy_s(s,"free mem"            ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", plist.freemem);         dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(Position)"    ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(Position));      dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(MainPosition)"); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(MainPosition));  dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(vector<Move>)"); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(Moves));         dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(Move)"        ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(Move));          dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(Action)"      ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(Action));        dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(ActionLift)"  ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(ActionLift));    dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(ActionJump)"  ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(ActionJump));    dc->Text(1000, h, s);
-      strcpy_s(s,"sizeof(ActionDrop)"  ); dc->Text(800, h += 20, s);  sprintf_s(s,"%zu", sizeof(ActionDrop));    dc->Text(1000, h, s);
+      const wchar_t* v = static_cast<const wchar_t*>(pos->GetValue(pos->OnTurn() == PieceColor::White));
+      wcscpy_s(s,L"Depth"               ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%u", pos->GetDepth());        dc->Text(1000, h, s);
+      wcscpy_s(s,L"Value"               ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%s",v);                       dc->Text(1000, h, s);
+      wcscpy_s(s,L"PList size"          ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", plist.size());          dc->Text(1000, h, s);
+      wcscpy_s(s,L"free mem"            ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", plist.freemem);         dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(Position)"    ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(Position));      dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(MainPosition)"); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(MainPosition));  dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(vector<Move>)"); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(Moves));         dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(Move)"        ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(Move));          dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(Action)"      ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(Action));        dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(ActionLift)"  ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(ActionLift));    dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(ActionJump)"  ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(ActionJump));    dc->Text(1000, h, s);
+      wcscpy_s(s,L"sizeof(ActionDrop)"  ); dc->Text(800, h += 20, s);  swprintf_s(s,L"%zu", sizeof(ActionDrop));    dc->Text(1000, h, s);
     }
   }
 

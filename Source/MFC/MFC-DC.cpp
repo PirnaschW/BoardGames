@@ -2,44 +2,42 @@
 
 namespace BoardGamesMFC
 {
-  
-  GdiObjectRAII::GdiObjectRAII(CDC* cdc, CGdiObject* gdi) : cdc_{ cdc }, gdi_{ gdi } { gdi_->DeleteObject(); };
-  
-  GdiObjectRAII::~GdiObjectRAII(void) { /* cdc_->SelectObject(gdi_); */ }
-  
-  const GdiObjectRAII DC::SelectStockObject(int nIndex)
-  {
-    return GdiObjectRAII(cdc_, cdc_->SelectStockObject(nIndex));
-  }
 
-  const GdiObjectRAII DC::SelectPen(int nPenStyle, int nWidth, unsigned char r, unsigned char g, unsigned char b)
-  {
-    return SelectPen(nPenStyle, nWidth, RGB(r, g, b));
-  }
+  // Pen handling
+  constexpr Pen::Pen(int nPenStyle, int nWidth, unsigned char r, unsigned char g, unsigned char b) noexcept
+    : pen_{ new CPen(nPenStyle,nWidth,RGB(r,g,b)) }
+  {}
+  constexpr Pen::~Pen() noexcept { delete pen_; }
+  const Pen Pen::PenBlack   { PenStyle_Solid, 1,   0,   0,   0 };
+  const Pen Pen::PenSelected{ PenStyle_Solid, 3,  64,  64, 255 };
 
-  const GdiObjectRAII DC::SelectPen(int nPenStyle, int nWidth, unsigned long crColor)
-  {
-//    CPen pen{ nPenStyle, nWidth, crColor };
-    CPen* pen = new CPen{ nPenStyle, nWidth, crColor };
-    // TODO: fix RAII for GDI objects
-    return GdiObjectRAII(cdc_, (CGdiObject*) cdc_->SelectObject(pen));
-//    pen.Detach();
-  }
 
-  void DC::Rectangle(const Rect& r)
+  // Brush handling
+  namespace
   {
-    Rectangle(r.left_, r.top_, r.right_, r.bottom_);
+    static inline CBrush* Indirect(const LOGBRUSH& l) noexcept // helper to create indirect
+    {
+      CBrush* b = new CBrush;
+      b->CreateBrushIndirect(&l);
+      return b;
+    }
   }
+  constexpr Brush::Brush(unsigned char r, unsigned char g, unsigned char b) noexcept : brush_{ new CBrush(RGB(r,g,b)) } {}
+  Brush::Brush(unsigned int style) noexcept : brush_{ Indirect(LOGBRUSH{style,RGB(0,0,0),HS_CROSS}) }  {}
+  Brush::Brush(unsigned int style, unsigned char r, unsigned char g, unsigned char b, unsigned long hatch) noexcept
+    : brush_{ Indirect(LOGBRUSH{style,RGB(r,g,b),hatch}) } {}
+  constexpr Brush::~Brush() noexcept { delete brush_; }
 
-  void DC::Rectangle(int l, int t, int r, int b)
-  {
-    cdc_->Rectangle(l,t,r,b);
-  }
+  const Brush Brush::Brushxxx{ 128, 128, 255 }; // example brush
+  const Brush Brush::BrushNull{BS_NULL};
 
-  bool DC::Text(int x, int y, std::string s)
+
+  void DC::Rectangle(const Rect& r, const Pen& pen, const Brush& brush)
   {
-    std::wstring w(s.cbegin(), s.cend());
-    return cdc_->TextOutW(x, y, (LPCTSTR)w.c_str(), (int)s.size());
+    cdc_->SelectObject(const_cast<CPen*  >(pen  .pen_  ));
+    cdc_->SelectObject(const_cast<CBrush*>(brush.brush_));
+    cdc_->Rectangle(r.left_, r.top_, r.right_, r.bottom_);
   }
+  bool DC::Text(int x, int y, std::wstring s) { return cdc_->TextOutW(x, y, (LPCTSTR)s.c_str(), (int)s.size()); }
 
 }

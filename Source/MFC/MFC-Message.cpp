@@ -3,7 +3,7 @@
 namespace BoardGamesMFC
 {
 
-  void AfxMessageBox(std::string_view s)
+  void AfxMessageBox(std::wstring_view s)
   {
     ::AfxMessageBox((LPCTSTR) s.data());
   }
