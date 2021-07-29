@@ -19,8 +19,10 @@ namespace BoardGamesMFC
 
   const GdiObjectRAII DC::SelectPen(int nPenStyle, int nWidth, unsigned long crColor)
   {
-    CPen pen{ nPenStyle, nWidth, crColor };
-    return GdiObjectRAII(cdc_, (CGdiObject*) cdc_->SelectObject(&pen));
+//    CPen pen{ nPenStyle, nWidth, crColor };
+    CPen* pen = new CPen{ nPenStyle, nWidth, crColor };
+    // TODO: fix RAII for GDI objects
+    return GdiObjectRAII(cdc_, (CGdiObject*) cdc_->SelectObject(pen));
 //    pen.Detach();
   }
 

@@ -65,33 +65,56 @@ namespace Chess
     const PieceColor& c{ p.GetPiece(l).GetColor()};
     const int dy = c == PieceColor::White ? -1 : 1;
 
- // TODO: Legan Pawns movement
- // TODO: Berolina Pawns movement
-
     if (p.HasRule(AllowTakes))
     {
-      const Location& lr{ l + Offset(+1, dy) };  // right forward
-      const Location& ll{ l + Offset(-1, dy) };  // left forward
-      const PieceColor cr{ p.GetPiece(lr).GetColor() };
-      const PieceColor cl{ p.GetPiece(ll).GetColor() };
-      // if there is a piece there, allow the pawn to take diagonally
-      if (cr == ~c || (p.HasRule(TakeOwn) && cr == c)) p.AddIfLegal(moves, l, lr);
-      if (cl == ~c || (p.HasRule(TakeOwn) && cl == c)) p.AddIfLegal(moves, l, ll);
+      // lamdba to handle the taking tests
+      auto TryTake = [&](const Offset& o)
+      {
+        const Location& lt{ l + o };                                                      // target field of take
+        const PieceColor ct{ p.GetPiece(lt).GetColor() };                                 // color of piece on target
+        if (ct == ~c || (p.HasRule(TakeOwn) && ct == c)) p.AddIfLegal(moves, l, lt);      // if there is a piece there, allow the pawn to take
+      };
+
+      if (p.HasRule(BerolinaPawns)) TryTake({ 0, dy });    // Berolina: takes straight
+      else if (p.HasRule(LeganPawns))                      // Legan: takes left and up
+      {
+        TryTake({ 0, dy });
+        TryTake({ dy, 0 });
+      }
+      else                                                 // Standard: takes diagonally left and right
+      {
+        TryTake({ +1, dy });
+        TryTake({ -1, dy });
+      }
     }
 
     if (p.HasRule(AllowMoves))
     {
-    // if the field ahead is free, pawn can move there
-      if (p.GetPiece(l + Offset(0, dy)).IsBlank())
+      const Coordinate z = c == PieceColor::White ? p.GetSizeY() - 2U : 1U;  // find double-step row
+  
+      // lamdba to handle the moving tests
+      auto TryMove = [&](const Offset& o)
       {
-        bool step = p.AddIfLegal(moves, l, l + Offset(0, dy));
-        if (step && p.HasRule(PawnsDoubleStep))
+        const Location& lt{ l + o };                   // target field of move
+        if (!p.GetPiece(lt).IsBlank()) return;         // must be blank
+
+        bool step = p.AddIfLegal(moves, l, lt);        // pawn can move there
+        if (step && p.HasRule(PawnsDoubleStep))        // double step allowed
         {
-          Coordinate z = c == PieceColor::White ? p.GetSizeY() - 2U : 1U;
-          // if the next field ahead is free too, pawn can move there too
-          if (l.y_ == z) if (p.GetPiece(l + Offset(0, dy * 2)).IsBlank()) p.AddIfLegal(moves, l, l + Offset(0, dy * 2));
+          if (l.y_ != z) return;                       // is this the double-step row?
+          const Location& lt2{ l + o + o};             // target field of double-step
+          if (!p.GetPiece(lt2).IsBlank()) return;      // must be blank
+          p.AddIfLegal(moves, l, lt2);                 // pawn can move there too
         }
+      };
+
+      if (p.HasRule(LeganPawns)) TryMove({ dy, dy });  // Legan: moves diagonally left
+      else if (p.HasRule(BerolinaPawns))
+      {
+        TryMove({ +1, dy });                           // Berolina: moves diagonally left and right
+        TryMove({ -1, dy });
       }
+      else TryMove({ 0, dy });                        // Standard: moves straight
     }
   }
   void Knight::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
@@ -158,6 +181,14 @@ namespace Chess
     for (const Offset& o : Offset::QDirection) p.AddIfLegal(moves, l, l + o);
 
     // TODO: implement castling rules
+    if (p.HasRule(CastlingShort))
+    {
+      p.AddIfLegal(moves, l, l + Offset{ 2, 0 });
+    }
+    if (p.HasRule(CastlingLong))
+    {
+      p.AddIfLegal(moves, l, l + Offset{ -3, 0 });
+    }
   }
 
 }

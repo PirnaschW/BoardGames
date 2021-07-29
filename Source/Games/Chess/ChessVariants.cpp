@@ -20,7 +20,6 @@ namespace Chess
 
   private:
     virtual Rule GetRule() const noexcept override { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
-// TODO: add (or not) EnPassant to all rules
     static bool ValidPosition(const std::vector<Coordinate>& c) noexcept { return true; }
   };
 
@@ -32,7 +31,7 @@ namespace Chess
 
 
   // specializations for ChessVariant::Corner
-  template <> inline Rule ChessVariantPosition<ChessVariant::Corner>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Corner>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
   template <> inline bool ChessVariantPosition<ChessVariant::Corner>::ValidPosition(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
   template <> inline void ChessVariantPosition<ChessVariant::Corner>::SetStartingPosition() noexcept
   {
@@ -57,7 +56,7 @@ namespace Chess
 
 
   // specializations for ChessVariant::Fortress
-  template <> inline Rule ChessVariantPosition<ChessVariant::Fortress>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Fortress>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
   template <> inline bool ChessVariantPosition<ChessVariant::Fortress>::ValidPosition(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
   template <> inline void ChessVariantPosition<ChessVariant::Fortress>::SetStartingPosition() noexcept
   {
@@ -85,7 +84,6 @@ namespace Chess
 
 
   // specializations for ChessVariant::Horde
-  template <> inline Rule ChessVariantPosition<ChessVariant::Horde>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsDoubleStep; }
   template <> inline void ChessVariantPosition<ChessVariant::Horde>::SetStartingPosition() noexcept
   {
     ChessPosition::SetStartingPosition();
@@ -105,11 +103,11 @@ namespace Chess
 
 
   // specializations for ChessVariant::Loop
-  template <> inline Rule ChessVariantPosition<ChessVariant::Loop>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | DropTakenPieces; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Loop>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant | DropTakenPieces; }
 
 
   // specializations for ChessVariant::Anti
-  template <> inline Rule ChessVariantPosition<ChessVariant::Anti>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | MustTake | PawnsDoubleStep; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Anti>::GetRule() const noexcept { return AllowMoves | AllowTakes | MustTake | PawnsPromote | PawnsDoubleStep | EnPassant; }
   template <> inline PositionValue ChessVariantPosition<ChessVariant::Anti>::EvaluateStatically(void) const noexcept
   {
     // TODO: evaluate Anti positions
@@ -209,7 +207,7 @@ namespace Chess
 
 
   // specializations for ChessVariant::Berolina
-  template <> inline Rule ChessVariantPosition<ChessVariant::Berolina>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | BerolinaPawns; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Berolina>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant | BerolinaPawns; }
 
 
   // specializations for ChessVariant::FischerRandom
@@ -242,7 +240,7 @@ namespace Chess
   
 
   // specializations for ChessVariant::Legan
-  template <> inline Rule ChessVariantPosition<ChessVariant::Legan>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | LeganPawns; }
+  template <> inline Rule ChessVariantPosition<ChessVariant::Legan>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | LeganPawns; }
   template <> inline void ChessVariantPosition<ChessVariant::Legan>::SetStartingPosition() noexcept
   {
     SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
@@ -266,6 +264,7 @@ namespace Chess
 
 
   // specializations for ChessVariant::KnightRelay
+  template <> inline Rule ChessVariantPosition<ChessVariant::KnightRelay>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
  // TODO: add KnightRelay chess
 
 
@@ -324,6 +323,7 @@ namespace Chess
 
 
   // specializations for ChessVariant::Ambiguous
+  template <> inline Rule ChessVariantPosition<ChessVariant::Ambiguous>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
   // TODO: add Ambiguous chess
 
 
@@ -386,7 +386,9 @@ namespace Chess
 
 
   // specializations for ChessVariant::CheshireCat
+  template <> inline Rule ChessVariantPosition<ChessVariant::CheshireCat>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
  // TODO: add CheshireCat field removal
+ // TODO: add CheshireCat King first move as Queen
 
 
   // specializations for ChessVariant::Knightmate

@@ -53,7 +53,7 @@ namespace BoardGamesCore
       if (t->GetLocation() == l)
       {
         Rect r = t->GetRect();
-        r.DeflateRect(1, 1, 0, 0);
+        r.DeflateRect(-1, -1, -1, -1);
         auto oldB = dc->SelectStockObject(No_Brush);
         auto oldP = dc->SelectPen(PenStyle_Solid, 2, 0, 128, 255);
         dc->Rectangle(r);
