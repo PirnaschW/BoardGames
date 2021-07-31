@@ -39,14 +39,25 @@ namespace Chess
     void SetPiecesHSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use horizontal mirror symmetry
   };
 
+  // this class has no function, but is needed as base for the variant templates
+  class ChessLayout : public MainLayout
+  {
+  public:
+    ChessLayout(const Dimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : MainLayout(d,lt) {}
+    virtual ~ChessLayout() noexcept {}
+    virtual void Draw(DC* pDC, const MainPosition* pos, _Mode mode) const { MainLayout::Draw(pDC, pos, mode); }
+  };
+
+
   class ChessGame : public Game
   {
   private:
     ChessGame(void) = delete;
     static MainPosition* GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept;
+    static MainLayout* GetNewLayout(const VariantChosen& v, const Dimensions& d) noexcept;
 
   public:
-    ChessGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, GetNewPosition(v, m, d), new MainLayout(d)) {}
+    ChessGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, GetNewPosition(v, m, d), GetNewLayout(v,d)) {}
     static const VariantList& GetVariants(void) noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;

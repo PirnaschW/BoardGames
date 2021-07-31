@@ -5,7 +5,7 @@
 namespace Chess
 {
 
-  // template to create a subclass for each variant
+  // templates to create a subclass for each variant
   template <ChessVariant V>
   class ChessVariantPosition : public ChessPosition
   {
@@ -23,6 +23,14 @@ namespace Chess
     static bool ValidPosition(const std::vector<Coordinate>& c) noexcept { return true; }
   };
 
+  template <ChessVariant V>
+  class ChessVariantLayout : public ChessLayout
+  {
+  public:
+    ChessVariantLayout(const Dimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : ChessLayout(d, lt) {}
+    virtual ~ChessVariantLayout() noexcept {}
+    virtual void Draw(DC* pDC, const MainPosition* pos, _Mode mode) const { ChessLayout::Draw(pDC, pos, mode); }
+  };
 
   //#########################################
   // Specializations - those contain thh variant specific code
@@ -348,10 +356,41 @@ namespace Chess
   // specializations for ChessVariant::Dice
   template <> inline void ChessVariantPosition<ChessVariant::Dice>::GetAllMoves(void) const noexcept // collect all moves for all pieces
   {
-    // TODO: roll dice for Dice
-    // TODO: GetAllMoves for Dice
+    ChessPosition::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
 
-    ChessPosition::GetAllMoves();  // temporary
+    static const std::array<const Kind*,6> Kinds{
+      &Pawn::ThePawn,    
+      &Knight::TheKnight,
+      &Bishop::TheBishop,
+      &Rook::TheRook,    
+      &Queen::TheQueen,  
+      &King::TheKing,    
+    };
+
+    if (movesW_.size() == 0) return;
+
+    std::array<Moves, 6> moves_{};
+
+    auto Find = [&](const Piece& p) -> int { for (int i = 0; i < 6; i++)  if (p.IsKind(*Kinds[i])) return i; return -1; };
+
+    for (auto m : movesW_)
+    {
+      int z = Find(m->GetActions()[0]->GetPiece());
+      assert(z >= 0);
+      moves_[z].push_back(m);
+    }
+
+    int z{};
+    do z = Math::D6() - 1; while (moves_[z].size() == 0);  // find a random Kind to move
+    movesW_ = moves_[z];
+  }
+  template <> inline void ChessVariantLayout<ChessVariant::Dice>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
+  {
+    ChessLayout::Draw(pDC, pos, mode);
+    
+    // show the rolled die
+    Rect r{ 500,200,580,280 };
+    pDC->Rectangle(r, BoardGamesMFC::Pen::PenSelected);
   }
 
 
@@ -562,6 +601,52 @@ namespace Chess
       case ChessVariant::RacingKings:       return new ChessVariantPosition<ChessVariant::RacingKings     >(v, m, d);     // Racing Kings            
       case ChessVariant::Dice10x10:         return new ChessVariantPosition<ChessVariant::Dice10x10       >(v, m, d);     // Dice Chess 10x10        
       case ChessVariant::Massacre:          return new ChessVariantPosition<ChessVariant::Massacre        >(v, m, d);     // Massacre Chess
+      default: return nullptr; // must not happen
+    }
+  }
+
+
+  MainLayout* ChessGame::GetNewLayout(const VariantChosen& v, const Dimensions& d) noexcept
+  {
+    // this switch looks silly, but cannot be avoided - the compiler has no idea which variants would be possible, 
+    // but needs to generate the code for each one. An explicit list is needed in some form!
+    switch (static_cast<ChessVariant>(v.c))
+    {
+      case ChessVariant::Standard:          return new ChessVariantLayout<ChessVariant::Standard        >(d);     // Standard Chess          
+      case ChessVariant::Corner:            return new ChessVariantLayout<ChessVariant::Corner          >(d);     // Corner Chess            
+      case ChessVariant::Fortress:          return new ChessVariantLayout<ChessVariant::Fortress        >(d);     // Fortress Chess          
+      case ChessVariant::Horde:             return new ChessVariantLayout<ChessVariant::Horde           >(d);     // Horde Chess             
+      case ChessVariant::Loop:              return new ChessVariantLayout<ChessVariant::Loop            >(d);     // Loop Chess              
+      case ChessVariant::Anti:              return new ChessVariantLayout<ChessVariant::Anti            >(d);     // Anti Chess              
+      case ChessVariant::Extinction:        return new ChessVariantLayout<ChessVariant::Extinction      >(d);     // Extinction Chess        
+      case ChessVariant::Maharajah:         return new ChessVariantLayout<ChessVariant::Maharajah       >(d);     // Maharajah Chess         
+      case ChessVariant::ThreeChecks:       return new ChessVariantLayout<ChessVariant::ThreeChecks     >(d);     // Three Checks Chess      
+      case ChessVariant::Dark:              return new ChessVariantLayout<ChessVariant::Dark            >(d);     // Dark Chess              
+      case ChessVariant::Atomic:            return new ChessVariantLayout<ChessVariant::Atomic          >(d);     // Atomic Chess            
+      case ChessVariant::Janus:             return new ChessVariantLayout<ChessVariant::Janus           >(d);     // Janus Chess             
+      case ChessVariant::Embassy:           return new ChessVariantLayout<ChessVariant::Embassy         >(d);     // Embassy Chess           
+      case ChessVariant::Screen:            return new ChessVariantLayout<ChessVariant::Screen          >(d);     // Screen Chess            
+      case ChessVariant::CrazyScreen:       return new ChessVariantLayout<ChessVariant::CrazyScreen     >(d);     // Crazy Screen Chess      
+      case ChessVariant::Cylinder:          return new ChessVariantLayout<ChessVariant::Cylinder        >(d);     // Cylinder Chess          
+      case ChessVariant::Amazons:           return new ChessVariantLayout<ChessVariant::Amazons         >(d);     // Amazon Chess            
+      case ChessVariant::Berolina:          return new ChessVariantLayout<ChessVariant::Berolina        >(d);     // Berolina Chess          
+      case ChessVariant::FischerRandom:     return new ChessVariantLayout<ChessVariant::FischerRandom   >(d);     // Fischer Random Chess    
+      case ChessVariant::Legan:             return new ChessVariantLayout<ChessVariant::Legan           >(d);     // Legan Chess             
+      case ChessVariant::KnightRelay:       return new ChessVariantLayout<ChessVariant::KnightRelay     >(d);     // Knight Relay Chess      
+      case ChessVariant::Grand:             return new ChessVariantLayout<ChessVariant::Grand           >(d);     // Grand Chess             
+      case ChessVariant::CapablancaRandom:  return new ChessVariantLayout<ChessVariant::CapablancaRandom>(d);     // Capablanca Random Chess 
+      case ChessVariant::LosAlamos:         return new ChessVariantLayout<ChessVariant::LosAlamos       >(d);     // Los Alamos Chess        
+      case ChessVariant::Ambiguous:         return new ChessVariantLayout<ChessVariant::Ambiguous       >(d);     // Ambiguous Chess         
+      case ChessVariant::Cheversi:          return new ChessVariantLayout<ChessVariant::Cheversi        >(d);     // Cheversi
+      case ChessVariant::Dice:              return new ChessVariantLayout<ChessVariant::Dice            >(d);     // Dice Chess              
+      case ChessVariant::Recycle:           return new ChessVariantLayout<ChessVariant::Recycle         >(d);     // Recycle Chess           
+      case ChessVariant::IceAge:            return new ChessVariantLayout<ChessVariant::IceAge          >(d);     // Ice Age Chess           
+      case ChessVariant::Behemoth:          return new ChessVariantLayout<ChessVariant::Behemoth        >(d);     // Behemoth Chess          
+      case ChessVariant::CheshireCat:       return new ChessVariantLayout<ChessVariant::CheshireCat     >(d);     // Cheshire Cat Chess      
+      case ChessVariant::Knightmate:        return new ChessVariantLayout<ChessVariant::Knightmate      >(d);     // Knightmate Chess        
+      case ChessVariant::RacingKings:       return new ChessVariantLayout<ChessVariant::RacingKings     >(d);     // Racing Kings            
+      case ChessVariant::Dice10x10:         return new ChessVariantLayout<ChessVariant::Dice10x10       >(d);     // Dice Chess 10x10        
+      case ChessVariant::Massacre:          return new ChessVariantLayout<ChessVariant::Massacre        >(d);     // Massacre Chess
       default: return nullptr; // must not happen
     }
   }

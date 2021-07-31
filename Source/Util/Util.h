@@ -33,14 +33,13 @@ namespace Math
 
   namespace
   {
-    static auto rnd = std::mt19937();
+    static std::mt19937 rnd;  //    static auto rnd = std::mt19937();
+    static std::uniform_int_distribution<> d6(1, 6);
   }
   
-  template<class T>
-  void Shuffle(std::vector<T>& v)
-  {
-    
-    std::ranges::shuffle(v, rnd);
-  }
+  template<class T> void Shuffle(std::vector<T>& v) { std::ranges::shuffle(v, rnd); }
+
+  inline int D6() { return d6(rnd); }
+
 
 }
