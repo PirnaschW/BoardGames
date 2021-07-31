@@ -1,10 +1,6 @@
 
 namespace BoardGamesCore
 {
-  using BoardGamesMFC::Bitmap;
-  using BoardGamesMFC::Archive;
-  using BoardGamesMFC::DC;
-  using BoardGamesMFC::Rect;
 
   class PieceColor final
   {

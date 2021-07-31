@@ -6,8 +6,13 @@ namespace Chess
 {
 
   // templates to create a subclass for each variant
+
+  template <ChessVariant V> struct ChessVariantData {};  // helper to allow to add data for one variant nly
+  template <> struct ChessVariantData<ChessVariant::Dice>      { mutable Side side_; };  // rolled Die
+  template <> struct ChessVariantData<ChessVariant::Dice10x10> { mutable Side side_; };  // rolled Die
+
   template <ChessVariant V>
-  class ChessVariantPosition : public ChessPosition
+  class ChessVariantPosition : public ChessPosition, public ChessVariantData<V>
   {
   public:
     inline ChessVariantPosition<V>(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
@@ -383,16 +388,21 @@ namespace Chess
     int z{};
     do z = Math::D6() - 1; while (moves_[z].size() == 0);  // find a random Kind to move
     movesW_ = moves_[z];
+    ChessVariantData::side_ = z;
   }
   template <> inline void ChessVariantLayout<ChessVariant::Dice>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
   {
     ChessLayout::Draw(pDC, pos, mode);
-    
-    // show the rolled die
-    Rect r{ 500,200,580,280 };
-    pDC->Rectangle(r, BoardGamesMFC::Pen::PenSelected);
-  }
 
+    // show the rolled die
+    constexpr int x = 500;
+    constexpr int y = 200;
+    Rect r{ x,y,x + 20,y + 20 };
+
+    auto pp{ dynamic_cast<const ChessVariantPosition<ChessVariant::Dice>*>(pos) };
+
+    Die::Sides[pp->ChessVariantData<ChessVariant::Dice>::side_].Draw(pDC, r);
+  }
 
   // specializations for ChessVariant::Recycle
   template <> inline Rule ChessVariantPosition<ChessVariant::Recycle>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | TakeOwn | PawnsPromote | PawnsDoubleStep | DropTakenPieces; }

@@ -17,6 +17,7 @@
 
 #include "Core\CoreResource.h"
 #include "Core\Using.h"
+#include "Core\Die.h"
 #include "Core\Offset.h"
 #include "Core\Location.h"
 #include "Core\Color.h"

@@ -19,4 +19,9 @@ namespace BoardGamesCore
   };
   static_assert(std::is_trivial<VariantChosen>::value, "must be a trivial structure");
 
+  using BoardGamesMFC::Bitmap;
+  using BoardGamesMFC::Archive;
+  using BoardGamesMFC::DC;
+  using BoardGamesMFC::Rect;
+
 }

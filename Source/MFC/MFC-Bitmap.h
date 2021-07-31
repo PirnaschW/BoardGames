@@ -8,8 +8,8 @@ namespace BoardGamesMFC
   {
   public:
     Bitmap(void) = delete;
-    Bitmap(unsigned int ID) noexcept;
-    ~Bitmap() noexcept;
+    constexpr Bitmap(unsigned int ID) noexcept;
+    constexpr ~Bitmap() noexcept;
     void Draw(DC* pDC, const Rect& r) const noexcept;
 
   private:

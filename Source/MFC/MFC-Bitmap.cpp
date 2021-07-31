@@ -3,9 +3,9 @@
 namespace BoardGamesMFC
 {
   
-  Bitmap::Bitmap(unsigned int ID) noexcept : ID_(ID), bmP_(new CBitmap()), bmM_(new CBitmap()) {}
+  constexpr Bitmap::Bitmap(unsigned int ID) noexcept : ID_(ID), bmP_(new CBitmap()), bmM_(new CBitmap()) {}
 
-  Bitmap::~Bitmap(void) noexcept { delete bmP_; delete bmM_; }
+  constexpr Bitmap::~Bitmap(void) noexcept { delete bmP_; delete bmM_; }
 
   void Bitmap::Load(DC* pDC, const Rect& r) const noexcept
   {
