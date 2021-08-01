@@ -76,21 +76,21 @@ namespace Chess
     SetPawns(1U, PieceColor::Black);
     SetPawns(sizeY_ - 2U, PieceColor::White);
 
-    SetPiece({ BoardPart::Main,               0U,          0U }, ChessPiece::BR);
-    SetPiece({ BoardPart::Main,               1U,          0U }, ChessPiece::BN);
-    SetPiece({ BoardPart::Main,               2U,          0U }, ChessPiece::BB);
-    SetPiece({ BoardPart::Main, sizeX_ - 3U,          0U }, ChessPiece::BB);
-    SetPiece({ BoardPart::Main, sizeX_ - 2U,          0U }, ChessPiece::BN);
-    SetPiece({ BoardPart::Main, sizeX_ - 1U,          0U }, ChessPiece::BR);
+    SetPiece({ BoardPart::Main,          0U,               0U }, ChessPiece::BR);
+    SetPiece({ BoardPart::Main,          1U,               0U }, ChessPiece::BN);
+    SetPiece({ BoardPart::Main,          2U,               0U }, ChessPiece::BB);
+    SetPiece({ BoardPart::Main, sizeX_ - 3U,               0U }, ChessPiece::BB);
+    SetPiece({ BoardPart::Main, sizeX_ - 2U,               0U }, ChessPiece::BN);
+    SetPiece({ BoardPart::Main, sizeX_ - 1U,               0U }, ChessPiece::BR);
     SetPiece({ BoardPart::Main, sizeX_ / 2U - 1U,          0U }, ChessPiece::BQ);  // set Queen and King last!
     SetPiece({ BoardPart::Main, sizeX_ / 2U     ,          0U }, ChessPiece::BK);  // this is useful for smaller boards
 
-    SetPiece({ BoardPart::Main,               0U, sizeY_ - 1U }, ChessPiece::WR);
-    SetPiece({ BoardPart::Main,               1U, sizeY_ - 1U }, ChessPiece::WN);
-    SetPiece({ BoardPart::Main,               2U, sizeY_ - 1U }, ChessPiece::WB);
-    SetPiece({ BoardPart::Main, sizeX_ - 3U, sizeY_ - 1U }, ChessPiece::WB);
-    SetPiece({ BoardPart::Main, sizeX_ - 2U, sizeY_ - 1U }, ChessPiece::WN);
-    SetPiece({ BoardPart::Main, sizeX_ - 1U, sizeY_ - 1U }, ChessPiece::WR);
+    SetPiece({ BoardPart::Main,          0U,      sizeY_ - 1U }, ChessPiece::WR);
+    SetPiece({ BoardPart::Main,          1U,      sizeY_ - 1U }, ChessPiece::WN);
+    SetPiece({ BoardPart::Main,          2U,      sizeY_ - 1U }, ChessPiece::WB);
+    SetPiece({ BoardPart::Main, sizeX_ - 3U,      sizeY_ - 1U }, ChessPiece::WB);
+    SetPiece({ BoardPart::Main, sizeX_ - 2U,      sizeY_ - 1U }, ChessPiece::WN);
+    SetPiece({ BoardPart::Main, sizeX_ - 1U,      sizeY_ - 1U }, ChessPiece::WR);
     SetPiece({ BoardPart::Main, sizeX_ / 2U - 1U, sizeY_ - 1U }, ChessPiece::WQ);  // set Queen and King last!
     SetPiece({ BoardPart::Main, sizeX_ / 2U     , sizeY_ - 1U }, ChessPiece::WK);  // this is useful for smaller boards
   }

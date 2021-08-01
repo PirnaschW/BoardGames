@@ -14,6 +14,8 @@ namespace Chess
   template <ChessVariant V>
   class ChessVariantPosition : public ChessPosition, public ChessVariantData<V>
   {
+  protected:
+    ChessVariantPosition<V>(const ChessVariantPosition<V>& m) noexcept : ChessPosition(m), ChessVariantData<V>(m) {}
   public:
     inline ChessVariantPosition<V>(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
     virtual MainPosition* Clone(void) const noexcept override { return new ChessVariantPosition<V>(*this); }
@@ -38,7 +40,7 @@ namespace Chess
   };
 
   //#########################################
-  // Specializations - those contain thh variant specific code
+  // Specializations - those contain the variant specific code
   // note that sequence DOES matter in defining method specializations!
   // each method specialization must be defined BEFORE it is used / called
 
@@ -388,7 +390,8 @@ namespace Chess
     int z{};
     do z = Math::D6() - 1; while (moves_[z].size() == 0);  // find a random Kind to move
     movesW_ = moves_[z];
-    ChessVariantData::side_ = z;
+    ChessVariantData<ChessVariant::Dice>::side_ = z;
+    // TODO: Move list for blacks crashes
   }
   template <> inline void ChessVariantLayout<ChessVariant::Dice>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
   {
@@ -403,6 +406,7 @@ namespace Chess
 
     Die::Sides[pp->ChessVariantData<ChessVariant::Dice>::side_].Draw(pDC, r);
   }
+
 
   // specializations for ChessVariant::Recycle
   template <> inline Rule ChessVariantPosition<ChessVariant::Recycle>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | TakeOwn | PawnsPromote | PawnsDoubleStep | DropTakenPieces; }
@@ -489,11 +493,52 @@ namespace Chess
   }
   template <> inline void ChessVariantPosition<ChessVariant::Dice10x10>::GetAllMoves(void) const noexcept // collect all moves for all pieces
   {
-    // TODO: roll dice for Dice10x10
-    // TODO: GetAllMoves for Dice10x10
+    ChessPosition::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
 
-    ChessPosition::GetAllMoves();  // temporary
+    static const std::array<const Kind*, 6> Kinds{
+      &Pawn::ThePawn,
+      &Knight::TheKnight,
+      &Bishop::TheBishop,
+      &Rook::TheRook,
+      &Queen::TheQueen,
+      &King::TheKing,
+    };
+
+    if (movesW_.size() == 0) return;
+
+    std::array<Moves, 6> moves_{};
+
+    auto Find = [&](const Piece& p) -> int { for (int i = 0; i < 6; i++)  if (p.IsKind(*Kinds[i])) return i; return -1; };
+
+    for (auto m : movesW_)
+    {
+      int z = Find(m->GetActions()[0]->GetPiece());
+      assert(z >= 0);
+      moves_[z].push_back(m);
+    }
+
+    int z{};
+    do z = Math::D6() - 1; while (moves_[z].size() == 0);  // find a random Kind to move
+    movesW_ = moves_[z];
+    ChessVariantData<ChessVariant::Dice10x10>::side_ = z;
   }
+  template <> inline void ChessVariantLayout<ChessVariant::Dice10x10>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
+  {
+    ChessLayout::Draw(pDC, pos, mode);
+
+    // show the rolled die
+    constexpr int x = 600;
+    constexpr int y = 200;
+    Rect r{ x,y,x + 20,y + 20 };
+
+    auto pp{ dynamic_cast<const ChessVariantPosition<ChessVariant::Dice10x10>*>(pos) };
+
+    Die::Sides[pp->ChessVariantData<ChessVariant::Dice10x10>::side_].Draw(pDC, r);
+  }
+
+
+
+
 
 
   // specializations for ChessVariant::Massacre

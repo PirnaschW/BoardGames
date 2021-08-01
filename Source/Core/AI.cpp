@@ -190,6 +190,8 @@ namespace BoardGamesCore
 
   [[ nodiscard ]] PositionValue MainPosition::EvaluateStatically(void) const noexcept   // as seen from White
   {
+    if (depth_ > 0U) return value_;  /// don't evaluate again
+
     assert(movesW_.empty());
     assert(movesB_.empty());
 

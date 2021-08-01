@@ -76,7 +76,7 @@ namespace BoardGamesCore
     virtual std::size_t GetHash(void) const noexcept;
 
     virtual void SetStartingPosition() noexcept {}; // TODO: add this for each game, then make base member abstract
-    virtual void SetPosition(std::vector<const Piece*>& list);
+    virtual void SetPosition(std::vector<const Piece*>& list) noexcept;
 
     void SetOnTurn(const PieceColor& c) noexcept;
     const PieceColor& OnTurn(void) const noexcept;

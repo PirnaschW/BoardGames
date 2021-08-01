@@ -48,7 +48,7 @@ namespace BoardGamesCore
 
   std::size_t MainPosition::GetHash(void) const noexcept { return Position::GetHash() + taken_.GetHash() + std::hash<const PieceColor*>()(onTurn_); }
 
-  void MainPosition::SetPosition(std::vector<const Piece*>& list)
+  void MainPosition::SetPosition(std::vector<const Piece*>& list)  noexcept
   {
     auto iList = list.cbegin();
     for (Coordinate j = 0; j < sizeY_; j++)
