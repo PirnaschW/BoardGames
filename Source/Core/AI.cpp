@@ -133,6 +133,9 @@ namespace BoardGamesCore
 
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
+#ifdef LOG
+      m->Log();
+#endif
       MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
       PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);// evaluate the result
       assert(v != PositionValue::PValueType::Undefined);
@@ -168,6 +171,9 @@ namespace BoardGamesCore
     PositionValue best = PositionValue::PValueType::Lost;
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
+#ifdef LOG
+      m->Log();
+#endif
       MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
       PositionValue v = -p->EvaluateBF(plist, !w, plies - 1);             // evaluate the result
       assert(v != PositionValue::PValueType::Undefined);
@@ -190,8 +196,6 @@ namespace BoardGamesCore
 
   [[ nodiscard ]] PositionValue MainPosition::EvaluateStatically(void) const noexcept   // as seen from White
   {
-    if (depth_ > 0U) return value_;  /// don't evaluate again
-
     assert(movesW_.empty());
     assert(movesB_.empty());
 

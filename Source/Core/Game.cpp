@@ -30,6 +30,7 @@ namespace BoardGamesCore
     else pos->SetPosition(list);
 
     pos->SetValue(true, pos->EvaluateStatically());                       // evaluate position statically
+    plist.insert(pos->Clone());                                           // and save a copy in the position list
   }
 
   void Game::Execute(const Move& m)

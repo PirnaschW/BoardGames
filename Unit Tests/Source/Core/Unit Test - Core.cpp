@@ -594,6 +594,7 @@ namespace UnitTestAI
   public:
     TEST_METHOD(TestAI)
     {
+      Assert::IsTrue(true);
 
 
 

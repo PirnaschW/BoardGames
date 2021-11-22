@@ -55,6 +55,7 @@
     <ClInclude Include="..\Source\Core\Kind.h" />
     <ClInclude Include="..\Source\Core\Layout.h" />
     <ClInclude Include="..\Source\Core\Location.h" />
+    <ClInclude Include="..\Source\Core\Log.h" />
     <ClInclude Include="..\Source\Core\Move.h" />
     <ClInclude Include="..\Source\Core\Offset.h" />
     <ClInclude Include="..\Source\Core\Piece.h" />
@@ -115,6 +116,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="..\Source\Core\Log.cpp" />
     <ClCompile Include="..\Source\Core\Move.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core.h</PrecompiledHeaderFile>

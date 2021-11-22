@@ -116,6 +116,37 @@ namespace Chess
     SetPiece({ BoardPart::Main,               x, sizeY_ - 1U - y }, w);
   }
 
+  Side ChessPosition::PickRandomPiece(void) const noexcept
+  {
+    static const std::array<const Kind*, 6> Kinds{
+      &Pawn::ThePawn,
+      &Knight::TheKnight,
+      &Bishop::TheBishop,
+      &Rook::TheRook,
+      &Queen::TheQueen,
+      &King::TheKing,
+    };
+
+    if (movesW_.size() == 0) return 0;
+
+    std::array<Moves, 6> moves_{};
+
+    auto Find = [&](const Piece& p) -> int { for (int i = 0; i < 6; i++)  if (p.IsKind(*Kinds[i])) return i; return -1; };
+
+    for (auto m : movesW_)
+    {
+      int z = Find(m->GetActions()[0]->GetPiece());
+      assert(z >= 0);
+      moves_[z].push_back(m);
+    }
+
+    int z{};
+    do z = Math::D6() - 1; while (moves_[z].size() == 0);  // find a random Kind to move
+
+    movesW_ = moves_[z];
+    return z;
+  }
+
 
   PositionValue ChessPosition::EvaluateStatically(void) const noexcept { return MainPosition::EvaluateStatically(); }
 

@@ -20,6 +20,11 @@ namespace BoardGamesCore
     const Location& GetFrL(void) const noexcept;
     const Location& GetToL(void) const noexcept;
 
+#ifdef LOG
+  public:
+    void Log(void);
+#endif // LOG
+
   private:
     PositionValue value_{ PositionValue::PValueType::Undefined };
     const Actions a_{};

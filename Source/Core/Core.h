@@ -16,6 +16,7 @@
 #include "MFC\MFC.h"
 
 #include "Core\CoreResource.h"
+#include "Core\Log.h"
 #include "Core\Using.h"
 #include "Core\Die.h"
 #include "Core\Offset.h"

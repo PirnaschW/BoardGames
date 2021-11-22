@@ -364,33 +364,7 @@ namespace Chess
   template <> inline void ChessVariantPosition<ChessVariant::Dice>::GetAllMoves(void) const noexcept // collect all moves for all pieces
   {
     ChessPosition::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
-
-    static const std::array<const Kind*,6> Kinds{
-      &Pawn::ThePawn,    
-      &Knight::TheKnight,
-      &Bishop::TheBishop,
-      &Rook::TheRook,    
-      &Queen::TheQueen,  
-      &King::TheKing,    
-    };
-
-    if (movesW_.size() == 0) return;
-
-    std::array<Moves, 6> moves_{};
-
-    auto Find = [&](const Piece& p) -> int { for (int i = 0; i < 6; i++)  if (p.IsKind(*Kinds[i])) return i; return -1; };
-
-    for (auto m : movesW_)
-    {
-      int z = Find(m->GetActions()[0]->GetPiece());
-      assert(z >= 0);
-      moves_[z].push_back(m);
-    }
-
-    int z{};
-    do z = Math::D6() - 1; while (moves_[z].size() == 0);  // find a random Kind to move
-    movesW_ = moves_[z];
-    ChessVariantData<ChessVariant::Dice>::side_ = z;
+    ChessVariantData<ChessVariant::Dice>::side_ = PickRandomPiece();
     // TODO: Move list for blacks crashes
   }
   template <> inline void ChessVariantLayout<ChessVariant::Dice>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
@@ -494,33 +468,7 @@ namespace Chess
   template <> inline void ChessVariantPosition<ChessVariant::Dice10x10>::GetAllMoves(void) const noexcept // collect all moves for all pieces
   {
     ChessPosition::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
-
-    static const std::array<const Kind*, 6> Kinds{
-      &Pawn::ThePawn,
-      &Knight::TheKnight,
-      &Bishop::TheBishop,
-      &Rook::TheRook,
-      &Queen::TheQueen,
-      &King::TheKing,
-    };
-
-    if (movesW_.size() == 0) return;
-
-    std::array<Moves, 6> moves_{};
-
-    auto Find = [&](const Piece& p) -> int { for (int i = 0; i < 6; i++)  if (p.IsKind(*Kinds[i])) return i; return -1; };
-
-    for (auto m : movesW_)
-    {
-      int z = Find(m->GetActions()[0]->GetPiece());
-      assert(z >= 0);
-      moves_[z].push_back(m);
-    }
-
-    int z{};
-    do z = Math::D6() - 1; while (moves_[z].size() == 0);  // find a random Kind to move
-    movesW_ = moves_[z];
-    ChessVariantData<ChessVariant::Dice10x10>::side_ = z;
+    ChessVariantData<ChessVariant::Dice10x10>::side_ = PickRandomPiece();
   }
   template <> inline void ChessVariantLayout<ChessVariant::Dice10x10>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
   {
@@ -535,10 +483,6 @@ namespace Chess
 
     Die::Sides[pp->ChessVariantData<ChessVariant::Dice10x10>::side_].Draw(pDC, r);
   }
-
-
-
-
 
 
   // specializations for ChessVariant::Massacre

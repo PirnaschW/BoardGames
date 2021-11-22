@@ -37,6 +37,7 @@ namespace Chess
     void SetPawns(Coordinate row, const PieceColor& c) noexcept;
     void SetPiecesPSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use point symmetry
     void SetPiecesHSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use horizontal mirror symmetry
+    Side PickRandomPiece(void) const noexcept;
   };
 
   // this class has no function, but is needed as base for the variant templates
