@@ -6,7 +6,7 @@ namespace BoardGamesCore
   class Checker : public Kind
   {
   protected:
-    constexpr inline Checker(void) noexcept : Kind('C') {}
+    constexpr inline Checker(void) noexcept : Kind('0') {}
   public:
     virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
 

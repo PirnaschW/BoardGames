@@ -10,6 +10,33 @@
 
 namespace BoardGamesCore
 {
+  void PositionValue::Log(void)
+  {
+    wchar_t buffer[256];
+    switch (type_)
+    {
+      case BoardGamesCore::PositionValue::PValueType::Undefined:
+        wsprintfW(buffer, L"[undefined]\n");
+        break;
+      case BoardGamesCore::PositionValue::PValueType::Normal:
+        wsprintfW(buffer, L"[%d]\n",value_);
+        break;
+      case BoardGamesCore::PositionValue::PValueType::Won:
+        wsprintfW(buffer, L"[Won]\n");
+        break;
+      case BoardGamesCore::PositionValue::PValueType::Lost:
+        wsprintfW(buffer, L"[Lost]\n");
+        break;
+      case BoardGamesCore::PositionValue::PValueType::Tie:
+        wsprintfW(buffer, L"[Tie]\n");
+        break;
+      default:
+        wsprintfW(buffer, L"[invalid!]\n");
+        break;
+    }
+    OutputDebugString(buffer);
+  }
+
   void Move::Log(void)
   {
     const auto& aa = GetActions();
@@ -35,10 +62,9 @@ namespace BoardGamesCore
         jump = false;
       }
     }
-    --pBuf;
-    wsprintfW(buffer + pBuf, L"\n");
+    buffer[--pBuf] = '\0';
     OutputDebugString(buffer);
-
+    value_.Log();
   }
 
 }

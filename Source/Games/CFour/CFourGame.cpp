@@ -107,7 +107,6 @@ namespace CFour
   {
     switch (z)
     {
-      case 0:  return   100;
       case 1:  return   100;
       case 2:  return  1000;
       case 3:  return 10000;

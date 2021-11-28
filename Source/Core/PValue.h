@@ -82,6 +82,11 @@ namespace BoardGamesCore
       return s.c_str();
     }
 
+#ifdef LOG
+  public:
+    void Log(void);
+#endif // LOG
+
   private:
     PValueType type_{ PValueType::Undefined };
     int value_{ 0 };

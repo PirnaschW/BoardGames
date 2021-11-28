@@ -25,7 +25,8 @@ namespace UnitTestCheckers
       Assert::IsTrue(CheckersPiece::CheckersPieceB.Promote(true) == CheckersPiece::CheckersQueenB);
 
       const VariantChosen v{ 0,'\0', 8U, 8U };
-      const CheckersPosition p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+      CheckersPosition p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+      p.SetStartingPosition();
       Moves m{};
 
       m.clear();

@@ -14,30 +14,6 @@ namespace TicTacToe
 
   using namespace BoardGamesCore;
 
-  class Checker : public Kind
-  {
-  private:
-    constexpr Checker(void) noexcept : Kind('0') {}
-  public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
-
-  public:
-    static const Checker TheChecker;
-  };
-
-  class TicTacToePiece : public Piece
-  {
-  private:
-    TicTacToePiece(const Kind& k, const PieceColor& c, unsigned int ID) noexcept : Piece(k, c, ID) {}
-    TicTacToePiece(const TicTacToePiece&) = delete;
-    TicTacToePiece& operator=(const TicTacToePiece&) = delete;
-
-  public:
-    static const TicTacToePiece TicTacToePieceB;
-    static const TicTacToePiece TicTacToePieceW;
-  };
-
-
   class TicTacToePosition : public MainPosition
   {
   public:

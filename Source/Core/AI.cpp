@@ -131,20 +131,21 @@ namespace BoardGamesCore
 
     const auto l = [](MoveP a, MoveP b) { return *b < *a; };              // define sort predicate
 
-    for (auto& m : movelist)                                              // for all possible opponent's moves
+    for (int i = 0; i < movelist.size(); ++i)                             // for all possible opponent's moves
     {
-#ifdef LOG
-      m->Log();
-#endif
+      auto& m = movelist[i];
       MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
       PositionValue v = -p->Evaluate(plist, !w, -beta, -alpha, plies - 1);// evaluate the result
       assert(v != PositionValue::PValueType::Undefined);
       m->SetValue(p->GetValue(w));                                        // save real position value into move for sorting
+#ifdef LOG
+      m->Log();
+#endif
 
       // apply alpha/beta pruning
       if (v >= beta)                                                      // cut branch off, use current value
       {
-        std::sort(movelist.begin(), movelist.end(), l);                   // sort the moves by their value (for the next level of depth)
+        std::sort(movelist.begin(), movelist.begin() + i + 1, l);         // sort the moves by their value (for the next level of depth)
         SetValue(w, v);                                                   // save top value in current position
         depth_ = plies;                                                   // save evaluation depth
         return beta;
@@ -171,14 +172,14 @@ namespace BoardGamesCore
     PositionValue best = PositionValue::PValueType::Lost;
     for (auto& m : movelist)                                              // for all possible opponent's moves
     {
-#ifdef LOG
-      m->Log();
-#endif
       MainPosition* p{ GetPosition(plist,m) };                            // find the board in the list
       PositionValue v = -p->EvaluateBF(plist, !w, plies - 1);             // evaluate the result
       assert(v != PositionValue::PValueType::Undefined);
       m->SetValue(v);                                                     // save position value into move for sorting
       if (v > best) best = v;
+#ifdef LOG
+      m->Log();
+#endif
 
       //wchar_t buffer[256];
       //const Location& l{ m->GetActions()[1]->GetLocation() };
