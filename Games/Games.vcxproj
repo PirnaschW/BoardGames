@@ -383,7 +383,6 @@
     <ClInclude Include="..\Source\Games\LoA\LoAResource.h" />
     <ClInclude Include="..\Source\Games\Logik\LogikGame.h" />
     <ClInclude Include="..\Source\Games\Logik\LogikResource.h" />
-    <ClInclude Include="..\Source\Games\Logik\res\LogikResource.h" />
     <ClInclude Include="..\Source\Games\GamesResource.h" />
     <ClInclude Include="..\Source\Games\Shogi\ShogiGame.h" />
     <ClInclude Include="..\Source\Games\Shogi\ShogiResource.h" />

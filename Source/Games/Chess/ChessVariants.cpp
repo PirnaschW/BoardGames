@@ -414,7 +414,43 @@ namespace Chess
 
   // specializations for ChessVariant::CheshireCat
   template <> inline Rule ChessVariantPosition<ChessVariant::CheshireCat>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
- // TODO: add CheshireCat field removal
+  template <> inline bool ChessVariantPosition<ChessVariant::CheshireCat>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  {
+    const Piece& pf = GetPiece(fr);
+    assert(pf != Piece::NoTile);                                                    // start field must exist
+    assert(!pf.IsBlank());                                                          // start field must be a piece
+
+    const Piece& pt = GetPiece(to);
+    if (pt == Piece::NoTile) return false;                                          // out of board
+    if (pt.IsBlank())                                                               // moving onto free field
+    {
+      if (HasRule(AllowMoves))
+      {
+        Actions a{};
+        a.push_back(std::make_shared<ActionLift>(fr, pf));                          // pick piece up
+        a.push_back(std::make_shared<ActionEliminate>(fr, Piece::NoTile));          // remove starting field
+        a.push_back(std::make_shared<ActionDrop>(to, pf));                          // and place it on target
+        m.push_back(std::make_shared<Move>(a));                                     // add move to move list
+      }
+      return true;                                                                  // keep trying this direction
+    }
+
+    if (HasRule(AllowTakes))
+    {
+      if (pt.GetColor() == pf.GetColor() && !HasRule(TakeOwn)) return false;        // own piece; don't keep trying this direction
+
+      // valid take move, save into collection
+      Actions a{};
+      a.push_back(std::make_shared<ActionLift>(fr, pf));                            // pick piece up
+      a.push_back(std::make_shared<ActionEliminate>(fr, Piece::NoTile));            // remove starting field
+      a.push_back(std::make_shared<ActionLift>(to, pt));                            // pick opponent piece up
+      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));  // place it in Taken
+      a.push_back(std::make_shared<ActionDrop>(to, pf));                            // and place it on target
+      m.push_back(std::make_shared<Move>(a));                                       // add move to move list
+    }
+
+    return false;                                                                   // don't keep trying this direction
+  }
  // TODO: add CheshireCat King first move as Queen
 
 

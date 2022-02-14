@@ -30,7 +30,6 @@ namespace CFour
     virtual inline MainPosition* Clone(void) const noexcept override { return new CFourPosition(*this); }
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
-    virtual unsigned int GetChainValue(unsigned int z) const noexcept override;
   };
 
 

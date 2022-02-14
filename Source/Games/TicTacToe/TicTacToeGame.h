@@ -22,9 +22,6 @@ namespace TicTacToe
     virtual MainPosition* Clone(void) const noexcept override { return new TicTacToePosition(*this); }
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
-
-  protected:
-    virtual unsigned int GetChainValue(unsigned int z) const noexcept override;
   };
 
 

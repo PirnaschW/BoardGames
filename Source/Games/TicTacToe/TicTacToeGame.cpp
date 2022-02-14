@@ -46,17 +46,6 @@ namespace TicTacToe
     return EvaluateChainLengths(3);
   }
 
-  unsigned int TicTacToePosition::GetChainValue(unsigned int z) const noexcept
-  {
-    switch (z)
-    {
-      case 1:  return  1;
-      case 2:  return  9;
-      default: return  0;
-    }
-  }
-
-
   const VariantList& TicTacToeGame::GetVariants(void) noexcept
   {
     static VariantList v{

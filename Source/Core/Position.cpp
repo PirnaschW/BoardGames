@@ -21,10 +21,7 @@ namespace BoardGamesCore
     if (hash_) return hash_;
     std::size_t z{};
     for (auto& p : pieces_)
-    {
       z ^= static_cast<size_t>(p) + 0x9e3779b9 + (z << 6) + (z >> 2);
-//      z ^= pMap_->GetPiece(p)->GetHash() + 0x9e3779b9 + (z << 6) + (z >> 2);
-    }
     return hash_ = z;
   }
 

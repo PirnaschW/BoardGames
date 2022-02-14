@@ -46,9 +46,6 @@ namespace Hasami
     virtual MainPosition* Clone(void) const noexcept override { return new HasamiPosition(*this); }
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
-
-  protected:
-    unsigned int GetChainValue(unsigned int z) const noexcept;
   };
 
   class HasamiGame : public Game

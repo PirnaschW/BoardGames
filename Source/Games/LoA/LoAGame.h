@@ -41,8 +41,8 @@ namespace LoA
     LoAPiece& operator=(const LoAPiece&) = delete;
 
   public:
-    static const LoAPiece LoAPieceW; //{ &LoAPeg::ThePeg, &PieceColor::White, IDB_WCL, IDB_WCD, IDB_WCS };
-    static const LoAPiece LoAPieceB; //{ &LoAPeg::ThePeg, &PieceColor::Black, IDB_BCL, IDB_BCD, IDB_BCS };
+    static const LoAPiece LoAPieceW;
+    static const LoAPiece LoAPieceB;
   };
 
 

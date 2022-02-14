@@ -6,8 +6,8 @@
 namespace LoA
 {
   const LoAPeg LoAPeg::ThePeg{};
-  const LoAPiece LoAPiece::LoAPieceW{ LoAPeg::ThePeg, PieceColor::White, IDB_WCL };
-  const LoAPiece LoAPiece::LoAPieceB{ LoAPeg::ThePeg, PieceColor::Black, IDB_BCL };
+  const LoAPiece LoAPiece::LoAPieceW{ LoAPeg::ThePeg, PieceColor::White, IDB_W0L };
+  const LoAPiece LoAPiece::LoAPieceB{ LoAPeg::ThePeg, PieceColor::Black, IDB_B0L };
 
   std::vector<const Piece*> LoAPeg::CollectAlong(const MainPosition& pos, Location l, const Offset& o) const
   {
@@ -226,7 +226,7 @@ namespace LoA
   {
     Dimensions d{
        Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(3, 1, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
+       Dimension(3, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
        Dimension(2 * v.x, 2, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),
     };
     return d;

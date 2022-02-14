@@ -73,7 +73,7 @@ namespace BoardGamesCore
 
   ActionDrop::ActionDrop(const Location l, const Piece& p) noexcept : Action(l, p) {}
 
-  void ActionDrop::Execute(MainPosition* p) const noexcept               // place piece on the the target field
+  void ActionDrop::Execute(MainPosition* p) const noexcept                // place piece on the target field
   {
     if (l_.b_ == BoardPart::Taken)                                        // Taken pieces will go in the next free spot
     {  
@@ -89,9 +89,20 @@ namespace BoardGamesCore
     }
     else
     {
-      assert(p->GetPiece(l_) == Piece::NoPiece);                         // target field must be free
+      assert(p->GetPiece(l_) == Piece::NoPiece);                          // target field must be free
       p->SetPiece(l_, p_);
     }
+  }
+
+
+  ActionEliminate::ActionEliminate(const Location l, const Piece& p) noexcept : Action(l, p) {}
+  
+  void ActionEliminate::Execute(MainPosition* p) const noexcept           // remove the target field from the board
+  {                                                                       
+    assert(l_.b_ == BoardPart::Main);                                     // only change the main board ever
+    assert(p->GetPiece(l_) == Piece::NoPiece);                            // target field must be free?
+    assert(p_ == Piece::NoTile);                                          // replacement must be 'NoTile'
+    p->SetPiece(l_, p_);
   }
 
 }

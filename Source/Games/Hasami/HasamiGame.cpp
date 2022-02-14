@@ -131,19 +131,6 @@ namespace Hasami
     return v1 - v2;
   }
 
-  unsigned int HasamiPosition::GetChainValue(unsigned int z) const noexcept
-  {
-    switch (z)
-    {
-      case 0:  return    0;
-      case 1:  return  100;
-      case 2:  return  200;
-      case 3:  return  600;
-      case 4:  return 2400;
-      default: return    0;
-    }
-  }
-
   const VariantList& HasamiGame::GetVariants(void) noexcept
   {
     static VariantList v{

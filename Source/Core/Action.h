@@ -64,4 +64,11 @@ namespace BoardGamesCore
     virtual void Execute(MainPosition* p) const noexcept override;
   };
 
+  class ActionEliminate : public Action  // Eliminate-Action: remove a tile from the board
+  {
+  public:
+    ActionEliminate(const Location l, const Piece& p) noexcept;
+    virtual void Execute(MainPosition* p) const noexcept override;
+  };
+
 }

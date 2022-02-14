@@ -329,9 +329,6 @@
     <ClInclude Include="..\Source\Games\Dispatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Games\Logik\res\LogikResource.h">
-      <Filter>Game Logik\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Games\BrainKing.h">
       <Filter>Header Files</Filter>
     </ClInclude>

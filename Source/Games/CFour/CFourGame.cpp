@@ -102,19 +102,6 @@ namespace CFour
     return v_.c & Anti ? -EvaluateChainLengths(4) : +EvaluateChainLengths(4);
   }
 
-
-  unsigned int CFourPosition::GetChainValue(unsigned int z) const noexcept
-  {
-    switch (z)
-    {
-      case 1:  return   100;
-      case 2:  return  1000;
-      case 3:  return 10000;
-      default: return     0;
-    }
-  }
-
-
   const VariantList& CFourGame::GetVariants(void) noexcept
   {
     static const VariantList v{

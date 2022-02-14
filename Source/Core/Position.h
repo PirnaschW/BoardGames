@@ -88,8 +88,8 @@ namespace BoardGamesCore
     constexpr Moves& GetMoveList(bool w) const noexcept { return w ? movesW_ : movesB_; }
     virtual bool AddIfLegal(Moves&, const Location&, const Location&) const noexcept { return false; };
     [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept;       // calculate position value
-    [[ nodiscard ]] virtual PositionValue EvaluateChainLengths(unsigned int max) const noexcept;        // calculate position value by chain lengths
-    virtual unsigned int GetChainValue(unsigned int /*z*/) const noexcept { return 0; }
+    [[ nodiscard ]] virtual PositionValue EvaluateChainLengths(unsigned int towin) const noexcept;        // calculate position value by chain lengths
+    virtual unsigned int GetChainValue(unsigned int z) const noexcept;
     virtual PositionValue Evaluate(AIContext& plist, bool w, PositionValue alpha, PositionValue beta, unsigned int plies) const noexcept;
     virtual PositionValue EvaluateBF(AIContext& plist, bool w, unsigned int plies) const noexcept;
     PositionValue GetValue(bool w) const noexcept;
@@ -113,7 +113,7 @@ namespace BoardGamesCore
     virtual Rule GetRule(void) const noexcept { return 0; }
 
   private:
-    [[ nodiscard ]] PositionValue EvaluateChainLength(Location l, unsigned int max) const noexcept;  // chain length for one location
+    [[ nodiscard ]] PositionValue EvaluateChainLength(Location l, unsigned int towin) const noexcept;  // chain length for one location
 
 
   public:

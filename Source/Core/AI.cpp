@@ -219,14 +219,14 @@ namespace BoardGamesCore
     return v;
   }
 
-  [[ nodiscard ]] PositionValue MainPosition::EvaluateChainLengths(unsigned int max) const noexcept           // as seen from White
+  [[ nodiscard ]] PositionValue MainPosition::EvaluateChainLengths(unsigned int towin) const noexcept           // as seen from White
   {
     PositionValue v{ 0 };
     for (Coordinate j = 0; j < sizeY_; j++)
     {
       for (Coordinate i = 0; i < sizeX_; i++)                                                      // loop through all locations
       {                                                                       
-        PositionValue vv = EvaluateChainLength(Location(BoardPart::Main, i, j), max);
+        PositionValue vv = EvaluateChainLength(Location(BoardPart::Main, i, j), towin);
         if (vv != PositionValue::PValueType::Normal) return vv;
         v += vv;
       }
@@ -235,21 +235,23 @@ namespace BoardGamesCore
     return v;
   }
 
-  [[ nodiscard ]] PositionValue MainPosition::EvaluateChainLength(Location l, unsigned int max) const noexcept    // as seen from White
+  [[ nodiscard ]] PositionValue MainPosition::EvaluateChainLength(Location l, unsigned int towin) const noexcept    // as seen from White
   {
     int v1{ 0 };
     int v2{ 0 };
 
     const Piece* p = &GetPiece(l);
-    if (p->IsColor(PieceColor::NoColor)) return 0;                                                 // nothing here, so no chain can start
-    const bool w = p->IsColor(PieceColor::White);
-
-    for (const Offset& d : Offset::QDirection)
-    {
-      const Piece* pp{ &GetPiece(l + d * -1) };
-      if (pp != &Piece::NoTile && pp->IsColor(p->GetColor())) continue;                            // if same color is that direction, we counted it already, so move on
-      if (pp != &Piece::NoTile && pp->IsBlank()) (w ? v1 : v2) += GetChainValue(0);                // free field, give an extra point - much better than opponent's piece
-      Location ll{l};
+    if (p->IsColor(PieceColor::NoColor)) return 0;                                       // nothing here, so no chain can start
+    const bool w = p->IsColor(PieceColor::White);                                        
+    const int n = sizeof(Offset::QDirection) / sizeof(Offset::QDirection[0]) / 2;        
+    for (int i = 0; i < n; ++i)                                                          
+    {                                                                                    
+      int bonus = 0;                                                                     
+      const Offset& d = Offset::QDirection[i];                                           
+      const Piece* pp{ &GetPiece(l + d * -1) };                                          
+      if (pp != &Piece::NoTile && pp->IsColor(p->GetColor())) continue;                  // if same color is that direction, we counted it already, so move on
+      if (pp != &Piece::NoTile && pp->IsBlank()) ++bonus;                                // free field, give extra points - much better than opponent's piece
+      Location ll{ l };
 //      Location ll{ BoardPart::Main,i,j };
       unsigned int z{ 1 };
       while ((pp = &GetPiece(ll += d)) != nullptr)
@@ -257,15 +259,34 @@ namespace BoardGamesCore
         if (pp->IsColor(p->GetColor())) z++;
         else
         {
-          if (pp->IsColor(PieceColor::NoColor)) (w ? v1 : v2) += GetChainValue(0);                 // if line ends with free field, give an extra point - much better than opponent's piece
+          if (pp->IsColor(PieceColor::NoColor)) ++bonus;                                 // if line ends with free field, give an extra point - much better than opponent's piece
           break;
         }
       }
-      if (z >= max) return w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
-      (w ? v1 : v2) += GetChainValue(z);
+      if (z >= towin) return w ? PositionValue::PValueType::Won : PositionValue::PValueType::Lost;
+      (w ? v1 : v2) += GetChainValue(z) + bonus * GetChainValue(z-1);
     }
     return v1 - v2;
   }
+
+  unsigned int MainPosition::GetChainValue(unsigned int z) const noexcept
+  {
+    switch (z)
+    {
+      case 0:  return          1U;
+      case 1:  return         10U;
+      case 2:  return        100U;
+      case 3:  return       1000U;
+      case 4:  return      10000U;
+      case 5:  return     100000U;
+      case 6:  return    1000000U;
+      case 7:  return   10000000U;
+      case 8:  return  100000000U;
+      case 9:  return 1000000000U;
+      default: return          0U;
+    }                             
+  }
+
 
   MainPosition* MainPosition::GetPosition(AIContext& plist, MoveP m) const noexcept                // execute move, maintain resulting pos in PList
   {
