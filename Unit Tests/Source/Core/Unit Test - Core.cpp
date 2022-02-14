@@ -500,6 +500,7 @@ namespace UnitTestCore
       {
       public:
         TestPosition(VariantChosen v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
+        virtual void SetStartingPosition() noexcept override {};
         virtual MainPosition* Clone(void) const noexcept override { return new TestPosition(*this); }
       };
 
@@ -651,6 +652,7 @@ namespace UnitTestCore
       {
       public:
         TestPosition(VariantChosen v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
+        virtual void SetStartingPosition() noexcept override {};
         virtual MainPosition* Clone(void) const noexcept override { return new TestPosition(*this); }
        };
 

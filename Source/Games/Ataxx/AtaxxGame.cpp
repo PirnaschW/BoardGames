@@ -100,13 +100,13 @@ namespace Ataxx
   }
 
 
-  AtaxxPosition::AtaxxPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
+  void AtaxxPosition::SetStartingPosition() noexcept
   {
     // put one piece in each corner:
-    SetPiece(Location(BoardPart::Main, 0U,             d[0].yCount_-1), AtaxxPiece::AtaxxPieceW);
-    SetPiece(Location(BoardPart::Main, d[0].xCount_-1, 0U            ), AtaxxPiece::AtaxxPieceW);
-    SetPiece(Location(BoardPart::Main, 0U,             0U            ), AtaxxPiece::AtaxxPieceB);
-    SetPiece(Location(BoardPart::Main, d[0].xCount_-1, d[0].yCount_-1), AtaxxPiece::AtaxxPieceB);
+    SetPiece(Location(BoardPart::Main, 0U,       sizeY_-1), AtaxxPiece::AtaxxPieceW);
+    SetPiece(Location(BoardPart::Main, sizeX_-1, 0U      ), AtaxxPiece::AtaxxPieceW);
+    SetPiece(Location(BoardPart::Main, 0U,       0U      ), AtaxxPiece::AtaxxPieceB);
+    SetPiece(Location(BoardPart::Main, sizeX_-1, sizeY_-1), AtaxxPiece::AtaxxPieceB);
   }
 
   const VariantList& AtaxxGame::GetVariants(void) noexcept

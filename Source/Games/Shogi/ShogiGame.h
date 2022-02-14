@@ -250,8 +250,9 @@ namespace Shogi
   class ShogiPosition : public MainPosition
   {
   public:
-    ShogiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    ShogiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
     virtual MainPosition* Clone(void) const noexcept override { return new ShogiPosition(*this); };
+    virtual void SetStartingPosition() noexcept override;
     virtual void GetAllMoves(void) const noexcept;                              // generate all moves and save list
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;              // calculate position value and save

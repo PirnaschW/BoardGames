@@ -18,8 +18,8 @@ namespace TicTacToe
   {
   public:
     TicTacToePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
-
     virtual MainPosition* Clone(void) const noexcept override { return new TicTacToePosition(*this); }
+    virtual void SetStartingPosition() noexcept override {}
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
   };

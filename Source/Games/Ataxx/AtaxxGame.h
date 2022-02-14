@@ -50,8 +50,9 @@ namespace Ataxx
   class AtaxxPosition : public MainPosition
   {
   public:
-    AtaxxPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    AtaxxPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
     virtual MainPosition* Clone(void) const noexcept override { return new AtaxxPosition(*this); }
+    virtual void SetStartingPosition() noexcept override;
   };
 
 

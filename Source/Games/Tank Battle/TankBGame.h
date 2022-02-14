@@ -81,8 +81,9 @@ namespace TankB
   class TankBPosition : public MainPosition
   {
   public:
-    TankBPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    TankBPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
     virtual MainPosition* Clone(void) const noexcept override { return new TankBPosition(*this); }
+    virtual void SetStartingPosition() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
   };

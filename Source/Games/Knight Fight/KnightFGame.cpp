@@ -8,9 +8,9 @@ namespace KnightF
   const KnightFPiece KnightFPiece::KnightFPieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
   const KnightFPiece KnightFPiece::KnightFPieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
 
-  KnightFPosition::KnightFPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
+  void KnightFPosition::SetStartingPosition() noexcept
   {
-    const Coordinate max = d[0].xCount_ * d[0].yCount_;
+    const Coordinate max = sizeX_ * sizeY_;
 
     std::vector<Coordinate> available(max);
     for (Coordinate i = 0; i < max; ++i) available[i] = i;

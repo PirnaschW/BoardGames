@@ -100,9 +100,9 @@ namespace Cam
   }
 
 
-  CamPosition::CamPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
+  void CamPosition::SetStartingPosition() noexcept
   {
-    switch (v.c)
+    switch (v_.c)
     {
       case 'F': // full Camelot
         // Black Knights

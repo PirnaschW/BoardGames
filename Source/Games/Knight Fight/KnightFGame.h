@@ -45,8 +45,9 @@ namespace KnightF
   class KnightFPosition : public MainPosition
   {
   public:
-    KnightFPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    KnightFPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
     virtual MainPosition* Clone(void) const noexcept override { return new KnightFPosition(*this); }
+    virtual void SetStartingPosition() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
   private:

@@ -155,8 +155,9 @@ namespace Espionage
   class EspionagePosition : public MainPosition
   {
   public:
-    EspionagePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    EspionagePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
     virtual MainPosition* Clone(void) const noexcept override { return new EspionagePosition(*this); }
+    virtual void SetStartingPosition() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
   };

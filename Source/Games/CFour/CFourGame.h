@@ -28,6 +28,7 @@ namespace CFour
   public:
     inline CFourPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
     virtual inline MainPosition* Clone(void) const noexcept override { return new CFourPosition(*this); }
+    virtual void SetStartingPosition() noexcept override {};
     virtual void GetAllMoves(void) const noexcept override;
     virtual PositionValue EvaluateStatically(void) const noexcept override;
   };

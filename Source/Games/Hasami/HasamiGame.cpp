@@ -34,14 +34,14 @@ namespace Hasami
   }
 
 
-  HasamiPosition::HasamiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
+  void HasamiPosition::SetStartingPosition() noexcept
   {
-    for (Coordinate i = 0; i < d[0].xCount_; i++)
+    for (Coordinate i = 0; i < sizeX_; i++)
     {
-      SetPiece(Location(BoardPart::Main, i, 0U), HasamiPiece::HasamiPieceB);
-      SetPiece(Location(BoardPart::Main, i, 1U), HasamiPiece::HasamiPieceB);
-      SetPiece(Location(BoardPart::Main, i, d[0].yCount_ - 1), HasamiPiece::HasamiPieceW);
-      SetPiece(Location(BoardPart::Main, i, d[0].yCount_ - 2), HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, 0U        ), HasamiPiece::HasamiPieceB);
+      SetPiece(Location(BoardPart::Main, i, 1U        ), HasamiPiece::HasamiPieceB);
+      SetPiece(Location(BoardPart::Main, i, sizeY_ - 1), HasamiPiece::HasamiPieceW);
+      SetPiece(Location(BoardPart::Main, i, sizeY_ - 2), HasamiPiece::HasamiPieceW);
     }
   }
 

@@ -60,8 +60,9 @@ namespace Cam
   class CamPosition : public MainPosition
   {
   public:
-    CamPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept;
+    CamPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
     virtual MainPosition* Clone(void) const noexcept override { return new CamPosition(*this); }
+    virtual void SetStartingPosition() noexcept override;
     virtual void GetAllMoves(void) const noexcept override;
 
     // extensions:

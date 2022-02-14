@@ -276,6 +276,8 @@ namespace Logik
     return TileColor::Light;
   }
 
+  // TODO: correct Logik Game drag&drop (AI always at move)
+
 
   bool LogikGame::React(unsigned int nChar, unsigned int, unsigned int)  // react to keyboard input (not menu shortcuts, but typing)
   {

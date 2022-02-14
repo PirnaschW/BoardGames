@@ -70,16 +70,16 @@ namespace LoA
   }
 
 
-  LoAPosition::LoAPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d)
+  void LoAPosition::SetStartingPosition() noexcept
   {
-    for (Coordinate i = 0; i < d[0].xCount_; i++)
-      for (Coordinate j = 0; j < d[0].yCount_; j++)
+    for (Coordinate i = 0; i < sizeX_; i++)
+      for (Coordinate j = 0; j < sizeY_; j++)
       {
-        if (((i == 0) || (i == d[0].xCount_ - 1)) && (j != 0) && (j != d[0].yCount_ - 1))  // left or right border, but not top or bottom corner
+        if (((i == 0) || (i == sizeX_ - 1)) && (j != 0) && (j != sizeY_ - 1))  // left or right border, but not top or bottom corner
         {
           SetPiece(Location(BoardPart::Main, i, j), LoAPiece::LoAPieceW);
         }
-        else if (((j == 0) || (j == d[0].yCount_ - 1)) && (i != 0) && (i != d[0].xCount_ - 1))  // top or bottom border, but not left or right corner
+        else if (((j == 0) || (j == sizeY_ - 1)) && (i != 0) && (i != sizeX_ - 1))  // top or bottom border, but not left or right corner
         {
           SetPiece(Location(BoardPart::Main, i, j), LoAPiece::LoAPieceB);
         }
