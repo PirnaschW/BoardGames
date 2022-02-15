@@ -338,18 +338,22 @@ namespace BoardGamesBK
   VariantChosen BKGame::LoadGame(std::vector<const Piece*>& list) const
   {
     // try to read a Current game
-    const std::wstring urlc = LR"(http://brainking.com/en/ShowGame?g=)" + std::to_wstring(no_);
-    std::string html = URL::GetHTMLFromURL(urlc);
-    if (strlen(html.c_str()) < 256)    // if this results in a redirect, try to read as Archived game
+    const std::string urlc = R"(http://brainking.com/en/ShowGame?g=)" + std::to_string(no_);
+    URL::Cookies cookies{};
+    //cookies.push_back({ "http://brainking.com","JSESSIONID","18j066c3wgj91cdeae9ohktd6" });
+    std::string html = URL::GetHTMLFromURL(urlc, cookies);
+    if (html.size() < 256)    // if this results in a redirect, try to read as Archived game
     {
-      const std::wstring urla = LR"(http://brainking.com/en/ArchivedGame?g=)" + std::to_wstring(no_);
-      html = URL::GetHTMLFromURL(urla);
+      const std::string urla = R"(http://brainking.com/en/ArchivedGame?g=)" + std::to_string(no_);
+      html = URL::GetHTMLFromURL(urla, cookies);
     }
+
+    // TODO: analyze HTML properly
 
     const std::string tp = GetBetween(html, R"(<a href="GameRules?tp=)", R"(&)");
     BKGameType gametype = stoi(tp);
 
-    const auto& it{ BKGameMap.find(gametype) };                            
+    const auto& it{ BKGameMap.find(gametype) };
     assert(it != BKGameMap.end());        // stop immediately if unknown game type encountered                                 
     if (it->second.id)                    // if the game type is implemented, read the board
     {

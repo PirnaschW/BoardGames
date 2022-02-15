@@ -17,7 +17,14 @@ namespace ClipBoard
 namespace URL
 {
 
-  const std::string GetHTMLFromURL(const std::wstring& url);
+  struct Cookie {
+    std::string url{};
+    std::string name{};
+    std::string value{};
+  };
+  using Cookies = std::vector<Cookie>;
+
+  const std::string GetHTMLFromURL(const std::string& url, const Cookies& c);
   const std::string GetHTMLFromURL(const std::string& url);
 
 }

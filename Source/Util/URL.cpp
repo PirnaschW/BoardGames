@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#undef UNICODE
+
 #define VC_EXTRALEAN        // Exclude rarely-used stuff from Windows headers
 #include "targetver.h"
 #include <windows.h>
@@ -8,14 +10,26 @@
 
 namespace URL
 {
-  const std::string GetHTMLFromURL(const std::string& url) { return GetHTMLFromURL(std::wstring(url.begin(), url.end())); }
-
-  const std::string GetHTMLFromURL(const std::wstring& url)
+  const std::string GetHTMLFromURL(const std::string& url)
   {
-    HINTERNET connect = InternetOpen(L"Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
-    assert(connect);
+    Cookies c{};
+    return GetHTMLFromURL(url, c);
+  }
 
-    HINTERNET OpenAddress = InternetOpenUrl(connect, url.c_str(), nullptr, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
+  const std::string GetHTMLFromURL(const std::string& url, const Cookies& cookies)
+  {
+    HINTERNET connect = InternetOpen("Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
+    assert(connect);
+    InternetSetOption(connect, INTERNET_OPTION_END_BROWSER_SESSION, NULL, 0);
+
+    for (const auto& cookie : cookies)
+    {
+      const std::string s = cookie.name + "=" + cookie.value;
+      BOOL cookieOk = InternetSetCookie(cookie.url.c_str(), NULL, s.c_str());
+      assert(cookieOk);
+    }
+
+    HINTERNET OpenAddress = InternetOpenUrl(connect, url.c_str(), nullptr, 0, INTERNET_FLAG_PRAGMA_NOCACHE, 0);
     assert(OpenAddress);
 
     std::string DataReceived{};
@@ -37,15 +51,16 @@ namespace URL
         DWORD ErrorCode = GetLastError();
         switch (ErrorCode)
         {
-        case ERROR_INSUFFICIENT_BUFFER:
-          throw;
-        default:
-          break;
+          case ERROR_INSUFFICIENT_BUFFER:
+            throw;
+          default:
+            break;
         }
       }
     } while (success && NumberOfBytesRead > 0UL);
 
     InternetCloseHandle(OpenAddress);
+    InternetSetOption(connect, INTERNET_OPTION_END_BROWSER_SESSION, NULL, 0);
     InternetCloseHandle(connect);
     return DataReceived;
   }
