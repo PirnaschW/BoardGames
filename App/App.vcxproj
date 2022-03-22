@@ -84,7 +84,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Source;$(SolutionDir)Source\Util;$(SolutionDir)Source\MFC;$(SolutionDir)Source\Core;$(SolutionDir)Source\Games</IncludePath>
     <TargetName>BG</TargetName>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -92,7 +92,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Source;$(SolutionDir)Source\Util;$(SolutionDir)Source\MFC;$(SolutionDir)Source\Core;$(SolutionDir)Source\Games</IncludePath>
     <TargetName>BG</TargetName>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -100,7 +100,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Source;$(SolutionDir)Source\Util;$(SolutionDir)Source\MFC;$(SolutionDir)Source\Core;$(SolutionDir)Source\Games</IncludePath>
     <TargetName>BG</TargetName>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -108,7 +108,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Projects\BoardGames\Source;D:\Projects\BoardGames\Source\Util;D:\Projects\BoardGames\Source\MFC;D:\Projects\BoardGames\Source\Core;D:\Projects\BoardGames\Source\Games</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Source;$(SolutionDir)Source\Util;$(SolutionDir)Source\MFC;$(SolutionDir)Source\Core;$(SolutionDir)Source\Games</IncludePath>
     <TargetName>BG</TargetName>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>

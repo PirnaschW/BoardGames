@@ -1,6 +1,6 @@
 // Unit Test - Games.h: This is a precompiled header file.
 
-#include "CppUnitTest.h"
+#include "..\UnitTest\include\CppUnitTest.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #define VC_EXTRALEAN        // Exclude rarely-used stuff from Windows headers
@@ -10,5 +10,5 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include <algorithm>
 
-#include "../../../Source/Games/Games.h"
+#include "Games.h"
 using namespace BoardGamesCore;
