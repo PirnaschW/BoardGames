@@ -4,56 +4,6 @@
 
 namespace Checkers
 {
-  const Checker Checker::TheChecker{};
-  const King    King   ::TheKing   {};
-  const Queen   Queen  ::TheQueen  {};
-  const Para    Para   ::ThePara   {};
-
-  const CheckersPiece CheckersPiece::CheckersPieceW{ Checker::TheChecker, PieceColor::White, &CheckersQueenW, IDB_WPL };
-  const CheckersPiece CheckersPiece::CheckersPieceB{ Checker::TheChecker, PieceColor::Black, &CheckersQueenB, IDB_BPL };
-  const CheckersPiece CheckersPiece::CheckersKingW { King   ::TheKing,    PieceColor::White, &CheckersKingW,  IDB_WKL };
-  const CheckersPiece CheckersPiece::CheckersKingB { King   ::TheKing,    PieceColor::Black, &CheckersKingB,  IDB_BKL };
-  const CheckersPiece CheckersPiece::CheckersQueenW{ Queen  ::TheQueen,   PieceColor::White, &CheckersQueenW, IDB_WQL };
-  const CheckersPiece CheckersPiece::CheckersQueenB{ Queen  ::TheQueen,   PieceColor::Black, &CheckersQueenB, IDB_BQL };
-  const CheckersPiece CheckersPiece::CheckersParaW { Para   ::ThePara,    PieceColor::White, &CheckersPieceW, IDB_CHECKERSWPARA };
-  const CheckersPiece CheckersPiece::CheckersParaB { Para   ::ThePara,    PieceColor::Black, &CheckersPieceB, IDB_CHECKERSBPARA };
-
-
-  void Checker::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
-  {
-    const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    const int dy = pos.GetPiece(l).IsColor(PieceColor::White) ? -1 : 1;
-    pos.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
-    pos.AddIfLegal(moves, l, l + Offset(-1, dy));
-    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);        // check for jump moves
-  }
-
-
-  void King::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
-  {
-    const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    for (auto& d : Offset::BDirection)
-      pos.AddIfLegal(moves, l, l + d);                                    // check for slide moves
-    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);        // check for jump moves
-  }
-
-
-  void Queen::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
-  {
-    const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    for (auto& d : Offset::BDirection)
-      for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);          // check for slide moves
-    pos.AddIfLegalJump(moves, true, Actions{}, Piece::NoTile, l);         // check for jump moves
-  }
-
-
-  void Para::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
-  {
-    const CheckersPosition& pos = dynamic_cast<const CheckersPosition&>(p);
-    const int dy = pos.GetPiece(l).IsColor(PieceColor::White) ? -1 : 1;
-    pos.AddIfLegalJump(moves, false, Actions{}, Piece::NoTile, l);        // check only for (back-)jump moves
-  }
-
 
   void CheckersPosition::SetStartingPosition() noexcept
   {
@@ -170,6 +120,36 @@ namespace Checkers
     return (p.IsColor(PieceColor::White) && l.y_ == 0) || (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 1);
   }
 
+  Rule CheckersPosition::GetRule() const noexcept
+  {
+    return PromotedJump;
+  }
+
+
+  MainPosition* CheckersGame::GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept
+  {
+    switch (static_cast<CheckerVariant>(v.c))
+    {
+      case CheckerVariant::Standard:      return new CheckersPosition(v, m, d);     // Checkers
+      case CheckerVariant::International: return new InternationalCheckersPosition(v, m, d);     // International Checkers
+      case CheckerVariant::Brazilian:     return new BrazilianCheckersPosition(v, m, d);     // Brazilian Checkers
+      case CheckerVariant::Canadian:      return new CanadianCheckersPosition(v, m, d);     // Canadian Checkers
+      case CheckerVariant::Czech:         return new CzechCheckersPosition(v, m, d);     // Czech Checkers
+      case CheckerVariant::Italian:       return new ItalianCheckersPosition(v, m, d);     // Italian Checkers
+      case CheckerVariant::Portuguese:    return new PortugueseCheckersPosition(v, m, d);     // Portuguese Checkers
+      case CheckerVariant::Russian:       return new RussianCheckersPosition(v, m, d);     // Russian Checkers
+      case CheckerVariant::Thai:          return new ThaiCheckersPosition(v, m, d);     // Thai Checkers
+      case CheckerVariant::Turkish:       return new TurkCheckersPosition(v, m, d);     // Turkish Checkers
+      case CheckerVariant::Anti:          return new AntiCheckersPosition(v, m, d);     // Anti Checkers
+      case CheckerVariant::Corner:        return new CornerCheckersPosition(v, m, d);     // Corner Checkers
+      case CheckerVariant::Hawaiian:      return new HawaiianCheckersPosition(v, m, d);     // Hawaiian Checkers
+      case CheckerVariant::OneWay:        return new OneWayCheckersPosition(v, m, d);     // One Way Checkers
+      case CheckerVariant::Parachute:     return new ParachuteCheckersPosition(v, m, d);     // Parachute Checkers
+      case CheckerVariant::Gothic:        return new GothicCheckersPosition(v, m, d);     // Gothis Checkers
+      case CheckerVariant::Dameo:         return new DameoCheckersPosition(v, m, d);     // Dameo
+      default: return nullptr; // must not happen
+    }
+  }
 
   const VariantList& CheckersGame::GetVariants(void) noexcept
   {
@@ -200,7 +180,14 @@ namespace Checkers
   {
     static const PieceMapP& p = std::make_shared<PieceMap>();
     p->Empty();
-    p->Add(CheckersPiece::CheckersPieceW);     p->Add(CheckersPiece::CheckersPieceB);
+    if (v.c == Checkers::Turkish)
+    {
+      p->Add(TurkCheckersPiece::TurkCheckersPieceW); p->Add(TurkCheckersPiece::TurkCheckersPieceB);
+    }
+    else
+    {
+      p->Add(CheckersPiece::CheckersPieceW);     p->Add(CheckersPiece::CheckersPieceB);
+    }
     p->Add(CheckersPiece::CheckersKingW);      p->Add(CheckersPiece::CheckersKingB);
     p->Add(CheckersPiece::CheckersQueenW);     p->Add(CheckersPiece::CheckersQueenB);
     p->Add(CheckersPiece::CheckersParaW);      p->Add(CheckersPiece::CheckersParaB);

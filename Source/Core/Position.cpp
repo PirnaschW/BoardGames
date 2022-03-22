@@ -152,6 +152,7 @@ namespace BoardGamesCore
     //depth_ = 0; " keep value for display
 
     sequence_.push_back(std::make_shared<Move>(m));                       // save the move in the sequence_
+    m.GetActions().Log();
     for (const auto& aa : m.GetActions()) aa->Execute(this);              // execute all Actions
     NextPlayer();                                                         // after the move, it's the next player's turn
   }

@@ -41,10 +41,10 @@
 // permanently don't want to see those:
 #pragma warning( disable : 26435 )  // Function 'func' should specify exactly one of 'virtual', 'override', or 'final' (c.128).
 #pragma warning( disable : 26426 )  // Global initializer calls a non - constexpr function '~Class' (i.22).
-#pragma warning( disable : 26429 )  // Symbol '' is never tested for nullness, it can be marked as not_null(f.23).
-#pragma warning( disable : 26443 )  // Overriding destructor should not use explicit 'override' or 'virtual' specifiers(c.128).
+//#pragma warning( disable : 26429 )  // Symbol '' is never tested for nullness, it can be marked as not_null(f.23).
+//#pragma warning( disable : 26443 )  // Overriding destructor should not use explicit 'override' or 'virtual' specifiers(c.128).
 #pragma warning( disable : 26446 )  // Prefer to use gsl::at() instead of unchecked subscript operator (bounds.4).
-#pragma warning( disable : 26472 )  // Don't use a static_cast for arithmetic conversions. Use brace initialization, gsl::narrow_cast or gsl::narow (type.1).
+//#pragma warning( disable : 26472 )  // Don't use a static_cast for arithmetic conversions. Use brace initialization, gsl::narrow_cast or gsl::narow (type.1).
 #pragma warning( disable : 26482 )  // Only index into arrays using constant expressions(bounds.2).
 #pragma warning( disable : 26486 )  // Don't pass a pointer that may be invalid to a function. Parameter 2 'p.{vfptr}' in call to 'icall' may be invalid (lifetime.1).
 #pragma warning( disable : 26489 )  // Don't dereference a pointer that may be invalid: 'p'. 'p' may have been invalidated at line # (lifetime.1).

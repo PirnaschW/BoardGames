@@ -10,7 +10,7 @@
 
 namespace BoardGamesCore
 {
-  void PositionValue::Log(void)
+  void PositionValue::Log(void) const
   {
     wchar_t buffer[256];
     switch (type_)
@@ -37,34 +37,38 @@ namespace BoardGamesCore
     OutputDebugString(buffer);
   }
 
-  void Move::Log(void)
+  void Move::Log(void) const
   {
-    const auto& aa = GetActions();
-    assert(aa.size() > 0);
-    const auto s = aa.size();
+    GetActions().Log();
+    value_.Log();
+  }
+  
+  void Actions::Log(void) const
+  {
+    assert(size() > 0);
+    const auto s = size();
     wchar_t buffer[256];
-    assert(s < sizeof(buffer)/3);
+    assert(s < sizeof(buffer) / 3);
     size_t pBuf = 0U;
     bool jump = false;
 
-    for (int i = 0; i < aa.size(); ++i)
+    for (size_t i = 0; i < size(); ++i)
     {
-      if (aa[i]->IsJump())
+      if ((*this)[i]->IsJump())
       {
         jump = true;
         i += 2;
       }
       else
       {
-        const auto x = aa[i]->GetLocation().x_;
-        const auto y = aa[i]->GetLocation().y_;
+        const auto x = (*this)[i]->GetLocation().x_;
+        const auto y = (*this)[i]->GetLocation().y_;
         pBuf += wsprintfW(buffer + pBuf, L"%c%c%s-", x + 'a', y + '1', jump ? "x" : "");
         jump = false;
       }
     }
     buffer[--pBuf] = '\0';
     OutputDebugString(buffer);
-    value_.Log();
   }
 
 }

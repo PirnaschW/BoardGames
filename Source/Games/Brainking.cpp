@@ -1,5 +1,9 @@
 #include "Games.h"
 
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+
 #include "BrainKing.h"
 
 // needed for the game-specific Pieces / Variants:
@@ -334,9 +338,22 @@ namespace BoardGamesBK
 
   }
 
+  void DownloadInput(const std::string& source, const std::string& target)
+  {
+    URL::Cookies cookies{};
+    cookies.push_back({ "http://brainking.com","JSESSIONID","18j066c3wgj91cdeae9ohktd6" });
+
+    std::string s = URL::GetHTMLFromURL(source, cookies);
+    std::ofstream outf(target, std::ios::out);
+    outf << s;
+  }
 
   VariantChosen BKGame::LoadGame(std::vector<const Piece*>& list) const
   {
+    DownloadInput(R"(http://brainking.com/en/ShowGame?g=)" + std::to_string(no_),
+                  R"(D:\Projects\BoardGames\)"+ std::to_string(no_) + R"(.html)");
+
+
     // try to read a Current game
     const std::string urlc = R"(http://brainking.com/en/ShowGame?g=)" + std::to_string(no_);
     URL::Cookies cookies{};

@@ -7,7 +7,7 @@ namespace Chess
 
   // templates to create a subclass for each variant
 
-  template <ChessVariant V> struct ChessVariantData {};  // helper to allow to add data for one variant nly
+  template <ChessVariant V> struct ChessVariantData {};  // helper to allow to add data for one variant only
   template <> struct ChessVariantData<ChessVariant::Dice>      { mutable Side side_; };  // rolled Die
   template <> struct ChessVariantData<ChessVariant::Dice10x10> { mutable Side side_; };  // rolled Die
 

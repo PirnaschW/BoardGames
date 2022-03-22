@@ -1,3 +1,5 @@
+#include "ChessVariants.h"
+#include "ChessPieces.h"
 
 namespace Chess
 {
@@ -13,13 +15,6 @@ namespace Chess
   constexpr unsigned int BoardStartY = 30;  // offset for drawing the board
 
   using namespace BoardGamesCore;
-}
-
-#include "ChessVariants.h"
-#include "ChessPieces.h"
-
-namespace Chess
-{
 
   class ChessPosition abstract: public MainPosition
   {

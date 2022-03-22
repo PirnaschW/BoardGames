@@ -39,6 +39,10 @@ namespace BoardGamesCore
     bool HasJump(void) const noexcept;
     bool operator == (const Actions& a) const noexcept;
     bool operator != (const Actions& a) const noexcept { return !(*this == a); }
+#ifdef LOG
+  public:
+    void Log(void) const;
+#endif // LOG
   };
 
 

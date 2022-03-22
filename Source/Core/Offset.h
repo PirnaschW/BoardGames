@@ -12,6 +12,7 @@ namespace BoardGamesCore
     Offset(const Location& l1, const Location& l2) noexcept;
     constexpr bool operator==(const Offset& o) const noexcept { return o.dx_ == dx_ && o.dy_ == dy_; }
     constexpr Offset operator*(int i) const noexcept { return Offset(dx_ * i, dy_ * i); }
+    constexpr Offset rotate(bool p) const noexcept { return p ? Offset(-dy_, dx_) : Offset(dy_, -dx_); } // rotate mathematically positive (p=true) or negative (p=false)
     constexpr bool IsParallel(const Offset& o) const noexcept { return dx_ * o.dy_ == o.dx_ * dy_; }  // 2-dim cross product is 0 when parallel
 
   private:

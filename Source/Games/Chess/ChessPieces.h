@@ -2,6 +2,7 @@
 
 namespace Chess
 {
+  using namespace BoardGamesCore;
 
   class Pawn : public Kind
   {

@@ -22,7 +22,7 @@ namespace BoardGamesCore
 
 #ifdef LOG
   public:
-    void Log(void);
+    void Log(void) const;
 #endif // LOG
 
   private:

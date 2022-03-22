@@ -21,6 +21,11 @@ namespace BoardGamesCore
     bool operator ==(const Position* p) const noexcept;
     bool operator !=(const Position* p) const noexcept;
 
+    bool IsValid(const Location& l) const noexcept { return GetPiece(l) != Piece::NoTile; }       // check if the location is a valid field
+    bool IsFree(const Location& l) const noexcept { return IsValid(l) && GetPiece(l).IsBlank(); } // check if the location is a valid field and is free
+    bool IsMyPiece(const Location& l, const PieceColor& c) const noexcept { return IsValid(l) && GetPiece(l).IsColor(c); }  // check if own piece is in the location 
+    bool IsOppPiece(const Location& l, const PieceColor& c) const noexcept { return IsValid(l) && !GetPiece(l).IsBlank() && !GetPiece(l).IsColor(c); }  // check if opponent's piece is in the location 
+
     virtual std::size_t GetHash(void) const noexcept;
     virtual void Serialize(Archive& ar);
     virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept;
