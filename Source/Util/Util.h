@@ -8,8 +8,8 @@
 namespace ClipBoard
 {
 
-  bool IsClipboardFormatText(void);
-  std::string GetClipboardText(void);
+  bool IsClipboardFormatText();
+  std::string GetClipboardText();
 
 };
 

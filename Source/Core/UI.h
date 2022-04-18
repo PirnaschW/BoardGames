@@ -16,14 +16,12 @@ namespace BoardGamesCore
     virtual void DragStart(const Point&) = 0;                                                // user triggered a dragging operation
     virtual void DragEnd(const Point&) = 0;                                                  // user ended a dragging operation
     virtual void Select(const Point& point) = 0;                                             // user selected a Piece
-    virtual void Unselect(void) = 0;                                                         // user cleared selection of a Piece
-    virtual void SetUpdateCallBack(std::function<void(void)> cb) = 0;                        // periodic callback during AI move
-    virtual void SetPosition(std::vector<const Piece*>& list) = 0;                           // overwrite position with given Piece list (load from WWW)
-
+    virtual void Unselect() = 0;                                                         // user cleared selection of a Piece
+    virtual void SetUpdateCallBack(std::function<void()> cb) = 0;                        // periodic callback during AI move
 
   protected:
-    const Piece* dragPiece_{};       // currently dragged piece
-    Point dragPoint_{};             // point the piece is dragged to
+    PieceIndex dragPiece_{};      // currently dragged piece
+    Point dragPoint_{};           // point the piece is dragged to
   };
 
   static_assert(std::is_abstract<IUI>::value, "must be abstract");

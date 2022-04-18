@@ -8,8 +8,6 @@ namespace BoardGamesMFC
     : pen_{ new CPen(nPenStyle,nWidth,RGB(r,g,b)) }
   {}
   constexpr Pen::~Pen() noexcept { delete pen_; }
-  const Pen Pen::PenBlack   { PenStyle_Solid, 1,   0,   0,   0 };
-  const Pen Pen::PenSelected{ PenStyle_Solid, 3,  64,  64, 255 };
 
 
   // Brush handling

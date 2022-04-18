@@ -1,23 +1,28 @@
 
 class CBitmap;
+class Internal;
 
 namespace BoardGamesMFC
 {
+  using BitmapID = unsigned int;
 
-  class __declspec(dllexport) Bitmap
+  class Bitmap
   {
+    class Internal; // decoupled helper class to do the work
+  private:
+    constexpr Bitmap() = delete;
   public:
-    Bitmap(void) = delete;
-    constexpr Bitmap(unsigned int ID) noexcept;
-    constexpr ~Bitmap() noexcept;
-    void Draw(DC* pDC, const Rect& r) const noexcept;
+    constexpr Bitmap(BitmapID id) noexcept : id_(id) {}
+    constexpr ~Bitmap() noexcept = default;
+    void Draw(DC* dc, const Rect& r) const;
+
+    static void Cleanup();
 
   private:
-    void Load(DC* pDC, const Rect& r) const noexcept;
+    const BitmapID id_{};
 
-    const unsigned int ID_{};
-    mutable CBitmap* bmP_{nullptr};  // Piece bitmap - mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
-    mutable CBitmap* bmM_{nullptr};  // Mask  bitmap 
+  private:  // collect all internal objects ina static map to allow decoupling and constexpr Bitmap objects
+    static inline std::unordered_map<BitmapID, Internal*> map_{};
   };
 
 }

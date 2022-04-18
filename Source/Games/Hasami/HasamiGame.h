@@ -17,10 +17,10 @@ namespace Hasami
   class Checker : public Kind
   {
   private:
-    constexpr Checker(void) noexcept : Kind('0') {}
+    constexpr Checker() noexcept : Kind('0') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 1000; }
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 1000; }
+    virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
 
   public:
     static const Checker TheChecker;
@@ -39,25 +39,25 @@ namespace Hasami
   };
 
 
-  class HasamiPosition : public MainPosition
+  class HasamiBoard : public Board
   {
   public:
-    HasamiPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
-    virtual MainPosition* Clone(void) const noexcept override { return new HasamiPosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
+    HasamiBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {};
+    virtual Board* Clone() const noexcept override { return new HasamiBoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
   };
 
   class HasamiGame : public Game
   {
   private:
-    HasamiGame(void) = delete;
+    HasamiGame() = delete;
   public:
-    HasamiGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new HasamiPosition(v, m,d), new MainLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    HasamiGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new HasamiBoard(v, m,d)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

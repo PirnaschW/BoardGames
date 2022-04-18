@@ -4,10 +4,10 @@ class CArchive;
 namespace BoardGamesMFC
 {
 
-  class Archive
+  class Archive : public std::stringstream
   {
   public:
-    constexpr Archive(CArchive* ar) noexcept : ar_(ar) {}
+    Archive(CArchive* ar) noexcept : ar_(ar) {}
 
     bool IsLoading() const; // This code must be outside the header, as during header compilation, CArchive doesn't yet know it's methods.
     bool IsStoring() const { return !IsLoading(); }
@@ -37,9 +37,6 @@ namespace BoardGamesMFC
       static_assert(std::is_fundamental_v<T> || std::is_standard_layout_v<T>, "Only primitives and PODs can be serialized");
       IsStoring() ? *this << t : *this >> t;
     }
-
-    //Archive& operator << (const char c);
-    //Archive& operator >> (char& c);
 
   private:
     // Load and Save through CArchive.

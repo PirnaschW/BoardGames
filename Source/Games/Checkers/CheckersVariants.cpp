@@ -5,144 +5,144 @@
 namespace Checkers
 {
 
-  void ItalianCheckersPosition::SetStartingPosition() noexcept
+  void ItalianCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-        else
-          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    if ((i + j) % 2)
+    //      SetPieceIndex(CheckersPiece::CheckersPieceW, i, sizeY_ - 1 - j);
+    //    else
+    //      SetPieceIndex(CheckersPiece::CheckersPieceB, i, j);
+    //  }
+    //}
   }
 
 
-  void PortugueseCheckersPosition::SetStartingPosition() noexcept
+  void PortugueseCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-        else
-          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    if ((i + j) % 2)
+    //      SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+    //    else
+    //      SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //  }
+    //}
   }
 
 
-  void CornerCheckersPosition::SetStartingPosition() noexcept
+  void CornerCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-        {
-          if ((i + j + 1) < sizeX_)
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-          else if ((i + j) > sizeX_)
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
-        }
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    if ((i + j) % 2)
+    //    {
+    //      if ((i + j + 1) < sizeX_)
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //      else if ((i + j) > sizeX_)
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceW);
+    //    }
+    //  }
+    //}
   }
 
-  void OneWayCheckersPosition::SetStartingPosition() noexcept
+  void OneWayCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 2; j < sizeY_; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-        {
-          if (i < sizeX_ / 2)
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-          else
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
-        }
-      }
-    }
+    //for (Coordinate j = 2; j < sizeY_; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    if ((i + j) % 2)
+    //    {
+    //      if (i < sizeX_ / 2)
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //      else
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceW);
+    //    }
+    //  }
+    //}
   }
 
-  void GothicCheckersPosition::SetStartingPosition() noexcept
+  void GothicCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_ / 4; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-        SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_ / 4; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //    SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+    //  }
+    //}
   }
 
-  void ThaiCheckersPosition::SetStartingPosition() noexcept
+  void ThaiCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_ / 4; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-        else
-          SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_ / 4; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    if ((i + j) % 2)
+    //      SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //    else
+    //      SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+    //  }
+    //}
   }
 
-  void DameoCheckersPosition::SetStartingPosition() noexcept
+  void DameoCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-    {
-      for (Coordinate i = j; i < sizeX_ - j; i++)
-      {
-        SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-        SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    //{
+    //  for (Coordinate i = j; i < sizeX_ - j; i++)
+    //  {
+    //    SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //    SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+    //  }
+    //}
   }
 
-  void HawaiianCheckersPosition::SetStartingPosition() noexcept
+  void HawaiianCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceW);
-        else
-          SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    if ((i + j) % 2)
+    //      SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceW);
+    //    else
+    //      SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //  }
+    //}
   }
 
-  void ParachuteCheckersPosition::SetStartingPosition() noexcept
+  void ParachuteCheckersBoard::SetStartingBoard() noexcept
   {
-    for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
-    {
-      for (Coordinate i = 0; i < sizeX_; i++)
-      {
-        if ((i + j) % 2)
-        {
-          if (j == 0)
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersParaW);
-          else
-            SetPiece(Location(BoardPart::Main, i, j), CheckersPiece::CheckersPieceB);
-        }
-        else
-        {
-          if (j == 0)
-            SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersParaB);
-          else
-            SetPiece(Location(BoardPart::Main, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
-        }
-      }
-    }
+    //for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
+    //{
+    //  for (Coordinate i = 0; i < sizeX_; i++)
+    //  {
+    //    if ((i + j) % 2)
+    //    {
+    //      if (j == 0)
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersParaW);
+    //      else
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, j), CheckersPiece::CheckersPieceB);
+    //    }
+    //    else
+    //    {
+    //      if (j == 0)
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 1 - j), CheckersPiece::CheckersParaB);
+    //      else
+    //        SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 1 - j), CheckersPiece::CheckersPieceW);
+    //    }
+    //  }
+    //}
   }
 
 

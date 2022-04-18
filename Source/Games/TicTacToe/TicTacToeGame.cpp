@@ -5,20 +5,20 @@
 namespace TicTacToe
 {
 
-  void TicTacToePosition::GetAllMoves(void) const noexcept                      // collect all moves
+  void TicTacToeBoard::GetAllMoves() const noexcept                      // collect all moves
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
 
     Actions aw0{};
     Actions ab0{};
-    aw0.push_back(std::make_shared<ActionLift>(Location{ BoardPart::Stock, 0U, 0U }, CorePiece::WC));
-    ab0.push_back(std::make_shared<ActionLift>(Location{ BoardPart::Stock, 0U, 1U }, CorePiece::BC));
+    aw0.push_back(std::make_shared<ActionLift>(Location{ BoardPartID::Stock, 0U, 0U }, CorePiece::WC));
+    ab0.push_back(std::make_shared<ActionLift>(Location{ BoardPartID::Stock, 0U, 1U }, CorePiece::BC));
     for (Coordinate i = 0; i < sizeX_; i++)
     {
       for (Coordinate j = 0; j < sizeY_; j++)
       {
-        const Location l{ BoardPart::Main, i, j };
+        const Location l{ BoardPartID::Main, i, j };
         const Piece& p = GetPiece(l);
         assert(p != Piece::NoTile);
         if (p.IsBlank())
@@ -34,7 +34,7 @@ namespace TicTacToe
     }
   }
 
-  PositionValue TicTacToePosition::EvaluateStatically(void) const noexcept
+  PositionValue TicTacToeBoard::EvaluateStatically() const noexcept
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
@@ -46,7 +46,7 @@ namespace TicTacToe
     return EvaluateChainLengths(3);
   }
 
-  const VariantList& TicTacToeGame::GetVariants(void) noexcept
+  const VariantList& TicTacToeGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ nullptr, 'A', 3 } },

@@ -19,6 +19,8 @@ namespace BoardGamesMFC
     static const Pen PenBlack;
     static const Pen PenSelected;
   };
+  constexpr inline const Pen Pen::PenBlack   { PenStyle_Solid, 1,   0,   0,   0 };
+  constexpr inline const Pen Pen::PenSelected{ PenStyle_Solid, 3,  64,  64, 255 };
 
   class Brush
   {
@@ -41,7 +43,7 @@ namespace BoardGamesMFC
   {
   public:
     constexpr DC(CDC* cdc) noexcept : cdc_{ cdc } {};
-    constexpr operator CDC* (void) const noexcept { return cdc_; }
+    constexpr operator CDC* () const noexcept { return cdc_; }
     void Rectangle(const Rect& r, const Pen& p = Pen::PenBlack, const Brush& brush = Brush::BrushNull);
     bool Text(int x, int y, std::wstring s);
 

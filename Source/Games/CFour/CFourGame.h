@@ -23,27 +23,27 @@ namespace CFour
     SpiderLinetris = Linetris | Spider,
   };
 
-  class CFourPosition : public MainPosition
+  class CFourBoard : public Board
   {
   public:
-    inline CFourPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
-    virtual inline MainPosition* Clone(void) const noexcept override { return new CFourPosition(*this); }
-    virtual void SetStartingPosition() noexcept override {};
-    virtual void GetAllMoves(void) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    inline CFourBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {}
+    virtual inline Board* Clone() const noexcept override { return new CFourBoard(*this); }
+    virtual void SetStartingBoard() noexcept override {};
+    virtual void GetAllMoves() const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
   };
 
 
   class CFourGame : public Game
   {
   private:
-    CFourGame(void) = delete;
+    CFourGame() = delete;
 
   public:
-    inline CFourGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CFourPosition(v, m, d), new MainLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    inline CFourGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new CFourBoard(v, m, d)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

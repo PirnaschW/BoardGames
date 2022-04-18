@@ -25,49 +25,49 @@ namespace UnitTestCheckers
       Assert::IsTrue(CheckersPiece::CheckersPieceB.Promote(true) == CheckersPiece::CheckersQueenB);
 
       const VariantChosen v{ 0,'\0', 8U, 8U };
-      CheckersPosition p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
-      p.SetStartingPosition();
+      CheckersBoard p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+      p.SetStartingBoard();
       Moves m{};
 
       m.clear();
-      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPart::Main, 0, 7 }, m);
+      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPartID::Main, 0, 7 }, m);
       Assert::IsTrue(m.size() == 0);
       m.clear();
-      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPart::Main, 1, 6 }, m);
+      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPartID::Main, 1, 6 }, m);
       Assert::IsTrue(m.size() == 0);
       m.clear();
-      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPart::Main, 0, 5 }, m);
+      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPartID::Main, 0, 5 }, m);
       Assert::IsTrue(m.size() == 1);
 
       m.clear();
-      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPart::Main, 2, 7 }, m);
+      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPartID::Main, 2, 7 }, m);
       Assert::IsTrue(m.size() == 0);
       m.clear();
-      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPart::Main, 3, 6 }, m);
+      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPartID::Main, 3, 6 }, m);
       Assert::IsTrue(m.size() == 0);
       m.clear();
-      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPart::Main, 2, 5 }, m);
+      CheckersPiece::CheckersPieceW.CollectMoves(p, Location{ BoardPartID::Main, 2, 5 }, m);
       Assert::IsTrue(m.size() == 2);
 
       m.clear();
-      CheckersPiece::CheckersPieceB.CollectMoves(p, Location{ BoardPart::Main, 1, 2 }, m);
+      CheckersPiece::CheckersPieceB.CollectMoves(p, Location{ BoardPartID::Main, 1, 2 }, m);
       Assert::IsTrue(m.size() == 2);
       m.clear();
-      CheckersPiece::CheckersPieceB.CollectMoves(p, Location{ BoardPart::Main, 0, 1 }, m);
+      CheckersPiece::CheckersPieceB.CollectMoves(p, Location{ BoardPartID::Main, 0, 1 }, m);
       Assert::IsTrue(m.size() == 0);
       m.clear();
-      CheckersPiece::CheckersPieceB.CollectMoves(p, Location{ BoardPart::Main, 7, 2 }, m);
+      CheckersPiece::CheckersPieceB.CollectMoves(p, Location{ BoardPartID::Main, 7, 2 }, m);
       Assert::IsTrue(m.size() == 1);
     }
 
-    TEST_METHOD(TestCheckersPositionClone)
+    TEST_METHOD(TestCheckersBoardClone)
     {
       const VariantChosen v{ 0,'\0', 8U, 8U };
-      const CheckersPosition p1{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
-      MainPosition* pm = p1.Clone();
+      const CheckersBoard p1{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+      Board* pm = p1.Clone();
       Assert::IsTrue(pm != nullptr);
 
-      CheckersPosition* p2{ dynamic_cast<CheckersPosition*>(pm) };
+      CheckersBoard* p2{ dynamic_cast<CheckersBoard*>(pm) };
       Assert::IsTrue(p2 != nullptr);
       Assert::IsTrue(p1 == *p2);
       delete p2;
@@ -78,7 +78,7 @@ namespace UnitTestCheckers
       const VariantChosen v{ 0,'\0', 8U, 8U };
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a game works multiple times
       {
-        CheckersPosition p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+        CheckersBoard p{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
       }
     }
 
@@ -88,7 +88,7 @@ namespace UnitTestCheckers
       for (unsigned int z = 0; z < 100; ++z)
       {
         const VariantChosen v{ 0,'\0', MaxX, MaxY };
-        CheckersPosition pos{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+        CheckersBoard board_{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
 
         for (Coordinate i = 0; i < MaxX; ++i)                             // create a random position
         {
@@ -103,7 +103,7 @@ namespace UnitTestCheckers
               case 1: p = &CheckersPiece::CheckersPieceB; break;
               default: break;
             }
-            pos.SetPiece(Location{ BoardPart::Main, i,j }, *p);
+            board_.SetPiece(Location{ BoardPartID::Main, i,j }, *p);
           }
         }
 
@@ -113,12 +113,12 @@ namespace UnitTestCheckers
         {
           for (Coordinate j = 0; j < MaxY; ++j)
           {
-            const Location& lf{ BoardPart::Main, i, j };
-            const Piece& p = pos.GetPiece(lf);
+            const Location& lf{ BoardPartID::Main, i, j };
+            const Piece& p = board_.GetPiece(lf);
             if (p == CheckersPiece::CheckersPieceW)
             {
-              const Location& lul{ BoardPart::Main, i - 1U, j - 1U };     // up left
-              const Piece& pul = pos.GetPiece(lul);
+              const Location& lul{ BoardPartID::Main, i - 1U, j - 1U };     // up left
+              const Piece& pul = board_.GetPiece(lul);
               if (pul == Piece::NoPiece)
               {
                 const Piece& pp = ((lul.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -128,8 +128,8 @@ namespace UnitTestCheckers
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
-              const Location& lur{ BoardPart::Main, i + 1U, j - 1U };     // up right
-              const Piece& pur = pos.GetPiece(lur);
+              const Location& lur{ BoardPartID::Main, i + 1U, j - 1U };     // up right
+              const Piece& pur = board_.GetPiece(lur);
               if (pur == Piece::NoPiece)
               {
                 const Piece& pp = ((lur.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -141,8 +141,8 @@ namespace UnitTestCheckers
             }
             else if (p == CheckersPiece::CheckersPieceB)
             {
-              const Location& ldl{ BoardPart::Main, i - 1U, j + 1U };     // down left
-              const Piece& pdl = pos.GetPiece(ldl);
+              const Location& ldl{ BoardPartID::Main, i - 1U, j + 1U };     // down left
+              const Piece& pdl = board_.GetPiece(ldl);
               if (pdl == Piece::NoPiece)
               {
                 const Piece& pp = ((ldl.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -152,8 +152,8 @@ namespace UnitTestCheckers
                 mb.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
-              const Location& ldr{ BoardPart::Main, i + 1U, j + 1U };     // dowm right
-              const Piece& pdr = pos.GetPiece(ldr);
+              const Location& ldr{ BoardPartID::Main, i + 1U, j + 1U };     // dowm right
+              const Piece& pdr = board_.GetPiece(ldr);
               if (pdr == Piece::NoPiece)
               {
                 const Piece& pp = ((ldr.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -171,10 +171,10 @@ namespace UnitTestCheckers
           }
         }
 
-        pos.GetAllMoves();                                                // create move list with productive code
-        Moves& mw0 = pos.GetMoveList(true);
+        board_.GetAllMoves();                                                // create move list with productive code
+        Moves& mw0 = board_.GetMoveList(true);
         Assert::IsTrue(mw0.size() == mw.size());                          // compare white move list SIZE with list produced in test code
-        Moves& mb0 = pos.GetMoveList(false);
+        Moves& mb0 = board_.GetMoveList(false);
         Assert::IsTrue(mb0.size() == mb.size());                          // compare black move list SIZE with list produced in test code
 
         // sort order for moves
@@ -222,7 +222,7 @@ namespace UnitTestCheckers
       for (unsigned int z = 0; z < 100; ++z)  // for now, only 1 time
       {
         const VariantChosen v{ 0,'\0', MaxX, MaxY };
-        CheckersPosition pos{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
+        CheckersBoard board_{ v, Variants<Checkers::CheckersGame>::GetPieces(v), CheckersGame::GetDimensions(v) };
 
 
         for (Coordinate i = 0; i < MaxX; ++i)                             // create a random position
@@ -240,7 +240,7 @@ namespace UnitTestCheckers
               case 3: p = &CheckersPiece::CheckersQueenB; break;
               default: break;
             }
-            pos.SetPiece(Location{ BoardPart::Main, i,j }, *p);
+            board_.SetPiece(Location{ BoardPartID::Main, i,j }, *p);
           }
         }
 
@@ -250,12 +250,12 @@ namespace UnitTestCheckers
         {
           for (Coordinate j = 0; j < MaxY; ++j)
           {
-            const Location& lf{ BoardPart::Main, i, j };
-            const Piece& p = pos.GetPiece(lf);
+            const Location& lf{ BoardPartID::Main, i, j };
+            const Piece& p = board_.GetPiece(lf);
             if (p == CheckersPiece::CheckersPieceW)
             {
-              const Location& lul{ BoardPart::Main, i - 1U, j - 1U };     // up left
-              const Piece& pul = pos.GetPiece(lul);
+              const Location& lul{ BoardPartID::Main, i - 1U, j - 1U };     // up left
+              const Piece& pul = board_.GetPiece(lul);
               if (pul == Piece::NoPiece)
               {
                 const Piece& pp = ((lul.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -265,8 +265,8 @@ namespace UnitTestCheckers
                 mw.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
-              const Location& lur{ BoardPart::Main, i + 1U, j - 1U };     // up right
-              const Piece& pur = pos.GetPiece(lur);
+              const Location& lur{ BoardPartID::Main, i + 1U, j - 1U };     // up right
+              const Piece& pur = board_.GetPiece(lur);
               if (pur == Piece::NoPiece)
               {
                 const Piece& pp = ((lur.y_ == 0) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -278,8 +278,8 @@ namespace UnitTestCheckers
             }
             else if (p == CheckersPiece::CheckersPieceB)
             {
-              const Location& ldl{ BoardPart::Main, i - 1U, j + 1U };     // down left
-              const Piece& pdl = pos.GetPiece(ldl);
+              const Location& ldl{ BoardPartID::Main, i - 1U, j + 1U };     // down left
+              const Piece& pdl = board_.GetPiece(ldl);
               if (pdl == Piece::NoPiece)
               {
                 const Piece& pp = ((ldl.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -289,8 +289,8 @@ namespace UnitTestCheckers
                 mb.push_back(std::make_shared<Move>(a));                  // add move to move list
               }
 
-              const Location& ldr{ BoardPart::Main, i + 1U, j + 1U };     // dowm right
-              const Piece& pdr = pos.GetPiece(ldr);
+              const Location& ldr{ BoardPartID::Main, i + 1U, j + 1U };     // dowm right
+              const Piece& pdr = board_.GetPiece(ldr);
               if (pdr == Piece::NoPiece)
               {
                 const Piece& pp = ((ldr.y_ == MaxY - 1) && p.IsPromotable()) ? p.Promote(true) : p;
@@ -307,7 +307,7 @@ namespace UnitTestCheckers
                 for (Coordinate k = 1U; k < MaxX; ++k)
                 {
                   const Location& lt{ lf + o * k };
-                  const Piece& pt = pos.GetPiece(lt);
+                  const Piece& pt = board_.GetPiece(lt);
                   if (pt == Piece::NoPiece)
                   {
                     Actions a{};
@@ -326,7 +326,7 @@ namespace UnitTestCheckers
                 for (Coordinate k = 1U; k < MaxX; ++k)
                 {
                   const Location& lt{ lf + o * k };
-                  const Piece& pt = pos.GetPiece(lt);
+                  const Piece& pt = board_.GetPiece(lt);
                   if (pt == Piece::NoPiece)
                   {
                     Actions a{};
@@ -346,10 +346,10 @@ namespace UnitTestCheckers
           }
         }
 
-        pos.GetAllMoves();                                                // create move list with productive code
-        Moves& mw0 = pos.GetMoveList(true);
+        board_.GetAllMoves();                                                // create move list with productive code
+        Moves& mw0 = board_.GetMoveList(true);
         Assert::IsTrue(mw0.size() == mw.size());                          // compare white move list SIZE with list produced in test code
-        Moves& mb0 = pos.GetMoveList(false);
+        Moves& mb0 = board_.GetMoveList(false);
         Assert::IsTrue(mb0.size() == mb.size());                          // compare black move list SIZE with list produced in test code
 
         // sort order for moves

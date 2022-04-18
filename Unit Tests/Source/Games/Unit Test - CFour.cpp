@@ -21,11 +21,11 @@ namespace UnitTestCFour
     TEST_METHOD(Clone)
     {
       const VariantChosen v{ 0, '\0', 7U, 6U };
-      CFourPosition p1{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      MainPosition* pm = p1.Clone();
+      CFourBoard p1{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      Board* pm = p1.Clone();
       Assert::IsTrue(pm != nullptr);
 
-      CFourPosition* p2{ dynamic_cast<CFourPosition*>(pm) };
+      CFourBoard* p2{ dynamic_cast<CFourBoard*>(pm) };
       Assert::IsTrue(p2 != nullptr);
       Assert::IsTrue(p1 == *p2);
       delete pm;
@@ -34,36 +34,36 @@ namespace UnitTestCFour
     TEST_METHOD(EvaluateChain)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      CFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      CFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      auto Put = [&pos](int x, int y, const CorePiece& p)
+      auto Put = [&board_](int x, int y, const CorePiece& p)
       {
-        const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-        const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+        const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+        const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
         Actions a_{};
         a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
         a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
-        pos.Execute(Move{ a_ });                              // create Move and execute it
-        pos.SetValue(true,pos.EvaluateChainLengths(4));
+        board_.Execute(Move{ a_ });                              // create Move and execute it
+        board_.SetValue(true,board_.EvaluateChainLengths(4));
       };
 
       Put(2, 5, CorePiece::WC);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(1800));  // 6 directions * (100 + 100) + 2 directions * (100 + 100 + 100)
+      Assert::IsTrue(board_.GetValue(true) == PositionValue(1800));  // 6 directions * (100 + 100) + 2 directions * (100 + 100 + 100)
 
       Put(3, 5, CorePiece::WC);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(4800));  // 2 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 1000 + 100)
+      Assert::IsTrue(board_.GetValue(true) == PositionValue(4800));  // 2 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 1000 + 100)
 
       Put(4, 5, CorePiece::WC);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(24000));  // 3 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 10000 + 100)
+      Assert::IsTrue(board_.GetValue(true) == PositionValue(24000));  // 3 Pieces * 6 directions * (100 + 100) + 2 pieces * 1 directions * (100 + 10000 + 100)
 
       Put(4, 4, CorePiece::WC);
       //  1 Pieces * 6 directions * (100 + 100) + 1 direction  * (100 + 10000 + 100) + 1 direction  * (  0) +
       //  1 pieces * 4 directions * (100 + 100) + 2 directions * (100)               + 2 directions * (  0) +
       //  1 pieces * 4 directions * (100 + 100) + 1 direction  * (100 + 10000 + 100) + 2 directions * (100) +
       //-(1 pieces * 4 directions * (100 + 100) + 4 direction  * (100 +  100 + 100))
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(21600)); // 104 + 10 + 102 - 20
+      Assert::IsTrue(board_.GetValue(true) == PositionValue(21600)); // 104 + 10 + 102 - 20
 
       Put(3, 4, CorePiece::BC);
       //  1 Pieces * ( 4 directions * (100 + 100) + 2 directions * (100) + 1 directions * (100 + 9000 + 100) + 1 directions * (0) ) +
@@ -71,7 +71,7 @@ namespace UnitTestCFour
       //  1 Pieces * ( 2 directions * (100 + 100) + 4 directions * (100) + 1 directions * (100 + 9000 + 100) + 1 directions * (0) ) +
       // -1 pieces * ( 6 directions * (100 + 100) + 0 directions * (100 + 100 + 100) + 1 directions * (100 + 800 + 100) + 1 directions * (0) ) +
       // -1 pieces * ( 4 directions * (100 + 100) + 2 directions * (100 + 100 + 100) + 1 directions * (100 + 800 + 100) + 1 directions * (0) )
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(16400)); // 102 + 8 + 100 - 22 - 24
+      Assert::IsTrue(board_.GetValue(true) == PositionValue(16400)); // 102 + 8 + 100 - 22 - 24
 
       Put(2, 4, CorePiece::BC);
       //  1 Pieces * ( 2 directions * (100 + 100) + 4 directions * (100) + 1 directions * (100 + 9000 + 100) + 1 directions * (0) ) +
@@ -80,25 +80,25 @@ namespace UnitTestCFour
       // -1 pieces * ( 4 directions * (100 + 100) + 2 directions * (100 + 100 + 100) + 1 directions * (100 + 9000 + 100) + 1 directions * (0) ) +
       // -1 pieces * ( 6 directions * (100 + 100) +                                  +                                     2 directions * (0) ) +
       // -1 pieces * ( 4 directions * (100 + 100) + 2 directions * (100 + 100 + 100) + 1 directions * (100 + 9000 + 100) + 1 directions * (0) )
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(-1800)); // 100 + 6 + 100 - 106 - 12 - 106
+      Assert::IsTrue(board_.GetValue(true) == PositionValue(-1800)); // 100 + 6 + 100 - 106 - 12 - 106
 
       Put(5, 5, CorePiece::WC);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue::PValueType::Won);  // four in a row
+      Assert::IsTrue(board_.GetValue(true) == PositionValue::PValueType::Won);  // four in a row
     }
 
-    class TestCFourPosition : public CFourPosition
+    class TestCFourBoard : public CFourBoard
     {
     public:
-      TestCFourPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CFourPosition(v, p, d) {}
-      virtual MainPosition* Clone(void) const noexcept override { return new TestCFourPosition(*this); }
-      void  Eval4inaRow(void)
+      TestCFourBoard(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : CFourBoard(v, p, d) {}
+      virtual Board* Clone() const noexcept override { return new TestCFourBoard(*this); }
+      void  Eval4inaRow()
       {
         using P = PositionValue::PValueType;
 
         auto Put = [this](int x, int y, const CorePiece& p)
         {
-          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-          const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+          const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
           Actions a_{};
           a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
           a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
@@ -116,7 +116,7 @@ namespace UnitTestCFour
         Assert::IsTrue(GetValue(true) == P::Won);
       }
 
-      void BruteForceMove1(void)
+      void BruteForceMove1()
       {
         constexpr static PositionValue val1[7]     { 1400, 1800 , 1800 , 1800 , 1800 , 1800 , 1400 };
         constexpr static PositionValue val2[7][7]{ { -400, -400 , -400 , -400 , -400 , -400 ,    0 },
@@ -132,14 +132,14 @@ namespace UnitTestCFour
 
         for (int i1 = 0; i1 < 7; ++i1)
         {
-          MainPosition* p1 = Clone();
+          Board* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
           Assert::IsTrue(p1->GetValue(true) == PositionValue(val1[i1]));
 
           for (int i2 = 0; i2 < 7; ++i2)
           {
-            MainPosition* p2 = p1->Clone();
+            Board* p2 = p1->Clone();
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
@@ -159,7 +159,7 @@ namespace UnitTestCFour
         PositionValue valAB2 = Evaluate(plist, true, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 2);
         Assert::IsTrue(valAB2 == PositionValue(-400));
       }
-      void  BruteForceWinIn2(void)
+      void  BruteForceWinIn2()
       {
         using P = PositionValue::PValueType;
         constexpr static PositionValue val1[7]     {  23400, P::Won,  26000,  26800,  26000, P::Won,  23400 };
@@ -173,8 +173,8 @@ namespace UnitTestCFour
 
         auto Put = [this](int x, int y, const CorePiece& p)
         {
-          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-          const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+          const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
           Actions a_{};
           a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
           a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
@@ -196,7 +196,7 @@ namespace UnitTestCFour
         wchar_t buffer[256];
         for (int i1 = 0; i1 < 7; ++i1)
         {
-          MainPosition* p1 = Clone();
+          Board* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
           wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
@@ -205,7 +205,7 @@ namespace UnitTestCFour
 
           for (int i2 = 0; i2 < 7; ++i2)
           {
-            MainPosition* p2 = p1->Clone();
+            Board* p2 = p1->Clone();
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
@@ -224,7 +224,7 @@ namespace UnitTestCFour
         PositionValue valAB2 = Evaluate(plist, true, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 2);
         Assert::IsTrue(valAB2 == PositionValue::PValueType::Won);
       }
-      void BruteForceWinIn3(void)
+      void BruteForceWinIn3()
       {
         using P = PositionValue::PValueType;
         constexpr static PositionValue val1[7]      {  5800,  22000,   8400,   8400,  22000,   6200,   5800 };
@@ -238,8 +238,8 @@ namespace UnitTestCFour
 
         auto Put = [this](int x, int y, const CorePiece& p)
         {
-          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-          const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+          const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
           Actions a_{};
           a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
           a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
@@ -258,7 +258,7 @@ namespace UnitTestCFour
         wchar_t buffer[256];
         for (int i1 = 0; i1 < 7; ++i1)
         {
-          MainPosition* p1 = Clone();
+          Board* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
           wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
@@ -267,7 +267,7 @@ namespace UnitTestCFour
 
           for (int i2 = 0; i2 < 7; ++i2)
           {
-            MainPosition* p2 = p1->Clone();
+            Board* p2 = p1->Clone();
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
@@ -290,7 +290,7 @@ namespace UnitTestCFour
         Assert::IsTrue(valAB3 == P::Won);
       }
 
-      void BruteForceNoWinIn3(void)
+      void BruteForceNoWinIn3()
       {
         using P = PositionValue::PValueType;
         constexpr static PositionValue val1[7]      {  3200,   4400,   5000,   4400,   3600,   3600,   3200 };
@@ -304,8 +304,8 @@ namespace UnitTestCFour
 
         auto Put = [this](int x, int y, const CorePiece& p)
         {
-          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-          const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+          const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
           Actions a_{};
           a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
           a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
@@ -321,7 +321,7 @@ namespace UnitTestCFour
         wchar_t buffer[256];
         for (int i1 = 0; i1 < 7; ++i1)
         {
-          MainPosition* p1 = Clone();
+          Board* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
           wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
@@ -330,7 +330,7 @@ namespace UnitTestCFour
 
           for (int i2 = 0; i2 < 7; ++i2)
           {
-            MainPosition* p2 = p1->Clone();
+            Board* p2 = p1->Clone();
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
@@ -379,7 +379,7 @@ namespace UnitTestCFour
           Assert::IsTrue(valAB4 == PositionValue(16400));
         }
       }
-      void BruteForceWinIn33(void)
+      void BruteForceWinIn33()
       {
         using P = PositionValue::PValueType;
         constexpr static PositionValue val1[7]      {  3200,   4400,   5000,   4400,   3600,   3600,   3200 };
@@ -393,8 +393,8 @@ namespace UnitTestCFour
 
         auto Put = [this](int x, int y, const CorePiece& p)
         {
-          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-          const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+          const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
           Actions a_{};
           a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
           a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
@@ -410,7 +410,7 @@ namespace UnitTestCFour
         wchar_t buffer[256];
         for (int i1 = 0; i1 < 7; ++i1)
         {
-          MainPosition* p1 = Clone();
+          Board* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
           wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
@@ -419,7 +419,7 @@ namespace UnitTestCFour
 
           for (int i2 = 0; i2 < 7; ++i2)
           {
-            MainPosition* p2 = p1->Clone();
+            Board* p2 = p1->Clone();
             p2->Execute(*(p1->GetMoveList(false)[i2]));
             p2->SetValue(true, p2->EvaluateStatically());
 
@@ -468,7 +468,7 @@ namespace UnitTestCFour
           Assert::IsTrue(valAB4 == P::Won);
         }
       }
-      void BruteForceWinIn1(void)
+      void BruteForceWinIn1()
       {
         using P = PositionValue::PValueType;
         constexpr static PositionValue val1[7]{       17800, P::Won,  20400,  18800,  18800, P::Won,  17800 };
@@ -482,8 +482,8 @@ namespace UnitTestCFour
 
         auto Put = [this](int x, int y, const CorePiece& p)
         {
-          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-          const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+          const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+          const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
           Actions a_{};
           a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
           a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
@@ -502,7 +502,7 @@ namespace UnitTestCFour
         wchar_t buffer[256];
         for (int i1 = 0; i1 < 7; ++i1)
         {
-          MainPosition* p1 = Clone();
+          Board* p1 = Clone();
           p1->Execute(*movesW_[i1]);
           p1->SetValue(true, p1->EvaluateStatically());
           wsprintfW(buffer, L"%3d: %10.10S\n", i1, (const wchar_t*)p1->GetValue(true));
@@ -511,7 +511,7 @@ namespace UnitTestCFour
 
           //for (int i2 = 0; i2 < 7; ++i2)
           //{
-          //  MainPosition* p2 = p1->Clone();
+          //  Board* p2 = p1->Clone();
           //  p2->Execute(*(p1->GetMoveList(false)[i2]));
           //  p2->SetValue(true, p2->EvaluateStatically());
 
@@ -539,87 +539,87 @@ namespace UnitTestCFour
     TEST_METHOD(Eval4inaRow)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      pos.Eval4inaRow();
+      board_.Eval4inaRow();
     }
 
     TEST_METHOD(BruteForceMove0)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      auto Put = [&pos](int x, int y, const CorePiece& p)
+      auto Put = [&board_](int x, int y, const CorePiece& p)
       {
-        const Location& lf_ = p == CorePiece::WC ? Location{ BoardPart::Stock, 0, 0 } : Location{ BoardPart::Stock, 0, 1 };
-        const Location& lt_{ BoardPart::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
+        const Location& lf_ = p == CorePiece::WC ? Location{ BoardPartID::Stock, 0, 0 } : Location{ BoardPartID::Stock, 0, 1 };
+        const Location& lt_{ BoardPartID::Main, static_cast<Coordinate>(x), static_cast<Coordinate>(y) };
         Actions a_{};
         a_.push_back(std::make_shared<ActionLift>(lf_, p));   // pick fresh Piece up
         a_.push_back(std::make_shared<ActionDrop>(lt_, p));   // and place it on target
-        pos.Execute(Move{ a_ });                              // create Move and execute it
-        pos.SetValue(true, pos.EvaluateStatically());
+        board_.Execute(Move{ a_ });                              // create Move and execute it
+        board_.SetValue(true, board_.EvaluateStatically());
       };
 
       Put(0, 5, CorePiece::WC);
-      Assert::IsTrue(pos.GetValue(true) == PositionValue(1400));  // 6 directions * (100 + 100) + 2 directions * (100 + 100 + 100)
+      Assert::IsTrue(board_.GetValue(true) == PositionValue(1400));  // 6 directions * (100 + 100) + 2 directions * (100 + 100 + 100)
 
       AIContext plist{};
-      PositionValue valAB1 = pos.Evaluate(plist, false, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
+      PositionValue valAB1 = board_.Evaluate(plist, false, PositionValue::PValueType::Lost, PositionValue::PValueType::Won, 1);
       Assert::IsTrue(valAB1 == PositionValue(400));
     }
 
     TEST_METHOD(BruteForceMove1)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      pos.BruteForceMove1();
+      board_.BruteForceMove1();
     }
 
     TEST_METHOD(BruteForceWinIn2)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      pos.BruteForceWinIn2();
+      board_.BruteForceWinIn2();
     }
 
     TEST_METHOD(BruteForceWinIn3)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      pos.BruteForceWinIn3();
+      board_.BruteForceWinIn3();
     }
 
     TEST_METHOD(BruteForceNoWinIn3)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      pos.BruteForceNoWinIn3();
+      board_.BruteForceNoWinIn3();
     }
 
     TEST_METHOD(BruteForceWinIn1)
     {
       const VariantChosen v{ 0,'\0', 7U, 6U };
-      TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 0 }, CorePiece::WC);
-      pos.SetPiece(Location{ BoardPart::Stock, 0, 1 }, CorePiece::BC);
+      TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 0 }, CorePiece::WC);
+      board_.SetPiece(Location{ BoardPartID::Stock, 0, 1 }, CorePiece::BC);
 
-      pos.BruteForceWinIn1();
+      board_.BruteForceWinIn1();
     }
 
     TEST_METHOD(Game)
@@ -627,7 +627,7 @@ namespace UnitTestCFour
       const VariantChosen v{ 0,'\0', 7U, 6U };
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a game works multiple times
       {
-        TestCFourPosition pos{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
+        TestCFourBoard board_{ v, Variants<CFour::CFourGame>::GetPieces(v), CFourGame::GetDimensions(v) };
       }
     }
 

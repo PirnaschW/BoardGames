@@ -66,26 +66,26 @@ namespace UnitTestLogik
       }
     }
     
-    TEST_METHOD(TestLogikPositionClone)
+    TEST_METHOD(TestLogikBoardClone)
     {
       const VariantChosen v{ 0,'\0', MaxPegs, MaxTries };
-      LogikPosition l1{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
-      MainPosition* p2 = l1.Clone();
+      LogikBoard l1{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
+      Board* p2 = l1.Clone();
       Assert::IsTrue(p2 != nullptr);
 
-      LogikPosition* pl2{ dynamic_cast<LogikPosition*>(p2) };
+      LogikBoard* pl2{ dynamic_cast<LogikBoard*>(p2) };
       Assert::IsTrue(pl2 != nullptr);
       delete p2;
     }
 
-    TEST_METHOD(TestLogikPositionPegsMarkers)
+    TEST_METHOD(TestLogikBoardPegsMarkers)
     {
       const VariantChosen v{ 0,'\0', MaxPegs, MaxTries };
-      LogikPosition l1{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
-      MainPosition* pm = &l1;
+      LogikBoard l1{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
+      Board* pm = &l1;
       Assert::IsTrue(pm != nullptr);
 
-      LogikPosition* pl1{ dynamic_cast<LogikPosition*>(pm) };
+      LogikBoard* pl1{ dynamic_cast<LogikBoard*>(pm) };
       Assert::IsTrue(pl1 != nullptr);
 
       bool set{ false };
@@ -102,7 +102,7 @@ namespace UnitTestLogik
         Assert::IsTrue(set);
       }
 
-      pl1->ReadPosition();
+      pl1->ReadBoard();
 
       // verify that 'Peg full' is recognized correctly
       set = pl1->SetFirstFreePeg(LogikPiece::GetPiece(rand() % MaxColors));
@@ -121,22 +121,22 @@ namespace UnitTestLogik
         const unsigned char i31 = i / MaxPegs;
         const unsigned char i22 = i21 + MaxPegs;
         // verify Pegs come back as set
-        const Piece& pp2 = pl1->GetPiece(Location{ BoardPart::Main, i22, i31 });
+        const Piece& pp2 = pl1->GetPiece(Location{ BoardPartID::Main, i22, i31 });
         Assert::IsTrue(pp2 == *p[i]);
         // verify Markers come back as set
-        const Piece& pm2 = pl1->GetPiece(Location{ BoardPart::Main, i21, i31 });
+        const Piece& pm2 = pl1->GetPiece(Location{ BoardPartID::Main, i21, i31 });
         Assert::IsTrue(pm2 == *m[i]);
       }
     }
 
 
-    TEST_METHOD(TestLogikPositionExecute)
+    TEST_METHOD(TestLogikBoardExecute)
     {
       std::unique_ptr<const Plays> plays = std::make_unique<const Plays>();
       for (unsigned int z = 0; z < 10; ++z)  // make sure creating a position works multiple times
       {
         const VariantChosen v{ 0,'\0', MaxPegs, MaxTries };
-        LogikPosition l{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
+        LogikBoard l{ v, Variants<Logik::LogikGame>::GetPieces(v), LogikGame::GetDimensions(v) };
         for (unsigned char j = 0; j < MaxTries; ++j)
         {
           PlayCode c = rand() % Plays::Max;
@@ -145,7 +145,7 @@ namespace UnitTestLogik
           for (unsigned char i = MaxPegs; i < 2 * MaxPegs; ++i)
           {
             // verify Pegs come back as set
-            const Piece& pp = l.GetPiece(Location{ BoardPart::Main, i, j });
+            const Piece& pp = l.GetPiece(Location{ BoardPartID::Main, i, j });
             Assert::IsTrue(pp == LogikPiece::GetPiece((*plays)[c][i - MaxPegs]));
           }
         }

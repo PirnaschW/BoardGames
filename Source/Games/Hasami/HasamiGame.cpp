@@ -9,24 +9,24 @@ namespace Hasami
   const HasamiPiece HasamiPiece::HasamiPieceB{ Checker::TheChecker, PieceColor::Black, IDB_HASAMI_B };
   const HasamiPiece HasamiPiece::HasamiPieceW{ Checker::TheChecker, PieceColor::White, IDB_HASAMI_W };
 
-  void Checker::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept
+  void Checker::CollectMoves(const Board& board_, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::RDirection)
     {
-      const Piece& p1 = pos.GetPiece(l + d);
+      const Piece& p1 = board_.GetPieceIndex(l + d);
       if (p1 != Piece::NoTile)                    // on the board
       {
         if (p1.IsBlank())                  // free
         {
           // check for normal movement
-          for (int z = 1; pos.AddIfLegal(moves, l, l + d * z); z++);
+          for (int z = 1; board_.AddIfLegal(moves, l, l + d * z); z++);
         }
         else
         {
           // check for jumps
-          if (!p1.IsColor(pos.OnTurn()))   // not own piece
+          if (!p1.IsColor(board_.OnTurn()))   // not own piece
           {
-            pos.AddIfLegal(moves, l, l + d * 2);
+            board_.AddIfLegal(moves, l, l + d * 2);
           }
         }
       }
@@ -34,20 +34,20 @@ namespace Hasami
   }
 
 
-  void HasamiPosition::SetStartingPosition() noexcept
+  void HasamiBoard::SetStartingBoard() noexcept
   {
     for (Coordinate i = 0; i < sizeX_; i++)
     {
-      SetPiece(Location(BoardPart::Main, i, 0U        ), HasamiPiece::HasamiPieceB);
-      SetPiece(Location(BoardPart::Main, i, 1U        ), HasamiPiece::HasamiPieceB);
-      SetPiece(Location(BoardPart::Main, i, sizeY_ - 1), HasamiPiece::HasamiPieceW);
-      SetPiece(Location(BoardPart::Main, i, sizeY_ - 2), HasamiPiece::HasamiPieceW);
+      SetPieceIndex(Location(BoardPartID::Stage, i, 0U        ), HasamiPiece::HasamiPieceB);
+      SetPieceIndex(Location(BoardPartID::Stage, i, 1U        ), HasamiPiece::HasamiPieceB);
+      SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 1), HasamiPiece::HasamiPieceW);
+      SetPieceIndex(Location(BoardPartID::Stage, i, sizeY_ - 2), HasamiPiece::HasamiPieceW);
     }
   }
 
-  bool HasamiPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  bool HasamiBoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
-    const Piece& p = GetPiece(to);
+    const Piece& p = GetPieceIndex(to);
     if (p == Piece::NoTile) return false;                                // out of board
     if (!p.IsBlank()) return false;                                      // occupied
 
@@ -59,14 +59,14 @@ namespace Hasami
       Actions ad{};
       Location l = to;
       const Piece* pp{ &Piece::NoTile };
-      while ((pp = &(GetPiece(l += d))) != &Piece::NoTile)
+      while ((pp = &(GetPieceIndex(l += d))) != &Piece::NoTile)
       {
         if (pp->IsBlank()) break;                                         // nothing comes from this direction
         if (l == fr) break;                                               // was this going backwards?
         if (pp->GetColor() != p.GetColor())                              // opponent's piece? Take it tentatively
         {
           ad.push_back(std::make_shared<ActionLift>(l, *pp));              // pick opponents piece up
-          ad.push_back(std::make_shared<ActionDrop>(GetNextTakenL(p.GetColor()), *pp));            // and place it to Taken
+          ad.push_back(std::make_shared<ActionDrop>(GetNextFreeTakenLocation(p.GetColor()), *pp));            // and place it to Taken
         }
         else a.insert(a.end(),ad.begin(),ad.end());                       // own piece; tentative takes become real
       }
@@ -77,7 +77,7 @@ namespace Hasami
     return true;
   }
 
-  PositionValue HasamiPosition::EvaluateStatically(void) const noexcept
+  PositionValue HasamiBoard::EvaluateStatically() const noexcept
   {
     GetAllMoves();                                                        // fill the move lists
     if (onTurn_ == &PieceColor::White && movesW_.empty()) return PositionValue::PValueType::Tie;        // if no more moves, game over
@@ -92,8 +92,8 @@ namespace Hasami
       const bool b2{ OnTurn() == PieceColor::White ? j > 1 : j < sizeY_ - 2 };  // limits for the player not on turn
       for (Coordinate i = 0; i < sizeX_; i++)  // loop through all locations
       {
-        const Location l{ BoardPart::Main, i,j };
-        const Piece& p = GetPiece(l);
+        const Location l{ BoardPartID::Stage, i,j };
+        const Piece& p = GetPieceIndex(l);
         if (p.IsColor(PieceColor::NoColor)) continue;  // nothing here, so no chain can start
         const bool w = p.IsColor(PieceColor::White);
 
@@ -102,13 +102,13 @@ namespace Hasami
           if (k == 1) continue; // horizontal is not allowed
 
           const Offset& d = Offset::QDirection[k];
-          const Piece* pp{ &GetPiece(l + d * -1) };
+          const Piece* pp{ &GetPieceIndex(l + d * -1) };
           if (*pp != Piece::NoTile && pp->IsColor(p.GetColor())) continue;    // if same color is that direction, we counted it already, so move on
-          Location ll{ BoardPart::Main,  i,j };
+          Location ll{ BoardPartID::Stage,  i,j };
           unsigned int z{ 0 };
           if (p.IsColor(OnTurn()) ? b1 : b2) z++;  // count the starting checker only if it is in the valid range
 
-          while ((pp = &GetPiece(ll += d)) != nullptr)
+          while ((pp = &GetPieceIndex(ll += d)) != nullptr)
           {
             if (pp->IsColor(p.GetColor()))
             {
@@ -131,7 +131,7 @@ namespace Hasami
     return v1 - v2;
   }
 
-  const VariantList& HasamiGame::GetVariants(void) noexcept
+  const VariantList& HasamiGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ nullptr, 'A', 9, 9, 2, 20, 5, 20 } },
@@ -147,12 +147,12 @@ namespace Hasami
     return p;
   }
 
-  const Dimensions HasamiGame::GetDimensions(const VariantChosen& v) noexcept
+  const BoardPartDimensions HasamiGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    Dimensions d{
-       Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(3, 1, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
-       Dimension(2 * v.x, 2, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),
+    BoardPartDimensions d{
+       BoardPartDimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       BoardPartDimension(3, 1, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
+       BoardPartDimension(2 * v.x, 2, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),
     };
     return d;
   }

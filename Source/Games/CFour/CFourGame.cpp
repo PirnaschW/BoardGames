@@ -6,7 +6,7 @@ namespace CFour
 {
 
   // TODO: handle LineTris functionality (disappearing complete lines)
-  void CFourPosition::GetAllMoves(void) const noexcept // collect all moves
+  void CFourBoard::GetAllMoves() const noexcept // collect all moves
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
@@ -19,8 +19,8 @@ namespace CFour
     {
       for (Coordinate z = sizeY_ - 1, j = 0; j < sizeY_; ++j,--z)         //   bottom -> top
       {
-        const Location l{ BoardPart::Main, i, z };
-        const Piece& p = GetPiece(l);
+        const Location l{ BoardPartID::Stage, i, z };
+        const Piece& p = GetPieceIndex(l);
         if (p.IsBlank())  // skip filled fields as well as nonexisting tiles
         {
           m.insert(l);
@@ -31,8 +31,8 @@ namespace CFour
       {
         for (Coordinate j = 0; j < sizeY_; ++j)                           //   top -> bottom
         {
-          const Location l{ BoardPart::Main, i, j };
-          const Piece& p = GetPiece(l);
+          const Location l{ BoardPartID::Stage, i, j };
+          const Piece& p = GetPieceIndex(l);
           if (p.IsBlank())  // skip filled fields as well as nonexisting tiles
           {
             m.insert(l);
@@ -47,8 +47,8 @@ namespace CFour
       {
         for (Coordinate i = 0; i < sizeX_; ++i)                           //   left -> right
         {
-          const Location l{ BoardPart::Main, i, j };
-          const Piece& p = GetPiece(l);
+          const Location l{ BoardPartID::Stage, i, j };
+          const Piece& p = GetPieceIndex(l);
           if (p.IsBlank())  // skip filled fields as well as nonexisting tiles
           {
             m.insert(l);
@@ -58,8 +58,8 @@ namespace CFour
         Coordinate z = sizeX_ - 1;
         for (Coordinate i = 0; i < sizeX_; ++i, --z)                      //   right -> left
         {
-          const Location l{ BoardPart::Main, z, j };
-          const Piece& p = GetPiece(l);
+          const Location l{ BoardPartID::Stage, z, j };
+          const Piece& p = GetPieceIndex(l);
           if (p.IsBlank())  // skip filled fields as well as nonexisting tiles
           {
             m.insert(l);
@@ -72,8 +72,8 @@ namespace CFour
     movesW_.reserve(m.size());
     movesB_.reserve(m.size());
 
-    const Location w{ BoardPart::Stock, 0, 0 };
-    const Location b{ BoardPart::Stock, 0, 1 };
+    const Location w{ BoardPartID::Stock, 0, 0 };
+    const Location b{ BoardPartID::Stock, 0, 1 };
 
     for (const Location& l : m)
     {
@@ -89,7 +89,7 @@ namespace CFour
     }
   }
 
-  PositionValue CFourPosition::EvaluateStatically(void) const noexcept    // as seen from White
+  PositionValue CFourBoard::EvaluateStatically() const noexcept    // as seen from White
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
@@ -102,7 +102,7 @@ namespace CFour
     return v_.c & Anti ? -EvaluateChainLengths(4) : +EvaluateChainLengths(4);
   }
 
-  const VariantList& CFourGame::GetVariants(void) noexcept
+  const VariantList& CFourGame::GetVariants() noexcept
   {
     static const VariantList v{
       { Variant{ "Classic Connect Four", CFour::Classic,        7, 6, 4, 20 } },
@@ -123,12 +123,12 @@ namespace CFour
     return p;
   }
 
-  const Dimensions CFourGame::GetDimensions(const VariantChosen& v) noexcept
+  const BoardPartDimensions CFourGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    Dimensions d{
-       Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(2, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
-       Dimension(0, 0, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
+    BoardPartDimensions d{
+       BoardPartDimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       BoardPartDimension(2, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
+       BoardPartDimension(0, 0, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
     };
     return d;
   }

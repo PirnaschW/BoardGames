@@ -127,6 +127,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,7 +136,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -155,6 +157,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -178,6 +182,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -185,7 +191,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -206,6 +212,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -225,6 +233,10 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetName).h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

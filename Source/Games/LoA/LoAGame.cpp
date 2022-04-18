@@ -9,19 +9,19 @@ namespace LoA
   const LoAPiece LoAPiece::LoAPieceW{ LoAPeg::ThePeg, PieceColor::White, IDB_W0L };
   const LoAPiece LoAPiece::LoAPieceB{ LoAPeg::ThePeg, PieceColor::Black, IDB_B0L };
 
-  std::vector<const Piece*> LoAPeg::CollectAlong(const MainPosition& pos, Location l, const Offset& o) const
+  std::vector<const Piece*> LoAPeg::CollectAlong(const Board& board_, Location l, const Offset& o) const
   {
     std::vector<const Piece*> along{};
     const Piece* p{};
-    while ((p = &pos.GetPiece(l = l + o)) != &Piece::NoTile) along.push_back(p);
+    while ((p = &board_.GetPieceIndex(l = l + o)) != &Piece::NoTile) along.push_back(p);
     return along;
   }
 
-  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves, int dx, int dy) const
+  void LoAPeg::CollectMoves(const Board& board_, const Location& l, Moves& moves, int dx, int dy) const
   {
-    unsigned int s{ pos.GetPiece(l).IsBlank() ? 0U : 1U };
-    std::vector<const Piece*> a1 = CollectAlong(pos, l, Offset(dx, dy));
-    std::vector<const Piece*> a2 = CollectAlong(pos, l, Offset(-dx, -dy));
+    unsigned int s{ board_.GetPieceIndex(l).IsBlank() ? 0U : 1U };
+    std::vector<const Piece*> a1 = CollectAlong(board_, l, Offset(dx, dy));
+    std::vector<const Piece*> a2 = CollectAlong(board_, l, Offset(-dx, -dy));
 
     for (auto& p : a1) if (!p->IsBlank()) s++;
     for (auto& p : a2) if (!p->IsBlank()) s++;
@@ -33,14 +33,14 @@ namespace LoA
       {
         if (i == s - 1) // last = target place needs to be empty or opponent's
         {
-          if (!a1[i]->IsBlank() && a1[i]->IsColor(pos.OnTurn())) free = false;
+          if (!a1[i]->IsBlank() && a1[i]->IsColor(board_.OnTurn())) free = false;
         }
         else  // intermediate places need to be empty or own
         {
-          if (!a1[i]->IsBlank() && !a1[i]->IsColor(pos.OnTurn())) free = false;
+          if (!a1[i]->IsBlank() && !a1[i]->IsColor(board_.OnTurn())) free = false;
         }
       }
-      if (free) pos.AddIfLegal(moves, l, l + Offset(dx * s, dy * s));
+      if (free) board_.AddIfLegal(moves, l, l + Offset(dx * s, dy * s));
     }
 
     if (a2.size() >= s) // will a move even fit on the board?
@@ -50,45 +50,45 @@ namespace LoA
       {
         if (i == s - 1) // last = target place needs to be empty or opponent's
         {
-          if (!a2[i]->IsBlank() && a2[i]->IsColor(pos.OnTurn())) free = false;
+          if (!a2[i]->IsBlank() && a2[i]->IsColor(board_.OnTurn())) free = false;
         }
         else  // intermediate places need to be empty or own
         {
-          if (!a2[i]->IsBlank() && !a2[i]->IsColor(pos.OnTurn())) free = false;
+          if (!a2[i]->IsBlank() && !a2[i]->IsColor(board_.OnTurn())) free = false;
         }
       }
-      if (free) pos.AddIfLegal(moves, l, l + Offset(-dx * s, -dy * s));
+      if (free) board_.AddIfLegal(moves, l, l + Offset(-dx * s, -dy * s));
     }
   }
 
-  void LoAPeg::CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept
+  void LoAPeg::CollectMoves(const Board& board_, const Location& l, Moves& moves) const noexcept
   {
-    CollectMoves(pos, l, moves, 1, 0); // check horizontal moves
-    CollectMoves(pos, l, moves, 0, 1); // check vertical moves
-    CollectMoves(pos, l, moves, 1, -1); // check diagonal '/' moves
-    CollectMoves(pos, l, moves, 1, 1); // check diagonal '\' moves
+    CollectMoves(board_, l, moves, 1, 0); // check horizontal moves
+    CollectMoves(board_, l, moves, 0, 1); // check vertical moves
+    CollectMoves(board_, l, moves, 1, -1); // check diagonal '/' moves
+    CollectMoves(board_, l, moves, 1, 1); // check diagonal '\' moves
   }
 
 
-  void LoAPosition::SetStartingPosition() noexcept
+  void LoABoard::SetStartingBoard() noexcept
   {
     for (Coordinate i = 0; i < sizeX_; i++)
       for (Coordinate j = 0; j < sizeY_; j++)
       {
         if (((i == 0) || (i == sizeX_ - 1)) && (j != 0) && (j != sizeY_ - 1))  // left or right border, but not top or bottom corner
         {
-          SetPiece(Location(BoardPart::Main, i, j), LoAPiece::LoAPieceW);
+          SetPieceIndex(Location(BoardPartID::Stage, i, j), LoAPiece::LoAPieceW);
         }
         else if (((j == 0) || (j == sizeY_ - 1)) && (i != 0) && (i != sizeX_ - 1))  // top or bottom border, but not left or right corner
         {
-          SetPiece(Location(BoardPart::Main, i, j), LoAPiece::LoAPieceB);
+          SetPieceIndex(Location(BoardPartID::Stage, i, j), LoAPiece::LoAPieceB);
         }
         else
-          SetPiece(Location(BoardPart::Main, i, j), Piece::NoPiece);
+          SetPieceIndex(Location(BoardPartID::Stage, i, j), Piece::NoPiece);
       }
   }
 
-  const Piece& LoAPosition::SetPiece(const Location& l, const Piece& p) noexcept
+  const Piece& LoABoard::SetPieceIndex(const Location& l, const Piece& p) noexcept
   {
     try
     {
@@ -99,13 +99,13 @@ namespace LoA
       else if (p == LoAPiece::LoAPieceB) llb.push_back(l);
     }
     catch (...) {};
-    return MainPosition::SetPiece(l, p);
+    return Board::SetPieceIndex(l, p);
   }
 
-  bool LoAPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  bool LoABoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
-    const Piece& pf = GetPiece(fr);
-    const Piece& pt = GetPiece(to);
+    const Piece& pf = GetPieceIndex(fr);
+    const Piece& pt = GetPieceIndex(to);
     if (pt == Piece::NoTile) return false;  // out of board
     if (pt.IsColor(OnTurn())) return false;  // own piece
 
@@ -114,14 +114,14 @@ namespace LoA
     if (!pt.IsBlank())
     {
       a.push_back(std::make_shared<ActionLift>(to, pt));                  // pick piece up
-      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pt.GetColor()), pt));  // and place it on target
+      a.push_back(std::make_shared<ActionDrop>(GetNextFreeTakenLocation(pt.GetColor()), pt));  // and place it on target
     }
     a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return false;
   }
 
-  bool LoAPosition::IsConnected(bool t) const noexcept
+  bool LoABoard::IsConnected(bool t) const noexcept
   {
     const std::list<Peg>& lp = (t ^ (OnTurn() == PieceColor::White) ? llb : llw);
     if (lp.empty()) return true;
@@ -166,7 +166,7 @@ namespace LoA
     return false;
   }
 
-  PositionValue LoAPosition::EvaluateStatically(void) const noexcept
+  PositionValue LoABoard::EvaluateStatically() const noexcept
   {
     if (IsConnected(false)) return PositionValue::PValueType::Lost;  // opponent is connected -> loss
     if (IsConnected(true))  return PositionValue::PValueType::Won;   // player is connected -> win
@@ -179,7 +179,7 @@ namespace LoA
     {
       for (Coordinate j = 0; j < sizeY_; j++)
       {
-        const Piece& p = GetPiece(Location{ BoardPart::Main, i,j });
+        const Piece& p = GetPieceIndex(Location{ BoardPartID::Stage, i,j });
         if (p.IsColor(PieceColor::NoColor)) continue;
         int d{ 0 };
         for (Coordinate z = 0; z < (sizeX_ - 1) / 2; z++)
@@ -206,7 +206,7 @@ namespace LoA
   }
 
 
-  const VariantList& LoAGame::GetVariants(void) noexcept
+  const VariantList& LoAGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ nullptr, 'A', 8, 8, 3, 20 } }
@@ -222,12 +222,12 @@ namespace LoA
     return p;
   }
 
-  const Dimensions LoAGame::GetDimensions(const VariantChosen& v) noexcept
+  const BoardPartDimensions LoAGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    Dimensions d{
-       Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(3, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
-       Dimension(2 * v.x, 2, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),
+    BoardPartDimensions d{
+       BoardPartDimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       BoardPartDimension(3, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
+       BoardPartDimension(2 * v.x, 2, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),
     };
     return d;
   }

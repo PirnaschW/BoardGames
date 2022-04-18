@@ -12,31 +12,31 @@ namespace Chess
   template <> struct ChessVariantData<ChessVariant::Dice10x10> { mutable Side side_; };  // rolled Die
 
   template <ChessVariant V>
-  class ChessVariantPosition : public ChessPosition, public ChessVariantData<V>
+  class ChessVariantBoard : public ChessBoard, public ChessVariantData<V>
   {
   protected:
-    ChessVariantPosition<V>(const ChessVariantPosition<V>& m) noexcept : ChessPosition(m), ChessVariantData<V>(m) {}
+    ChessVariantBoard<V>(const ChessVariantBoard<V>& m) noexcept : ChessBoard(m), ChessVariantData<V>(m) {}
   public:
-    inline ChessVariantPosition<V>(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : ChessPosition(v, p, d) {}
-    virtual MainPosition* Clone(void) const noexcept override { return new ChessVariantPosition<V>(*this); }
-    virtual void SetStartingPosition() noexcept override { ChessPosition::SetStartingPosition(); }
-    virtual void GetAllMoves(void) const noexcept { ChessPosition::GetAllMoves(); }
-    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override { return ChessPosition::AddIfLegal(m, fr, to); }
-    constexpr virtual unsigned int GetMoveCountFactor(void) const noexcept override { return ChessPosition::GetMoveCountFactor(); }
-    [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept override { return ChessPosition::EvaluateStatically(); }
+    inline ChessVariantBoard<V>(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : ChessBoard(v, p, d) {}
+    virtual Board* Clone() const noexcept override { return new ChessVariantBoard<V>(*this); }
+    virtual void SetStartingBoard() noexcept override { ChessBoard::SetStartingBoard(); }
+    virtual void GetAllMoves() const noexcept { ChessBoard::GetAllMoves(); }
+    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override { return ChessBoard::AddIfLegal(m, fr, to); }
+    constexpr virtual int GetMoveCountFactor() const noexcept override { return ChessBoard::GetMoveCountFactor(); }
+    [[ nodiscard ]] virtual PositionValue EvaluateStatically() const noexcept override { return ChessBoard::EvaluateStatically(); }
 
   private:
     virtual Rule GetRule() const noexcept override { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
-    static bool ValidPosition(const std::vector<Coordinate>& c) noexcept { return true; }
+    static bool ValidBoard(const std::vector<Coordinate>& c) noexcept { return true; }
   };
 
   template <ChessVariant V>
   class ChessVariantLayout : public ChessLayout
   {
   public:
-    ChessVariantLayout(const Dimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : ChessLayout(d, lt) {}
+    ChessVariantLayout(const BoardPartDimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : ChessLayout(d, lt) {}
     virtual ~ChessVariantLayout() noexcept {}
-    virtual void Draw(DC* pDC, const MainPosition* pos, _Mode mode) const { ChessLayout::Draw(pDC, pos, mode); }
+    virtual void Draw(DC* pDC, const Board* board_, Mode mode_) const { ChessLayout::Draw(pDC, board_, mode_); }
   };
 
   //#########################################
@@ -46,9 +46,9 @@ namespace Chess
 
 
   // specializations for ChessVariant::Corner
-  template <> inline Rule ChessVariantPosition<ChessVariant::Corner>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
-  template <> inline bool ChessVariantPosition<ChessVariant::Corner>::ValidPosition(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
-  template <> inline void ChessVariantPosition<ChessVariant::Corner>::SetStartingPosition() noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::Corner>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
+  template <> inline bool ChessVariantBoard<ChessVariant::Corner>::ValidBoard(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
+  template <> inline void ChessVariantBoard<ChessVariant::Corner>::SetStartingBoard() noexcept
   {
     SetPawns(1U, PieceColor::Black);
     SetPawns(sizeY_ - 2U, PieceColor::White);
@@ -58,7 +58,7 @@ namespace Chess
     std::vector<Coordinate> c;
     for (Coordinate i = 1; i < sizeX_; i++) c.push_back(i);
     do Math::Shuffle(c);
-    while (!ValidPosition(c));  // keep shuffling until the position is valid
+    while (!ValidBoard(c));  // keep shuffling until the position is valid
 
     SetPiecesPSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
     SetPiecesPSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
@@ -71,9 +71,9 @@ namespace Chess
 
 
   // specializations for ChessVariant::Fortress
-  template <> inline Rule ChessVariantPosition<ChessVariant::Fortress>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
-  template <> inline bool ChessVariantPosition<ChessVariant::Fortress>::ValidPosition(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
-  template <> inline void ChessVariantPosition<ChessVariant::Fortress>::SetStartingPosition() noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::Fortress>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
+  template <> inline bool ChessVariantBoard<ChessVariant::Fortress>::ValidBoard(const std::vector<Coordinate>& c) noexcept { return c[3] % 2 != c[4] % 2; } // check for bishops on differently colored fields
+  template <> inline void ChessVariantBoard<ChessVariant::Fortress>::SetStartingBoard() noexcept
   {
     SetPawns(1U, PieceColor::Black);
     SetPawns(sizeY_ - 2U, PieceColor::White);
@@ -83,7 +83,7 @@ namespace Chess
     std::vector<Coordinate> c;
     for (Coordinate i = 1; i < sizeX_; i++) c.push_back(i);
     do Math::Shuffle(c);
-    while (!ValidPosition(c));  // keep shuffling until the position is valid
+    while (!ValidBoard(c));  // keep shuffling until the position is valid
 
     SetPiecesPSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
     SetPiecesPSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
@@ -99,64 +99,64 @@ namespace Chess
 
 
   // specializations for ChessVariant::Horde
-  template <> inline void ChessVariantPosition<ChessVariant::Horde>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::Horde>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
+    ChessBoard::SetStartingBoard();
     SetPawns(0U, PieceColor::Black);
     SetPawns(2U, PieceColor::Black);
     SetPawns(3U, PieceColor::Black);
-    SetPiece({ BoardPart::Main, 3U, 4U }, ChessPiece::BP);
-    SetPiece({ BoardPart::Main, 4U, 4U }, ChessPiece::BP);
-    SetPiece({ BoardPart::Main, 3U, 0U }, Piece::NoPiece);
-    SetPiece({ BoardPart::Main, 4U, 0U }, Piece::NoPiece);
+    SetPieceIndex({ BoardPartID::Stage, 3U, 4U }, ChessPiece::BP);
+    SetPieceIndex({ BoardPartID::Stage, 4U, 4U }, ChessPiece::BP);
+    SetPieceIndex({ BoardPartID::Stage, 3U, 0U }, Piece::NoPiece);
+    SetPieceIndex({ BoardPartID::Stage, 4U, 0U }, Piece::NoPiece);
   }
-  template <> inline PositionValue ChessVariantPosition<ChessVariant::Horde>::EvaluateStatically(void) const noexcept
+  template <> inline PositionValue ChessVariantBoard<ChessVariant::Horde>::EvaluateStatically() const noexcept
   {
     // TODO: evaluate Horde positions
-    return ChessPosition::EvaluateStatically(); // temporary
+    return ChessBoard::EvaluateStatically(); // temporary
   }
 
 
   // specializations for ChessVariant::Loop
-  template <> inline Rule ChessVariantPosition<ChessVariant::Loop>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant | DropTakenPieces; }
+  template <> inline Rule ChessVariantBoard<ChessVariant::Loop>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant | DropTakenPieces; }
 
 
   // specializations for ChessVariant::Anti
-  template <> inline Rule ChessVariantPosition<ChessVariant::Anti>::GetRule() const noexcept { return AllowMoves | AllowTakes | MustTake | PawnsPromote | PawnsDoubleStep | EnPassant; }
-  template <> inline PositionValue ChessVariantPosition<ChessVariant::Anti>::EvaluateStatically(void) const noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::Anti>::GetRule() const noexcept { return AllowMoves | AllowTakes | MustTake | PawnsPromote | PawnsDoubleStep | EnPassant; }
+  template <> inline PositionValue ChessVariantBoard<ChessVariant::Anti>::EvaluateStatically() const noexcept
   {
     // TODO: evaluate Anti positions
-    return ChessPosition::EvaluateStatically(); // temporary
+    return ChessBoard::EvaluateStatically(); // temporary
   }
 
 
   // specializations for ChessVariant::Extinction
-  template <> inline PositionValue ChessVariantPosition<ChessVariant::Extinction>::EvaluateStatically(void) const noexcept
+  template <> inline PositionValue ChessVariantBoard<ChessVariant::Extinction>::EvaluateStatically() const noexcept
   {
     // TODO: evaluate Extinction positions
-    return ChessPosition::EvaluateStatically(); // temporary
+    return ChessBoard::EvaluateStatically(); // temporary
   }
 
   
   // specializations for ChessVariant::Maharajah
-  template <> inline Rule ChessVariantPosition<ChessVariant::Maharajah>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsDoubleStep; }
-  template <> inline void ChessVariantPosition<ChessVariant::Maharajah>::SetStartingPosition() noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::Maharajah>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsDoubleStep; }
+  template <> inline void ChessVariantBoard<ChessVariant::Maharajah>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
+    ChessBoard::SetStartingBoard();
     for (Coordinate i = 0; i < sizeX_; i++)
     {
-      SetPiece({ BoardPart::Main, i, sizeY_ - 2U }, Piece::NoPiece);
-      SetPiece({ BoardPart::Main, i, sizeY_ - 1U }, Piece::NoPiece);
+      SetPieceIndex({ BoardPartID::Stage, i, sizeY_ - 2U }, Piece::NoPiece);
+      SetPieceIndex({ BoardPartID::Stage, i, sizeY_ - 1U }, Piece::NoPiece);
     }
-    SetPiece({ BoardPart::Main, 4U, sizeY_ - 1U }, ChessPiece::WA);
+    SetPieceIndex({ BoardPartID::Stage, 4U, sizeY_ - 1U }, ChessPiece::WA);
   }
 
 
   // specializations for ChessVariant::ThreeChecks
-  template <> inline PositionValue ChessVariantPosition<ChessVariant::ThreeChecks>::EvaluateStatically(void) const noexcept
+  template <> inline PositionValue ChessVariantBoard<ChessVariant::ThreeChecks>::EvaluateStatically() const noexcept
   {
     // TODO: evaluate ThreeChecks positions
-    return ChessPosition::EvaluateStatically(); // temporary
+    return ChessBoard::EvaluateStatically(); // temporary
   }
 
 
@@ -164,17 +164,17 @@ namespace Chess
 // TODO: Dark Chess
 
   // specializations for ChessVariant::Atomic
-  template <> inline bool ChessVariantPosition<ChessVariant::Atomic>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  template <> inline bool ChessVariantBoard<ChessVariant::Atomic>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     // TODO: AddifLegal Atomic chess
-    return ChessPosition::AddIfLegal(m, fr, to);  // temporary
+    return ChessBoard::AddIfLegal(m, fr, to);  // temporary
   }
 
 
   // specializations for ChessVariant::Janus
-  template <> inline void ChessVariantPosition<ChessVariant::Janus>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::Janus>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
+    ChessBoard::SetStartingBoard();
     SetPiecesHSymmetrical(1U, 0U, ChessPiece::BC, ChessPiece::WC);
     SetPiecesHSymmetrical(2U, 0U, ChessPiece::BN, ChessPiece::WN);
     SetPiecesHSymmetrical(3U, 0U, ChessPiece::BB, ChessPiece::WB);
@@ -185,9 +185,9 @@ namespace Chess
   
 
   // specializations for ChessVariant::Embassy
-  template <> inline void ChessVariantPosition<ChessVariant::Embassy>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::Embassy>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
+    ChessBoard::SetStartingBoard();
     SetPiecesHSymmetrical(3U, 0U, ChessPiece::BQ, ChessPiece::WQ);
     SetPiecesHSymmetrical(4U, 0U, ChessPiece::BK, ChessPiece::WK);
     SetPiecesHSymmetrical(5U, 0U, ChessPiece::BM, ChessPiece::WM);
@@ -196,44 +196,44 @@ namespace Chess
   
 
   // specializations for ChessVariant::Screen
-  template <> inline void ChessVariantPosition<ChessVariant::Screen>::SetStartingPosition() noexcept {} // start blank
+  template <> inline void ChessVariantBoard<ChessVariant::Screen>::SetStartingBoard() noexcept {} // start blank
   // TODO: Screen chess
 
 
   // specializations for ChessVariant::CrazyScreen
-  template <> inline void ChessVariantPosition<ChessVariant::CrazyScreen>::SetStartingPosition() noexcept {} // start blank
+  template <> inline void ChessVariantBoard<ChessVariant::CrazyScreen>::SetStartingBoard() noexcept {} // start blank
   // TODO: CrazyScreen chess
 
   
   // specializations for ChessVariant::Cylinder
-  template <> inline bool ChessVariantPosition<ChessVariant::Cylinder>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  template <> inline bool ChessVariantBoard<ChessVariant::Cylinder>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     // TODO: AddifLegal Cylinder chess
-    return ChessPosition::AddIfLegal(m, fr, to);  // temporary
+    return ChessBoard::AddIfLegal(m, fr, to);  // temporary
   }
 
 
   // specializations for ChessVariant::Amazons
-  template <> inline void ChessVariantPosition<ChessVariant::Amazons>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::Amazons>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
+    ChessBoard::SetStartingBoard();
     SetPiecesHSymmetrical(3U, 0U, ChessPiece::BA, ChessPiece::WA);
   }
 
 
   // specializations for ChessVariant::Berolina
-  template <> inline Rule ChessVariantPosition<ChessVariant::Berolina>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant | BerolinaPawns; }
+  template <> inline Rule ChessVariantBoard<ChessVariant::Berolina>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant | BerolinaPawns; }
 
 
   // specializations for ChessVariant::FischerRandom
-  template <> inline bool ChessVariantPosition<ChessVariant::FischerRandom>::ValidPosition(const std::vector<Coordinate>& c) noexcept
+  template <> inline bool ChessVariantBoard<ChessVariant::FischerRandom>::ValidBoard(const std::vector<Coordinate>& c) noexcept
   {
     if (c[3] % 2 == c[4] % 2) return false;       // bishops not on differently colored fields
     if (c[7] > c[1] && c[7] < c[2]) return true;  // king is between the rooks
     if (c[7] > c[2] && c[7] < c[1]) return true;  // king is between the rooks
     return false;
   }
-  template <> inline void ChessVariantPosition<ChessVariant::FischerRandom>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::FischerRandom>::SetStartingBoard() noexcept
   {
     SetPawns(1U, PieceColor::Black);
     SetPawns(sizeY_ - 2U, PieceColor::White);
@@ -241,7 +241,7 @@ namespace Chess
     std::vector<Coordinate> c;
     for (Coordinate i = 0; i < sizeX_; i++) c.push_back(i);
       
-    do Math::Shuffle(c); while (!ValidPosition(c));   // keep shuffling until position is valid
+    do Math::Shuffle(c); while (!ValidBoard(c));   // keep shuffling until position is valid
 
     SetPiecesHSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
     SetPiecesHSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
@@ -255,8 +255,8 @@ namespace Chess
   
 
   // specializations for ChessVariant::Legan
-  template <> inline Rule ChessVariantPosition<ChessVariant::Legan>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | LeganPawns; }
-  template <> inline void ChessVariantPosition<ChessVariant::Legan>::SetStartingPosition() noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::Legan>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | LeganPawns; }
+  template <> inline void ChessVariantBoard<ChessVariant::Legan>::SetStartingBoard() noexcept
   {
     SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
     SetPiecesPSymmetrical(1U, 1U, ChessPiece::BQ, ChessPiece::WQ);
@@ -279,12 +279,12 @@ namespace Chess
 
 
   // specializations for ChessVariant::KnightRelay
-  template <> inline Rule ChessVariantPosition<ChessVariant::KnightRelay>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
+  template <> inline Rule ChessVariantBoard<ChessVariant::KnightRelay>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep; }
  // TODO: add KnightRelay chess
 
 
   // specializations for ChessVariant::Grand
-  template <> inline void ChessVariantPosition<ChessVariant::Grand>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::Grand>::SetStartingBoard() noexcept
   {
     SetPawns(2U, PieceColor::Black);
     SetPawns(sizeY_ - 3U, PieceColor::White);
@@ -303,14 +303,14 @@ namespace Chess
 
 
   // specializations for ChessVariant::CapablancaRandom
-  template <> inline bool ChessVariantPosition<ChessVariant::CapablancaRandom>::ValidPosition(const std::vector<Coordinate>& c) noexcept
+  template <> inline bool ChessVariantBoard<ChessVariant::CapablancaRandom>::ValidBoard(const std::vector<Coordinate>& c) noexcept
   {
     if (c[3] % 2 == c[4] % 2) return false;       // bishops not on differently colored fields
     if (c[7] > c[1] && c[7] < c[2]) return true;  // king is between the rooks
     if (c[7] > c[2] && c[7] < c[1]) return true;  // king is between the rooks
     return false;
   }
-  template <> inline void ChessVariantPosition<ChessVariant::CapablancaRandom>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::CapablancaRandom>::SetStartingBoard() noexcept
   {
     SetPawns(1U, PieceColor::Black);
     SetPawns(sizeY_ - 2U, PieceColor::White);
@@ -318,7 +318,7 @@ namespace Chess
     std::vector<Coordinate> c;
     for (Coordinate i = 0; i < sizeX_; i++) c.push_back(i);
 
-    do Math::Shuffle(c); while (!ValidPosition(c));   // keep shuffling until position is valid
+    do Math::Shuffle(c); while (!ValidBoard(c));   // keep shuffling until position is valid
 
     SetPiecesHSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
     SetPiecesHSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
@@ -334,18 +334,18 @@ namespace Chess
 
 
   // specializations for ChessVariant::LosAlamos
-  template <> inline Rule ChessVariantPosition<ChessVariant::LosAlamos>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote; }
+  template <> inline Rule ChessVariantBoard<ChessVariant::LosAlamos>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote; }
 
 
   // specializations for ChessVariant::Ambiguous
-  template <> inline Rule ChessVariantPosition<ChessVariant::Ambiguous>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
+  template <> inline Rule ChessVariantBoard<ChessVariant::Ambiguous>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
   // TODO: add Ambiguous chess
 
 
   // specializations for ChessVariant::Cheversi
-  template <> inline Rule ChessVariantPosition<ChessVariant::Cheversi>::GetRule() const noexcept { return None; }
-  template <> inline void ChessVariantPosition<ChessVariant::Cheversi>::SetStartingPosition() noexcept {}  // start empty
-  template <> inline void ChessVariantPosition<ChessVariant::Cheversi>::GetAllMoves(void) const noexcept // collect all moves for all pieces
+  template <> inline Rule ChessVariantBoard<ChessVariant::Cheversi>::GetRule() const noexcept { return None; }
+  template <> inline void ChessVariantBoard<ChessVariant::Cheversi>::SetStartingBoard() noexcept {}  // start empty
+  template <> inline void ChessVariantBoard<ChessVariant::Cheversi>::GetAllMoves() const noexcept // collect all moves for all pieces
   {
     assert(movesW_.empty());
     assert(movesB_.empty());
@@ -361,35 +361,35 @@ namespace Chess
   
 
   // specializations for ChessVariant::Dice
-  template <> inline void ChessVariantPosition<ChessVariant::Dice>::GetAllMoves(void) const noexcept // collect all moves for all pieces
+  template <> inline void ChessVariantBoard<ChessVariant::Dice>::GetAllMoves() const noexcept // collect all moves for all pieces
   {
-    ChessPosition::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
+    ChessBoard::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
     ChessVariantData<ChessVariant::Dice>::side_ = PickRandomPiece();
     // TODO: Move list for blacks crashes
   }
-  template <> inline void ChessVariantLayout<ChessVariant::Dice>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
+  template <> inline void ChessVariantLayout<ChessVariant::Dice>::Draw(DC* pDC, const Board* board_, Mode mode_) const
   {
-    ChessLayout::Draw(pDC, pos, mode);
+    ChessLayout::Draw(pDC, board_, mode_);
 
     // show the rolled die
     constexpr int x = 500;
     constexpr int y = 200;
     Rect r{ x,y,x + 20,y + 20 };
 
-    auto pp{ dynamic_cast<const ChessVariantPosition<ChessVariant::Dice>*>(pos) };
+    auto pp{ dynamic_cast<const ChessVariantBoard<ChessVariant::Dice>*>(board_) };
 
     Die::Sides[pp->ChessVariantData<ChessVariant::Dice>::side_].Draw(pDC, r);
   }
 
 
   // specializations for ChessVariant::Recycle
-  template <> inline Rule ChessVariantPosition<ChessVariant::Recycle>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | TakeOwn | PawnsPromote | PawnsDoubleStep | DropTakenPieces; }
+  template <> inline Rule ChessVariantBoard<ChessVariant::Recycle>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | TakeOwn | PawnsPromote | PawnsDoubleStep | DropTakenPieces; }
 
 
   // specializations for ChessVariant::IceAge
-  template <> inline void ChessVariantPosition<ChessVariant::IceAge>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::IceAge>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
+    ChessBoard::SetStartingBoard();
     for (Coordinate i = 0U; i < sizeX_; i++)
     {
       for (Coordinate j = 2U; j < sizeY_/2; j++)
@@ -403,24 +403,24 @@ namespace Chess
 
 
   // specializations for ChessVariant::Behemoth
-  template <> inline void ChessVariantPosition<ChessVariant::Behemoth>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::Behemoth>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
-    SetPiece({ BoardPart::Main,3U, 4U }, ChessPiece::RB);
+    ChessBoard::SetStartingBoard();
+    SetPieceIndex({ BoardPartID::Stage,3U, 4U }, ChessPiece::RB);
   }
   // TODO: add Behemoth post-move killing
   // note: killing is NOT known to AI / player
 
 
   // specializations for ChessVariant::CheshireCat
-  template <> inline Rule ChessVariantPosition<ChessVariant::CheshireCat>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
-  template <> inline bool ChessVariantPosition<ChessVariant::CheshireCat>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::CheshireCat>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | EnPassant; }
+  template <> inline bool ChessVariantBoard<ChessVariant::CheshireCat>::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
-    const Piece& pf = GetPiece(fr);
+    const Piece& pf = GetPieceIndex(fr);
     assert(pf != Piece::NoTile);                                                    // start field must exist
     assert(!pf.IsBlank());                                                          // start field must be a piece
 
-    const Piece& pt = GetPiece(to);
+    const Piece& pt = GetPieceIndex(to);
     if (pt == Piece::NoTile) return false;                                          // out of board
     if (pt.IsBlank())                                                               // moving onto free field
     {
@@ -444,7 +444,7 @@ namespace Chess
       a.push_back(std::make_shared<ActionLift>(fr, pf));                            // pick piece up
       a.push_back(std::make_shared<ActionEliminate>(fr, Piece::NoTile));            // remove starting field
       a.push_back(std::make_shared<ActionLift>(to, pt));                            // pick opponent piece up
-      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));  // place it in Taken
+      a.push_back(std::make_shared<ActionDrop>(GetNextFreeTakenLocation(pf.GetColor()), pt));  // place it in Taken
       a.push_back(std::make_shared<ActionDrop>(to, pf));                            // and place it on target
       m.push_back(std::make_shared<Move>(a));                                       // add move to move list
     }
@@ -455,83 +455,83 @@ namespace Chess
 
 
   // specializations for ChessVariant::Knightmate
-  template <> inline Rule ChessVariantPosition<ChessVariant::Knightmate>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | TakeKing; }
-  template <> inline PositionValue ChessVariantPosition<ChessVariant::Knightmate>::EvaluateStatically(void) const noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::Knightmate>::GetRule() const noexcept { return Castling | AllowMoves | AllowTakes | PawnsPromote | PawnsDoubleStep | TakeKing; }
+  template <> inline PositionValue ChessVariantBoard<ChessVariant::Knightmate>::EvaluateStatically() const noexcept
   {
     // TODO: evaluate Knightmate positions
-    return ChessPosition::EvaluateStatically(); // temporary
+    return ChessBoard::EvaluateStatically(); // temporary
   }
 
 
   // specializations for ChessVariant::RacingKings
-  template <> inline Rule ChessVariantPosition<ChessVariant::RacingKings>::GetRule() const noexcept { return AllowMoves | AllowTakes;; }
-  template <> inline void ChessVariantPosition<ChessVariant::RacingKings>::SetStartingPosition() noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::RacingKings>::GetRule() const noexcept { return AllowMoves | AllowTakes;; }
+  template <> inline void ChessVariantBoard<ChessVariant::RacingKings>::SetStartingBoard() noexcept
   {
-    SetPiece({ BoardPart::Main,              0U,sizeY_ - 1U }, ChessPiece::BQ);
-    SetPiece({ BoardPart::Main,              0U,sizeY_ - 2U }, ChessPiece::BK);
-    SetPiece({ BoardPart::Main,              1U,sizeY_ - 1U }, ChessPiece::BR);
-    SetPiece({ BoardPart::Main,              1U,sizeY_ - 2U }, ChessPiece::BR);
-    SetPiece({ BoardPart::Main,              2U,sizeY_ - 1U }, ChessPiece::BB);
-    SetPiece({ BoardPart::Main,              2U,sizeY_ - 2U }, ChessPiece::BB);
-    SetPiece({ BoardPart::Main,              3U,sizeY_ - 1U }, ChessPiece::BN);
-    SetPiece({ BoardPart::Main,              3U,sizeY_ - 2U }, ChessPiece::BN);
+    SetPieceIndex({ BoardPartID::Stage,              0U,sizeY_ - 1U }, ChessPiece::BQ);
+    SetPieceIndex({ BoardPartID::Stage,              0U,sizeY_ - 2U }, ChessPiece::BK);
+    SetPieceIndex({ BoardPartID::Stage,              1U,sizeY_ - 1U }, ChessPiece::BR);
+    SetPieceIndex({ BoardPartID::Stage,              1U,sizeY_ - 2U }, ChessPiece::BR);
+    SetPieceIndex({ BoardPartID::Stage,              2U,sizeY_ - 1U }, ChessPiece::BB);
+    SetPieceIndex({ BoardPartID::Stage,              2U,sizeY_ - 2U }, ChessPiece::BB);
+    SetPieceIndex({ BoardPartID::Stage,              3U,sizeY_ - 1U }, ChessPiece::BN);
+    SetPieceIndex({ BoardPartID::Stage,              3U,sizeY_ - 2U }, ChessPiece::BN);
 
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 0U,sizeY_ - 1U }, ChessPiece::WQ);
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 0U,sizeY_ - 2U }, ChessPiece::WK);
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 1U,sizeY_ - 1U }, ChessPiece::WR);
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 1U,sizeY_ - 2U }, ChessPiece::WR);
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 2U,sizeY_ - 1U }, ChessPiece::WB);
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 2U,sizeY_ - 2U }, ChessPiece::WB);
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 3U,sizeY_ - 1U }, ChessPiece::WN);
-    SetPiece({ BoardPart::Main,sizeX_ - 1U - 3U,sizeY_ - 2U }, ChessPiece::WN);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 0U,sizeY_ - 1U }, ChessPiece::WQ);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 0U,sizeY_ - 2U }, ChessPiece::WK);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 1U,sizeY_ - 1U }, ChessPiece::WR);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 1U,sizeY_ - 2U }, ChessPiece::WR);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 2U,sizeY_ - 1U }, ChessPiece::WB);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 2U,sizeY_ - 2U }, ChessPiece::WB);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 3U,sizeY_ - 1U }, ChessPiece::WN);
+    SetPieceIndex({ BoardPartID::Stage,sizeX_ - 1U - 3U,sizeY_ - 2U }, ChessPiece::WN);
   }
-  template <> inline PositionValue ChessVariantPosition<ChessVariant::RacingKings>::EvaluateStatically(void) const noexcept
+  template <> inline PositionValue ChessVariantBoard<ChessVariant::RacingKings>::EvaluateStatically() const noexcept
   {
     // TODO: evaluate RacingKings positions
-    return ChessPosition::EvaluateStatically(); // temporary
+    return ChessBoard::EvaluateStatically(); // temporary
   }
 
   
   // specializations for ChessVariant::Dice10x10
-  template <> inline void ChessVariantPosition<ChessVariant::Dice10x10>::SetStartingPosition() noexcept
+  template <> inline void ChessVariantBoard<ChessVariant::Dice10x10>::SetStartingBoard() noexcept
   {
-    ChessPosition::SetStartingPosition();
+    ChessBoard::SetStartingBoard();
     SetPiecesHSymmetrical(              3U, 0U, ChessPiece::BQ, ChessPiece::WQ);
     SetPiecesHSymmetrical(              4U, 0U, ChessPiece::BK, ChessPiece::WK);
     SetPiecesHSymmetrical(sizeX_ - 1U - 3U, 0U, ChessPiece::BK, ChessPiece::WK);
     SetPiecesHSymmetrical(sizeX_ - 1U - 4U, 0U, ChessPiece::BK, ChessPiece::WK);
   }
-  template <> inline void ChessVariantPosition<ChessVariant::Dice10x10>::GetAllMoves(void) const noexcept // collect all moves for all pieces
+  template <> inline void ChessVariantBoard<ChessVariant::Dice10x10>::GetAllMoves() const noexcept // collect all moves for all pieces
   {
-    ChessPosition::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
+    ChessBoard::GetAllMoves(); // get all moves, and only then dabble around which numbers can be rolled
     ChessVariantData<ChessVariant::Dice10x10>::side_ = PickRandomPiece();
   }
-  template <> inline void ChessVariantLayout<ChessVariant::Dice10x10>::Draw(DC* pDC, const MainPosition* pos, _Mode mode) const
+  template <> inline void ChessVariantLayout<ChessVariant::Dice10x10>::Draw(DC* pDC, const Board* board_, Mode mode_) const
   {
-    ChessLayout::Draw(pDC, pos, mode);
+    ChessLayout::Draw(pDC, board_, mode_);
 
     // show the rolled die
     constexpr int x = 600;
     constexpr int y = 200;
     Rect r{ x,y,x + 20,y + 20 };
 
-    auto pp{ dynamic_cast<const ChessVariantPosition<ChessVariant::Dice10x10>*>(pos) };
+    auto pp{ dynamic_cast<const ChessVariantBoard<ChessVariant::Dice10x10>*>(board_) };
 
     Die::Sides[pp->ChessVariantData<ChessVariant::Dice10x10>::side_].Draw(pDC, r);
   }
 
 
   // specializations for ChessVariant::Massacre
-  template <> inline Rule ChessVariantPosition<ChessVariant::Massacre>::GetRule() const noexcept { return AllowTakes; }
-  template <> inline constexpr virtual unsigned int ChessVariantPosition<ChessVariant::Massacre>::GetMoveCountFactor(void) const noexcept { return 1000; }
-  template <> inline void ChessVariantPosition<ChessVariant::Massacre>::SetStartingPosition() noexcept
+  template <> inline Rule ChessVariantBoard<ChessVariant::Massacre>::GetRule() const noexcept { return AllowTakes; }
+  template <> inline constexpr virtual unsigned int ChessVariantBoard<ChessVariant::Massacre>::GetMoveCountFactor() const noexcept { return 1000; }
+  template <> inline void ChessVariantBoard<ChessVariant::Massacre>::SetStartingBoard() noexcept
   {
     std::vector<Location> ll;
     for (Coordinate i = 0; i < sizeX_; i++)
       for (Coordinate j = 0; j < sizeY_; j++)
       {
-        const Location l{ BoardPart::Main,  i,j };
-        assert(GetPiece(l) == Piece::NoPiece);
+        const Location l{ BoardPartID::Stage,  i,j };
+        assert(GetPieceIndex(l) == Piece::NoPiece);
         ll.push_back(l);
       }
     assert(ll.size() == sizeX_ * sizeY_);
@@ -539,20 +539,20 @@ namespace Chess
     auto it = ll.begin();
     for (Coordinate z = 0; z < sizeX_ * sizeY_ / 8; z++)
     {
-      SetPiece(*it++, ChessPiece::WQ);
-      SetPiece(*it++, ChessPiece::BQ);
-      SetPiece(*it++, ChessPiece::WR);
-      SetPiece(*it++, ChessPiece::BR);
-      SetPiece(*it++, ChessPiece::WB);
-      SetPiece(*it++, ChessPiece::BB);
-      SetPiece(*it++, ChessPiece::WN);
-      SetPiece(*it++, ChessPiece::BN);
+      SetPieceIndex(*it++, ChessPiece::WQ);
+      SetPieceIndex(*it++, ChessPiece::BQ);
+      SetPieceIndex(*it++, ChessPiece::WR);
+      SetPieceIndex(*it++, ChessPiece::BR);
+      SetPieceIndex(*it++, ChessPiece::WB);
+      SetPieceIndex(*it++, ChessPiece::BB);
+      SetPieceIndex(*it++, ChessPiece::WN);
+      SetPieceIndex(*it++, ChessPiece::BN);
     }
     assert(it == ll.end());
   }
     
 
-  const VariantList& ChessGame::GetVariants(void) noexcept
+  const VariantList& ChessGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ "Standard Chess",          VC(ChessVariant::Standard),           8,  8 } },
@@ -595,53 +595,53 @@ namespace Chess
   }
 
 
-  MainPosition* ChessGame::GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept
+  Board* ChessGame::GetNewBoard(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept
   {
     // this switch looks silly, but cannot be avoided - the compiler has no idea which variants would be possible, 
     // but needs to generate the code for each one. An explicit list is needed in some form!
     switch (static_cast<ChessVariant>(v.c))
     {
-      case ChessVariant::Standard:          return new ChessVariantPosition<ChessVariant::Standard        >(v, m, d);     // Standard Chess          
-      case ChessVariant::Corner:            return new ChessVariantPosition<ChessVariant::Corner          >(v, m, d);     // Corner Chess            
-      case ChessVariant::Fortress:          return new ChessVariantPosition<ChessVariant::Fortress        >(v, m, d);     // Fortress Chess          
-      case ChessVariant::Horde:             return new ChessVariantPosition<ChessVariant::Horde           >(v, m, d);     // Horde Chess             
-      case ChessVariant::Loop:              return new ChessVariantPosition<ChessVariant::Loop            >(v, m, d);     // Loop Chess              
-      case ChessVariant::Anti:              return new ChessVariantPosition<ChessVariant::Anti            >(v, m, d);     // Anti Chess              
-      case ChessVariant::Extinction:        return new ChessVariantPosition<ChessVariant::Extinction      >(v, m, d);     // Extinction Chess        
-      case ChessVariant::Maharajah:         return new ChessVariantPosition<ChessVariant::Maharajah       >(v, m, d);     // Maharajah Chess         
-      case ChessVariant::ThreeChecks:       return new ChessVariantPosition<ChessVariant::ThreeChecks     >(v, m, d);     // Three Checks Chess      
-      case ChessVariant::Dark:              return new ChessVariantPosition<ChessVariant::Dark            >(v, m, d);     // Dark Chess              
-      case ChessVariant::Atomic:            return new ChessVariantPosition<ChessVariant::Atomic          >(v, m, d);     // Atomic Chess            
-      case ChessVariant::Janus:             return new ChessVariantPosition<ChessVariant::Janus           >(v, m, d);     // Janus Chess             
-      case ChessVariant::Embassy:           return new ChessVariantPosition<ChessVariant::Embassy         >(v, m, d);     // Embassy Chess           
-      case ChessVariant::Screen:            return new ChessVariantPosition<ChessVariant::Screen          >(v, m, d);     // Screen Chess            
-      case ChessVariant::CrazyScreen:       return new ChessVariantPosition<ChessVariant::CrazyScreen     >(v, m, d);     // Crazy Screen Chess      
-      case ChessVariant::Cylinder:          return new ChessVariantPosition<ChessVariant::Cylinder        >(v, m, d);     // Cylinder Chess          
-      case ChessVariant::Amazons:           return new ChessVariantPosition<ChessVariant::Amazons         >(v, m, d);     // Amazon Chess            
-      case ChessVariant::Berolina:          return new ChessVariantPosition<ChessVariant::Berolina        >(v, m, d);     // Berolina Chess          
-      case ChessVariant::FischerRandom:     return new ChessVariantPosition<ChessVariant::FischerRandom   >(v, m, d);     // Fischer Random Chess    
-      case ChessVariant::Legan:             return new ChessVariantPosition<ChessVariant::Legan           >(v, m, d);     // Legan Chess             
-      case ChessVariant::KnightRelay:       return new ChessVariantPosition<ChessVariant::KnightRelay     >(v, m, d);     // Knight Relay Chess      
-      case ChessVariant::Grand:             return new ChessVariantPosition<ChessVariant::Grand           >(v, m, d);     // Grand Chess             
-      case ChessVariant::CapablancaRandom:  return new ChessVariantPosition<ChessVariant::CapablancaRandom>(v, m, d);     // Capablanca Random Chess 
-      case ChessVariant::LosAlamos:         return new ChessVariantPosition<ChessVariant::LosAlamos       >(v, m, d);     // Los Alamos Chess        
-      case ChessVariant::Ambiguous:         return new ChessVariantPosition<ChessVariant::Ambiguous       >(v, m, d);     // Ambiguous Chess         
-      case ChessVariant::Cheversi:          return new ChessVariantPosition<ChessVariant::Cheversi        >(v, m, d);     // Cheversi
-      case ChessVariant::Dice:              return new ChessVariantPosition<ChessVariant::Dice            >(v, m, d);     // Dice Chess              
-      case ChessVariant::Recycle:           return new ChessVariantPosition<ChessVariant::Recycle         >(v, m, d);     // Recycle Chess           
-      case ChessVariant::IceAge:            return new ChessVariantPosition<ChessVariant::IceAge          >(v, m, d);     // Ice Age Chess           
-      case ChessVariant::Behemoth:          return new ChessVariantPosition<ChessVariant::Behemoth        >(v, m, d);     // Behemoth Chess          
-      case ChessVariant::CheshireCat:       return new ChessVariantPosition<ChessVariant::CheshireCat     >(v, m, d);     // Cheshire Cat Chess      
-      case ChessVariant::Knightmate:        return new ChessVariantPosition<ChessVariant::Knightmate      >(v, m, d);     // Knightmate Chess        
-      case ChessVariant::RacingKings:       return new ChessVariantPosition<ChessVariant::RacingKings     >(v, m, d);     // Racing Kings            
-      case ChessVariant::Dice10x10:         return new ChessVariantPosition<ChessVariant::Dice10x10       >(v, m, d);     // Dice Chess 10x10        
-      case ChessVariant::Massacre:          return new ChessVariantPosition<ChessVariant::Massacre        >(v, m, d);     // Massacre Chess
+      case ChessVariant::Standard:          return new ChessVariantBoard<ChessVariant::Standard        >(v, m, d);     // Standard Chess          
+      case ChessVariant::Corner:            return new ChessVariantBoard<ChessVariant::Corner          >(v, m, d);     // Corner Chess            
+      case ChessVariant::Fortress:          return new ChessVariantBoard<ChessVariant::Fortress        >(v, m, d);     // Fortress Chess          
+      case ChessVariant::Horde:             return new ChessVariantBoard<ChessVariant::Horde           >(v, m, d);     // Horde Chess             
+      case ChessVariant::Loop:              return new ChessVariantBoard<ChessVariant::Loop            >(v, m, d);     // Loop Chess              
+      case ChessVariant::Anti:              return new ChessVariantBoard<ChessVariant::Anti            >(v, m, d);     // Anti Chess              
+      case ChessVariant::Extinction:        return new ChessVariantBoard<ChessVariant::Extinction      >(v, m, d);     // Extinction Chess        
+      case ChessVariant::Maharajah:         return new ChessVariantBoard<ChessVariant::Maharajah       >(v, m, d);     // Maharajah Chess         
+      case ChessVariant::ThreeChecks:       return new ChessVariantBoard<ChessVariant::ThreeChecks     >(v, m, d);     // Three Checks Chess      
+      case ChessVariant::Dark:              return new ChessVariantBoard<ChessVariant::Dark            >(v, m, d);     // Dark Chess              
+      case ChessVariant::Atomic:            return new ChessVariantBoard<ChessVariant::Atomic          >(v, m, d);     // Atomic Chess            
+      case ChessVariant::Janus:             return new ChessVariantBoard<ChessVariant::Janus           >(v, m, d);     // Janus Chess             
+      case ChessVariant::Embassy:           return new ChessVariantBoard<ChessVariant::Embassy         >(v, m, d);     // Embassy Chess           
+      case ChessVariant::Screen:            return new ChessVariantBoard<ChessVariant::Screen          >(v, m, d);     // Screen Chess            
+      case ChessVariant::CrazyScreen:       return new ChessVariantBoard<ChessVariant::CrazyScreen     >(v, m, d);     // Crazy Screen Chess      
+      case ChessVariant::Cylinder:          return new ChessVariantBoard<ChessVariant::Cylinder        >(v, m, d);     // Cylinder Chess          
+      case ChessVariant::Amazons:           return new ChessVariantBoard<ChessVariant::Amazons         >(v, m, d);     // Amazon Chess            
+      case ChessVariant::Berolina:          return new ChessVariantBoard<ChessVariant::Berolina        >(v, m, d);     // Berolina Chess          
+      case ChessVariant::FischerRandom:     return new ChessVariantBoard<ChessVariant::FischerRandom   >(v, m, d);     // Fischer Random Chess    
+      case ChessVariant::Legan:             return new ChessVariantBoard<ChessVariant::Legan           >(v, m, d);     // Legan Chess             
+      case ChessVariant::KnightRelay:       return new ChessVariantBoard<ChessVariant::KnightRelay     >(v, m, d);     // Knight Relay Chess      
+      case ChessVariant::Grand:             return new ChessVariantBoard<ChessVariant::Grand           >(v, m, d);     // Grand Chess             
+      case ChessVariant::CapablancaRandom:  return new ChessVariantBoard<ChessVariant::CapablancaRandom>(v, m, d);     // Capablanca Random Chess 
+      case ChessVariant::LosAlamos:         return new ChessVariantBoard<ChessVariant::LosAlamos       >(v, m, d);     // Los Alamos Chess        
+      case ChessVariant::Ambiguous:         return new ChessVariantBoard<ChessVariant::Ambiguous       >(v, m, d);     // Ambiguous Chess         
+      case ChessVariant::Cheversi:          return new ChessVariantBoard<ChessVariant::Cheversi        >(v, m, d);     // Cheversi
+      case ChessVariant::Dice:              return new ChessVariantBoard<ChessVariant::Dice            >(v, m, d);     // Dice Chess              
+      case ChessVariant::Recycle:           return new ChessVariantBoard<ChessVariant::Recycle         >(v, m, d);     // Recycle Chess           
+      case ChessVariant::IceAge:            return new ChessVariantBoard<ChessVariant::IceAge          >(v, m, d);     // Ice Age Chess           
+      case ChessVariant::Behemoth:          return new ChessVariantBoard<ChessVariant::Behemoth        >(v, m, d);     // Behemoth Chess          
+      case ChessVariant::CheshireCat:       return new ChessVariantBoard<ChessVariant::CheshireCat     >(v, m, d);     // Cheshire Cat Chess      
+      case ChessVariant::Knightmate:        return new ChessVariantBoard<ChessVariant::Knightmate      >(v, m, d);     // Knightmate Chess        
+      case ChessVariant::RacingKings:       return new ChessVariantBoard<ChessVariant::RacingKings     >(v, m, d);     // Racing Kings            
+      case ChessVariant::Dice10x10:         return new ChessVariantBoard<ChessVariant::Dice10x10       >(v, m, d);     // Dice Chess 10x10        
+      case ChessVariant::Massacre:          return new ChessVariantBoard<ChessVariant::Massacre        >(v, m, d);     // Massacre Chess
       default: return nullptr; // must not happen
     }
   }
 
 
-  MainLayout* ChessGame::GetNewLayout(const VariantChosen& v, const Dimensions& d) noexcept
+  MainLayout* ChessGame::GetNewLayout(const VariantChosen& v, const BoardPartDimensions& d) noexcept
   {
     // this switch looks silly, but cannot be avoided - the compiler has no idea which variants would be possible, 
     // but needs to generate the code for each one. An explicit list is needed in some form!

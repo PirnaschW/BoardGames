@@ -17,16 +17,16 @@ namespace LoA
   class LoAPeg : public Kind
   {
   private:
-    constexpr LoAPeg(void) noexcept : Kind('L') {}
+    constexpr LoAPeg() noexcept : Kind('L') {}
 
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; } // in LoA, pieces have no value
-    virtual void CollectMoves(const MainPosition& pos, const Location& l, Moves& moves) const noexcept override;
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 0; } // in LoA, pieces have no value
+    virtual void CollectMoves(const Board& board_, const Location& l, Moves& moves) const noexcept override;
 
 // extensions
   public:
-    std::vector<const Piece*> CollectAlong(const MainPosition& pos, Location l, const Offset& o) const;
-    void CollectMoves(const MainPosition& pos, const Location& l, Moves& moves, int dx, int dy) const;
+    std::vector<const Piece*> CollectAlong(const Board& board_, Location l, const Offset& o) const;
+    void CollectMoves(const Board& board_, const Location& l, Moves& moves, int dx, int dy) const;
 
   public:
     static const LoAPeg ThePeg;
@@ -46,15 +46,15 @@ namespace LoA
   };
 
 
-  class LoAPosition : public MainPosition
+  class LoABoard : public Board
   {
   public:
-    LoAPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
-    virtual MainPosition* Clone(void) const noexcept override { return new LoAPosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
-    virtual const Piece& SetPiece(const Location& l, const Piece& p) noexcept override;
+    LoABoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {}
+    virtual Board* Clone() const noexcept override { return new LoABoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
+    virtual const Piece& SetPieceIndex(const Location& l, const Piece& p) noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
 
     // extensions
   protected:
@@ -80,13 +80,13 @@ namespace LoA
   class LoAGame : public Game
   {
   private:
-    LoAGame(void) = delete;
+    LoAGame() = delete;
 
   public:
-    LoAGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new LoAPosition(v, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    LoAGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new LoABoard(v, m, d), new MainLayout(d, Layout::LayoutType::Light)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

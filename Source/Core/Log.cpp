@@ -10,7 +10,7 @@
 
 namespace BoardGamesCore
 {
-  void PositionValue::Log(void) const
+  void PositionValue::Log() const
   {
     wchar_t buffer[256];
     switch (type_)
@@ -37,17 +37,16 @@ namespace BoardGamesCore
     OutputDebugString(buffer);
   }
 
-  void Move::Log(void) const
+  void Move::Log() const
   {
     GetActions().Log();
     value_.Log();
   }
   
-  void Actions::Log(void) const
+  void Actions::Log() const
   {
-    assert(size() > 0);
     const auto s = size();
-    wchar_t buffer[256];
+    wchar_t buffer[256]{};
     assert(s < sizeof(buffer) / 3);
     size_t pBuf = 0U;
     bool jump = false;
@@ -67,7 +66,7 @@ namespace BoardGamesCore
         jump = false;
       }
     }
-    buffer[--pBuf] = '\0';
+    if (pBuf) buffer[--pBuf] = '\0';
     OutputDebugString(buffer);
   }
 

@@ -19,7 +19,7 @@ namespace TankB
   const CTankPiece CTankPiece::CTankB{ CTank::TheCTank, PieceColor::Black, IDB_CTANKB };
 
 
-  void NTank::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
+  void NTank::CollectMoves(const Board& p, const Location& l, Moves& moves) const noexcept
   {
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, +z)); z++);
     for (int z = 1; p.AddIfLegal(moves, l, l + Offset(+z, -z)); z++);
@@ -43,7 +43,7 @@ namespace TankB
           (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * (i + 1U)),
           (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * (j + 1U)) };
 
-        tiles_[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
+        tiles_[z] = new Tile(Location(BoardPartID::Main, i, j), r, FC(i, j));
       }
   }
 
@@ -61,41 +61,41 @@ namespace TankB
   }
 
 
-  void TankBPosition::SetStartingPosition() noexcept
+  void TankBBoard::SetStartingBoard() noexcept
   {
-    SetPiece(Location(BoardPart::Main, 10U,  6U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main, 10U,  7U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main, 10U,  8U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main, 10U,  9U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main, 10U, 10U), CTankPiece::CTankW);
-    SetPiece(Location(BoardPart::Main,  9U,  7U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  9U,  8U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  9U, 10U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  8U,  8U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  8U,  9U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  8U, 10U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  7U,  9U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  7U, 10U), NTankPiece::NTankW);
-    SetPiece(Location(BoardPart::Main,  6U, 10U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main, 10U,  6U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main, 10U,  7U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main, 10U,  8U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main, 10U,  9U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main, 10U, 10U), CTankPiece::CTankW);
+    SetPiece(Location(BoardPartID::Main,  9U,  7U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  9U,  8U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  9U, 10U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  8U,  8U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  8U,  9U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  8U, 10U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  7U,  9U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  7U, 10U), NTankPiece::NTankW);
+    SetPiece(Location(BoardPartID::Main,  6U, 10U), NTankPiece::NTankW);
 
-    SetPiece(Location(BoardPart::Main,  0U,  0U), CTankPiece::CTankB);
-    SetPiece(Location(BoardPart::Main,  0U,  1U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  0U,  2U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  0U,  3U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  0U,  4U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  1U,  0U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  1U,  2U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  1U,  3U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  2U,  0U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  2U,  1U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  2U,  2U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  3U,  0U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  3U,  1U), NTankPiece::NTankB);
-    SetPiece(Location(BoardPart::Main,  4U,  0U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  0U,  0U), CTankPiece::CTankB);
+    SetPiece(Location(BoardPartID::Main,  0U,  1U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  0U,  2U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  0U,  3U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  0U,  4U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  1U,  0U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  1U,  2U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  1U,  3U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  2U,  0U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  2U,  1U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  2U,  2U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  3U,  0U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  3U,  1U), NTankPiece::NTankB);
+    SetPiece(Location(BoardPartID::Main,  4U,  0U), NTankPiece::NTankB);
   }
 
 
-  bool TankBPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  bool TankBBoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
     const Piece& pf = GetPiece(fr);                                      // piece to move
     if (pf == Piece::NoTile) return false;                               // out of board
@@ -117,41 +117,41 @@ namespace TankB
     if (!pt.IsBlank())
     {
       a.push_back(std::make_shared<ActionLift>(to, pt));                 // pick opponent piece up
-      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+      a.push_back(std::make_shared<ActionDrop>(GetNextFreeTakenLocation(pf.GetColor()), pt));                   // place it in Taken
     }
     a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                              // add move to move list
     return pt.IsBlank();
   };
 
-  PositionValue TankBPosition::EvaluateStatically(void) const noexcept
+  PositionValue TankBBoard::EvaluateStatically() const noexcept
   {
-    return MainPosition::EvaluateStatically();
+    return Board::EvaluateStatically();
     // ...
   }
 
 
   const std::vector<Location> TankBGame::walls_{
-  {BoardPart::Main,  0U,  5U },
-  {BoardPart::Main,  1U,  1U },
-  {BoardPart::Main,  1U,  9U },
-  {BoardPart::Main,  2U,  3U },
-  {BoardPart::Main,  2U,  5U },
-  {BoardPart::Main,  2U,  7U },
-  {BoardPart::Main,  3U,  2U },
-  {BoardPart::Main,  3U,  8U },
-  {BoardPart::Main,  5U,  0U },
-  {BoardPart::Main,  5U,  2U },
-  {BoardPart::Main,  5U,  8U },
-  {BoardPart::Main,  5U, 10U },
-  {BoardPart::Main,  7U,  2U },
-  {BoardPart::Main,  7U,  8U },
-  {BoardPart::Main,  8U,  3U },
-  {BoardPart::Main,  8U,  5U },
-  {BoardPart::Main,  8U,  7U },
-  {BoardPart::Main,  9U,  1U },
-  {BoardPart::Main,  9U,  9U },
-  {BoardPart::Main, 10U,  5U },
+  {BoardPartID::Main,  0U,  5U },
+  {BoardPartID::Main,  1U,  1U },
+  {BoardPartID::Main,  1U,  9U },
+  {BoardPartID::Main,  2U,  3U },
+  {BoardPartID::Main,  2U,  5U },
+  {BoardPartID::Main,  2U,  7U },
+  {BoardPartID::Main,  3U,  2U },
+  {BoardPartID::Main,  3U,  8U },
+  {BoardPartID::Main,  5U,  0U },
+  {BoardPartID::Main,  5U,  2U },
+  {BoardPartID::Main,  5U,  8U },
+  {BoardPartID::Main,  5U, 10U },
+  {BoardPartID::Main,  7U,  2U },
+  {BoardPartID::Main,  7U,  8U },
+  {BoardPartID::Main,  8U,  3U },
+  {BoardPartID::Main,  8U,  5U },
+  {BoardPartID::Main,  8U,  7U },
+  {BoardPartID::Main,  9U,  1U },
+  {BoardPartID::Main,  9U,  9U },
+  {BoardPartID::Main, 10U,  5U },
   };
 
   TankBGame::FieldType TankBGame::GetFieldType(const Coordinate& sizeX, const Coordinate& sizeY, const Coordinate& x, const Coordinate& y) noexcept
@@ -165,7 +165,7 @@ namespace TankB
     return                                                               TankBGame::FieldType::Standard;
   }
 
-  const VariantList& TankBGame::GetVariants(void) noexcept
+  const VariantList& TankBGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ nullptr, 'A', 11, 11 } },

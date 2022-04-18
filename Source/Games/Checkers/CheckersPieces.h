@@ -5,10 +5,10 @@ namespace Checkers
   class Checker final : public Kind
   {
   private:
-    constexpr inline Checker(void) noexcept : Kind('0') {}
+    constexpr inline Checker() noexcept : Kind('0') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+    virtual inline PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const Board& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
     static const Checker TheChecker;
@@ -17,10 +17,10 @@ namespace Checkers
   class King final : public Kind
   {
   private:
-    constexpr inline King(void) noexcept : Kind('K') {}
+    constexpr inline King() noexcept : Kind('K') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 500; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+    virtual inline PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 500; }
+    virtual void CollectMoves(const Board& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
     static const King TheKing;
@@ -29,10 +29,10 @@ namespace Checkers
   class Queen final : public Kind
   {
   private:
-    constexpr inline Queen(void) noexcept : Kind('Q') {}
+    constexpr inline Queen() noexcept : Kind('Q') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 800; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+    virtual inline PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 800; }
+    virtual void CollectMoves(const Board& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
     static const Queen TheQueen;
@@ -41,10 +41,10 @@ namespace Checkers
   class Para final : public Kind
   {
   private:
-    constexpr inline Para(void) noexcept : Kind('P') {}
+    constexpr inline Para() noexcept : Kind('P') {}
   public:
-    virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+    virtual inline PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const Board& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
 
   public:
     static const Para ThePara;
@@ -53,11 +53,11 @@ namespace Checkers
   class CheckersPiece final : public Piece
   {
   private:
-    inline CheckersPiece(const Kind& k, const PieceColor& c, const CheckersPiece* u, unsigned int ID) noexcept : Piece(k, c, ID), up_(u) {}
+    constexpr CheckersPiece(const Kind& k, const PieceColor& c, const CheckersPiece* u, unsigned int ID) noexcept : Piece(k, c, ID), up_(u) {}
     CheckersPiece(const CheckersPiece&) = delete;
     CheckersPiece& operator=(const CheckersPiece&) = delete;
   public:
-    virtual inline bool IsPromotable(void) const noexcept override { return up_ != this; }          // is this a promotable piece?
+    virtual inline bool IsPromotable() const noexcept override { return up_ != this; }          // is this a promotable piece?
     virtual inline const Piece& Promote(bool /*u*/) const noexcept override { return *up_; }        // promote this piece up/down
   private:
     const CheckersPiece* up_;                                                                       // what this piece promotes up to
@@ -72,5 +72,14 @@ namespace Checkers
     static const CheckersPiece CheckersParaW;
     static const CheckersPiece CheckersParaB;
   };
+
+  constexpr inline const CheckersPiece CheckersPiece::CheckersPieceW    { Checker    ::TheChecker,     PieceColor::White, &CheckersQueenW, IDB_WPL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersPieceB    { Checker    ::TheChecker,     PieceColor::Black, &CheckersQueenB, IDB_BPL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersKingW     { King       ::TheKing,        PieceColor::White, &CheckersKingW,  IDB_WKL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersKingB     { King       ::TheKing,        PieceColor::Black, &CheckersKingB,  IDB_BKL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersQueenW    { Queen      ::TheQueen,       PieceColor::White, &CheckersQueenW, IDB_WQL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersQueenB    { Queen      ::TheQueen,       PieceColor::Black, &CheckersQueenB, IDB_BQL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersParaW     { Para       ::ThePara,        PieceColor::White, &CheckersPieceW, IDB_CHECKERSWPARA };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersParaB     { Para       ::ThePara,        PieceColor::Black, &CheckersPieceB, IDB_CHECKERSBPARA };
 
 }

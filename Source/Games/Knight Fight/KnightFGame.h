@@ -19,9 +19,9 @@ namespace KnightF
   class Checker : public Kind
   {
   private:
-    constexpr Checker(void) noexcept : Kind('0') {}
+    constexpr Checker() noexcept : Kind('0') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
 
   public:
     static const Checker TheChecker;
@@ -34,7 +34,7 @@ namespace KnightF
     KnightFPiece(const KnightFPiece&) = delete;
     KnightFPiece& operator=(const KnightFPiece&) = delete;
   public:
-    ~KnightFPiece(void) override {}
+    ~KnightFPiece() override {}
 
   public:
     static const KnightFPiece KnightFPieceW;
@@ -42,14 +42,14 @@ namespace KnightF
   };
 
 
-  class KnightFPosition : public MainPosition
+  class KnightFBoard : public Board
   {
   public:
-    KnightFPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
-    virtual MainPosition* Clone(void) const noexcept override { return new KnightFPosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
+    KnightFBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {};
+    virtual Board* Clone() const noexcept override { return new KnightFBoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
   private:
     std::vector<FieldValue> fValue_{};
   };
@@ -58,13 +58,13 @@ namespace KnightF
   class KnightFGame : public Game
   {
   private:
-    KnightFGame(void) = delete;
+    KnightFGame() = delete;
 
   public:
-    KnightFGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new KnightFPosition(v, m, d), new MainLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    KnightFGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new KnightFBoard(v, m, d)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

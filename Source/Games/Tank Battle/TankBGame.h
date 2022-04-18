@@ -30,10 +30,10 @@ namespace TankB
   class NTank : public Kind  // Normal Tank
   {
   private:
-    constexpr NTank(void) noexcept : Kind('N') {}
+    constexpr NTank() noexcept : Kind('N') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
-    virtual void CollectMoves(const MainPosition& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;                    // useful default implementation: No moves possible
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const Board& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;                    // useful default implementation: No moves possible
 
   public:
     static const NTank TheNTank;
@@ -42,9 +42,9 @@ namespace TankB
   class CTank : public Kind // Command Tank
   {
   private:
-    constexpr CTank(void) noexcept : Kind('C') {}
+    constexpr CTank() noexcept : Kind('C') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 400; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 400; }
 
   public:
     static const CTank TheCTank;
@@ -78,21 +78,21 @@ namespace TankB
     const TileColor& FC(Coordinate i, Coordinate j) const noexcept;
   };
 
-  class TankBPosition : public MainPosition
+  class TankBBoard : public Board
   {
   public:
-    TankBPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
-    virtual MainPosition* Clone(void) const noexcept override { return new TankBPosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
+    TankBBoard(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : Board(v, p, d) {}
+    virtual Board* Clone() const noexcept override { return new TankBBoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
   };
 
 
   class TankBGame : public Game
   {
   private:
-    TankBGame(void) = delete;
+    TankBGame() = delete;
 
   public:
     enum class FieldType { Standard, Wall, HomeWhite, HomeBlack, Contaminated};
@@ -102,8 +102,8 @@ namespace TankB
     const static std::vector<Location> walls_;
 
   public:
-    TankBGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TankBPosition(v, m, d), new TankBLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    TankBGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TankBBoard(v, m, d), new TankBLayout(d)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
   };

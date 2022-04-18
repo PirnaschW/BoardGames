@@ -24,9 +24,9 @@ namespace Ataxx
   class Checker : public BoardGamesCore::Checker
   {
   private:
-    constexpr Checker(void) noexcept {}
+    constexpr Checker() noexcept {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
+    virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
 
   public:
     static const Checker TheChecker;
@@ -39,7 +39,7 @@ namespace Ataxx
     AtaxxPiece(const AtaxxPiece&) = delete;
     AtaxxPiece& operator=(const AtaxxPiece&) = delete;
   public:
-    ~AtaxxPiece(void) override {}
+    ~AtaxxPiece() override {}
 
   public:
     static const AtaxxPiece AtaxxPieceW;
@@ -47,25 +47,25 @@ namespace Ataxx
   };
 
 
-  class AtaxxPosition : public MainPosition
+  class AtaxxBoard : public Board
   {
   public:
-    AtaxxPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
-    virtual MainPosition* Clone(void) const noexcept override { return new AtaxxPosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
+    AtaxxBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
+    virtual Board* Clone() const noexcept override { return new AtaxxBoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
   };
 
 
   class AtaxxGame : public Game
   {
   private:
-    AtaxxGame(void) = delete;
+    AtaxxGame() = delete;
 
   public:
-    AtaxxGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new AtaxxPosition(v, m, d), new MainLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
-    static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    AtaxxGame(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Game(v,new AtaxxBoard(v, d)) {}
+    static void Register() noexcept;
+    static const VariantList& GetVariants() noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

@@ -43,10 +43,10 @@ namespace Logik
   class Peg final : public Kind
   {
   private:
-    constexpr inline Peg<k>(void) noexcept : Kind(k) {}
+    constexpr inline Peg<k>() noexcept : Kind(k) {}
 
   public:
-    constexpr virtual inline unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 1; }
+    constexpr virtual inline unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 1; }
 
   public:
     static const Peg<k> ThePeg;
@@ -64,7 +64,7 @@ namespace Logik
     LogikPiece& operator=(const LogikPiece&) = delete;
 
   public:
-    static const LogikPiece& GetPiece(unsigned int z) noexcept
+    static const LogikPiece& GetPieceIndex(unsigned int z) noexcept
     {
       switch (z)
       {
@@ -136,8 +136,8 @@ namespace Logik
   class Plays final
   {
   public:
-    /*constexpr*/ inline Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) plays_[c] = new Play(c); }
-    inline ~Plays(void) noexcept { for (PlayCode c = 0; c < Max; ++c) delete plays_[c]; }
+    /*constexpr*/ inline Plays() noexcept { for (PlayCode c = 0; c < Max; ++c) plays_[c] = new Play(c); }
+    inline ~Plays() noexcept { for (PlayCode c = 0; c < Max; ++c) delete plays_[c]; }
     constexpr inline const Play& operator[](const PlayCode& c) const noexcept { return *plays_[c]; }
     constexpr inline const Play& operator[](const PlayCfg& p) const noexcept { return *plays_[Play::Convert(p)]; }
 
@@ -154,7 +154,7 @@ namespace Logik
   class Result final                                                      // holds a potential result (so many Black and so many White markers)
   {
   public:
-    constexpr inline Result(void) noexcept {}
+    constexpr inline Result() noexcept {}
     constexpr inline Result(MarkerCount b, MarkerCount w) noexcept : code_(Convert(b, w)) {}       // get the result from marker counts
     Result(const Play& p1, const Play& p2) noexcept;                                               // get the result from comparing two plays_
     constexpr inline bool operator==(const Result& r) const noexcept { return r.code_ == this->code_; }
@@ -173,7 +173,7 @@ namespace Logik
       return 0;
     }
   public:
-    constexpr inline static ResultCode RMax(void) noexcept { return (MaxPegs + 1) * (MaxPegs + 2) / 2 - 1; }
+    constexpr inline static ResultCode RMax() noexcept { return (MaxPegs + 1) * (MaxPegs + 2) / 2 - 1; }
 
   private:
     ResultCode code_{};
@@ -192,24 +192,24 @@ namespace Logik
   class LogikLayout final : public MainLayout
   {
   public:
-    LogikLayout(const Dimensions& d) noexcept;
-    virtual void Draw(DC* pDC, const MainPosition* pos, _Mode mode) const override;
+    LogikLayout(const BoardPartDimensions& d) noexcept;
+    virtual void Draw(DC* pDC, const Board* board_, Mode mode_) const override;
 
   private:
     inline const TileColor& FC(Coordinate i, Coordinate j) const noexcept;
   };
 
 
-  class LogikPosition final : public MainPosition
+  class LogikBoard final : public Board
   {
   public:
-    inline LogikPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
-    virtual inline MainPosition* Clone(void) const noexcept override { return new LogikPosition(*this); }
-    virtual void SetStartingPosition() noexcept override {};
+    inline LogikBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {}
+    virtual inline Board* Clone() const noexcept override { return new LogikBoard(*this); }
+    virtual void SetStartingBoard() noexcept override {};
 
     bool SetFirstFreePeg(const Piece& p) noexcept;                        // returns if it could successfully set the Peg
     bool SetFirstFreeMarker(const Piece& p) noexcept;                     // returns if it could successfully set the Marker
-    void ReadPosition(void) noexcept;
+    void ReadBoard() noexcept;
     PlayCode GetBestMove(unsigned int nThreads = std::thread::hardware_concurrency()) const;
     void Execute(const PlayCode& p);
 
@@ -232,16 +232,16 @@ namespace Logik
   class LogikGame final : public Game
   {
   private:
-    LogikGame(void) = delete;
+    LogikGame() = delete;
   public:
-    inline LogikGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new LogikPosition(v, m, d), new LogikLayout(d)) {}
+    inline LogikGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new LogikBoard(v, m, d), new LogikLayout(d)) {}
 
     virtual bool React(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
-    virtual bool AIMove(void) override;
+    virtual bool AIMove() override;
 
-    static const VariantList& GetVariants(void) noexcept;
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

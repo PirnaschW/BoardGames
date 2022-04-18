@@ -30,7 +30,7 @@ namespace Espionage
   protected:
     constexpr EKind(unsigned char z) noexcept : Kind(z) {}
   public:
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
+    virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
     virtual bool CanTake(const Kind&) const noexcept override;
   };
 
@@ -38,9 +38,9 @@ namespace Espionage
   class General : public EKind
   {
   private:
-    constexpr General(void) noexcept : EKind(z) {}
+    constexpr General() noexcept : EKind(z) {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100 * (z - '0'); }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100 * (z - '0'); }
 
   public:
     static const General TheGeneral;
@@ -49,9 +49,9 @@ namespace Espionage
   class Spy : public EKind
   {
   private:
-    constexpr Spy(void) noexcept : EKind('S') {}
+    constexpr Spy() noexcept : EKind('S') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 350; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 350; }
 
   public:
     static const Spy TheSpy;
@@ -60,9 +60,9 @@ namespace Espionage
   class Sapper : public EKind
   {
   private:
-    constexpr Sapper(void) noexcept : EKind('s') {}
+    constexpr Sapper() noexcept : EKind('s') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 250; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 250; }
 
   public:
     static const Sapper TheSapper;
@@ -71,9 +71,9 @@ namespace Espionage
   class Mine : public Kind
   {
   private:
-    constexpr Mine(void) noexcept : Kind('B') {}
+    constexpr Mine() noexcept : Kind('B') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
 
   public:
     static const Mine TheMine;
@@ -82,9 +82,9 @@ namespace Espionage
   class Headquarter : public Kind
   {
   private:
-    constexpr Headquarter(void) noexcept : Kind('H') {}
+    constexpr Headquarter() noexcept : Kind('H') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
 
   public:
     static const Headquarter TheHeadquarter;
@@ -93,9 +93,9 @@ namespace Espionage
   class Volcano : public Kind
   {
   private:
-    constexpr Volcano(void) noexcept : Kind('V') {}
+    constexpr Volcano() noexcept : Kind('V') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
 
   public:
     static const Volcano TheVolcano;
@@ -146,27 +146,27 @@ namespace Espionage
   class EspionageLayout final : public MainLayout
   {
   public:
-    EspionageLayout(const Dimensions& d) noexcept;
+    EspionageLayout(const BoardPartDimensions& d) noexcept;
 
   private:
     const TileColor& FC(Coordinate i, Coordinate j) const noexcept;
   };
 
-  class EspionagePosition : public MainPosition
+  class EspionageBoard : public Board
   {
   public:
-    EspionagePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
-    virtual MainPosition* Clone(void) const noexcept override { return new EspionagePosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
+    EspionageBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {};
+    virtual Board* Clone() const noexcept override { return new EspionageBoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
   };
 
 
   class EspionageGame : public Game
   {
   private:
-    EspionageGame(void) = delete;
+    EspionageGame() = delete;
 
   public:
     enum class FieldType { Standard, Volcano };
@@ -174,10 +174,10 @@ namespace Espionage
 
 
   public:
-    EspionageGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new EspionagePosition(v, m, d), new EspionageLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    EspionageGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new EspionageBoard(v, m, d), new EspionageLayout(d)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

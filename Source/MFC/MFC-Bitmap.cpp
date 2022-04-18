@@ -2,16 +2,29 @@
 
 namespace BoardGamesMFC
 {
-  
-  constexpr Bitmap::Bitmap(unsigned int ID) noexcept : ID_(ID), bmP_(new CBitmap()), bmM_(new CBitmap()) {}
 
-  constexpr Bitmap::~Bitmap(void) noexcept { delete bmP_; delete bmM_; }
-
-  void Bitmap::Load(DC* pDC, const Rect& r) const noexcept
+  class Bitmap::Internal
   {
-    assert(bmP_ != nullptr);
+  public:
+    Internal() = delete;
+    constexpr Internal(unsigned int id) noexcept : id_(id) {}
+    ~Internal() noexcept { delete bmP_; delete bmM_; };
+    void Draw(DC* dc, const Rect& r) const;
 
-    bmP_->LoadBitmap(ID_);
+  private:
+    void Load(DC* dc, const Rect& r) const;
+
+    const unsigned int id_{};
+    mutable CBitmap* bmP_{nullptr};  // Object bitmap - mutable to allow 'lazy' fill - also, Windows doesn't allow filling before main()
+    mutable CBitmap* bmM_{nullptr};  // Mask   bitmap 
+  };
+
+  void Bitmap::Internal::Load(DC* dc, const Rect& r) const
+  {
+    bmP_ = new CBitmap();
+    bmM_ = new CBitmap();
+
+    bmP_->LoadBitmap(id_);
     assert(bmP_->m_hObject != 0);
 
     BITMAP bm;
@@ -22,9 +35,9 @@ namespace BoardGamesMFC
     }
 
     // Create monochrome (1 bit) mask bitmap.  
-    /*auto b = */  bmM_->CreateBitmap(bm.bmWidth, bm.bmHeight, 1U, 1U, NULL);
+    bmM_->CreateBitmap(bm.bmWidth, bm.bmHeight, 1U, 1U, NULL);
 
-    CDC* const pCDC = *pDC;
+    CDC* const pCDC = *dc;
 
     // Get compatible DC for mask calculation
     CDC CDCImage;
@@ -50,10 +63,10 @@ namespace BoardGamesMFC
   }
 
 
-  void Bitmap::Draw(DC* pDC, const Rect& r) const noexcept
+  void Bitmap::Internal::Draw(DC* dc, const Rect& r) const
   {
-    CDC* const pCDC = *pDC;
-    if (bmP_->m_hObject == 0) Load(pDC, r); // lazy load
+    CDC* const pCDC = *dc;
+    if (bmP_ == nullptr) Load(dc, r); // lazy load
 
     CDC dcMemory;
     dcMemory.CreateCompatibleDC(pCDC);
@@ -64,6 +77,24 @@ namespace BoardGamesMFC
     pCDC->BitBlt(r.left_, r.top_, r.Width(), r.Height(), &dcMemory, 0, 0, SRCPAINT);
     dcMemory.SelectObject(MaskOld);
     dcMemory.DeleteDC();
+  }
+
+
+  void Bitmap::Draw(DC* dc, const Rect& r) const
+  {
+    Internal*& b = map_[id_];
+    if (b == nullptr)
+    {
+      b = new Internal(id_);
+    }
+    b->Draw(dc, r);
+
+  }
+
+  void Bitmap::Cleanup()
+  {
+    for (const auto& [id,b] : map_) if (b) delete b;
+    map_.clear();
   }
 
 }

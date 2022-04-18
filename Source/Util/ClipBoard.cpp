@@ -10,7 +10,7 @@
 namespace ClipBoard
 {
 
-  bool IsClipboardFormatText(void) { return ::IsClipboardFormatAvailable(CF_TEXT); }
+  bool IsClipboardFormatText() { return ::IsClipboardFormatAvailable(CF_TEXT); }
 
   class RaiiClipboard
   {

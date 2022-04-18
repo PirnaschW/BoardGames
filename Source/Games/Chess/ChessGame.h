@@ -16,15 +16,15 @@ namespace Chess
 
   using namespace BoardGamesCore;
 
-  class ChessPosition abstract: public MainPosition
+  class ChessBoard abstract: public Board
   {
   public:
-    ChessPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
-    virtual void SetStartingPosition() noexcept override;
-    virtual void GetAllMoves(void) const noexcept override;
+    ChessBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {};
+    virtual void SetStartingBoard() noexcept override;
+    virtual void GetAllMoves() const noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    constexpr virtual unsigned int GetMoveCountFactor(void) const noexcept override { return 20; }
-    [[ nodiscard ]] virtual PositionValue EvaluateStatically(void) const noexcept override;
+    constexpr virtual int GetMoveCountFactor() const noexcept override { return 20; }
+    [[ nodiscard ]] virtual PositionValue EvaluateStatically() const noexcept override;
 
 
     // extensions
@@ -32,31 +32,31 @@ namespace Chess
     void SetPawns(Coordinate row, const PieceColor& c) noexcept;
     void SetPiecesPSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use point symmetry
     void SetPiecesHSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use horizontal mirror symmetry
-    Side PickRandomPiece(void) const noexcept;
+    Side PickRandomPiece() const noexcept;
   };
 
   // this class has no function, but is needed as base for the variant templates
   class ChessLayout : public MainLayout
   {
   public:
-    ChessLayout(const Dimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : MainLayout(d,lt) {}
+    ChessLayout(const BoardPartDimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : MainLayout(d,lt) {}
     virtual ~ChessLayout() noexcept {}
-    virtual void Draw(DC* pDC, const MainPosition* pos, _Mode mode) const { MainLayout::Draw(pDC, pos, mode); }
+    virtual void Draw(DC* pDC, const Board* board_, Mode mode_) const { MainLayout::Draw(pDC, board_, mode_); }
   };
 
 
   class ChessGame : public Game
   {
   private:
-    ChessGame(void) = delete;
-    static MainPosition* GetNewPosition(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept;
-    static MainLayout* GetNewLayout(const VariantChosen& v, const Dimensions& d) noexcept;
+    ChessGame() = delete;
+    static Board* GetNewBoard(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept;
+    static MainLayout* GetNewLayout(const VariantChosen& v, const BoardPartDimensions& d) noexcept;
 
   public:
-    ChessGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, GetNewPosition(v, m, d), GetNewLayout(v,d)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    ChessGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, GetNewBoard(v, m, d), GetNewLayout(v,d)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

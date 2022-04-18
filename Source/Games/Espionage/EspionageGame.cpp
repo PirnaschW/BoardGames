@@ -47,7 +47,7 @@ namespace Espionage
 
   const EPiece EPiece::Volcano     { Volcano     ::TheVolcano,     PieceColor::Black, IDB_ESPIONAGEVOLCANO      };
 
-  void EKind::CollectMoves(const MainPosition& p, const Location& l, Moves& moves) const noexcept
+  void EKind::CollectMoves(const Board& p, const Location& l, Moves& moves) const noexcept
   {
     for (auto& d : Offset::RDirection)
       p.AddIfLegal(moves, l, l + d);
@@ -80,7 +80,7 @@ namespace Espionage
     return false;
   }
 
-  EspionageLayout::EspionageLayout(const Dimensions& d) noexcept : MainLayout(d, LayoutType::None)
+  EspionageLayout::EspionageLayout(const BoardPartDimensions& d) noexcept : MainLayout(d, LayoutType::None)
   {
     unsigned int z = 0;
     for (Coordinate i = 0; i < dim_.xCount_; i++)
@@ -92,7 +92,7 @@ namespace Espionage
           (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * (i + 1U)),
           (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * (j + 1U)) };
 
-        tiles_[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
+        tiles_[z] = new Tile(Location(BoardPartID::Stage, i, j), r, FC(i, j));
       }
   }
 
@@ -107,7 +107,7 @@ namespace Espionage
   }
 
 
-  void EspionagePosition::SetStartingPosition() noexcept
+  void EspionageBoard::SetStartingBoard() noexcept
   {
     std::vector<const Piece*> pp;
     for (Coordinate z = 0U; z < 5U; ++z) pp.push_back(&EPiece::UGeneral1);
@@ -125,7 +125,7 @@ namespace Espionage
       for (Coordinate j = 0; j < 3; j++)
       {
         const unsigned int z = rand() % pp.size();
-        SetPiece(Location{ BoardPart::Main,  i,j }, *(pp[z]));
+        SetPieceIndex(Location{ BoardPartID::Stage,  i,j }, *(pp[z]));
         pp.erase(pp.begin() + z);
       }
     assert(pp.size() == 0);
@@ -145,19 +145,19 @@ namespace Espionage
       for (Coordinate j = 7; j < sizeY_; j++)
       {
         const unsigned int z = rand() % pp.size();
-        SetPiece(Location{ BoardPart::Main,  i,j }, *(pp[z]));
+        SetPieceIndex(Location{ BoardPartID::Stage,  i,j }, *(pp[z]));
         pp.erase(pp.begin() + z);
       }
     assert(pp.size() == 0);
   }
 
-  bool EspionagePosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  bool EspionageBoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
-    const Piece& pf = GetPiece(fr);                                       // piece to move
+    const Piece& pf = GetPieceIndex(fr);                                       // piece to move
     if (pf == Piece::NoTile) return false;                                // out of board
     if (pf.IsBlank()) return false;                                       // tile not occupied
 
-    const Piece& pt = GetPiece(to);                                       // piece on target field
+    const Piece& pt = GetPieceIndex(to);                                       // piece on target field
     if (pt == Piece::NoTile) return false;                                // out of board
     if (pt.IsColor(pf.GetColor())) return false;                          // own piece
     
@@ -178,12 +178,12 @@ namespace Espionage
       a.push_back(std::make_shared<ActionLift>(to, pt));                  // pick opponent piece up
       if (pf.CanTake(pt))
       {
-        a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+        a.push_back(std::make_shared<ActionDrop>(GetNextFreeTakenLocation(pf.GetColor()), pt));                   // place it in Taken
         a.push_back(std::make_shared<ActionDrop>(to, pf));                  // place own piece on target
       }
       else
       {
-        a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pt.GetColor()), pf));                   // place own piece in Taken
+        a.push_back(std::make_shared<ActionDrop>(GetNextFreeTakenLocation(pt.GetColor()), pf));                   // place own piece in Taken
         a.push_back(std::make_shared<ActionDrop>(to, pt));                  // place opponent piece (back) on target
       }
     }
@@ -192,9 +192,9 @@ namespace Espionage
     return false;
   };
 
-  PositionValue EspionagePosition::EvaluateStatically(void) const noexcept
+  void EspionageBoard::EvaluateStatically() const noexcept
   {
-    return MainPosition::EvaluateStatically();
+    Board::EvaluateStatically();
     // ...
   }
 
@@ -211,7 +211,7 @@ namespace Espionage
   }
 
 
-  const VariantList& EspionageGame::GetVariants(void) noexcept
+  const VariantList& EspionageGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ "Espionage",            'E', 10, 10, 2, 20 } },
@@ -258,12 +258,12 @@ namespace Espionage
     return p;
   }
 
-  const Dimensions EspionageGame::GetDimensions(const VariantChosen& v) noexcept
+  const BoardPartDimensions EspionageGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    Dimensions d{
-       Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(15, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
-       Dimension(3 * v.x, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
+    BoardPartDimensions d{
+       BoardPartDimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       BoardPartDimension(15, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
+       BoardPartDimension(3 * v.x, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
     };
     return d;
   }

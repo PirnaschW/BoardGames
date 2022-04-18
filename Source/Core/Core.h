@@ -1,9 +1,10 @@
-#define WINDOWS_EXPORT_ALL_SYMBOLS
+//#define WINDOWS_EXPORT_ALL_SYMBOLS
 
 #include <array>
 #include <functional>
 #include <limits>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -12,27 +13,33 @@
 
 #include <assert.h>
 
-#include "Util\Util.h"
-#include "MFC\MFC.h"
+#include "Util.h"
+#include "MFC.h"
 
-#include "Core\CoreResource.h"
-#include "Core\Log.h"
-#include "Core\Using.h"
-#include "Core\Die.h"
-#include "Core\Offset.h"
-#include "Core\Location.h"
-#include "Core\Color.h"
-#include "Core\PValue.h"
-#include "Core\Action.h"
-#include "Core\Move.h"
-#include "Core\Piece.h"
-#include "Core\Position.h"
-#include "Core\Kind.h"
-#include "Core\Field.h"
-#include "Core\Player.h"
-#include "Core\UI.h"
-#include "Core\Variant.h"
-#include "Core\Layout.h"
-#include "Core\Game.h"
+#include "CoreResource.h"
+#include "Log.h"
+#include "Using.h"
+#include "Die.h"
+#include "PieceColor.h"
+#include "TileColor.h"
+#include "Offset.h"
+#include "Location.h"
+#include "PlayerType.h"
+#include "Player.h"
+#include "PValue.h"
+#include "Kind.h"
+#include "Piece.h"
+#include "PieceMap.h"
+#include "Action.h"
+#include "Move.h"
+#include "Field.h"
+#include "Mode.h"
+#include "BoardPart.h"
+#include "Board.h"
+#include "UI.h"
+#include "Variant.h"
+//#include "Layout.h"
+#include "AI.h"
+#include "Game.h"
 
-#include "Core\CorePieces.h"
+#include "CorePieces.h"

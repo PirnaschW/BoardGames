@@ -5,8 +5,8 @@
 namespace BoardGamesCore
 {
 
-  Game* GameDispatch::operator->(void) const noexcept { return p_; }
-  GameDispatch::~GameDispatch(void) { delete p_; }
+  Game* GameDispatch::operator->() const noexcept { return p_; }
+  GameDispatch::~GameDispatch() { delete p_; }
 
   bool GameDispatch::React(unsigned int command) { return p_->React(command); }
   bool GameDispatch::React(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags) { return p_->React(nChar, nRepCnt, nFlags); }
@@ -16,10 +16,10 @@ namespace BoardGamesCore
   void GameDispatch::DragTo(const Point& point) { p_->DragTo(point); }
   void GameDispatch::DragEnd(const Point& point) { p_->DragEnd(point); }
   void GameDispatch::Select(const Point& point) { p_->Select(point); }
-  void GameDispatch::Unselect(void) { p_->Unselect(); }
-  void GameDispatch::SetUpdateCallBack(std::function<void(void)> cb) { p_->SetUpdateCallBack(cb); }
+  void GameDispatch::Unselect() { p_->Unselect(); }
+  void GameDispatch::SetUpdateCallBack(std::function<void()> cb) { p_->SetUpdateCallBack(cb); }
   void GameDispatch::Serialize(Archive& ar) { p_->Serialize(ar); }
   void GameDispatch::Draw(DC* dc) { p_->Draw(dc); }
-  void GameDispatch::SetPosition(std::vector<const Piece*>& list) { p_->SetPosition(list); };
+  void GameDispatch::SetBoard(const std::vector<PieceIndex>& list) { p_->SetBoard(list); };
 
 }

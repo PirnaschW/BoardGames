@@ -14,25 +14,25 @@ namespace TicTacToe
 
   using namespace BoardGamesCore;
 
-  class TicTacToePosition : public MainPosition
+  class TicTacToeBoard : public Board
   {
   public:
-    TicTacToePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
-    virtual MainPosition* Clone(void) const noexcept override { return new TicTacToePosition(*this); }
-    virtual void SetStartingPosition() noexcept override {}
-    virtual void GetAllMoves(void) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    TicTacToeBoard(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : Board(v, p, d) {}
+    virtual Board* Clone() const noexcept override { return new TicTacToeBoard(*this); }
+    virtual void SetStartingBoard() noexcept override {}
+    virtual void GetAllMoves() const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
   };
 
 
   class TicTacToeGame : public Game
   {
   private:
-    TicTacToeGame(void) = delete;
+    TicTacToeGame() = delete;
 
   public:
-    TicTacToeGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TicTacToePosition(v, m, d), new MainLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
+    TicTacToeGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TicTacToeBoard(v, m, d)) {}
+    static const VariantList& GetVariants() noexcept;
     static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
   };

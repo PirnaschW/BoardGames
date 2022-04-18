@@ -17,9 +17,9 @@ namespace Template
   class Checker : public Kind
   {
   private:
-    constexpr Checker(void) noexcept : Kind('0') {}
+    constexpr Checker() noexcept : Kind('0') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
 
   public:
     static const Checker TheChecker;
@@ -32,7 +32,7 @@ namespace Template
     TemplatePiece(const TemplatePiece&) = delete;
     TemplatePiece& operator=(const TemplatePiece&) = delete;
   public:
-    ~TemplatePiece(void) override {}
+    ~TemplatePiece() override {}
 
   public:
     static const TemplatePiece TemplatePieceW;
@@ -40,26 +40,26 @@ namespace Template
   };
 
 
-  class TemplatePosition : public MainPosition
+  class TemplateBoard : public Board
   {
   public:
-    TemplatePosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {}
-    virtual MainPosition* Clone(void) const noexcept override { return new TemplatePosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
+    TemplateBoard(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : Board(v, p, d) {}
+    virtual Board* Clone() const noexcept override { return new TemplateBoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
-    virtual PositionValue EvaluateStatically(void) const noexcept override;
+    virtual PositionValue EvaluateStatically() const noexcept override;
   };
 
 
   class TemplateGame : public Game
   {
   private:
-    TemplateGame(void) = delete;
+    TemplateGame() = delete;
 
   public:
-    TemplateGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TemplatePosition(v, m, d), new MainLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
-    static const PieceMapP& GetPieces(void) noexcept;
+    TemplateGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new TemplateBoard(v, m, d)) {}
+    static const VariantList& GetVariants() noexcept;
+    static const PieceMapP& GetPieces() noexcept;
     static const Dimensions GetDimensions(Coordinate x, Coordinate y) noexcept;
   };
 

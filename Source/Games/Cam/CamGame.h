@@ -20,9 +20,9 @@ namespace Cam
     constexpr Pawn(const char& k = 'P') noexcept : Kind(k) {}
 
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 100; };
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
-    bool CollectJumps(const MainPosition& p, const Location& fr, const Actions& a, bool charge, const PieceColor& c, Moves& m) const noexcept;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; };
+    virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
+    bool CollectJumps(const Board& p, const Location& fr, const Actions& a, bool charge, const PieceColor& c, Moves& m) const noexcept;
 
   public:
     static const Pawn ThePawn;
@@ -31,10 +31,10 @@ namespace Cam
   class Knight : public Pawn
   {
   private:
-    constexpr Knight(void) noexcept : Pawn('N') {}
+    constexpr Knight() noexcept : Pawn('N') {}
   public:
-    virtual unsigned int GetValue(const MainPosition& /*p*/, const Location& /*l*/) const noexcept override { return 400; }
-    virtual void CollectMoves(const MainPosition&, const Location&, Moves&) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 400; }
+    virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
 
   public:
     static const Knight TheKnight;
@@ -47,7 +47,7 @@ namespace Cam
     CamPiece(const Kind& k, const PieceColor& c, unsigned int ID) noexcept : Piece(k, c, ID) {}
     CamPiece(const CamPiece&) = delete;
     CamPiece& operator=(const CamPiece&) = delete;
-    virtual unsigned int GetValue(const MainPosition& p, const Location& l) const noexcept override;
+    virtual PositionValue GetValue(const Board& p, const Location& l) const noexcept override;
 
   public:
     static const CamPiece WP;
@@ -57,13 +57,13 @@ namespace Cam
   };
 
 
-  class CamPosition : public MainPosition
+  class CamBoard : public Board
   {
   public:
-    CamPosition(const VariantChosen& v, const PieceMapP& p, const Dimensions& d) noexcept : MainPosition(v, p, d) {};
-    virtual MainPosition* Clone(void) const noexcept override { return new CamPosition(*this); }
-    virtual void SetStartingPosition() noexcept override;
-    virtual void GetAllMoves(void) const noexcept override;
+    CamBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
+    virtual Board* Clone() const noexcept override { return new CamBoard(*this); }
+    virtual void SetStartingBoard() noexcept override;
+    //virtual void GetAllMoves() const noexcept override;
 
     // extensions:
   public:
@@ -75,12 +75,12 @@ namespace Cam
   class CamGame : public Game
   {
   private:
-    CamGame(void) = delete;
+    CamGame() = delete;
   public:
-    CamGame(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept : Game(v, m, new CamPosition(v, m, d), new MainLayout(d)) {}
-    static const VariantList& GetVariants(void) noexcept;
-    static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
-    static const Dimensions GetDimensions(const VariantChosen& v) noexcept;
+    CamGame(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Game(v,new CamBoard(v, d)) {}
+    static void Register() noexcept;
+    static const VariantList& GetVariants() noexcept;
+    static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 
 }

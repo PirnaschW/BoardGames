@@ -8,7 +8,7 @@ namespace KnightF
   const KnightFPiece KnightFPiece::KnightFPieceW{ Checker::TheChecker, PieceColor::White, IDB_WCL };
   const KnightFPiece KnightFPiece::KnightFPieceB{ Checker::TheChecker, PieceColor::Black, IDB_BCL };
 
-  void KnightFPosition::SetStartingPosition() noexcept
+  void KnightFBoard::SetStartingBoard() noexcept
   {
     const Coordinate max = sizeX_ * sizeY_;
 
@@ -25,13 +25,13 @@ namespace KnightF
     assert(available.size() == 0);
   }
 
-  bool KnightFPosition::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
+  bool KnightFBoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
-    const Piece& pf = GetPiece(fr);                                       // piece to move
+    const Piece& pf = GetPieceIndex(fr);                                       // piece to move
     if (pf == Piece::NoTile) return false;                               // out of board
     if (pf.IsBlank()) return false;                                      // tile not occupied
 
-    const Piece& pt = GetPiece(to);                                       // piece on target field
+    const Piece& pt = GetPieceIndex(to);                                       // piece on target field
     if (pt == Piece::NoTile) return false;                               // out of board
 
     Actions a{};
@@ -39,21 +39,21 @@ namespace KnightF
     if (!pt.IsBlank())
     {
       a.push_back(std::make_shared<ActionLift>(to, pt));                    // pick opponent piece up
-      a.push_back(std::make_shared<ActionDrop>(GetNextTakenL(pf.GetColor()), pt));                   // place it in Taken
+      a.push_back(std::make_shared<ActionDrop>(GetNextFreeTakenLocation(pf.GetColor()), pt));                   // place it in Taken
     }
     a.push_back(std::make_shared<ActionDrop>(to, pf));                   // and place it on target
     m.push_back(std::make_shared<Move>(a));                               // add move to move list
     return false;
   };
 
-  PositionValue KnightFPosition::EvaluateStatically(void) const noexcept
+  void KnightFBoard::EvaluateStatically() const noexcept
   {
-    return MainPosition::EvaluateStatically();
+    Board::EvaluateStatically();
     // ...
   }
 
 
-  const VariantList& KnightFGame::GetVariants(void) noexcept
+  const VariantList& KnightFGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ nullptr, 'A', 10, 10 } },
@@ -70,12 +70,12 @@ namespace KnightF
     return p;
   }
 
-  const Dimensions KnightFGame::GetDimensions(const VariantChosen& v) noexcept
+  const BoardPartDimensions KnightFGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    Dimensions d{
-       Dimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(2, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
-       Dimension(1, 1, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
+    BoardPartDimensions d{
+       BoardPartDimension(v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       BoardPartDimension(2, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
+       BoardPartDimension(1, 1, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
     };
     return d;
   }

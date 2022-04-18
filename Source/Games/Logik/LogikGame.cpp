@@ -56,26 +56,26 @@ namespace Logik
   }
 
  
-  bool LogikPosition::SetFirstFreePeg(const Piece& p) noexcept
+  bool LogikBoard::SetFirstFreePeg(const Piece& p) noexcept
   {
     for (unsigned int j = 0; j < MaxTries; ++j)
       for (unsigned int i = MaxPegs; i < 2 * MaxPegs; ++i)
-        if (GetPiece(Location(BoardPart::Main, i, j)) == Piece::NoPiece)
+        if (GetPieceIndex(Location(BoardPartID::Stage, i, j)) == Piece::NoPiece)
         {
-          SetPiece(Location(BoardPart::Main, i, j), p);
+          SetPieceIndex(Location(BoardPartID::Stage, i, j), p);
           return true;
         }
     return false;
   }
 
-  bool LogikPosition::SetFirstFreeMarker(const Piece& p) noexcept
+  bool LogikBoard::SetFirstFreeMarker(const Piece& p) noexcept
   {
     // define and execute a Lambda to find the Marker target row (= the last row containing any Pegs)
     unsigned char row = [this]() -> unsigned char
     {
       for (unsigned char j = 0, z = MaxTries - 1; j < MaxTries-1; ++j, --z)              // start with last row, check backwards
         for (unsigned char i = MaxPegs; i < 2 * MaxPegs; ++i)
-          if (GetPiece(Location(BoardPart::Main, i, z)) != Piece::NoPiece) return z;     // if any Peg found, that's the target row
+          if (GetPieceIndex(Location(BoardPartID::Stage, i, z)) != Piece::NoPiece) return z;     // if any Peg found, that's the target row
       return 0U;                                                                         // if no Pegs were found at all, the first row is the target
     } ();
 
@@ -84,10 +84,10 @@ namespace Logik
     {
       for (unsigned char i = 0; i < MaxPegs; ++i)                         // check all Marker slots in the given row
       {
-        const Location l{ BoardPart::Main, i, j };
-        if (GetPiece(l) == Piece::NoPiece)                               // found a free slot, set the Marker
+        const Location l{ BoardPartID::Stage, i, j };
+        if (GetPieceIndex(l) == Piece::NoPiece)                               // found a free slot, set the Marker
         {
-          SetPiece(l, p);
+          SetPieceIndex(l, p);
           return true;
         }
       }
@@ -99,7 +99,7 @@ namespace Logik
     return false;                                                         // no good slot found
   }
 
-  void LogikPosition::ReadPosition(void) noexcept
+  void LogikBoard::ReadBoard() noexcept
   {
     prevc_ = 0;                                                           // number of moves already made
     for (unsigned int k = 0; k < MaxTries; ++k)
@@ -107,7 +107,7 @@ namespace Logik
       PlayCfg peg{};
       for (unsigned int i = 0; i < MaxPegs; ++i)
       {
-        const Piece& p = GetPiece(Location(BoardPart::Main, MaxPegs + i, k));
+        const Piece& p = GetPieceIndex(Location(BoardPartID::Stage, MaxPegs + i, k));
         if (p.IsKind(Peg<'1'>::ThePeg)) peg[i] = 0;
         else if (p.IsKind(Peg<'2'>::ThePeg)) peg[i] = 1;
         else if (p.IsKind(Peg<'3'>::ThePeg)) peg[i] = 2;
@@ -124,7 +124,7 @@ namespace Logik
       MarkerCount w{};
       for (unsigned char i = 0; i < MaxPegs; ++i)
       {
-        const Piece& p = GetPiece(Location(BoardPart::Main, i, k));
+        const Piece& p = GetPieceIndex(Location(BoardPartID::Stage, i, k));
         if (p.IsKind(Peg<'B'>::ThePeg)) b++;
         if (p.IsKind(Peg<'W'>::ThePeg)) w++;
       }
@@ -135,7 +135,7 @@ namespace Logik
   }
 
 
-  PlayCode LogikPosition::GetBestMove(unsigned int nThreads) const        // Evaluate best next move
+  PlayCode LogikBoard::GetBestMove(unsigned int nThreads) const        // EvaluateAB best next move
   {
     auto f = [this](PlayCode min, PlayCode max_)
     {
@@ -164,7 +164,7 @@ namespace Logik
     return bestI[rand() % bestI.size()];                                  // randomly pick one of the equally good tries
   }
 
-  unsigned int LogikPosition::EvaluatePlay(const PlayCode& c) const noexcept
+  unsigned int LogikBoard::EvaluatePlay(const PlayCode& c) const noexcept
   {
     for (unsigned int k = 0; k < prevc_; ++k)                             // compare play to all previous plays_
     {                                                                     
@@ -199,7 +199,7 @@ namespace Logik
     return lmax;
   }
 
-  void LogikPosition::CollectBestPlays(const PlayCode& c, unsigned int lmax) const noexcept
+  void LogikBoard::CollectBestPlays(const PlayCode& c, unsigned int lmax) const noexcept
   {
     mx->lock();                                                            // lock the mutex
     if (lmax < gmin)                                                      // did we find a better move?
@@ -216,18 +216,18 @@ namespace Logik
   }
 
 
-  void LogikPosition::Execute(const PlayCode& c)
+  void LogikBoard::Execute(const PlayCode& c)
   {
     previ_[prevc_] = c;
     for (unsigned int i = 0; i < MaxPegs; ++i)
     {
-      SetPiece(Location(BoardPart::Main, MaxPegs + i, prevc_), LogikPiece::GetPiece(plays_[c][i]));
+      SetPieceIndex(Location(BoardPartID::Stage, MaxPegs + i, prevc_), LogikPiece::GetPieceIndex(plays_[c][i]));
     }
     prevc_++;
   }
 
 
-  LogikLayout::LogikLayout(const Dimensions& d) noexcept : MainLayout(d, LayoutType::None)
+  LogikLayout::LogikLayout(const BoardPartDimensions& d) noexcept : MainLayout(d, LayoutType::None)
   {
     unsigned int z = 0;
     for (Coordinate i = 0; i < d[0].xCount_; i++)
@@ -241,14 +241,14 @@ namespace Logik
           (int)(dim_.lEdge_ + dim_.xSkip_ * i + dim_.xDim_ * (i + 1U) + dx),
           (int)(dim_.tEdge_ + dim_.ySkip_ * j + dim_.yDim_ * (j + 1U))
         };
-        tiles_[z] = new Tile(Location(BoardPart::Main, i, j), r, FC(i, j));
+        tiles_[z] = new Tile(Location(BoardPartID::Stage, i, j), r, FC(i, j));
       }
     }
   }
 
-  void LogikLayout::Draw(DC* dc, const MainPosition* pos, _Mode mode) const
+  void LogikLayout::Draw(DC* dc, const Board* board_, Mode mode_) const
   {
-    MainLayout::Draw(dc, pos, mode);       // let the (generic) parent draw the board itself
+    MainLayout::Draw(dc, board_, mode_);       // let the (generic) parent draw the board itself
 
     // frame around the complete board (corrected, as Layout:: wouldn't know about extra pixels)
     for (unsigned int z = 4; z > 0; z--)
@@ -281,7 +281,7 @@ namespace Logik
 
   bool LogikGame::React(unsigned int nChar, unsigned int, unsigned int)  // react to keyboard input (not menu shortcuts, but typing)
   {
-    LogikPosition* const lpos = dynamic_cast<LogikPosition*>(pos);
+    LogikBoard* const lpos = dynamic_cast<LogikBoard*>(board_);
     assert(lpos != nullptr);
 
     SetCurrentPlayer(1);
@@ -299,7 +299,7 @@ namespace Logik
         if (nChar > '0' + MaxColors) return false;
         {
           const unsigned int c = nChar - '1';
-          return lpos->SetFirstFreePeg(LogikPiece::GetPiece(c));
+          return lpos->SetFirstFreePeg(LogikPiece::GetPieceIndex(c));
         }
       case 'B':
       case 'b':
@@ -314,13 +314,13 @@ namespace Logik
     return false;
   }
 
-  bool LogikGame::AIMove(void)
+  bool LogikGame::AIMove()
   {
-    LogikPosition* lpos = dynamic_cast<LogikPosition*>(pos);
+    LogikBoard* lpos = dynamic_cast<LogikBoard*>(board_);
     assert(lpos != nullptr);
 
     // read all user input from screen (this allows to set up or modify existing moves and responses)
-    lpos->ReadPosition();
+    lpos->ReadBoard();
 
     PlayCode e{};
     try { e = lpos->GetBestMove(); }
@@ -334,7 +334,7 @@ namespace Logik
     return true;
   }
 
-  const VariantList& LogikGame::GetVariants(void) noexcept
+  const VariantList& LogikGame::GetVariants() noexcept
   {
     static VariantList v{
       { Variant{ "8 Colors", '8', 5, 7, 2, 8, 2, 16 } },
@@ -344,12 +344,12 @@ namespace Logik
     return v;
   }
 
-  const Dimensions LogikGame::GetDimensions(const VariantChosen& v) noexcept
+  const BoardPartDimensions LogikGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    Dimensions d{
-       Dimension(4 * v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       Dimension(6, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
-       Dimension(v.x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * v.y - v.x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * MaxTries + 1) / 2, FieldSizeX, FieldSizeY),
+    BoardPartDimensions d{
+       BoardPartDimension(4 * v.x, v.y, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
+       BoardPartDimension(6, 2, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
+       BoardPartDimension(v.x + 3, 1U, BoardStartX + FieldSizeX * (4 + 3 + 5 * v.y - v.x) / 2 + BoardFrameX, BoardStartY + FieldSizeY * (2 * MaxTries + 1) / 2, FieldSizeX, FieldSizeY),
     };
     return d;
   }

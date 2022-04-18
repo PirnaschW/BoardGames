@@ -9,8 +9,8 @@ namespace BoardGamesCore
   {
   public:
     GameDispatch(const VariantChosen& v) : p_{ CreateGame(v) } {}
-    ~GameDispatch(void);  // needed to allow unique_ptr to delete the object; default destructor is fine but must be in cpp
-    Game* operator->(void) const noexcept;
+    ~GameDispatch();  // needed to allow unique_ptr to delete the object; default destructor is fine but must be in cpp
+    Game* operator->() const noexcept;
 
     void Draw(DC* dc);
     bool React(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags);
@@ -21,10 +21,10 @@ namespace BoardGamesCore
     void DragTo(const Point& point);
     void DragEnd(const Point&);
     void Select(const Point& point);
-    void Unselect(void);
-    void SetUpdateCallBack(std::function<void(void)> cb);
+    void Unselect();
+    void SetUpdateCallBack(std::function<void()> cb);
     void Serialize(Archive& ar);
-    void SetPosition(std::vector<const Piece*>& list);
+    void SetBoard(const std::vector<PieceIndex>& list);
 
   private:
     Game* p_;

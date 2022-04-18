@@ -255,16 +255,7 @@
     <ClInclude Include="..\Source\Core\CorePieces.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\Color.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Core\Core.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Core\Die.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Core\Field.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\Game.h">
@@ -282,28 +273,19 @@
     <ClInclude Include="..\Source\Core\Log.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\Move.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Core\Offset.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Core\Piece.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\Player.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\Position.h">
+    <ClInclude Include="..\Source\Core\Board.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\PValue.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\CoreResource.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Core\Register.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\UI.h">
@@ -471,6 +453,39 @@
     <ClInclude Include="..\Source\Util\Util.h">
       <Filter>Util\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Core\BoardPart.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\AI.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Mode.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Core.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Field.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Move.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Piece.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\TileColor.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\PieceColor.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\PieceMap.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\PlayerType.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\App\BG.cpp">
@@ -503,49 +518,19 @@
     <ClCompile Include="..\Source\Core\CorePieces.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\Color.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Core\Core.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Die.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Game.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\Kind.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Core\Layout.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Location.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Log.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\Move.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Offset.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Piece.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Player.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Position.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Register.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Core\Variant.cpp">
+    <ClCompile Include="..\Source\Core\Board.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Games\Ataxx\AtaxxGame.cpp">
@@ -646,6 +631,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Util\Util.cpp">
       <Filter>Util\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\BoardPart.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1182,9 +1170,6 @@
     <None Include="..\Source\App\res\BG.reg">
       <Filter>App\Resource Files</Filter>
     </None>
-    <None Include="..\Source\Core\Core.rc2">
-      <Filter>Core\Header Files</Filter>
-    </None>
     <None Include="..\Source\Games\Ataxx\Ataxx.rc2">
       <Filter>Games\Game Ataxx\Source Files</Filter>
     </None>
@@ -1229,6 +1214,9 @@
     </None>
     <None Include="..\Source\App\BG.rc2">
       <Filter>App\Resource Files</Filter>
+    </None>
+    <None Include="..\Source\Core\Core.rc2">
+      <Filter>Core\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

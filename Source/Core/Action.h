@@ -1,78 +1,99 @@
 
 namespace BoardGamesCore
 {
-  class Location;
-  class Piece;
-  class MainPosition;
+  class Board;
 
   class Action abstract  // define one atomic action of a Move
   {
   private:
-    Action(void) = delete; // disable blank constructor
+    constexpr Action() = delete; // disable blank constructor
   protected:
-    Action(const Location l, const Piece& p) noexcept;
+    constexpr Action(const Location l, PieceIndex pI) noexcept : l_{ l }, pI_{ pI } {}
+    constexpr virtual ~Action() noexcept = default; // virtual destructor, as class is a base class
   public:
-    virtual ~Action(void) noexcept = default; // virtual destructor, as class is a base class
-    Action(const Action&) = default;                   // copy constructor
-    Action& operator=(const Action&) = default;        // copy assignment
-    Action(Action&&) = default;                        // move constructor
-    Action& operator=(Action&&) = default;             // move assignment
+    constexpr Action(const Action&) = default;                   // copy constructor
+    constexpr Action& operator=(const Action&) = delete;         // copy assignment
+    constexpr Action(Action&&) = default;                        // move constructor
+    constexpr Action& operator=(Action&&) = delete;              // move assignment
 
-    bool operator == (const Action& a) const noexcept;
-    bool operator != (const Action& a) const noexcept;
+    constexpr bool operator == (const Action& a) const noexcept { return l_ == a.l_ && pI_ == a.pI_; };
+    constexpr bool operator != (const Action& a) const noexcept { return !(*this == a); }
 
-    const Location& GetLocation(void) const noexcept;
-    const Piece& GetPiece(void) const noexcept;
-    virtual bool IsJump(void) const noexcept;
-    virtual void Execute(MainPosition* p) const noexcept = 0;
+    constexpr const Location& GetLocation() const noexcept { return l_; }
+    constexpr PieceIndex GetPieceIndex() const noexcept { return pI_; }
+
+    constexpr virtual bool IsJump() const noexcept { return false; }
+    constexpr virtual void Execute(Board* p) const noexcept = 0;
 
   protected:
     const Location l_;
-    const Piece& p_;
+    const PieceIndex pI_;
   };
-  using ActionP = std::shared_ptr<Action>;
-
-  class Actions : public std::vector<ActionP>
-  {
-  public:
-    bool IsRepeat(const Location& l, const Offset& o) const noexcept;   // is there already a jump over l (in direction o)?
-    bool HasJump(void) const noexcept;
-    bool operator == (const Actions& a) const noexcept;
-    bool operator != (const Actions& a) const noexcept { return !(*this == a); }
-#ifdef LOG
-  public:
-    void Log(void) const;
-#endif // LOG
-  };
-
 
   class ActionLift : public Action  // Lift-Action: Lift up one piece from the board (into 'hand')
   {
   public:
-    ActionLift(const Location l, const Piece& p) noexcept;
-    virtual void Execute(MainPosition* p) const noexcept override;
+    constexpr ActionLift(const Location l, PieceIndex pI) noexcept : Action(l, pI) {}
+    constexpr ~ActionLift() = default;
+    virtual void Execute(Board* p) const noexcept override;
   };
 
   class ActionJump : public Action  // Jump-Action: Jump over one piece on the board
   {
   public:
-    ActionJump(const Location l, const Piece& p) noexcept;
-    virtual bool IsJump(void) const noexcept override { return true; }
-    virtual void Execute(MainPosition* p) const noexcept override;
+    constexpr ActionJump(const Location l, PieceIndex pI) noexcept : Action(l, pI) {}
+    constexpr ~ActionJump() = default;
+    virtual bool IsJump() const noexcept override { return true; }
+    virtual void Execute(Board* p) const noexcept override;
   };
 
   class ActionDrop : public Action  // Drop-Action: Drop one piece on the board (from 'hand')
   {
   public:
-    ActionDrop(const Location l, const Piece& p) noexcept;
-    virtual void Execute(MainPosition* p) const noexcept override;
+    constexpr ActionDrop(const Location l, PieceIndex pI) noexcept : Action(l, pI) {}
+    constexpr ~ActionDrop() = default;
+
+    virtual void Execute(Board* p) const noexcept override;
   };
 
   class ActionEliminate : public Action  // Eliminate-Action: remove a tile from the board
   {
   public:
-    ActionEliminate(const Location l, const Piece& p) noexcept;
-    virtual void Execute(MainPosition* p) const noexcept override;
+    constexpr ActionEliminate(const Location l, PieceIndex pI) noexcept : Action(l, pI) {}
+    constexpr ~ActionEliminate() = default;
+    virtual void Execute(Board* p) const noexcept override;
   };
+
+
+  static_assert(ActionEliminate(Location(BoardPartID::Stage,1,2),3).GetLocation() == Location(BoardPartID::Stage,1,2), "Action is not constexpr");
+  static_assert(ActionDrop(Location(BoardPartID::Stage,1,2),3).GetPieceIndex() == 3, "Action is not constexpr");
+
+
+  class Actions : public std::vector<std::shared_ptr<Action>>
+  {
+  public:
+    constexpr Actions() = default;
+    constexpr ~Actions() = default;
+    constexpr bool operator == (const Actions& a) const noexcept {
+      if (size() != a.size()) return false;
+      for (auto i = 0U; i < a.size(); ++i) if (*(*this)[i] != *a[i]) return false;
+      return true;
+    }
+    constexpr bool operator != (const Actions& a) const noexcept { return !(*this == a); }
+
+    bool IsRepeat(const Location& l, const Offset& o) const noexcept;   // is there already a jump over l (in direction o)?
+    constexpr bool HasJump() const noexcept
+    {
+      auto AhasJump = [](const auto& a) -> bool { return a->IsJump(); };
+      return std::find_if(this->cbegin(), this->cend(), AhasJump) != this->cend();
+    }
+
+#ifdef LOG
+  public:
+    void Log() const;
+#endif // LOG
+  };
+
+  static_assert(Actions().size()==0, "Actions is not constexpr");
 
 }
