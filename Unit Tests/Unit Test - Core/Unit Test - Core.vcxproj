@@ -127,7 +127,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;Game.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -157,7 +157,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;Game.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -182,7 +182,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;Game.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -212,7 +212,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;CorePieces.obj;Game.obj;Games.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
+      <AdditionalDependencies>Action.obj;AI.obj;Board.obj;BoardPart.obj;Clipboard.obj;Core.obj;Game.obj;Log.obj;MFC-Archive.obj;MFC-Bitmap.obj;MFC-CmdUI.obj;MFC-Constants.obj;MFC-DC.obj;MFC-Message.obj;MFC-Win.obj;Util.obj</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\BoardGame;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

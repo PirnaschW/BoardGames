@@ -115,8 +115,8 @@ namespace Ataxx
     PMap.Register(AtaxxPiece::AtaxxPieceW);
     PMap.Register(AtaxxPiece::AtaxxPieceB);
 
-    Variants.Register(Variant(IDR_GAMETYPE_ATAXX, "Ataxx",        Ataxx::Ataxx,        8, 8, 2, 20));
-    Variants.Register(Variant(IDR_GAMETYPE_ATAXX, "Assimilation", Ataxx::Assimilation, 8, 8, 2, 20));
+    Variants.Register(Variant(0, IDR_GAMETYPE_ATAXX, "Ataxx",        Ataxx::Ataxx,        8, 8, 2, 20));
+    Variants.Register(Variant(0, IDR_GAMETYPE_ATAXX, "Assimilation", Ataxx::Assimilation, 8, 8, 2, 20));
   }
 
   const BoardPartDimensions AtaxxGame::GetDimensions(const VariantChosen& v) noexcept

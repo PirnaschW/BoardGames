@@ -515,9 +515,6 @@
     <ClCompile Include="..\Source\Core\AI.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\CorePieces.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Core\Core.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>

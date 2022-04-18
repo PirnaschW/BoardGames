@@ -254,7 +254,6 @@ namespace UnitTestCore
 
   TEST_CLASS(_PValue)
   {
-  public:
     TEST_METHOD(_OperatorEqual)
     {
       PositionValue p0(PositionValue::PValueType::Undefined);
@@ -369,6 +368,29 @@ namespace UnitTestCore
       Assert::IsFalse(p3 > pw);
       Assert::IsFalse(pt > pw);
       Assert::IsFalse(pw > pw);
+    }
+
+    TEST_METHOD(_OperatorMultiply)
+    {
+      PositionValue p0(PositionValue::PValueType::Undefined);
+      PositionValue p1(45);
+      PositionValue p2(56);
+      PositionValue p3(-67);
+      PositionValue p4(-67);
+
+      PValueBaseType f1 = 3;
+      Assert::IsTrue(p0 * f1 == PositionValue::PValueType::Undefined);
+      Assert::IsTrue(p1 * f1 == PositionValue{ f1 * 45 });
+      Assert::IsTrue(p2 * f1 == PositionValue{ f1 * 56 });
+      Assert::IsTrue(p3 * f1 == PositionValue{ f1 * -67 });
+
+      PValueBaseType f2 = -5;
+      Assert::IsTrue(p0 * f2 == PositionValue::PValueType::Undefined);
+      Assert::IsTrue(p1 * f2 == PositionValue{ f2 * 45 });
+      Assert::IsTrue(p2 * f2 == PositionValue{ f2 * 56 });
+      Assert::IsTrue(p3 * f2 == PositionValue{ f2 * -67 });
+      Assert::IsTrue(p4 * f1 * f2 == p3 * (f1 * f2));
+      Assert::IsTrue(p4 * f1 * f2 == p3 * f2 * f1);
     }
 
     TEST_METHOD(_IsRelative)
@@ -1939,6 +1961,88 @@ namespace UnitTestCore
       Assert::IsTrue(b.TestEvaluateChainLengths(4) == PositionValue(48));  // 4 directions * (10 + 2)
       b.SetPieceIndex(pWC, 2, 1);
       Assert::IsTrue(b.TestEvaluateChainLengths(4) == PositionValue(192));  // 6 directions * (10 + 2) + 1 directions * (100 + 20)
+    }
+
+  };
+
+  TEST_CLASS(_Variant)
+  {
+    TEST_METHOD(_constructor)
+    {
+      static_assert(!std::is_trivially_constructible<class Variant>::value, "must not be trivially constructible");
+      Variant v1(0, 1, "SomeGame", '\0', 8, 8, 2, 20);
+      Assert::IsTrue(v1.vName_ == std::string("SomeGame"));
+
+      std::string g = std::string{ "SomeGame" };
+      Variant v2(0, 1, g, '\0', 8, 8, 2, 20);
+      Assert::IsTrue(v2.vName_ == std::string("SomeGame"));
+      Assert::IsTrue(g == std::string("SomeGame"));
+    }
+  };
+
+  TEST_CLASS(_Vars)
+  {
+    TEST_METHOD(_Register)
+    {
+      Vars v;
+      v.Register(Variant(0, 1, "SomeGame1", '\0', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '\0', 8, 8, 2, 20));
+      v.Register(Variant(0, 1, "SomeGame1", '\0', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '\0', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '\0', 8, 8, 2, 20));
+      v.Register(Variant(0, 1, "SomeGame1", '\0', 8, 8, 2, 20));
+      Assert::IsTrue(v.size() == 6);
+    }
+    TEST_METHOD(_GetGameIDList)
+    {
+      Vars v;
+      v.Register(Variant(0, 1, "SomeGame1", '1', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '2', 8, 8, 2, 20));
+      v.Register(Variant(0, 1, "SomeGame1", '3', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '4', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '5', 8, 8, 2, 20));
+      v.Register(Variant(0, 1, "SomeGame1", '6', 8, 8, 2, 20));
+
+      auto g = v.GetGameIDList();
+      static_assert(std::is_same<decltype(g),std::vector<GameID>>::value);
+      Assert::IsTrue(g.size() == 2);
+      Assert::IsTrue((g[0] == 1 && g[1] == 2) || (g[0] == 2 && g[1] == 1));
+      Assert::IsTrue(v.size() == 6);
+    }
+    TEST_METHOD(_GetVariantList)
+    {
+      Vars v;
+      v.Register(Variant(0, 1, "SomeGame1", '\x01', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '\x02', 8, 8, 2, 20));
+      v.Register(Variant(0, 1, "SomeGame1", '\x04', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '\x08', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '\x10', 8, 8, 2, 20));
+      v.Register(Variant(0, 1, "SomeGame1", '\x20', 8, 8, 2, 20));
+
+      auto l = v.GetVariantList(2);
+      Assert::IsTrue(v.size() == 6);
+      static_assert(std::is_same<decltype(l), VariantList>::value);
+      Assert::IsTrue(l.size() == 3);
+
+      // can't sort l (it is not assignable), so we need to check for any possible random sequence
+      auto is2or8or10 = [](const VariantCode& v) -> bool {return v == '\x02' || v == '\x08' || v == '\x10'; };
+      Assert::IsTrue(is2or8or10(l[0].vCode_));
+      Assert::IsTrue(is2or8or10(l[1].vCode_));
+      Assert::IsTrue(is2or8or10(l[2].vCode_));  // each one is valid by itself, 
+      Assert::IsTrue(l[0].vCode_ + l[1].vCode_ + l[2].vCode_ == '\x1a'); // and no other three would add to \x1a
+    }
+  };
+
+  TEST_CLASS(_Game)
+  {
+    TEST_METHOD(_TODO)
+    {
+
+      Assert::IsTrue(true);
+    }
+    TEST_METHOD(_more)
+    {
+      Assert::Fail();
     }
 
   };

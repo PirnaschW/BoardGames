@@ -277,8 +277,8 @@ namespace Cam
     PMap.Register(CamPiece::WP);
     PMap.Register(CamPiece::BP);
 
-    Variants.Register(Variant(IDR_GAMETYPE_CAMELOT, "Camelot", 'F', 12, 16 ));
-    Variants.Register(Variant(IDR_GAMETYPE_CAMELOT, "Cam",     'M',  7, 13 ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CAMELOT, "Camelot", 'F', 12, 16 ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CAMELOT, "Cam",     'M',  7, 13 ));
   }
 
   const BoardPartDimensions CamGame::GetDimensions(const VariantChosen& v) noexcept

@@ -67,7 +67,7 @@ namespace BoardGamesCore
     constexpr PositionValue& operator-= (PValueBaseType z) noexcept { value_ -= z; return *this; }
     constexpr PositionValue& operator++ () noexcept { value_++; return *this; }
     constexpr PositionValue& operator-- () noexcept { value_--; return *this; }
-    [[TODO::Unittest]] constexpr PositionValue operator* (PValueBaseType f) const noexcept { return PositionValue{ value_ * f }; }
+    constexpr PositionValue operator* (PValueBaseType f) const noexcept { return type_ == PValueType::Undefined ? *this : PositionValue{ value_ * f }; }
     constexpr PositionValue Relative(bool w) const noexcept { return (w ? *this : -*this); }
     constexpr bool IsDecided() const noexcept { return type_ == PValueType::Lost || type_ == PValueType::Won; }
 
