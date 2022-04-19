@@ -8,7 +8,7 @@ using namespace BoardGamesMFC;
 namespace BoardGamesCore
 {
 
-  Game::Game(const VariantChosen& v, Board* b) noexcept : v_{ v }, board_{ b }
+  Game::Game(const VariantChosen& v, Board* b) noexcept : v_{ v }, board_{ ai_.Remember(b) }
   {
     AddPlayer(new Player(PlayerType::Human, PieceColor::White));
     AddPlayer(new Player(PlayerType::Computer, PieceColor::Black));

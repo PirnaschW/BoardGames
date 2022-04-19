@@ -5,3 +5,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "Core.h"
 using namespace BoardGamesCore;
+
+#include "MemoryLeaks.h"
+

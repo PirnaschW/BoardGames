@@ -217,6 +217,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Core\MemoryLeaks.h" />
     <ClInclude Include="..\Source\Core\Unit Test - Core.h" />
   </ItemGroup>
   <ItemGroup>

@@ -49,7 +49,7 @@ namespace Microsoft
 
 namespace UnitTestCore
 {
-  TEST_MODULE_INITIALIZE(TestCore)
+  TEST_MODULE_INITIALIZE(TestCoreInitialize)
   {
     PMap.Register(Piece::NoPiece);
     PMap.Register(Piece::NoTile);
@@ -59,8 +59,7 @@ namespace UnitTestCore
 
   TEST_CLASS(_PieceColor)
   {
-  public:
-    std::stringstream s;
+    std::stringstream s{ "" };
     // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
@@ -72,6 +71,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       static_assert(PieceColor::Void == PieceColor::Void, "PieceColor singletons are not constexpr");
 
       Assert::IsFalse(&PieceColor::Void == nullptr);
@@ -94,6 +95,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorBitwiseInvert)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(~PieceColor::White == PieceColor::Black);
       Assert::IsTrue(PieceColor::White == ~PieceColor::Black);
       Assert::IsTrue(PieceColor::Black.operator~() == PieceColor::White);
@@ -103,6 +106,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsPlayable)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue (PieceColor::White  .IsPlayable());
       Assert::IsTrue (PieceColor::Black  .IsPlayable());
       Assert::IsFalse(PieceColor::NoColor.IsPlayable());
@@ -111,11 +116,16 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetHash)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(PieceColor::Void.GetHash() == std::hash<char>()('X'));
       Assert::IsTrue(PieceColor::Black.GetHash() == std::hash<char>()('B'));
     }
+
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(TrySerialize([this]() { PieceColor::Black.Serialize(s); }) == "B");
       Assert::IsTrue(TrySerialize([this]() { PieceColor::White.Serialize(s); }) == "W");
       Assert::IsTrue(TrySerialize([this]() { PieceColor::Void.Serialize(s); }) == "X");
@@ -125,8 +135,7 @@ namespace UnitTestCore
 
   TEST_CLASS(_TileColor)
   {
-  public:
-    std::stringstream s;
+    std::stringstream s{ "" };
     // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
@@ -138,6 +147,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsFalse(&TileColor::Light == nullptr);
 
       Assert::IsFalse(&TileColor::Light == &TileColor::Dark);
@@ -154,6 +165,8 @@ namespace UnitTestCore
     }
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(TrySerialize([this]() { TileColor::Light.Serialize(s); }) == "L");
       Assert::IsTrue(TrySerialize([this]() { TileColor::Dark.Serialize(s); }) == "D");
       Assert::IsTrue(TrySerialize([this]() { TileColor::Small.Serialize(s); }) == "l");
@@ -162,9 +175,10 @@ namespace UnitTestCore
 
   TEST_CLASS(_Offset)
   {
-  public:
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       Offset o1{ 3, 5 };
       Offset o2 = o1 * 3;
       Offset o3{ 9, 15 };
@@ -179,6 +193,8 @@ namespace UnitTestCore
     }
     TEST_METHOD(_Rotate)
     {
+      CheckForMemoryLeaks check;
+
       Offset o1{ 3, 5 };
       Offset o2 = o1 * 3;
       Offset o3{ 9, 15 };
@@ -191,6 +207,8 @@ namespace UnitTestCore
     }
     TEST_METHOD(_IsParallel)
     {
+      CheckForMemoryLeaks check;
+
       Offset o1{ 3, 5 };
       Offset o2 = o1 * 3;
       Offset o3{ 9, 15 };
@@ -212,9 +230,10 @@ namespace UnitTestCore
 
   TEST_CLASS(_Location)
   {
-  public:
     TEST_METHOD(OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       Location l1(BoardPartID::Stage, 2U, 3U);
       Assert::IsTrue(l1 == l1);
       Assert::IsFalse(l1 != l1);
@@ -232,6 +251,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorPlus)
     {
+      CheckForMemoryLeaks check;
+
       Offset o1{ 3, 5 };
       Offset o2 = o1 * 3;
       Location l1(BoardPartID::Stage, 2U, 3U);
@@ -256,6 +277,8 @@ namespace UnitTestCore
   {
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       PositionValue p0(PositionValue::PValueType::Undefined);
       PositionValue p1(45);
       PositionValue p2(56);
@@ -288,6 +311,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorComparison)
     {
+      CheckForMemoryLeaks check;
+
       PositionValue p0(PositionValue::PValueType::Undefined);
       PositionValue p1(45);
       PositionValue p2(56);
@@ -325,6 +350,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorComparisonNonNumeric)
     {
+      CheckForMemoryLeaks check;
+
       PositionValue p0(PositionValue::PValueType::Undefined);
       PositionValue p1(45);
       PositionValue p2(56);
@@ -372,6 +399,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorMultiply)
     {
+      CheckForMemoryLeaks check;
+
       PositionValue p0(PositionValue::PValueType::Undefined);
       PositionValue p1(45);
       PositionValue p2(56);
@@ -395,6 +424,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsRelative)
     {
+      CheckForMemoryLeaks check;
+
       PositionValue p0(PositionValue::PValueType::Undefined);
       PositionValue p1(45);
       PositionValue p2(56);
@@ -426,6 +457,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsDecided)
     {
+      CheckForMemoryLeaks check;
+
       PositionValue p0(PositionValue::PValueType::Undefined);
       PositionValue p1(45);
       PositionValue p2(56);
@@ -449,7 +482,7 @@ namespace UnitTestCore
 
   TEST_CLASS(_Kind)
   {
-    std::stringstream s;
+    std::stringstream s{ "" };
     // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
@@ -461,19 +494,23 @@ namespace UnitTestCore
 
     TEST_METHOD(_NoKind)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsFalse(&noKind::NoKind == nullptr);
       static_assert(noKind::NoKind == noKind::NoKind, "Kinds can't be constexpr");
     }
 
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(TrySerialize([this]() { noKind::NoKind.Serialize(s); }) == "X");  // testing serialization
     }
   };
 
   TEST_CLASS(_Piece)
   {
-    std::stringstream s;
+    std::stringstream s{ "" };
     // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
@@ -485,23 +522,30 @@ namespace UnitTestCore
 
     TEST_METHOD(_Singletons)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsFalse(&Piece::NoTile == nullptr);    // verify NoTile exists
       Assert::IsFalse(&Piece::NoPiece == nullptr);   // verify NoPiece exists
     }
 
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(TrySerialize([this]() { Piece::NoTile.Serialize(s); }) == "XX");
       Assert::IsTrue(TrySerialize([this]() { Piece::NoPiece.Serialize(s); }) == "X ");
     }
 
     TEST_METHOD(_Draw)
     {
+      CheckForMemoryLeaks check;
       // can't really test draw...
     }
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(&Piece::NoTile == &Piece::NoTile);
       Assert::IsFalse(&Piece::NoTile == &Piece::NoPiece);
       Assert::IsTrue(&Piece::NoTile != &Piece::NoPiece);
@@ -511,12 +555,16 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsKind)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(Piece::NoTile.IsKind(noKind::NoKind));
       Assert::IsTrue(Piece::NoPiece.IsKind(noKind::NoKind));
     }
 
     TEST_METHOD(_IsColor)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(Piece::NoTile.IsColor(PieceColor::Void));
       Assert::IsTrue(Piece::NoPiece.IsColor(PieceColor::NoColor));
       Assert::IsTrue(Piece::NoPiece.IsColor(Piece::NoPiece));
@@ -525,18 +573,24 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsBlank)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(Piece::NoPiece.IsBlank());
       Assert::IsFalse(Piece::NoTile.IsBlank());
     }
 
     TEST_METHOD(_GetHash)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsFalse(Piece::NoTile.GetHash() == 0);
       Assert::IsFalse(Piece::NoTile.GetHash() == Piece::NoPiece.GetHash());
     }
 
     TEST_METHOD(_CollectMoves)
     {
+      CheckForMemoryLeaks check;
+
       Location l(BoardPartID::Stage, 2U, 3U);
       Board* p{};
       Moves m{};
@@ -546,6 +600,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetValue)
     {
+      CheckForMemoryLeaks check;
+
       Location l(BoardPartID::Stage, 2U, 3U);
       Board* p{};
       Assert::IsTrue(Piece::NoTile.GetValue(*p, l) == PositionValue(0));
@@ -554,12 +610,16 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsPromotable)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsFalse(Piece::NoTile.IsPromotable());
       Assert::IsFalse(Piece::NoPiece.IsPromotable());
     }
 
     TEST_METHOD(_Promote)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(Piece::NoTile.Promote(true) == Piece::NoTile);
       Assert::IsTrue(Piece::NoPiece.Promote(true) == Piece::NoPiece);
       Assert::IsTrue(Piece::NoTile.Promote(false) == Piece::NoTile);
@@ -571,6 +631,8 @@ namespace UnitTestCore
   {
     TEST_METHOD(_Register)
     {
+      CheckForMemoryLeaks check;
+
       PieceMap PMap{};
       Assert::IsTrue(PMap.size() == 1);   // map comes with 'invalid' already in it
       PieceIndex pNP = PMap.Register(Piece::NoPiece);
@@ -584,6 +646,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorAt)
     {
+      CheckForMemoryLeaks check;
+
       PieceMap PMap{};
       PieceIndex pNP = PMap.Register(Piece::NoPiece);
       PieceIndex pNT = PMap.Register(Piece::NoTile);
@@ -593,6 +657,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetIndex)
     {
+      CheckForMemoryLeaks check;
+
       PieceMap PMap{};
       PieceIndex pNP = PMap.Register(Piece::NoPiece);
       PieceIndex pNT = PMap.Register(Piece::NoTile);
@@ -602,6 +668,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Find)
     {
+      CheckForMemoryLeaks check;
+
       PieceMap PMap{};
       PieceIndex pNP = PMap.Register(Piece::NoPiece);
       PieceIndex pNT = PMap.Register(Piece::NoTile);
@@ -614,6 +682,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsColor)
     {
+      CheckForMemoryLeaks check;
+
       PieceMap PMap{};
       PieceIndex pNP = PMap.Register(Piece::NoPiece);
       PieceIndex pNT = PMap.Register(Piece::NoTile);
@@ -631,6 +701,8 @@ namespace UnitTestCore
   {
     TEST_METHOD(_Constructor)
     {
+      CheckForMemoryLeaks check;
+
       Location l1{ BoardPartID::Stage, 2U, 3U };
       Location l2{ BoardPartID::Stage, 3U, 2U };
       Location l3{ BoardPartID::Stage, 4U, 1U };
@@ -646,6 +718,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       PieceIndex pWC = PMap[CorePiece::WC];
       PieceIndex pBC = PMap[CorePiece::BC];
 
@@ -682,6 +756,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorNotEqual)
     {
+      CheckForMemoryLeaks check;
+
       PieceIndex pWC = PMap[CorePiece::WC];
       PieceIndex pBC = PMap[CorePiece::BC];
 
@@ -713,6 +789,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetLocation)
     {
+      CheckForMemoryLeaks check;
+
       PieceIndex pWC = PMap[CorePiece::WC];
       PieceIndex pBC = PMap[CorePiece::BC];
 
@@ -731,6 +809,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetPieceIndex)
     {
+      CheckForMemoryLeaks check;
+
       PieceIndex pWC = PMap[CorePiece::WC];
       PieceIndex pBC = PMap[CorePiece::BC];
 
@@ -749,6 +829,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsJump)
     {
+      CheckForMemoryLeaks check;
+
       PieceIndex pWC = PMap[CorePiece::WC];
       PieceIndex pBC = PMap[CorePiece::BC];
 
@@ -768,7 +850,6 @@ namespace UnitTestCore
 
   TEST_CLASS(_Actions)
   {
-  public:
     Location l1{ BoardPartID::Stage, 2U, 3U };
     Location l2{ BoardPartID::Stage, 3U, 2U };
     Location l3{ BoardPartID::Stage, 4U, 1U };
@@ -784,6 +865,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Constructor)
     {
+      CheckForMemoryLeaks check;
+
       static_assert(Actions().HasJump() == false, "Actions is not constexpr");
 
       Actions aa1{};
@@ -798,6 +881,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       Actions aa1{};
       aa1.push_back(a1);
       aa1.push_back(a3);
@@ -815,6 +900,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsRepeat)
     {
+      CheckForMemoryLeaks check;
+
       Actions aa1{};
       aa1.push_back(a1);
       aa1.push_back(a3);
@@ -831,6 +918,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_HasJump)
     {
+      CheckForMemoryLeaks check;
+
       Actions aa1{};
       aa1.push_back(a1);
       aa1.push_back(a3);
@@ -865,13 +954,32 @@ namespace UnitTestCore
     std::shared_ptr<Action> a32{ std::make_shared<ActionJump>(l2,PMap[Piece::NoPiece]) };
     std::shared_ptr<Action> a33{ std::make_shared<ActionDrop>(l3,pBC) };
 
-    Actions a1{};
-    Actions a2{};
-    Actions a3{};
-    Actions a4{};
-
-    TEST_METHOD_INITIALIZE(_setup)
+    TEST_METHOD(_SetValue)
     {
+      CheckForMemoryLeaks check;
+
+      Actions a1{};
+      a1.push_back(a11);
+      a1.push_back(a12);
+      a1.push_back(a13);
+
+      Move m1{ a1 };
+      m1.SetValue(PositionValue::PValueType::Tie);
+      Assert::IsTrue(m1.GetValue() == PositionValue::PValueType::Tie);
+      PositionValue pv = Math::D6() + 100 * Math::D6();
+      m1.SetValue(pv);
+      Assert::IsTrue(m1.GetValue() == pv);
+    }
+
+    TEST_METHOD(_OperatorComparison)
+    {
+      CheckForMemoryLeaks check;
+
+      Actions a1{};
+      Actions a2{};
+      Actions a3{};
+      Actions a4{};
+
       a1.push_back(a11);
       a1.push_back(a12);
       a1.push_back(a13);
@@ -885,21 +993,7 @@ namespace UnitTestCore
 
       a4.push_back(a21);
       a4.push_back(a22);
-    }
 
-    TEST_METHOD(_SetValue)
-    {
-      Move m1{ a1 };
-
-      m1.SetValue(PositionValue::PValueType::Tie);
-      Assert::IsTrue(m1.GetValue() == PositionValue::PValueType::Tie);
-      PositionValue pv = Math::D6() + 100 * Math::D6();
-      m1.SetValue(pv);
-      Assert::IsTrue(m1.GetValue() == pv);
-    }
-
-    TEST_METHOD(_OperatorComparison)
-    {
       Move m1{ a1 };
       Move m2{ a2 };
       Move m3{ a3 };
@@ -923,6 +1017,27 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
+      Actions a1{};
+      Actions a2{};
+      Actions a3{};
+      Actions a4{};
+
+      a1.push_back(a11);
+      a1.push_back(a12);
+      a1.push_back(a13);
+
+      a2.push_back(a21);
+      a2.push_back(a22);
+
+      a3.push_back(a31);
+      a3.push_back(a32);
+      a3.push_back(a33);
+
+      a4.push_back(a21);
+      a4.push_back(a22);
+
       Move m1{ a1 };
       Move m2{ a2 };
       Move m3{ a3 };
@@ -936,6 +1051,27 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetActions)
     {
+      CheckForMemoryLeaks check;
+
+      Actions a1{};
+      Actions a2{};
+      Actions a3{};
+      Actions a4{};
+
+      a1.push_back(a11);
+      a1.push_back(a12);
+      a1.push_back(a13);
+
+      a2.push_back(a21);
+      a2.push_back(a22);
+
+      a3.push_back(a31);
+      a3.push_back(a32);
+      a3.push_back(a33);
+
+      a4.push_back(a21);
+      a4.push_back(a22);
+
       Move m1{ a1 };
       Move m2{ a2 };
       Move m3{ a3 };
@@ -957,7 +1093,7 @@ namespace UnitTestCore
     const PieceIndex pWC = PMap[CorePiece::WC];
     const PieceIndex pBC = PMap[CorePiece::BC];
 
-    std::stringstream s;
+    std::stringstream s{ "" };
 // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
@@ -969,6 +1105,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_CopyConstructor)
     {
+      CheckForMemoryLeaks check;
+
       Field f1(r, TileColor::Light, pBC);
       Field f2(f1);
       Assert::IsTrue(f1 == f2);
@@ -977,6 +1115,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_MoveConstructor)
     {
+      CheckForMemoryLeaks check;
+
       Field f1(r, TileColor::Light, pBC);
       Field f2(r, TileColor::Light, pBC);
       Field f3(std::move(f2));
@@ -986,12 +1126,16 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetPieceIndex)
     {
+      CheckForMemoryLeaks check;
+
       Field f(r, TileColor::Light, pBC);
       Assert::IsTrue(f.GetPieceIndex() == pBC);
     }
 
     TEST_METHOD(_SetPieceIndex)
     {
+      CheckForMemoryLeaks check;
+
       Field f(r, TileColor::Light, pBC);
       Assert::IsTrue(f.GetPieceIndex() == pBC);
       f.SetPieceIndex(pWC);
@@ -1000,6 +1144,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsInRect)
     {
+      CheckForMemoryLeaks check;
+
       Field f(r, TileColor::Light, pBC);
       Assert::IsFalse(f.IsInRect(Point(10, 10)));
       Assert::IsFalse(f.IsInRect(Point(30, 10)));
@@ -1010,6 +1156,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(TrySerialize([this]() { Field(r, TileColor::Light, pBC).Serialize(s); }) == "0B");
       Assert::IsTrue(TrySerialize([this]() { Field(r, TileColor::Dark, pWC).Serialize(s); }) == "0W");
       Field f2(r, TileColor::Light, pBC);
@@ -1018,13 +1166,14 @@ namespace UnitTestCore
       std::string s3 = TrySerialize([this, &f3]() { f3.Serialize(s); });
       Assert::IsTrue(s3 == s2);
     }
-
   };
 
   TEST_CLASS(_Mode)
   {
     TEST_METHOD(_Set)
     {
+      CheckForMemoryLeaks check;
+
       Mode m1{ Mode_::ShowStock };
       Mode m2 = m1;
       Assert::IsTrue(m2.IsSet(Mode_::ShowStock));
@@ -1042,6 +1191,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Del)
     {
+      CheckForMemoryLeaks check;
+
       Mode m1{ Mode_::ShowStock | Mode_::Editing | Mode_::GameOver };
       Mode m2 = m1;
 
@@ -1060,6 +1211,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsSet)
     {
+      CheckForMemoryLeaks check;
+
       Mode m1{ Mode_::ShowStock };
       Assert::IsFalse(m1.IsSet(Mode_::SelectFr));
       Assert::IsFalse(m1.IsSet(Mode_::SelectTo));
@@ -1081,6 +1234,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorBitwise)
     {
+      CheckForMemoryLeaks check;
+
       Mode_ m1 = (Mode_::Editing | Mode_::ShowStock | Mode_::GameOver) & (~Mode_::ShowStock);
       Mode_ m2 = Mode_::Editing | Mode_::GameOver;
       Mode_ m3 = Mode_::Editing | Mode_::ShowStock | Mode_::GameOver;
@@ -1092,7 +1247,7 @@ namespace UnitTestCore
 
   TEST_CLASS(_PlayerType)
   {
-    std::stringstream s;
+    std::stringstream s{ "" };
 // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
@@ -1104,6 +1259,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsFalse(&PlayerType::Human == nullptr);
       Assert::IsFalse(&PlayerType::Computer == nullptr);
 
@@ -1114,6 +1271,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorNotEqual)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(PlayerType::Human != PlayerType::Computer);
       Assert::IsTrue(PlayerType::Computer != PlayerType::Human);
       Assert::IsFalse(PlayerType::Human != PlayerType::Human);
@@ -1121,6 +1280,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(TrySerialize([this]() { PlayerType::Human.Serialize(s); }) == "H");
       Assert::IsTrue(TrySerialize([this]() { PlayerType::Computer.Serialize(s); }) == "C");
     }
@@ -1131,6 +1292,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Constructor)
     {
+      CheckForMemoryLeaks check;
+
       static_assert(Player(PlayerType::Computer, PieceColor::Black).IsAI(), "Player is not constexpr");
 
       Player p1{ PlayerType::Human,    PieceColor::White };
@@ -1142,7 +1305,9 @@ namespace UnitTestCore
       std::function<Player* ()>_makePHN = [&pt=PlayerType::Human,    &pc=PieceColor::NoColor]() -> Player* { return new Player(pt, pc); };
       std::function<Player* ()>_makePHV = [&pt=PlayerType::Human,    &pc=PieceColor::Void   ]() -> Player* { return new Player(pt, pc); };
       std::function<Player* ()>_makePCV = [&pt=PlayerType::Computer, &pc=PieceColor::Void   ]() -> Player* { return new Player(pt, pc); };
-      Assert::IsTrue(_makePHB() != nullptr);
+      auto p = _makePHB();
+      Assert::IsTrue(p != nullptr);
+      delete p;
       Assert::ExpectException<std::invalid_argument>(_makePHN);
       Assert::ExpectException<std::invalid_argument>(_makePHV);
       Assert::ExpectException<std::invalid_argument>(_makePCV);
@@ -1150,6 +1315,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsAI)
     {
+      CheckForMemoryLeaks check;
+
       Player p1{ PlayerType::Human,    PieceColor::White };
       Player p2{ PlayerType::Human,    PieceColor::Black };
       Player p3{ PlayerType::Computer, PieceColor::White };
@@ -1163,6 +1330,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_IsColor)
     {
+      CheckForMemoryLeaks check;
+
       Player p1{ PlayerType::Human,    PieceColor::White };
       Player p2{ PlayerType::Human,    PieceColor::Black };
       Player p3{ PlayerType::Computer, PieceColor::White };
@@ -1199,14 +1368,17 @@ namespace UnitTestCore
 // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
+      std::stringstream().swap(s); // clears flags and releases content
       f();
-      return s.str();
+      const std::string result = s.str();
+      std::stringstream().swap(s); // clears flags and releases content
+      return result;
     };
 
     TEST_METHOD(_Constructor)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b1(BoardPartDimension(4, 4, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       BoardPart b2(BoardPartDimension(1, 127, LayoutType::Dark, 10, 10, 50, 50), BoardPartID::Stage);
       BoardPart b4(BoardPartDimension(1, 1, LayoutType::Light, 0, 0, 0, 0), BoardPartID::Stage);
@@ -1214,6 +1386,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_CopyConstructor)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b1(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       b1.SetPieceIndex(pWC, 0, 1);
       BoardPart b2(b1);
@@ -1226,6 +1400,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_MoveConstructor)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b1(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       BoardPart b2(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       BoardPart b3(std::move(b2));
@@ -1238,8 +1414,13 @@ namespace UnitTestCore
 
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
       using namespace std::literals::string_literals;
-      BoardPart b1(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
+
+      BoardPartDimension d(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4);
+      Assert::IsTrue(TrySerialize([this, &d]() { d.Serialize(s); }) == "\x4\x2\x3\0\xa\0\xa\0\x32\0\x32\0\x4\0\x4\0"s);
+
+      BoardPart b1(d, BoardPartID::Stage);
       std::string res = TrySerialize([this, &b1]() { b1.Serialize(s); });
       Assert::IsTrue(TrySerialize([this, &b1]() { b1.Serialize(s); }) == "\x4\x2\x3\0\xa\0\xa\0\x32\0\x32\0\x4\0\x4\0" "X X X X X X X X "s);
 
@@ -1250,6 +1431,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b1(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       BoardPart b2(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       Assert::IsTrue(b1 == b2);
@@ -1264,6 +1447,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorNotEqual)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b1(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       BoardPart b2(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       Assert::IsFalse(b1 != b2);
@@ -1285,6 +1470,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetHash)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b1(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
       BoardPart b2(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pWC);
       BoardPart b3(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pBC);
@@ -1301,6 +1488,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetLocationFromPoint)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage);
 
       Coordinate x{ -1 };
@@ -1322,6 +1511,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetSize)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b(BoardPartDimension(4, 2, LayoutType::Dark, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pWC);
       Assert::IsTrue(b.GetSizeX() == 4);
       Assert::IsTrue(b.GetSizeY() == 2);
@@ -1329,6 +1520,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_HasPiece)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pWC);
       Assert::IsTrue(b.HasPiece(pWC));
       Assert::IsFalse(b.HasPiece(pBC));
@@ -1339,6 +1532,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetPieceIndex)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pBC);
       Assert::IsTrue(b.GetPieceIndex(3, 0) == pBC);
       Assert::IsTrue(b.GetPieceIndex(2, 1) == pBC);
@@ -1357,6 +1552,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_SetPieceIndex)
     {
+      CheckForMemoryLeaks check;
+
       BoardPart b(BoardPartDimension(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pBC);
       b.SetPieceIndex(pWC, 2, 1);
       Assert::IsTrue(b.GetPieceIndex(2, 1) == pWC);
@@ -1388,14 +1585,17 @@ namespace UnitTestCore
 // create a lambda that can be called with void() lambdas and executes them, to test serialization:
     std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
     {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
+      std::stringstream().swap(s); // clears flags and releases content
       f();
-      return s.str();
+      const std::string result = s.str();
+      std::stringstream().swap(s); // clears flags and releases content
+      return result;
     };
 
     TEST_METHOD(_Constructors)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b1{ v,d };
       TestBoard b2(b1);
       Assert::IsTrue(b1 == b2);
@@ -1406,17 +1606,22 @@ namespace UnitTestCore
 
     TEST_METHOD(_Clone)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b1{ v,d };
       TestBoard* b = dynamic_cast<TestBoard*>(b1.Clone());
       Assert::IsNotNull(b);
 
       Assert::IsTrue(&b1 != b);
       TestBoard b2 = *b;
+      delete b;
       Assert::IsTrue(b1 == b2);
     }
 
     TEST_METHOD(_GetHash)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b1{ v,d };
       Assert::IsTrue(b1.GetHash() != 0);
 
@@ -1435,6 +1640,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorEqual)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b1{ v,d };
       TestBoard b2{ v,d };
       Assert::IsTrue(b1 == b2);
@@ -1460,6 +1667,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_OperatorNotEqual)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b1{ v,d };
       TestBoard b2{ v,d };
       Assert::IsFalse(b1 != b2);
@@ -1483,6 +1692,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Serialize)
     {
+      CheckForMemoryLeaks check;
+
       using namespace std::literals::string_literals;
       TestBoard b1{ v,d };
       std::string res1 = TrySerialize([this, &b1]() { b1.Serialize(s); });
@@ -1504,6 +1715,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_SetBoard)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b{ v,d };
       Assert::IsTrue(b.GetPieceIndex(0, 0) == pNP);
       Assert::IsTrue(b.GetPieceIndex(0, 1) == pNP);
@@ -1534,6 +1747,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetPieceIndex)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b{ v,d };
 
       Assert::IsTrue(b.GetPieceIndex(3, 0) == pNP);
@@ -1549,6 +1764,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_SetPieceIndex)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b{ v,d };
 
       Assert::IsTrue(b.GetPieceIndex(3, 0) == pNP);
@@ -1591,6 +1808,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_SetGetValue)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b{ v,d };
       Assert::IsTrue(b.GetValue(true) == PositionValue::PValueType::Undefined);
       Assert::IsTrue(b.GetValue(false) == PositionValue::PValueType::Undefined);
@@ -1605,6 +1824,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_SetGetDepth)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b{ v,d };
       Assert::IsTrue(b.GetDepth() == 0);
       constexpr Depth z = 7;
@@ -1614,6 +1835,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetMoveList)
     {
+      CheckForMemoryLeaks check;
+
       class TestBoard : public Board
       {
       public:
@@ -1630,12 +1853,16 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetMoveCountFactor)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b{ v,d };
       Assert::IsTrue(b.GetMoveCountFactor() == 20);
     }
 
     TEST_METHOD(_GetAllMoves)
     {
+      CheckForMemoryLeaks check;
+
       class TestBoard : public Board
       {
         const PieceIndex pNP = PMap[Piece::NoPiece];
@@ -1715,6 +1942,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_EvaluateStatically)
     {
+      CheckForMemoryLeaks check;
+
         constexpr const static PositionValue CValue = 31;
         constexpr const static PValueBaseType CFactor = 7;
         class TestBoard : public Board
@@ -1796,6 +2025,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_Execute)
     {
+      CheckForMemoryLeaks check;
+
       class TestBoard : public Board
       {
         const PieceIndex pNP = PMap[Piece::NoPiece];
@@ -1877,6 +2108,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_WhiteOnTurn)
     {
+      CheckForMemoryLeaks check;
+
       TestBoard b{ v,d };
       Assert::IsTrue(b.WhiteOnTurn());
 
@@ -1888,6 +2121,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetLocationFromPoint)
     {
+      CheckForMemoryLeaks check;
+
       BoardPartDimensions d0{
         {4, 2, LayoutType::Alternating,  10,  10, 50, 50,  4,  4 },
         {2, 2, LayoutType::Light,       260, 140, 50, 50,  0,  0 },
@@ -1918,6 +2153,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_GetChainValue)
     {
+      CheckForMemoryLeaks check;
+
       BoardPartDimensions d0{
         {4, 2, LayoutType::Alternating,  10,  10, 50, 50,  4,  4 },
         {2, 2, LayoutType::Light,       260, 140, 50, 50,  0,  0 },
@@ -1942,6 +2179,8 @@ namespace UnitTestCore
 
     TEST_METHOD(_EvaluateChainLengths)
     {
+      CheckForMemoryLeaks check;
+
       BoardPartDimensions d0{
         {4, 4, LayoutType::Alternating,  10,  10, 50, 50,  0,  0 },
         {2, 2, LayoutType::Light,       260, 140, 50, 50,  0,  0 },
@@ -1969,6 +2208,8 @@ namespace UnitTestCore
   {
     TEST_METHOD(_constructor)
     {
+      CheckForMemoryLeaks check;
+
       static_assert(!std::is_trivially_constructible<class Variant>::value, "must not be trivially constructible");
       Variant v1(0, 1, "SomeGame", '\0', 8, 8, 2, 20);
       Assert::IsTrue(v1.vName_ == std::string("SomeGame"));
@@ -1984,6 +2225,8 @@ namespace UnitTestCore
   {
     TEST_METHOD(_Register)
     {
+      CheckForMemoryLeaks check;
+
       Vars v;
       v.Register(Variant(0, 1, "SomeGame1", '\0', 8, 8, 2, 20));
       v.Register(Variant(0, 2, "SomeGame2", '\0', 8, 8, 2, 20));
@@ -1993,8 +2236,11 @@ namespace UnitTestCore
       v.Register(Variant(0, 1, "SomeGame1", '\0', 8, 8, 2, 20));
       Assert::IsTrue(v.size() == 6);
     }
+
     TEST_METHOD(_GetGameIDList)
     {
+      CheckForMemoryLeaks check;
+
       Vars v;
       v.Register(Variant(0, 1, "SomeGame1", '1', 8, 8, 2, 20));
       v.Register(Variant(0, 2, "SomeGame2", '2', 8, 8, 2, 20));
@@ -2009,8 +2255,11 @@ namespace UnitTestCore
       Assert::IsTrue((g[0] == 1 && g[1] == 2) || (g[0] == 2 && g[1] == 1));
       Assert::IsTrue(v.size() == 6);
     }
+
     TEST_METHOD(_GetVariantList)
     {
+      CheckForMemoryLeaks check;
+
       Vars v;
       v.Register(Variant(0, 1, "SomeGame1", '\x01', 8, 8, 2, 20));
       v.Register(Variant(0, 2, "SomeGame2", '\x02', 8, 8, 2, 20));
@@ -2035,13 +2284,65 @@ namespace UnitTestCore
 
   TEST_CLASS(_Game)
   {
-    TEST_METHOD(_TODO)
+    const PieceIndex pNP = PMap[Piece::NoPiece];
+    const PieceIndex pNT = PMap[Piece::NoTile];
+    const PieceIndex pWC = PMap[CorePiece::WC];
+    const PieceIndex pBC = PMap[CorePiece::BC];
+    class TestBoard : public Board
     {
+    public:
+      TestBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
+      virtual Board* Clone() const noexcept override { return new TestBoard(*this); }
+    };
+    VariantChosen v{ 0, 1, '\0', 4, 4 };
+    BoardPartDimensions d{
+      {4, 4, LayoutType::Alternating,  10,  10, 50, 50,  0,  0 },
+      {2, 2, LayoutType::Light,       260, 140, 50, 50,  0,  0 },
+      {2, 2, LayoutType::Small,       260,  60, 50, 50,  0, 50 },
+    };
+    TestBoard b{ v,d };
 
-      Assert::IsTrue(true);
+    std::stringstream s;
+// create a lambda that can be called with void() lambdas and executes them, to test serialization:
+    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
+    {
+      std::stringstream().swap(s); // clears flags and releases content
+      f();
+      const std::string result = s.str();
+      std::stringstream().swap(s); // clears flags and releases content
+      return result;
+    };
+    class TestGame : public Game
+    {
+    public:
+      inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
+      virtual ~TestGame() noexcept {};
+      //static void Register() noexcept;
+      //static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
+    };
+
+    TEST_METHOD(_constructor)
+    {
+      CheckForMemoryLeaks check;
+
+      static_assert(!std::is_trivially_constructible<class Game>::value, "must not be trivially constructible");
+for (auto z=0; z<1000;++z)
+      TestGame g(v, b.Clone());
+
+//auto f = [&g]() { g.SetBoard(std::vector<PieceIndex>{}); };
+      //Assert::ExpectException<std::exception>(f);
+    }
+    TEST_METHOD(_Serialize)
+    {
+      CheckForMemoryLeaks check;
+
+      //VariantChosen v(0, 1, '\0', 4, 4);
+      //TestGame g(v, b.Clone());
     }
     TEST_METHOD(_more)
     {
+      CheckForMemoryLeaks check;
+
       Assert::Fail();
     }
 
@@ -2050,7 +2351,6 @@ namespace UnitTestCore
 
   TEST_CLASS(_Rest)
   {
-
     //TEST_METHOD(TestActions2?)
     //{
     //  // test with a board:
@@ -21993,10 +22293,10 @@ namespace UnitTestCore
 
   TEST_CLASS(_AI)
   {
-
-  public:
     TEST_METHOD(_TODO)
     {
+      CheckForMemoryLeaks check;
+
       Assert::IsTrue(true);
 
 

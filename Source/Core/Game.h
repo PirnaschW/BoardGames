@@ -4,10 +4,9 @@ namespace BoardGamesCore
 
   class Game abstract : public IUI
   {
- 
   private:
     // don't allow trivial construction, copying, and moving
-    Game() = delete;                    // trivial construction
+    Game() = delete;                        // trivial construction
     Game(const Game&) = delete;             // copy constructor
     Game& operator=(const Game&) = delete;  // copy assignment
     Game(Game&&) = delete;                  // move constructor
@@ -46,9 +45,8 @@ namespace BoardGamesCore
 
   protected:
     VariantChosen v_;                                 // Game ID and Variant
-    Board* board_;                                    // current playing board (not owned! plist owns all boards)
-                                                      
     AI ai_{};                                         // 'Artificial Intelligence' - evaluator and collected boards 
+    Board* board_;                                    // current playing board (not owned! plist owns all boards)                                                      
 
   private:                                            
     Mode mode_{ Mode_::SelectFr & Mode_::ShowStock };  // current game mode is: pick FRom; show stock

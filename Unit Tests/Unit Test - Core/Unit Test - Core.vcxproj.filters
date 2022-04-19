@@ -14,6 +14,9 @@
     <ClInclude Include="..\Source\Core\Unit Test - Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Core\MemoryLeaks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Core\Unit Test - Core.cpp">
