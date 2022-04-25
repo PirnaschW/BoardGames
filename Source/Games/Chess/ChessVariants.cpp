@@ -376,7 +376,7 @@ namespace Chess
     constexpr int y = 200;
     Rect r{ x,y,x + 20,y + 20 };
 
-    auto pp{ dynamic_cast<const ChessVariantBoard<ChessVariant::Dice>*>(board_) };
+    auto pp{ down_cast<const ChessVariantBoard<ChessVariant::Dice>*>(board_) };
 
     Die::Sides[pp->ChessVariantData<ChessVariant::Dice>::side_].Draw(pDC, r);
   }
@@ -515,7 +515,7 @@ namespace Chess
     constexpr int y = 200;
     Rect r{ x,y,x + 20,y + 20 };
 
-    auto pp{ dynamic_cast<const ChessVariantBoard<ChessVariant::Dice10x10>*>(board_) };
+    auto pp{ down_cast<const ChessVariantBoard<ChessVariant::Dice10x10>*>(board_) };
 
     Die::Sides[pp->ChessVariantData<ChessVariant::Dice10x10>::side_].Draw(pDC, r);
   }

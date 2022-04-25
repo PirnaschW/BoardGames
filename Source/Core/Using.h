@@ -14,19 +14,26 @@ namespace BoardGamesCore
   static_assert((std::numeric_limits<Rule      >::max)() >= 0xFFFF, "Rule type is defined too small");
   static_assert((std::numeric_limits<PieceIndex>::max)() >= 64, "PieceIndex type is defined too small");
 
-  struct VariantChosen
+  template <typename T, typename S>  // use verified dynamic_cast when RTTI is available, static_cast otherwise
+  inline T down_cast(S&& s)
   {
-    GameID id;               // internal Game ID
-    GameGroup g;             // Game group code
-    VariantCode c;           // variant code
-    Coordinate x;            // horizontal board size
-    Coordinate y;            // vertical board size
-  };
-  static_assert(std::is_trivial<VariantChosen>::value, "must be a trivial structure");
+#ifdef _CPPRTTI
+    T p = dynamic_cast<T>(s);
+    if constexpr (std::is_pointer<T>::value)
+      assert(p != nullptr);
+    return p;
+#else
+    using base_S = std::remove_pointer_t<std::remove_cvref_t<S>>;
+    using base_T = std::remove_pointer_t<std::remove_cvref_t<T>>;
+    static_assert(std::is_base_of_v<base_S, base_T>);
+    return static_cast<T>(s);
+#endif
+  }
 
   using BoardGamesMFC::Bitmap;
   using BoardGamesMFC::Archive;
   using BoardGamesMFC::DC;
   using BoardGamesMFC::Rect;
+
 
 }

@@ -35,10 +35,9 @@
 #include "Field.h"
 #include "Mode.h"
 #include "BoardPart.h"
+#include "Variant.h"
 #include "Board.h"
 #include "UI.h"
-#include "Variant.h"
-//#include "Layout.h"
 #include "AI.h"
 #include "Game.h"
 

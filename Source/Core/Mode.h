@@ -6,6 +6,7 @@ namespace BoardGamesCore
   {
   public:
     enum class Mode_ : unsigned char {
+      None = 0x00,
       SelectFr = 0x01,
       SelectTo = 0x02,
       Editing = 0x04,

@@ -70,4 +70,19 @@ namespace BoardGamesCore
 
   static_assert(Vars().size() == 0, "Variantlists can't be constexpr");
 
+  class VariantChosen
+  {
+  public:
+    GameID id;               // internal Game ID
+    GameGroup g;             // Game group code
+    VariantCode c;           // variant code
+    Coordinate x;            // horizontal board size
+    Coordinate y;            // vertical board size
+  public:
+    void Serialize(std::stringstream& s) const noexcept { s << id << g << c << x << y; }
+  };
+  static_assert(!std::is_abstract<VariantChosen>::value, "VariantChosen should not be abstract");
+  static_assert(std::is_trivially_constructible<VariantChosen>::value, "VariantChosen should be trivially constructible");
+  static_assert(VariantChosen().id == 0, "VariantChosen should be constexpr");
+
 }

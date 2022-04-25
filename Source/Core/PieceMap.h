@@ -38,7 +38,7 @@ namespace BoardGamesCore
       return Invalid;
     }
     constexpr PieceIndex size() const noexcept { return used_; }
-    [[TODO::Unittest]] constexpr bool IsColor(PieceIndex pI, const PieceColor& c) const noexcept { return this->operator[](pI).IsColor(c); }
+    constexpr bool IsColor(PieceIndex pI, const PieceColor& c) const noexcept { return this->operator[](pI).IsColor(c); }
 
   private:
     constexpr const Piece& GetPiece_(PieceIndex pI) const noexcept    // retrieve a piece
@@ -67,7 +67,7 @@ namespace BoardGamesCore
 
   inline PieceMap PMap{};
 
-  static_assert(PieceMap().size() == 1, "PieceMaps can't be constexpr");
-  static_assert(PieceMap().Register(Piece::NoPiece) == 1, "PieceMaps can't be constexpr");
+  static_assert(PieceMap().size() == 1, "PieceMaps should be initialized with 'Invalid'");
+  static_assert(PieceMap().Register(Piece::NoPiece) == 1, "PieceMaps should be constexpr");
 
 }

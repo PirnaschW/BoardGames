@@ -646,7 +646,7 @@
     <Image Include="..\Source\App\res\Toolbar256.bmp">
       <Filter>App\Resource Files</Filter>
     </Image>
-    <Image Include="..\Source\App\res\userimages.bmp">
+    <Image Include="..\Source\App\res\UserImages.bmp">
       <Filter>App\Resource Files</Filter>
     </Image>
     <Image Include="..\Source\Core\res\b0l.bmp">

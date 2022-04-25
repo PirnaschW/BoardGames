@@ -15,7 +15,7 @@ namespace Cam
 
   void Pawn::CollectMoves(const Board& p, const Location& l, Moves& m) const noexcept
   {
-    //const CamBoard& board_ = dynamic_cast<const CamBoard&>(p);         // position must be a Cam position
+    //const CamBoard& board_ = down_cast<const CamBoard&>(p);         // position must be a Cam position
     //const Piece& p0 = board_.GetPieceIndex(l);                                    // piece that is moving
     //CollectJumps(p, l, Actions{}, false, PieceColor::NoColor, m);                // collect all jumps
 
@@ -90,7 +90,7 @@ namespace Cam
   void Knight::CollectMoves(const Board& p, const Location& l, Moves& m) const noexcept
   {
     Pawn::CollectMoves(p, l, m);
-    const CamBoard& board_ = dynamic_cast<const CamBoard&>(p);         // position must be a Cam position
+    const CamBoard& board_ = down_cast<const CamBoard&>(p);         // position must be a Cam position
     CollectJumps(p, l, Actions{}, true, PieceColor::NoColor, m);             // collect all jumps
   }
 

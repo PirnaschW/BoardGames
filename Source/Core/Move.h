@@ -35,9 +35,9 @@ namespace BoardGamesCore
     PositionValue value_{ PositionValue::PValueType::Undefined };
     const Actions a_{};
   };
-  static_assert(!std::is_abstract<Move>::value, "must not be constructible");
-  static_assert(std::is_constructible<Move, const Move&>::value, "is not constructible");
-  static_assert(Move(Actions()).GetValue() == PositionValue::PValueType::Undefined, "Move is not constexpr");
+  static_assert(!std::is_abstract<Move>::value, "Move should not be abstract");
+  static_assert(std::is_constructible<Move, const Move&>::value, "Move should be constructible");
+  static_assert(Move(Actions()).GetValue() == PositionValue::PValueType::Undefined, "Move should be constexpr");
 
   using Moves = std::vector<std::shared_ptr<Move>>;
 

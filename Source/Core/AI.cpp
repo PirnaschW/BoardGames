@@ -5,6 +5,31 @@
 namespace BoardGamesCore
 {
 
+  Mode::Mode_ AI::MakeMove(Board*& b)
+  {
+    // cleanup position buffer
+    Purge(b->sequence_);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
+
+    // evaluate position
+    PositionValue v = Evaluate(b, AIMethod::BruteForce, 9, 4.0);
+
+    // inform player
+    if (v == PositionValue::PValueType::Lost)
+    {
+      BoardGamesMFC::AfxMessageBox(L"Computer resigns - Player wins!");
+      return Mode_::GameOver;
+    }
+    if (v == PositionValue::PValueType::Won) BoardGamesMFC::AfxMessageBox(L"You might as well resign - Computer will win!");
+    if (v == PositionValue::PValueType::Tie) BoardGamesMFC::AfxMessageBox(L"Computer will hold a Draw.");
+
+    // now execute best move:
+    const Moves& m = b->GetMoveList(b->WhiteOnTurn());
+    assert(m.size() > 0);
+    b->Execute(*m[0]);
+    b = Remember(b);
+    return Mode_::None;
+  }
+
   // Evaluate by chosen method
   PositionValue AI::Evaluate(Board* board, AIMethod method, Depth maxDepth, double timeLimit)
   {

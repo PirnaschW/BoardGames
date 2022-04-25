@@ -22,6 +22,7 @@ namespace BoardGamesCore
       auto pl0 = map_.find(board);  // check if we evaluated this position before
       if (pl0 != map_.end())
       {
+        if (*pl0 == board) return board;  // did we find ourselves?
         assert(**pl0 == *board); // for now, do a full compare anyway, to verify all our hashing works as it should
         delete board;    // as a better (=already evaluated) version is in the map; delete this one
         return *pl0;  // return the version found in the map
@@ -30,6 +31,7 @@ namespace BoardGamesCore
       auto entry = map_.insert(board);
       return *(entry.first);  // return the pointer to the new entry
     }
+    Mode::Mode_ MakeMove(Board*& b);
     PositionValue Evaluate(Board* board, AIMethod method, Depth maxdepth, double timeLimit);
     void SetCallback(std::function<void()> cb) { assert(cb != nullptr); callback_ = cb; }
     void Purge(const Moves& sequence_) noexcept;  // 'forget' all boards that don't start with this move sequence
@@ -43,7 +45,6 @@ namespace BoardGamesCore
       b->Execute(m);
       return Remember(b);
     }
-
 
   private:
     struct AIContextHelper

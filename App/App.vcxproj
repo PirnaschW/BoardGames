@@ -132,6 +132,8 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
       <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -162,6 +164,8 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -192,6 +196,8 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
       <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -222,6 +228,8 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1082,7 +1090,7 @@
     <Image Include="..\Source\App\res\BGDoc.ico" />
     <Image Include="..\Source\App\res\Toolbar.bmp" />
     <Image Include="..\Source\App\res\Toolbar256.bmp" />
-    <Image Include="..\Source\App\res\userimages.bmp" />
+    <Image Include="..\Source\App\res\UserImages.bmp" />
     <Image Include="..\Source\Core\res\b0l.bmp" />
     <Image Include="..\Source\Core\res\b0s.bmp" />
     <Image Include="..\Source\Core\res\s1l.bmp" />

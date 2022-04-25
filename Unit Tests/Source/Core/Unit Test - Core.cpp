@@ -46,6 +46,7 @@ namespace Microsoft
 }
 
 #include <functional>
+using namespace std::literals::string_literals;
 
 namespace UnitTestCore
 {
@@ -59,16 +60,6 @@ namespace UnitTestCore
 
   TEST_CLASS(_PieceColor)
   {
-    std::stringstream s{ "" };
-    // create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
-      f();
-      return s.str();
-    };
-
     TEST_METHOD(_OperatorEqual)
     {
       CheckForMemoryLeaks check;
@@ -126,25 +117,15 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      Assert::IsTrue(TrySerialize([this]() { PieceColor::Black.Serialize(s); }) == "B");
-      Assert::IsTrue(TrySerialize([this]() { PieceColor::White.Serialize(s); }) == "W");
-      Assert::IsTrue(TrySerialize([this]() { PieceColor::Void.Serialize(s); }) == "X");
-      Assert::IsTrue(TrySerialize([this]() { PieceColor::NoColor.Serialize(s); }) == " ");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { PieceColor::Black.Serialize(s); }) == "B");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { PieceColor::White.Serialize(s); }) == "W");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { PieceColor::Void.Serialize(s); }) == "X");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { PieceColor::NoColor.Serialize(s); }) == " ");
     }
   };
 
   TEST_CLASS(_TileColor)
   {
-    std::stringstream s{ "" };
-    // create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
-      f();
-      return s.str();
-    };
-
     TEST_METHOD(_OperatorEqual)
     {
       CheckForMemoryLeaks check;
@@ -167,9 +148,9 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      Assert::IsTrue(TrySerialize([this]() { TileColor::Light.Serialize(s); }) == "L");
-      Assert::IsTrue(TrySerialize([this]() { TileColor::Dark.Serialize(s); }) == "D");
-      Assert::IsTrue(TrySerialize([this]() { TileColor::Small.Serialize(s); }) == "l");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { TileColor::Light.Serialize(s); }) == "L");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { TileColor::Dark.Serialize(s); }) == "D");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { TileColor::Small.Serialize(s); }) == "l");
     }
   };
 
@@ -482,16 +463,6 @@ namespace UnitTestCore
 
   TEST_CLASS(_Kind)
   {
-    std::stringstream s{ "" };
-    // create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
-      f();
-      return s.str();
-    };
-
     TEST_METHOD(_NoKind)
     {
       CheckForMemoryLeaks check;
@@ -504,22 +475,12 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      Assert::IsTrue(TrySerialize([this]() { noKind::NoKind.Serialize(s); }) == "X");  // testing serialization
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { noKind::NoKind.Serialize(s); }) == "X");  // testing serialization
     }
   };
 
   TEST_CLASS(_Piece)
   {
-    std::stringstream s{ "" };
-    // create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
-      f();
-      return s.str();
-    };
-
     TEST_METHOD(_Singletons)
     {
       CheckForMemoryLeaks check;
@@ -532,8 +493,8 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      Assert::IsTrue(TrySerialize([this]() { Piece::NoTile.Serialize(s); }) == "XX");
-      Assert::IsTrue(TrySerialize([this]() { Piece::NoPiece.Serialize(s); }) == "X ");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { Piece::NoTile.Serialize(s); }) == "XX");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { Piece::NoPiece.Serialize(s); }) == "X ");
     }
 
     TEST_METHOD(_Draw)
@@ -1093,16 +1054,6 @@ namespace UnitTestCore
     const PieceIndex pWC = PMap[CorePiece::WC];
     const PieceIndex pBC = PMap[CorePiece::BC];
 
-    std::stringstream s{ "" };
-// create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
-      f();
-      return s.str();
-    };
-
     TEST_METHOD(_CopyConstructor)
     {
       CheckForMemoryLeaks check;
@@ -1158,12 +1109,12 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      Assert::IsTrue(TrySerialize([this]() { Field(r, TileColor::Light, pBC).Serialize(s); }) == "0B");
-      Assert::IsTrue(TrySerialize([this]() { Field(r, TileColor::Dark, pWC).Serialize(s); }) == "0W");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { Field(r, TileColor::Light, pBC).Serialize(s); }) == "0B");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { Field(r, TileColor::Dark, pWC).Serialize(s); }) == "0W");
       Field f2(r, TileColor::Light, pBC);
-      std::string s2 = TrySerialize([this, &f2]() { f2.Serialize(s); });
+      std::string s2 = TestSerialize([this, &f2](std::stringstream& s) { f2.Serialize(s); });
       Field f3(std::move(f2));
-      std::string s3 = TrySerialize([this, &f3]() { f3.Serialize(s); });
+      std::string s3 = TestSerialize([this, &f3](std::stringstream& s) { f3.Serialize(s); });
       Assert::IsTrue(s3 == s2);
     }
   };
@@ -1247,16 +1198,6 @@ namespace UnitTestCore
 
   TEST_CLASS(_PlayerType)
   {
-    std::stringstream s{ "" };
-// create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      s.str().clear();  // clears flags only!
-      s.str("");        // clears content
-      f();
-      return s.str();
-    };
-
     TEST_METHOD(_OperatorEqual)
     {
       CheckForMemoryLeaks check;
@@ -1282,8 +1223,8 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      Assert::IsTrue(TrySerialize([this]() { PlayerType::Human.Serialize(s); }) == "H");
-      Assert::IsTrue(TrySerialize([this]() { PlayerType::Computer.Serialize(s); }) == "C");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { PlayerType::Human.Serialize(s); }) == "H");
+      Assert::IsTrue(TestSerialize([this](std::stringstream& s) { PlayerType::Computer.Serialize(s); }) == "C");
     }
   };
 
@@ -1364,17 +1305,6 @@ namespace UnitTestCore
     const PieceIndex pWC = PMap[CorePiece::WC];
     const PieceIndex pBC = PMap[CorePiece::BC];
 
-    std::stringstream s;
-// create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      std::stringstream().swap(s); // clears flags and releases content
-      f();
-      const std::string result = s.str();
-      std::stringstream().swap(s); // clears flags and releases content
-      return result;
-    };
-
     TEST_METHOD(_Constructor)
     {
       CheckForMemoryLeaks check;
@@ -1415,18 +1345,17 @@ namespace UnitTestCore
     TEST_METHOD(_Serialize)
     {
       CheckForMemoryLeaks check;
-      using namespace std::literals::string_literals;
 
       BoardPartDimension d(4, 2, LayoutType::Alternating, 10, 10, 50, 50, 4, 4);
-      Assert::IsTrue(TrySerialize([this, &d]() { d.Serialize(s); }) == "\x4\x2\x3\0\xa\0\xa\0\x32\0\x32\0\x4\0\x4\0"s);
+      Assert::IsTrue(TestSerialize([this, &d](std::stringstream& s) { d.Serialize(s); }) == "\x4\x2\x3\0\xa\0\xa\0\x32\0\x32\0\x4\0\x4\0"s);
 
       BoardPart b1(d, BoardPartID::Stage);
-      std::string res = TrySerialize([this, &b1]() { b1.Serialize(s); });
-      Assert::IsTrue(TrySerialize([this, &b1]() { b1.Serialize(s); }) == "\x4\x2\x3\0\xa\0\xa\0\x32\0\x32\0\x4\0\x4\0" "X X X X X X X X "s);
+      std::string res = TestSerialize([this, &b1](std::stringstream& s) { b1.Serialize(s); });
+      Assert::IsTrue(TestSerialize([this, &b1](std::stringstream& s) { b1.Serialize(s); }) == "\x4\x2\x3\0\xa\0\xa\0\x32\0\x32\0\x4\0\x4\0" "X X X X X X X X "s);
 
       BoardPart b2(BoardPartDimension(3, 2, LayoutType::Light, 20, 5, 40, 30, 3, 2), BoardPartID::Stage, pWC);
       b2.SetPieceIndex(pBC, 1, 1);
-      Assert::IsTrue(TrySerialize([this, &b2]() { b2.Serialize(s); }) == "\x3\x2\x1\0\x14\0\x5\0\x28\0\x1e\0\x3\0\x2\0" "0W0W0W0W0B0W"s);
+      Assert::IsTrue(TestSerialize([this, &b2](std::stringstream& s) { b2.Serialize(s); }) == "\x3\x2\x1\0\x14\0\x5\0\x28\0\x1e\0\x3\0\x2\0" "0W0W0W0W0B0W"s);
     }
 
     TEST_METHOD(_OperatorEqual)
@@ -1581,17 +1510,6 @@ namespace UnitTestCore
       {2, 2, LayoutType::Small,       260,  60, 50, 50,  0, 50 },
     };
 
-    std::stringstream s;
-// create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      std::stringstream().swap(s); // clears flags and releases content
-      f();
-      const std::string result = s.str();
-      std::stringstream().swap(s); // clears flags and releases content
-      return result;
-    };
-
     TEST_METHOD(_Constructors)
     {
       CheckForMemoryLeaks check;
@@ -1609,7 +1527,7 @@ namespace UnitTestCore
       CheckForMemoryLeaks check;
 
       TestBoard b1{ v,d };
-      TestBoard* b = dynamic_cast<TestBoard*>(b1.Clone());
+      TestBoard* b = down_cast<TestBoard*>(b1.Clone());
       Assert::IsNotNull(b);
 
       Assert::IsTrue(&b1 != b);
@@ -1694,10 +1612,9 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      using namespace std::literals::string_literals;
       TestBoard b1{ v,d };
-      std::string res1 = TrySerialize([this, &b1]() { b1.Serialize(s); });
-      Assert::IsTrue(TrySerialize([this, &b1]() { b1.Serialize(s); }) ==
+      std::string res1 = TestSerialize([this, &b1](std::stringstream& s) { b1.Serialize(s); });
+      Assert::IsTrue(TestSerialize([this, &b1](std::stringstream& s) { b1.Serialize(s); }) ==
                      "\x4\x2\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0" "X X X X X X X X "
                      "\x2\x2\x4\0\x4\x1\x3c\0\x32\0\x32\0\0\0\x32\0" "XXXXXXXX"s);
 
@@ -1707,13 +1624,13 @@ namespace UnitTestCore
         {2, 2, LayoutType::Small,       260,  60, 50, 50,  0, 50 },
       };
       TestBoard b3{ v,d3 };
-      std::string res3 = TrySerialize([this, &b3]() { b3.Serialize(s); });
-      Assert::IsTrue(TrySerialize([this, &b3]() { b3.Serialize(s); }) ==
+      std::string res3 = TestSerialize([this, &b3](std::stringstream& s) { b3.Serialize(s); });
+      Assert::IsTrue(TestSerialize([this, &b3](std::stringstream& s) { b3.Serialize(s); }) ==
                      "\x3\x4\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0" "X X X X X X X X X X X X "
                      "\x2\x2\x4\0\x4\x1\x3c\0\x32\0\x32\0\0\0\x32\0" "XXXXXXXX"s);
     }
 
-    TEST_METHOD(_SetBoard)
+    TEST_METHOD(_SetupBoard)
     {
       CheckForMemoryLeaks check;
 
@@ -1732,7 +1649,7 @@ namespace UnitTestCore
 
       b.SetDepth(1);
       b.SetValue(true, PositionValue::PValueType::Won);
-      b.SetBoard(list);
+      b.SetupBoard(list);
       Assert::IsTrue(b.GetPieceIndex(0, 0) == list[0]);
       Assert::IsTrue(b.GetPieceIndex(1, 0) == list[1]);
       Assert::IsTrue(b.GetPieceIndex(2, 0) == list[2]);
@@ -1902,7 +1819,7 @@ namespace UnitTestCore
         constexpr virtual void CollectMoves(const Board& p, const Location& l, Moves& m) const noexcept override
         {
           if (l.b_ != BoardPartID::Stage) return;  // this game does nto allow dropping taken pieces
-          const TestBoard* b = dynamic_cast<const TestBoard*>(&p);
+          const TestBoard* b = down_cast<const TestBoard*>(&p);
           assert(b != nullptr);
           PieceIndex pI = b->GetPieceIndex(l.x_, l.y_);
           const Piece& p0 = PMap[pI];
@@ -1985,7 +1902,7 @@ namespace UnitTestCore
             constexpr virtual void CollectMoves(const Board& p, const Location& l, Moves& m) const noexcept override
             {
                 if (l.b_ != BoardPartID::Stage) return;  // this game does nto allow dropping taken pieces
-                const TestBoard* b = dynamic_cast<const TestBoard*>(&p);
+                const TestBoard* b = down_cast<const TestBoard*>(&p);
                 assert(b != nullptr);
                 PieceIndex pI = b->GetPieceIndex(l.x_, l.y_);
                 const Piece& p0 = PMap[pI];
@@ -2065,7 +1982,7 @@ namespace UnitTestCore
         constexpr virtual void CollectMoves(const Board& p, const Location& l, Moves& m) const noexcept override
         {
           if (l.b_ != BoardPartID::Stage) return;  // this game does nto allow dropping taken pieces
-          const TestBoard* b = dynamic_cast<const TestBoard*>(&p);
+          const TestBoard* b = down_cast<const TestBoard*>(&p);
           assert(b != nullptr);
           PieceIndex pI = b->GetPieceIndex(l.x_, l.y_);
           const Piece& p0 = PMap[pI];
@@ -2282,6 +2199,30 @@ namespace UnitTestCore
     }
   };
 
+  TEST_CLASS(_VariantChosen)
+  {
+    TEST_METHOD(_constructor)
+    {
+      CheckForMemoryLeaks check;
+
+      static_assert(!std::is_abstract<VariantChosen>::value, "VariantChosen should not be abstract");
+      static_assert(std::is_trivially_constructible<VariantChosen>::value, "VariantChosen should be trivially constructible");
+      static_assert(VariantChosen().id == 0, "VariantChosen should be constexpr");
+      VariantChosen v(1, 3, '\0', 4, 7);
+      Assert::IsTrue(v.x == 4);
+      Assert::IsTrue(v.y == 7);
+    }
+
+    TEST_METHOD(_Serialize)
+    {
+      CheckForMemoryLeaks check;
+
+      VariantChosen v(1, 3, '\0', 4, 7);
+      Assert::IsTrue(TestSerialize([this, &v](std::stringstream& s) { v.Serialize(s); }) == "\x1\x3\x0\x4\x7"s);
+    }
+
+  };
+
   TEST_CLASS(_Game)
   {
     const PieceIndex pNP = PMap[Piece::NoPiece];
@@ -2294,29 +2235,20 @@ namespace UnitTestCore
       TestBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
       virtual Board* Clone() const noexcept override { return new TestBoard(*this); }
     };
-    VariantChosen v{ 0, 1, '\0', 4, 4 };
+    VariantChosen v{ 1, 3, '\0', 4, 7 };
     BoardPartDimensions d{
-      {4, 4, LayoutType::Alternating,  10,  10, 50, 50,  0,  0 },
+      {4, 7, LayoutType::Alternating,  10,  10, 50, 50,  0,  0 },
       {2, 2, LayoutType::Light,       260, 140, 50, 50,  0,  0 },
       {2, 2, LayoutType::Small,       260,  60, 50, 50,  0, 50 },
     };
     TestBoard b{ v,d };
 
-    std::stringstream s;
-// create a lambda that can be called with void() lambdas and executes them, to test serialization:
-    std::function<std::string(std::function<void()>)> TrySerialize = [&](auto f) -> std::string
-    {
-      std::stringstream().swap(s); // clears flags and releases content
-      f();
-      const std::string result = s.str();
-      std::stringstream().swap(s); // clears flags and releases content
-      return result;
-    };
     class TestGame : public Game
     {
     public:
       inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
       virtual ~TestGame() noexcept {};
+      const Board& TestGetBoard() const noexcept { return *board_; }
       //static void Register() noexcept;
       //static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
     };
@@ -2325,21 +2257,120 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      static_assert(!std::is_trivially_constructible<class Game>::value, "must not be trivially constructible");
-for (auto z=0; z<1000;++z)
+      static_assert(!std::is_trivially_constructible<class Game>::value, "Game should not be trivially constructible");
       TestGame g(v, b.Clone());
-
-//auto f = [&g]() { g.SetBoard(std::vector<PieceIndex>{}); };
-      //Assert::ExpectException<std::exception>(f);
     }
+
     TEST_METHOD(_Serialize)
     {
       CheckForMemoryLeaks check;
 
-      //VariantChosen v(0, 1, '\0', 4, 4);
-      //TestGame g(v, b.Clone());
+      TestGame g(v, b.Clone());
+      std::string s = TestSerialize([this, &g](std::stringstream& s) { g.Serialize(s); });
+
+      Assert::IsTrue(TestSerialize([this, &g](std::stringstream& s) { g.Serialize(s); }) ==
+                     "\x1\x3\x0\x4\x7"s                                           // VariantChosen
+                     "\x4\x7\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0"s                 // BoardPart stage size
+                     "X X X X X X X X X X X X X X X X X X X X X X X X X X X X "s  // BoardPart stage 28 Pieces
+                     "\x2\x2\x4\0\x4\x1\x3c\0\x32\0\x32\0\0\0\x32\0"s             // BoardPart taken size
+                     "XXXXXXXX"s);                                                // BoardPart taken 4 Pieces
     }
-    TEST_METHOD(_more)
+
+    TEST_METHOD(_SetupBoard)
+    {
+      CheckForMemoryLeaks check;
+
+      TestGame g(v, b.Clone());
+      for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
+        for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
+          Assert::IsTrue(b.GetPieceIndex(x, y) == pNP);
+
+      g.SetupBoard(std::vector<PieceIndex>{});  // run with empty vector
+      for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
+        for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
+          Assert::IsTrue(b.GetPieceIndex(x, y) == pNP);  // nothing should have changed
+
+      std::vector<PieceIndex> list(b.stage_.GetSizeX() * b.stage_.GetSizeY());
+      std::size_t z = 0;
+      for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
+        for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
+        {
+          switch ((y * (b.stage_.GetSizeX() + 2) + x) % (b.stage_.GetSizeX()))
+          {
+            case 0: list[z++] = pWC; break;
+            case 1: list[z++] = pNT; break;
+            case 2: list[z++] = pNP; break;
+            case 3: list[z++] = pBC; break;
+            default: Assert::Fail(); break;
+          }
+        }
+
+      g.SetupBoard(list);
+
+      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(0, 0) == list[0]);
+      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(1, 0) == list[1]);
+      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(2, 0) == list[2]);
+      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(3, 0) == list[3]);
+      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(0, 1) == list[4]);
+      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(2, 6) == list[26]);
+      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(3, 6) == list[27]);
+
+      const Board& bb = g.TestGetBoard();
+      std::string s = TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); });
+      Assert::IsTrue(TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); }) ==
+                     "\x4\x7\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0"s                                      // BoardPart stage size
+                     "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B"s);   // BoardPart stage 28 Pieces
+    }
+
+    TEST_METHOD(_AddPlayer)
+    {
+      CheckForMemoryLeaks check;
+
+      class TestGame : public Game
+      {
+      public:
+        inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
+        virtual ~TestGame() noexcept {};
+        virtual void AddPlayer(const PlayerType& t, const PieceColor& c) noexcept override { Game::AddPlayer(t, c); }
+      };
+      TestGame g(v, b.Clone());
+
+      g.AddPlayer(PlayerType::Human, PieceColor::White);
+      g.AddPlayer(PlayerType::Computer, PieceColor::Black);
+      g.AddPlayer(PlayerType::Computer, PieceColor::White);
+      g.AddPlayer(PlayerType::Human, PieceColor::Black);
+    }
+
+    TEST_METHOD(_AIOnTurn)
+    {
+      CheckForMemoryLeaks check;
+
+      class TestBoard : public Board
+      {
+      public:
+        TestBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
+        virtual Board* Clone() const noexcept override { return new TestBoard(*this); }
+        bool& TestGetWhiteOnTurn() { return whiteOnTurn_; }
+      };
+      TestBoard b(v,d);
+      class TestGame : public Game
+      {
+      public:
+        inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
+        virtual ~TestGame() noexcept {};
+        TestBoard& TestGetBoard() noexcept { return down_cast<TestBoard&>(*board_); }
+        virtual bool AIOnTurn() const noexcept override { return Game::AIOnTurn(); }
+      };
+      TestGame g(v, b.Clone());
+      Assert::IsFalse(g.AIOnTurn());
+      g.TestGetBoard().TestGetWhiteOnTurn() = false;
+      Assert::IsTrue(g.AIOnTurn());
+      g.TestGetBoard().TestGetWhiteOnTurn() = true;
+      Assert::IsFalse(g.AIOnTurn());
+
+    }
+
+    TEST_METHOD(_AIAction)
     {
       CheckForMemoryLeaks check;
 
@@ -2357,10 +2388,10 @@ for (auto z=0; z<1000;++z)
     //  BoardPartDimension d(5, 5, 0, 0, 0, 0);
     //  BoardPart b(d, BoardPart::LayoutType::Alternating, 3);
     //  Assert::IsTrue(b.GetPiece(1,2) == 3);  // verify BoardPart exists and is initialized
-
+    //
     //  b.SetPiece(2, 2, 3);
-
-
+    //
+    // 
     //  class TestBoardPart : public BoardPart
     //  {
     //  public:
@@ -2371,27 +2402,27 @@ for (auto z=0; z<1000;++z)
     //    const Location& l_;
     //    const Piece* p_;
     //  };
-
+    //
     //  TestBoard t{ l1, Piece::NoPiece };
     //  Assert::IsTrue(t.SetPiece(l1, Piece::NoPiece) == Piece::NoPiece);
-
+    //
     //  // testing Action.Execute():
     //  TestBoard t1{ a1->GetLocation(), a1->GetPiece() };   // take starting piece
     //  Assert::IsTrue(t1.GetPiece(a1->GetLocation()) == a1->GetPiece());
     //  a1->Execute(&t1);
     //  Assert::IsTrue(t1.GetPiece(a1->GetLocation()) == Piece::NoPiece);
-
+    //
     //  TestBoard t2{ a2->GetLocation(), Piece::NoPiece };  // jump over empty field
     //  Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == Piece::NoPiece);
     //  a2->Execute(&t2);
     //  Assert::IsTrue(t2.GetPiece(a2->GetLocation()) == Piece::NoPiece);
-
+    //
     //  TestBoard t3{ a3->GetLocation(), Piece::NoPiece };  // place on empty field
     //  Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == Piece::NoPiece);
     //  a3->Execute(&t3);
     //  Assert::IsTrue(t3.GetPiece(a3->GetLocation()) == a3->GetPiece());
     //}
-
+    //
     //TEST_METHOD(TestEvaluateChainLengths1)
     //{
     //  const PieceMapP& map = std::make_shared<PieceMap>();
@@ -2399,13 +2430,13 @@ for (auto z=0; z<1000;++z)
     //  map->Add(CorePiece::WC);
     //  map->Add(CorePiece::BC);
     //  map->Add(Piece::NoPiece);
-
+    //
     //  constexpr unsigned int FieldSizeX = 50;   // pixels per tile
     //  constexpr unsigned int FieldSizeY = 50;   // pixels per tile
-
+    //
     //  constexpr unsigned int FieldSizeSX = 20;  // pixels per small tile
     //  constexpr unsigned int FieldSizeSY = 18;  // pixels per small tile
-
+    //
     //  constexpr unsigned int BoardStartX = 30;  // offset for drawing the board
     //  constexpr unsigned int BoardStartY = 30;  // offset for drawing the board
     //  Dimensions dim{
@@ -2413,8 +2444,8 @@ for (auto z=0; z<1000;++z)
     //    Dimension(15, 2, BoardStartX + FieldSizeX * (8 + 1), BoardStartY + 8 * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
     //    Dimension(3 * 8, 2, BoardStartX + FieldSizeX * (8 + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * 8 - FieldSizeSY * 4),
     //  };
-
-
+    //
+    //
     //  class TestBoard : public Board
     //  {
     //  public:
@@ -2422,19 +2453,19 @@ for (auto z=0; z<1000;++z)
     //    virtual void SetStartingBoard() noexcept override {};
     //    virtual Board* Clone() const noexcept override { return new TestBoard(*this); }
     //  };
-
+    //
     //  { // create a test position and run test for white 1, 2, 3 ,4
     //    VariantChosen v_{ 0,0,0,0 };
     //    TestBoard p(v_, map, dim);
     //    PositionValue v(PositionValue::PValueType::Undefined);
-
+    //
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(0));
     //    v = p.EvaluateChainLengths(4);
     //    Assert::IsTrue(v == PositionValue(0));
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(0));
-
+    //
     //    // values are calculated: directions * ( free open ends + free open opposite ends ) + 1-chains + 2-chains + ...
     //    p.SetPiece(Location{ BoardPartID::Main,7,7 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
@@ -2443,7 +2474,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(96)); // 8 * (1 + 1) + 8 * 10
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(96)); // 8 * (1 + 1) + 8 * 10
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,7,6 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
@@ -2451,7 +2482,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,7,5 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(PositionValue::PValueType::Won));
@@ -2459,7 +2490,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(2220)); // (7+6+7) * (1+1) + 6+6+6 * 10 + 2 * 1000
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(2220)); // (7+6+7) * (1+1) + 6+6+6 * 10 + 2 * 1000
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,7,4 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(PositionValue::PValueType::Won));
@@ -2468,12 +2499,12 @@ for (auto z=0; z<1000;++z)
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(20292)); // (7+6+6+7) * (1+1) + 24 * 10 + 2 * 10000
     //  }
-
+    //
     //  { // create a test position and run test for white 1, 2, 3 ,4
     //    VariantChosen v_{ 0,0,0,0 };
     //    TestBoard p(v_, map, dim);
     //    PositionValue v(PositionValue::PValueType::Undefined);
-
+    //
     //    // values are calculated: directions * ( free open ends + free open opposite ends ) + 1-chains + 2-chains + ...
     //    p.SetPiece(Location{ BoardPartID::Main,7,7 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
@@ -2482,7 +2513,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(96)); // 8 * (1 + 1) + 8 * 10
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(96)); // 8 * (1 + 1) + 8 * 10
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,6,7 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
@@ -2490,7 +2521,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(348)); // 7 * (1 + 1) + 2 * 6 * 10 + 2 * 100
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,8,7 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(PositionValue::PValueType::Won));
@@ -2498,7 +2529,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(2220)); // (7+6+7) * (1+1) + 6+6+6 * 10 + 2 * 1000
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(2220)); // (7+6+7) * (1+1) + 6+6+6 * 10 + 2 * 1000
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,5,7 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(PositionValue::PValueType::Won));
@@ -2507,12 +2538,12 @@ for (auto z=0; z<1000;++z)
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(20292)); // (7+6+6+7) * (1+1) + 24 * 10 + 2 * 10000
     //  }
-
+    //
     //  { // create a test position and run test for white 1, black 1, white 2, black 2, 
     //    VariantChosen v_{ 0,0,0,0 };
     //    TestBoard p(v_, map, dim);
     //    PositionValue v(PositionValue::PValueType::Undefined);
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,7,7 }, CorePiece::WC);
     //    p.SetPiece(Location{ BoardPartID::Main,6,7 }, CorePiece::BC);
     //    v = p.EvaluateChainLengths(3);
@@ -2521,7 +2552,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(0));
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(0));
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,7,6 }, CorePiece::WC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(252)); // 12 * 2 + 10 * 10 + 2 * 100 - 6 * 2 - 6 * 10
@@ -2529,7 +2560,7 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(252)); // 12 * 2 + 10 * 10 + 2 * 100 - 6 * 2 - 6 * 10
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(252)); // 12 * 2 + 10 * 10 + 2 * 100 - 6 * 2 - 6 * 10
-
+    //
     //    p.SetPiece(Location{ BoardPartID::Main,6,6 }, CorePiece::BC);
     //    v = p.EvaluateChainLengths(3);
     //    Assert::IsTrue(v == PositionValue(0)); // symmetry!
@@ -2537,27 +2568,27 @@ for (auto z=0; z<1000;++z)
     //    Assert::IsTrue(v == PositionValue(0));
     //    v = p.EvaluateChainLengths(5);
     //    Assert::IsTrue(v == PositionValue(0));
-
+    //
     //  }
     //}
-
+    //
     //TEST_METHOD(TestEvaluateChainLengths2)
     //{
     //  const std::array<const Piece*,  3> pieces { &CorePiece::WC, &CorePiece::BC, &Piece::NoPiece };
     //  const std::array<const wchar_t, 3> symbols{  L'x',           L'o',           L'.'};
-
+    //
     //  const PieceMapP& map = std::make_shared<PieceMap>();
     //  map->Empty();
     //  map->Add(*pieces[0]);
     //  map->Add(*pieces[1]);
     //  map->Add(*pieces[2]);
-
+    //
     //  constexpr unsigned int FieldSizeX = 50;   // pixels per tile
     //  constexpr unsigned int FieldSizeY = 50;   // pixels per tile
-
+    //
     //  constexpr unsigned int FieldSizeSX = 20;  // pixels per small tile
     //  constexpr unsigned int FieldSizeSY = 18;  // pixels per small tile
-
+    //
     //  constexpr unsigned int BoardStartX = 30;  // offset for drawing the board
     //  constexpr unsigned int BoardStartY = 30;  // offset for drawing the board
     //  Dimensions dim{
@@ -2565,8 +2596,8 @@ for (auto z=0; z<1000;++z)
     //    Dimension(15, 2, BoardStartX + FieldSizeX * (8 + 1), BoardStartY + 8 * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
     //    Dimension(3 * 8, 2, BoardStartX + FieldSizeX * (8 + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * 8 - FieldSizeSY * 4),
     //  };
-
-
+    //
+    //
     //  class TestBoard : public Board
     //  {
     //  public:
@@ -2574,27 +2605,27 @@ for (auto z=0; z<1000;++z)
     //    virtual void SetStartingBoard() noexcept override {};
     //    virtual Board* Clone() const noexcept override { return new TestBoard(*this); }
     //   };
-
+    //
     //  const int N = 3 * 3 * 3 * 3 * 3 * 3 * 3 * 3 * 3;
     //  VariantChosen v_{ 0,0,0,0 };
     //  TestBoard p(v_, map, dim);
     //  PositionValue v(PositionValue::PValueType::Undefined);
-
+    //
     //  wchar_t buffer[11]{ L"          " };
-
+    //
     //  for (int i = 0; i < N; i++)
     //  {
     //    int z = i;
-
+    //
     //    for (Coordinate j = 0; j < 9; ++j)
     //    {
     //      int k = z % 3;
     //      buffer[j] = symbols[k];
     //      p.SetPiece(Location{ BoardPartID::Main,j / 3U,j % 3U }, * pieces[k]);
-
+    //
     //      z /= 3;
     //    }
-
+    //
     //    v = p.EvaluateChainLengths(3);
     //    OutputDebugString(buffer); v.Log();
     //    continue;
@@ -22285,10 +22316,9 @@ for (auto z=0; z<1000;++z)
     //      case 19682: Assert::IsTrue(v == PositionValue(+    0                         )); break;  // ... ... ...
     //      default:   break;
     //    }
-
+    //
     //  }
     //}
-
   };
 
   TEST_CLASS(_AI)

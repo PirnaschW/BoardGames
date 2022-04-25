@@ -40,7 +40,7 @@ namespace BoardGamesCore
   //  //taken_.ForEach(f);
   //}
 
-  void Board::SetBoard(const std::vector<PieceIndex>& list)  noexcept
+  void Board::SetupBoard(const std::vector<PieceIndex>& list)  noexcept
   {
     const auto noTile = PMap[Piece::NoTile];
     auto iList = list.cbegin();
@@ -154,7 +154,7 @@ namespace BoardGamesCore
       value_ = PositionValue::PValueType::Won; // if no more moves, game over
       return;
     }
-    PositionValue v{ GetMoveCountFactor() * (static_cast<long>(movesW_.size()) - static_cast<long>(movesB_.size())) };
+    PositionValue v{ GetMoveCountFactor() * (static_cast<PValueBaseType>(movesW_.size()) - static_cast<PValueBaseType>(movesB_.size())) };
     for (Coordinate j = 0; j < stage_.GetSizeY(); j++)
     {
       for (Coordinate i = 0; i < stage_.GetSizeX(); i++)                                // loop through all locations

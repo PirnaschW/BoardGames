@@ -13,8 +13,8 @@ namespace Ataxx
     const Location w{ BoardPartID::Stock, 0, 0 };
     const Location b{ BoardPartID::Stock, 0, 1 };
 
-    const AtaxxBoard& board_ = dynamic_cast<const AtaxxBoard&>(p);        // position must be an Ataxx position
-    PieceIndex pI0 = board_.GetPieceIndex(l.x_,l.y_);                         // piece that is moving
+    const AtaxxBoard& board_ = down_cast<const AtaxxBoard&>(p);           // position must be an Ataxx position
+    PieceIndex pI0 = board_.GetPieceIndex(l.x_,l.y_);                       // piece that is moving
     //const Piece& p0 = board_.pMap_.GetPiece(pI0);
     //const Location ls{ p0.IsColor(PieceColor::White) ? w : b };
 

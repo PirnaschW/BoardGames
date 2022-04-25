@@ -12,11 +12,11 @@ namespace BoardGamesCore
     virtual bool React(unsigned int command) = 0;                                             // react to button/menu command
     virtual bool React(unsigned int event, unsigned int nFlags, const Point& p) = 0;          // react to mouse events
     virtual void React(CmdUI*) = 0;                                                           // react to UI events (allows to set buttons greyed, etc.)
-    virtual void DragTo(const Point&) = 0;                                                    // Piece gets dragged to a certain coordiante
-    virtual void DragStart(const Point&) = 0;                                                 // user triggered a dragging operation
-    virtual void DragEnd(const Point&) = 0;                                                   // user ended a dragging operation
-    virtual void Select(const Point&) = 0;                                                    // user selected a Piece
-    virtual void Unselect() = 0;                                                              // user cleared selection of a Piece
+    //virtual void DragTo(const Point&) = 0;                                                    // Piece gets dragged to a certain coordiante
+    //virtual void DragStart(const Point&) = 0;                                                 // user triggered a dragging operation
+    //virtual void DragEnd(const Point&) = 0;                                                   // user ended a dragging operation
+    //virtual void Select(const Point&) = 0;                                                    // user selected a Piece
+    //virtual void Unselect() = 0;                                                              // user cleared selection of a Piece
     virtual void SetUpdateCallBack(std::function<void()> cb) = 0;                             // periodic callback during AI move
 
   protected:

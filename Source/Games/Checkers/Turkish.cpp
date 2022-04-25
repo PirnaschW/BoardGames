@@ -11,7 +11,7 @@ namespace Checkers
 
   void TurkChecker::CollectMoves(const Board& p, const Location& l, Moves& moves) const noexcept
   {
-    const TurkCheckersBoard& board_ = dynamic_cast<const TurkCheckersBoard&>(p);
+    const TurkCheckersBoard& board_ = static_cast<const TurkCheckersBoard&>(p);
     //const int dy = board_.GetPiece(l).IsColor(PieceColor::White) ? -1 : 1;
     //board_.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
     //board_.AddIfLegal(moves, l, l + Offset(0, dy));

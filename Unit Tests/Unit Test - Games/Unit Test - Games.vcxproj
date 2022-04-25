@@ -123,6 +123,8 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
       <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,6 +151,8 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -174,6 +178,8 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
       <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -200,6 +206,8 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableModules>true</EnableModules>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -23,7 +23,7 @@ namespace BoardGamesCore
 
     virtual void Serialize(std::stringstream& s) const;
     virtual void SetStartingBoard() noexcept {};  // default is empty board; each game can define its specific starting setup
-    void SetBoard(const std::vector<PieceIndex>& list) noexcept;  // set up a board from a given Piece List
+    void SetupBoard(const std::vector<PieceIndex>& list) noexcept;  // set up a board from a given Piece List
 
     constexpr PieceIndex GetPieceIndex(Coordinate x, Coordinate y, BoardPartID b = BoardPartID::Stage) const noexcept
     {
