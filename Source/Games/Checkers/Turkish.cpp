@@ -32,7 +32,7 @@ namespace Checkers
   }
 
 // p is the piece that is moving, but it doesn't necessarily come from fr - it could be a continuation jump
-  bool TurkCheckersBoard::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept
+  bool TurkCheckersBoard::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, PieceIndex pI, const Location& fr) const noexcept
   {
     bool any{ false };                                                    // were any more jumps possible?
 

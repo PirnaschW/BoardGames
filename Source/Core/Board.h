@@ -11,7 +11,7 @@ namespace BoardGamesCore
     Board(const Board& m) noexcept;                    // copy constructor - needed for cloning in derived boards
     Board& operator=(const Board& b) = delete;         // copy assignment
     Board(Board&& m) noexcept = delete;                // move constructor
-    Board& operator=(Board&& b) { assert(false); }     // move assignment
+    Board& operator=(Board&& b) noexcept { assert(false); }     // move assignment
 
   public:
     virtual ~Board() noexcept = default;

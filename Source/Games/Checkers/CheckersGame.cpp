@@ -24,8 +24,10 @@ namespace Checkers
 
   bool CheckersBoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
-    assert(fr.b_ == BoardPartID::Stage); // should never come here
-    assert(to.b_ == BoardPartID::Stage); // should never come here
+    assert(fr.b_ == BoardPartID::Stage); // otherwise, should never come here
+    assert(to.b_ == BoardPartID::Stage); // otherwise, should never come here
+
+    if (!stage_.IsValid(to.x_, to.y_)) return false;
 
     PieceIndex pfI = GetPieceIndex(fr.x_, fr.y_);
     assert(pfI != PMap[Piece::NoPiece]);
@@ -47,7 +49,7 @@ namespace Checkers
   }
 
 
-  bool CheckersBoard::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept
+  bool CheckersBoard::AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, PieceIndex pI, const Location& fr) const noexcept
   {
     //const Location l0{ fr };
     //const Piece& p0 = p == Piece::NoTile ? GetPieceIndex(fr) : p;

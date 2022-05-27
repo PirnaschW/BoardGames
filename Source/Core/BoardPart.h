@@ -109,23 +109,20 @@ namespace BoardGamesCore
 
     constexpr Coordinate GetSizeX() const noexcept { return dim_.xCount_; }  // needed for loops
     constexpr Coordinate GetSizeY() const noexcept { return dim_.yCount_; }  // needed for loops
+    constexpr bool IsValid(Coordinate x, Coordinate y) const noexcept   // check if this is a field of the BoardPart
+    { return -x <= dim_.xCount_ && x < dim_.xCount_ && -y <= dim_.yCount_ && y < dim_.yCount_; }
 
     constexpr bool HasPiece(PieceIndex pI) const noexcept { for (const auto& f : fields_) if (f.GetPieceIndex() == pI) return true; return false; }
-    constexpr PieceIndex GetPieceIndex(Coordinate x, Coordinate y) const /*noexcept*/ { EnsureValid(x, y); return fields_[Index(x, y)].GetPieceIndex(); }
-    constexpr void SetPieceIndex(PieceIndex pI, Coordinate x, Coordinate y) /*noexcept*/
+    constexpr PieceIndex GetPieceIndex(Coordinate x, Coordinate y) const noexcept { assert(IsValid(x, y)); return fields_[Index(x, y)].GetPieceIndex(); }
+    constexpr void SetPieceIndex(PieceIndex pI, Coordinate x, Coordinate y) noexcept
     {
-      EnsureValid(x, y);
+      assert(IsValid(x, y));
       hash_ = 0;
       fields_[Index(x, y)].SetPieceIndex(pI);
     }
 
   private:
     std::size_t Index(Coordinate x, Coordinate y) const noexcept;
-    constexpr void EnsureValid(Coordinate x, Coordinate y) const
-    {
-      if (-x > dim_.xCount_ || x >= dim_.xCount_) throw std::invalid_argument("x out of range");
-      if (-y > dim_.yCount_ || y >= dim_.yCount_) throw std::invalid_argument("x out of range");
-    }
     Coordinate GetX(PieceIndex pI) const noexcept { return pI % dim_.xCount_; }
     Coordinate GetY(PieceIndex pI) const noexcept { return pI / dim_.xCount_; }
 

@@ -39,7 +39,7 @@ namespace Checkers
     void SetStartingBoard() noexcept override;
     // extensions
   public:
-    virtual bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, const Piece& p, const Location& fr) const noexcept override;
+    virtual bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, PieceIndex pI, const Location& fr) const noexcept override;
   protected:
     Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther; }
   };

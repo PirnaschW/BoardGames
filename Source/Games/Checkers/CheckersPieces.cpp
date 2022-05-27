@@ -13,10 +13,10 @@ namespace Checkers
   void Checker::CollectMoves(const Board& p, const Location& l, Moves& moves) const noexcept
   {
     const CheckersBoard& board_ = down_cast<const CheckersBoard&>(p);
-    //const int dy = board_.GetPieceIndex(l.x_,l.y_).IsColor(PieceColor::White) ? -1 : 1;
-    //board_.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
-    //board_.AddIfLegal(moves, l, l + Offset(-1, dy));
-    //board_.AddIfLegalJump(moves, false, Actions{}, board_.GetPieceIndex(l.x_, l.y_), l);        // check for jump moves
+    const int dy = PMap[board_.GetPieceIndex(l.x_,l.y_)].IsColor(PieceColor::White) ? -1 : 1;
+    board_.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
+    board_.AddIfLegal(moves, l, l + Offset(-1, dy));
+    board_.AddIfLegalJump(moves, false, Actions{}, board_.GetPieceIndex(l.x_, l.y_), l);        // check for jump moves
   }
 
 

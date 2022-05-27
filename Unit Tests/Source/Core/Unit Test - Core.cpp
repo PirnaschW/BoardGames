@@ -1447,6 +1447,24 @@ namespace UnitTestCore
       Assert::IsTrue(b.GetSizeY() == 2);
     }
 
+    TEST_METHOD(_IsValid)
+    {
+      CheckForMemoryLeaks check;
+      constexpr Coordinate xSize{ 4 };
+      constexpr Coordinate ySize{ 2 };
+
+      BoardPart b(BoardPartDimension(xSize, ySize, LayoutType::Dark, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pWC);
+      for (Coordinate x = -6; x < 6; ++x)
+        for (Coordinate y = -6; x < 6; ++x)
+        {
+          if      (x <  -xSize)  Assert::IsFalse(b.IsValid(x, y));
+          else if (x >=  xSize)  Assert::IsFalse(b.IsValid(x, y));
+          else if (y <  -ySize)  Assert::IsFalse(b.IsValid(x, y));
+          else if (y >=  ySize)  Assert::IsFalse(b.IsValid(x, y));
+          else                   Assert::IsTrue (b.IsValid(x, y));
+        }
+    }
+
     TEST_METHOD(_HasPiece)
     {
       CheckForMemoryLeaks check;
@@ -1470,12 +1488,8 @@ namespace UnitTestCore
       for (Coordinate x = -6; x < 6; ++x)
         for (Coordinate y = -6; x < 6; ++x)
         {
-          std::function<int()>_l = [&b, x, y] { return b.GetPieceIndex(x, y); };
-          if      (x <  -b.GetSizeX())  Assert::ExpectException<std::invalid_argument>(_l);
-          else if (x >=  b.GetSizeX())  Assert::ExpectException<std::invalid_argument>(_l);
-          else if (y <  -b.GetSizeY())  Assert::ExpectException<std::invalid_argument>(_l);
-          else if (y >=  b.GetSizeY())  Assert::ExpectException<std::invalid_argument>(_l);
-          else _l();
+          std::function<int()>l_ = [&b, x, y] { return b.GetPieceIndex(x, y); };
+          if (b.IsValid(x, y)) Assert::IsTrue(l_() == pBC);
         }
     }
 
@@ -2321,6 +2335,60 @@ namespace UnitTestCore
                      "\x4\x7\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0"s                                      // BoardPart stage size
                      "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B"s);   // BoardPart stage 28 Pieces
     }
+
+
+    TEST_METHOD(_ReactFSM)
+    {
+      CheckForMemoryLeaks check;
+
+      Assert::Fail();
+    }
+
+    TEST_METHOD(_React_CanMove)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_CanEdit)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_Editing)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_SelectFrom)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_Reset)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_SelectTarget)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_AIMove)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_StartEdit)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_StartDrag)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_Drag)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+    TEST_METHOD(_React_Drop)
+    {
+      CheckForMemoryLeaks check; Assert::Fail();
+    }
+
 
     TEST_METHOD(_AddPlayer)
     {

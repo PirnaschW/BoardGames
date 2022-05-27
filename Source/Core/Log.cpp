@@ -19,7 +19,7 @@ namespace BoardGamesCore
         wsprintfW(buffer, L"[undefined]\n");
         break;
       case BoardGamesCore::PositionValue::PValueType::Normal:
-        wsprintfW(buffer, L"[%d]\n",value_);
+        wsprintfW(buffer, L"[%lld]\n",value_);
         break;
       case BoardGamesCore::PositionValue::PValueType::Won:
         wsprintfW(buffer, L"[Won]\n");

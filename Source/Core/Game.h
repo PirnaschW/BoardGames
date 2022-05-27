@@ -46,128 +46,18 @@ namespace BoardGamesCore
       UIChecked,     // is event checked in UI
     };
 
-    bool React(State state, unsigned int event)
-    {
-      struct StateChange {
-        State state;
-        unsigned int event;
-        struct Hash { std::size_t operator()(const StateChange& c) const noexcept { return std::hash<long>()((c.event << 8L) + static_cast<long>(c.state)); } };
-        struct Equality { bool operator()(const StateChange& c1, const StateChange& c2) const noexcept { return c1.state == c2.state && c1.event == c2.event; } };
-      };
-
-      static const std::unordered_map<StateChange, std::function<bool(void)>, StateChange::Hash, StateChange::Equality> reactMap_{
-        { {State::SelectFrom,    BoardGamesMFC::Mouse_LButton_Up   }, [this]() -> bool { return React_SelectFrom  (); } },
-        { {State::SelectTarget,  BoardGamesMFC::Mouse_RButton_Up   }, [this]() -> bool { return React_Reset       (); } },
-        { {State::SelectTarget,  BoardGamesMFC::Mouse_LButton_Up   }, [this]() -> bool { return React_SelectTarget(); } },
-        { {State::ReadyToSubmit, BoardGamesMFC::Mouse_RButton_Up   }, [this]() -> bool { return React_Reset       (); } },
-        { {State::ReadyToSubmit, ID_EDIT_MOVE                      }, [this]() -> bool { return React_AIMove      (); } },
-        { {State::SelectFrom,    ID_EDIT_BOARD                     }, [this]() -> bool { return React_StartEdit   (); } },
-        { {State::BoardEditing,  ID_EDIT_BOARD                     }, [this]() -> bool { return React_Reset       (); } },
-        { {State::BoardEditing,  BoardGamesMFC::Mouse_LButton_Down }, [this]() -> bool { return React_StartDrag   (); } },
-        { {State::Dragging,      BoardGamesMFC::Mouse_Move         }, [this]() -> bool { return React_Drag        (); } },
-        { {State::Dragging,      BoardGamesMFC::Mouse_LButton_Up   }, [this]() -> bool { return React_Drop        (); } },
-        { {State::UIAvailable,   ID_EDIT_MOVE                      }, [this]() -> bool { return React_CanMove     (); } },
-        { {State::UIAvailable,   ID_EDIT_BOARD                     }, [this]() -> bool { return React_CanEdit     (); } },
-        { {State::UIChecked,     ID_EDIT_BOARD                     }, [this]() -> bool { return React_Editing     (); } },
-      };
-      const auto validStateChange = reactMap_.find({ state, event });
-      return validStateChange != reactMap_.end() && validStateChange->second();
-    }
-
-    bool React_CanMove()
-    {
-      return state_ == State::ReadyToSubmit;
-    }
-
-    bool React_CanEdit()
-    {
-      return state_ == State::SelectFrom || state_ == State::BoardEditing;
-    }
-
-    bool React_Editing()
-    {
-      return state_ == State::BoardEditing;
-    }
-
-    bool React_SelectFrom()
-    {
-      Location l{ BoardPartID::Stage, 0U,0U };
-      if (!board_->GetLocationFromPoint(point_, l)) return false;        // user clicked somewhere outside
-      for (const auto& m : board_->GetMoveList(board_->WhiteOnTurn()))   // filter moves of the selected piece into 'moves'
-      {
-        const Location& lf = m->GetFrL();
-        if (lf == l || (lf.b_ == BoardPartID::Stock && m->GetToL() == l)) moves_.push_back(m);
-      }
-      if (moves_.empty()) return false;
-      state_ = State::SelectTarget;
-      return true;
-    }
-
-    bool React_Reset()
-    {
-      moves_.clear();
-      state_ = State::SelectFrom;
-      return true;
-    }
-
-    bool React_SelectTarget()
-    {
-      Location l{ BoardPartID::Stage, 0U,0U };
-      if (!board_->GetLocationFromPoint(point_, l)) return false;        // user clicked somewhere outside
-      for (const auto& m : moves_)   // check through allowed moves
-      {
-        if (m->GetToL() == l)
-        {
-          MoveP mm = m;
-          moves_.clear();
-          moves_.push_back(mm);
-          state_ = State::ReadyToSubmit;
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool React_AIMove()
-    {
-      AIAction();  // execute computer move
-      state_ = State::SelectFrom;
-      return true;
-    }
-    bool React_StartEdit()
-    {
-      state_ = State::BoardEditing;
-      return true;
-    }
-    bool React_StartDrag()
-    {
-      Location l{ BoardPartID::Stage, 0U,0U };
-      if (!board_->GetLocationFromPoint(point_, l)) return false; // clicked somewhere invalid
-      PieceIndex pI = board_->GetPieceIndex(l.x_, l.y_, l.b_);
-      if (pI == PMap[Piece::NoTile]) return false;;
-      dragPoint_ = point_;
-      dragPiece_ = pI;
-      state_ = State::Dragging;
-      return true;
-    }
-    bool React_Drag()
-    {
-      dragPoint_ = point_;
-      return true;
-    }
-    bool React_Drop()
-    {
-      Location l{ BoardPartID::Stage, 0U,0U };
-      if (board_->GetLocationFromPoint(point_, l))
-      {
-        if (l.b_ != BoardPartID::Stock)
-          board_->SetPieceIndex(dragPiece_, l.x_, l.y_, l.b_); // dropped on a valid target
-      }
-      dragPoint_ = {};
-      dragPiece_ = PMap[Piece::NoPiece];
-      state_ = State::BoardEditing;
-      return true;
-    }
+    [[TODO::Unittest]] bool React(State state, unsigned int event) noexcept;  // FSM (Finite State Machine) for UI handling
+    [[TODO::Unittest]] bool React_CanMove() const noexcept;
+    [[TODO::Unittest]] bool React_CanEdit() const noexcept;
+    [[TODO::Unittest]] bool React_Editing() const noexcept;
+    [[TODO::Unittest]] bool React_SelectFrom() noexcept;
+    [[TODO::Unittest]] bool React_Reset() noexcept;
+    [[TODO::Unittest]] bool React_SelectTarget() noexcept;
+    [[TODO::Unittest]] bool React_AIMove() noexcept;
+    [[TODO::Unittest]] bool React_StartEdit() noexcept;
+    [[TODO::Unittest]] bool React_StartDrag() noexcept;
+    [[TODO::Unittest]] bool React_Drag() noexcept;
+    [[TODO::Unittest]] bool React_Drop() noexcept;
 
   protected:
     virtual void AddPlayer(const PlayerType& t, const PieceColor& c) noexcept { players_.push_back(new Player(t,c)); }

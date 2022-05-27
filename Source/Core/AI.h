@@ -28,6 +28,8 @@ namespace BoardGamesCore
         return *pl0;  // return the version found in the map
       }
 
+      board->GetAllMoves();
+      board->EvaluateStatically();
       auto entry = map_.insert(board);
       return *(entry.first);  // return the pointer to the new entry
     }
