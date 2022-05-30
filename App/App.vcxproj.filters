@@ -459,9 +459,6 @@
     <ClInclude Include="..\Source\Core\AI.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\Mode.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Core\Core.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>

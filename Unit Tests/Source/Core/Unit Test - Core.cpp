@@ -1119,83 +1119,6 @@ namespace UnitTestCore
     }
   };
 
-  TEST_CLASS(_Mode)
-  {
-    TEST_METHOD(_Set)
-    {
-      CheckForMemoryLeaks check;
-
-      Mode m1{ Mode_::ShowStock };
-      Mode m2 = m1;
-      Assert::IsTrue(m2.IsSet(Mode_::ShowStock));
-      Assert::IsFalse(m2.IsSet(Mode_::Editing));
-      Assert::IsFalse(m2.IsSet(Mode_::GameOver));
-      m2.Set(Mode_::Editing);
-      Assert::IsTrue(m2.IsSet(Mode_::ShowStock));
-      Assert::IsTrue(m2.IsSet(Mode_::Editing));
-      Assert::IsFalse(m2.IsSet(Mode_::GameOver));
-      m2.Set(Mode_::GameOver);
-      Assert::IsTrue(m2.IsSet(Mode_::ShowStock));
-      Assert::IsTrue(m2.IsSet(Mode_::Editing));
-      Assert::IsTrue(m2.IsSet(Mode_::GameOver));
-    }
-
-    TEST_METHOD(_Del)
-    {
-      CheckForMemoryLeaks check;
-
-      Mode m1{ Mode_::ShowStock | Mode_::Editing | Mode_::GameOver };
-      Mode m2 = m1;
-
-      Assert::IsTrue(m2.IsSet(Mode_::ShowStock));
-      Assert::IsTrue(m2.IsSet(Mode_::Editing));
-      Assert::IsTrue(m2.IsSet(Mode_::GameOver));
-      m2.Del(Mode_::Editing);
-      Assert::IsTrue(m2.IsSet(Mode_::ShowStock));
-      Assert::IsFalse(m2.IsSet(Mode_::Editing));
-      Assert::IsTrue(m2.IsSet(Mode_::GameOver));
-      m2.Del(Mode_::GameOver);
-      Assert::IsTrue(m2.IsSet(Mode_::ShowStock));
-      Assert::IsFalse(m2.IsSet(Mode_::Editing));
-      Assert::IsFalse(m2.IsSet(Mode_::GameOver));
-    }
-
-    TEST_METHOD(_IsSet)
-    {
-      CheckForMemoryLeaks check;
-
-      Mode m1{ Mode_::ShowStock };
-      Assert::IsFalse(m1.IsSet(Mode_::SelectFr));
-      Assert::IsFalse(m1.IsSet(Mode_::SelectTo));
-      Assert::IsFalse(m1.IsSet(Mode_::Editing));
-      Assert::IsFalse(m1.IsSet(Mode_::Dragging));
-      Assert::IsTrue(m1.IsSet(Mode_::ShowStock));
-      Assert::IsFalse(m1.IsSet(Mode_::ShowTaken));
-      Assert::IsFalse(m1.IsSet(Mode_::GameOver));
-
-      Mode m2{ Mode_::Dragging};
-      Assert::IsFalse(m2.IsSet(Mode_::SelectFr));
-      Assert::IsFalse(m2.IsSet(Mode_::SelectTo));
-      Assert::IsFalse(m2.IsSet(Mode_::Editing));
-      Assert::IsTrue(m2.IsSet(Mode_::Dragging));
-      Assert::IsFalse(m2.IsSet(Mode_::ShowStock));
-      Assert::IsFalse(m2.IsSet(Mode_::ShowTaken));
-      Assert::IsFalse(m2.IsSet(Mode_::GameOver));
-    }
-
-    TEST_METHOD(_OperatorBitwise)
-    {
-      CheckForMemoryLeaks check;
-
-      Mode_ m1 = (Mode_::Editing | Mode_::ShowStock | Mode_::GameOver) & (~Mode_::ShowStock);
-      Mode_ m2 = Mode_::Editing | Mode_::GameOver;
-      Mode_ m3 = Mode_::Editing | Mode_::ShowStock | Mode_::GameOver;
-      Assert::IsTrue(m1 == m2);
-      Assert::IsFalse(m1 == m3);
-      Assert::IsTrue(m3 == ~~m3);
-    }
-  };
-
   TEST_CLASS(_PlayerType)
   {
     TEST_METHOD(_OperatorEqual)
@@ -2262,9 +2185,9 @@ namespace UnitTestCore
     public:
       inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
       virtual ~TestGame() noexcept {};
-      const Board& TestGetBoard() const noexcept { return *board_; }
-      //static void Register() noexcept;
-      //static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
+      Board*& TestGetBoard() noexcept { return board_; }
+      AI& TestGetAI() noexcept { return ai_; }
+      void TestCallBack() const {}
     };
 
     TEST_METHOD(_constructor)
@@ -2321,74 +2244,20 @@ namespace UnitTestCore
 
       g.SetupBoard(list);
 
-      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(0, 0) == list[0]);
-      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(1, 0) == list[1]);
-      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(2, 0) == list[2]);
-      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(3, 0) == list[3]);
-      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(0, 1) == list[4]);
-      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(2, 6) == list[26]);
-      Assert::IsTrue(g.TestGetBoard().GetPieceIndex(3, 6) == list[27]);
+      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(0, 0) == list[0]);
+      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(1, 0) == list[1]);
+      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(2, 0) == list[2]);
+      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(3, 0) == list[3]);
+      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(0, 1) == list[4]);
+      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(2, 6) == list[26]);
+      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(3, 6) == list[27]);
 
-      const Board& bb = g.TestGetBoard();
+      const Board& bb = *g.TestGetBoard();
       std::string s = TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); });
       Assert::IsTrue(TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); }) ==
                      "\x4\x7\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0"s                                      // BoardPart stage size
                      "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B"s);   // BoardPart stage 28 Pieces
     }
-
-
-    TEST_METHOD(_ReactFSM)
-    {
-      CheckForMemoryLeaks check;
-
-      Assert::Fail();
-    }
-
-    TEST_METHOD(_React_CanMove)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_CanEdit)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_Editing)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_SelectFrom)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_Reset)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_SelectTarget)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_AIMove)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_StartEdit)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_StartDrag)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_Drag)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-    TEST_METHOD(_React_Drop)
-    {
-      CheckForMemoryLeaks check; Assert::Fail();
-    }
-
 
     TEST_METHOD(_AddPlayer)
     {
@@ -2409,44 +2278,31 @@ namespace UnitTestCore
       g.AddPlayer(PlayerType::Human, PieceColor::Black);
     }
 
-    TEST_METHOD(_AIOnTurn)
+    TEST_METHOD(_MakeMove)
     {
       CheckForMemoryLeaks check;
 
-      class TestBoard : public Board
-      {
-      public:
-        TestBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
-        virtual Board* Clone() const noexcept override { return new TestBoard(*this); }
-        bool& TestGetWhiteOnTurn() { return whiteOnTurn_; }
-      };
-      TestBoard b(v,d);
-      class TestGame : public Game
-      {
-      public:
-        inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
-        virtual ~TestGame() noexcept {};
-        TestBoard& TestGetBoard() noexcept { return down_cast<TestBoard&>(*board_); }
-        virtual bool AIOnTurn() const noexcept override { return Game::AIOnTurn(); }
-      };
       TestGame g(v, b.Clone());
-      Assert::IsFalse(g.AIOnTurn());
-      g.TestGetBoard().TestGetWhiteOnTurn() = false;
-      Assert::IsTrue(g.AIOnTurn());
-      g.TestGetBoard().TestGetWhiteOnTurn() = true;
-      Assert::IsFalse(g.AIOnTurn());
+      g.SetUpdateCallBack(std::bind(&TestGame::TestCallBack,&g));
 
-    }
-
-    TEST_METHOD(_AIAction)
-    {
-      CheckForMemoryLeaks check;
-
-      Assert::Fail();
+      PositionValue v = g.TestGetAI().MakeMove(g.TestGetBoard());
+      Assert::IsTrue(v.IsDecided());
+      Assert::IsTrue(v == PositionValue::PValueType::Lost);
     }
 
   };
 
+  TEST_CLASS(_AI)
+  {
+    TEST_METHOD(_TODO)
+    {
+      CheckForMemoryLeaks check;
+
+      Assert::IsTrue(true);
+
+    }
+
+  };
 
   TEST_CLASS(_Rest)
   {
@@ -22389,17 +22245,4 @@ namespace UnitTestCore
     //}
   };
 
-  TEST_CLASS(_AI)
-  {
-    TEST_METHOD(_TODO)
-    {
-      CheckForMemoryLeaks check;
-
-      Assert::IsTrue(true);
-
-
-
-    }
-
-  };
 }

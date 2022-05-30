@@ -110,16 +110,12 @@ namespace BoardGamesCore
     //depth_ = 0; " keep value for display
   }
 
-  void Board::Draw(DC* dc, Mode mode_) const
+  void Board::Draw(DC* dc, bool showstock) const
   { 
     stage_.DrawFrame(dc);
     stage_.Draw(dc);
-
-    if (mode_.IsSet(Mode_::ShowStock) || mode_.IsSet(Mode_::Editing))
-    {
-      stock_.Draw(dc);
-    }
     taken_.Draw(dc);
+    if (showstock) stock_.Draw(dc);
   }
 
   void Board::DrawSelected(DC* dc, const Location& l) const

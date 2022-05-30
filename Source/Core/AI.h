@@ -33,7 +33,7 @@ namespace BoardGamesCore
       auto entry = map_.insert(board);
       return *(entry.first);  // return the pointer to the new entry
     }
-    Mode::Mode_ MakeMove(Board*& b);
+    PositionValue MakeMove(Board*& b);
     PositionValue Evaluate(Board* board, AIMethod method, Depth maxdepth, double timeLimit);
     void SetCallback(std::function<void()> cb) { assert(cb != nullptr); callback_ = cb; }
     void Purge(const Moves& sequence_) noexcept;  // 'forget' all boards that don't start with this move sequence

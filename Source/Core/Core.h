@@ -33,7 +33,6 @@
 #include "Action.h"
 #include "Move.h"
 #include "Field.h"
-#include "Mode.h"
 #include "BoardPart.h"
 #include "Variant.h"
 #include "Board.h"

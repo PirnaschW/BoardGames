@@ -53,7 +53,7 @@ namespace BoardGamesCore
 
     constexpr bool WhiteOnTurn() const noexcept { return whiteOnTurn_; }
 
-    void Draw(DC* dc, Mode mode_) const;                          // draw the complete board
+    void Draw(DC* dc, bool showstock) const;                          // draw the complete board
     virtual void DrawSelected(DC* dc, const Location& l) const;   // highlight field (for selected / from / to)
     virtual bool GetLocationFromPoint(const Point& p, Location& l) const noexcept;
 

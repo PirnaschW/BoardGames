@@ -38,11 +38,11 @@ namespace BoardGamesCore
   
   void Game::Draw(DC* dc) const
   {
-    board_->Draw(dc, mode_);
+    board_->Draw(dc, true);
 
     // markup selectable tiles
 
-    if (mode_.IsSet(Mode_::SelectTo))
+    if (state_ == State::SelectTarget)
     {
       for (auto& m : moves_)
       {
@@ -51,7 +51,7 @@ namespace BoardGamesCore
       }
     }
 
-    if (mode_.IsSet(Mode_::Dragging))
+    if (state_ == State::Dragging)
     {
       if (dragPiece_ != PMap[Piece::NoPiece])
       {
@@ -165,7 +165,17 @@ namespace BoardGamesCore
 
   bool Game::React_AIMove() noexcept
   {
-    AIAction();  // execute computer move
+    PositionValue v = ai_.MakeMove(board_);  // execute computer move
+
+        // inform player
+    if (v == PositionValue::PValueType::Lost)
+    {
+      BoardGamesMFC::AfxMessageBox(L"Computer resigns - Player wins!");
+      state_ = State::GameOver;
+      return false;
+    }
+    if (v == PositionValue::PValueType::Won)  BoardGamesMFC::AfxMessageBox(L"You might as well resign - Computer will win!");
+    if (v == PositionValue::PValueType::Tie)  BoardGamesMFC::AfxMessageBox(L"Computer will hold a Draw.");
     state_ = State::SelectFrom;
     return true;
   }

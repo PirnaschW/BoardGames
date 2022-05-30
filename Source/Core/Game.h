@@ -43,32 +43,30 @@ namespace BoardGamesCore
       Dragging,      // a piece is being dragged with the mouse
       GameOver,      // the game is over - won or lost
       UIAvailable,   // is event available to user in UI
-      UIChecked,     // is event checked in UI
+      UIChecked,     // is event shown with a check mark in UI
     };
 
-    [[TODO::Unittest]] bool React(State state, unsigned int event) noexcept;  // FSM (Finite State Machine) for UI handling
-    [[TODO::Unittest]] bool React_CanMove() const noexcept;
-    [[TODO::Unittest]] bool React_CanEdit() const noexcept;
-    [[TODO::Unittest]] bool React_Editing() const noexcept;
-    [[TODO::Unittest]] bool React_SelectFrom() noexcept;
-    [[TODO::Unittest]] bool React_Reset() noexcept;
-    [[TODO::Unittest]] bool React_SelectTarget() noexcept;
-    [[TODO::Unittest]] bool React_AIMove() noexcept;
-    [[TODO::Unittest]] bool React_StartEdit() noexcept;
-    [[TODO::Unittest]] bool React_StartDrag() noexcept;
-    [[TODO::Unittest]] bool React_Drag() noexcept;
-    [[TODO::Unittest]] bool React_Drop() noexcept;
+    bool React(State state, unsigned int event) noexcept;  // FSM (Finite State Machine) for UI handling
+    bool React_CanMove() const noexcept;
+    bool React_CanEdit() const noexcept;
+    bool React_Editing() const noexcept;
+    bool React_SelectFrom() noexcept;
+    bool React_Reset() noexcept;
+    bool React_SelectTarget() noexcept;
+    bool React_AIMove() noexcept;
+    bool React_StartEdit() noexcept;
+    bool React_StartDrag() noexcept;
+    bool React_Drag() noexcept;
+    bool React_Drop() noexcept;
 
   protected:
     virtual void AddPlayer(const PlayerType& t, const PieceColor& c) noexcept { players_.push_back(new Player(t,c)); }
-    virtual bool AIOnTurn() const noexcept { return !board_->WhiteOnTurn(); }
-    virtual void AIAction() { while (!(mode_.IsSet(Mode_::GameOver)) && AIOnTurn()) mode_.Set(ai_.MakeMove(board_)); }// execute computer moves while it is its turn
+
     //[[deprecated]] [[TODO::Unittest]] virtual void SetCurrentPlayer(unsigned int p) noexcept { current_ = p; }
     //[[deprecated]] [[TODO::Unittest]] virtual const Player& NextPlayer() noexcept;
     //[[deprecated]] [[TODO::Unittest]] virtual void Execute(const Move& m);
-    //[[deprecated]] [[TODO::Unittest]] virtual bool AIMove();
 
-  //[[TODO::Unittest]] virtual void AddToStock(const Location& l, const Piece& p) noexcept;
+    //[[TODO::Unittest]] virtual void AddToStock(const Location& l, const Piece& p) noexcept;
 
   protected:
     VariantChosen v_;                                 // Game ID and Variant
@@ -76,9 +74,8 @@ namespace BoardGamesCore
     Board* board_;                                    // current playing board (not owned! AI owns all boards)                                                      
 
   private:                                            
-    Mode mode_{ Mode_::SelectFr & Mode_::ShowStock }; // current game mode is: pick FRom; show stock
-    State state_{ State::SelectFrom };  // current game State
-    Point point_{};                // last Mouse event point
+    State state_{ State::SelectFrom };                // current game State
+    Point point_{};                                   // last Mouse event point
     Moves moves_{};                                   // will contain all allowed moves once a start piece is selected
                                                       
     std::vector<Player*> players_{};                  // list of players

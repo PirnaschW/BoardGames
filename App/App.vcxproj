@@ -83,7 +83,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Source;$(SolutionDir)Source\Util;$(SolutionDir)Source\MFC;$(SolutionDir)Source\Core;$(SolutionDir)Source\Games</IncludePath>
     <TargetName>BG</TargetName>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
@@ -99,7 +99,7 @@
     <ExtensionsToDeleteOnClean>*.recipe;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Source;$(SolutionDir)Source\Util;$(SolutionDir)Source\MFC;$(SolutionDir)Source\Core;$(SolutionDir)Source\Games</IncludePath>
     <TargetName>BG</TargetName>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
@@ -267,7 +267,6 @@
     <ClInclude Include="..\Source\Core\Layout.h" />
     <ClInclude Include="..\Source\Core\Location.h" />
     <ClInclude Include="..\Source\Core\Log.h" />
-    <ClInclude Include="..\Source\Core\Mode.h" />
     <ClInclude Include="..\Source\Core\Move.h" />
     <ClInclude Include="..\Source\Core\Offset.h" />
     <ClInclude Include="..\Source\Core\Piece.h" />
