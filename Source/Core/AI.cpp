@@ -33,7 +33,7 @@ namespace BoardGamesCore
         PositionValue value_ = EvaluateDeeper(board, method, board->WhiteOnTurn(), PositionValue::PValueType::Lost, PositionValue::PValueType::Won, plies);
         if (value_.IsDecided()) return value_;
         if (board->GetMoveList(board->WhiteOnTurn()).size() == 1) return value_;          // if there is only one move, don't spend more time evaluating it
-        if (map_.size() > 4'500'000) break;
+        if (memory_.GetSize() > 4'500'000) break;
         callback_(); // update screen
       }
       catch (std::bad_alloc)
@@ -68,8 +68,6 @@ namespace BoardGamesCore
     {
       auto& m = movelist[i];
       Board* p = MoveAndRemember(board,*m);                                      // move and find the resulting board in the list
-      p->GetAllMoves();                                                   // fill the move lists
-      p->EvaluateStatically();
       PositionValue v = -EvaluateDeeper(p, method, !w, -beta, -alpha, plies - 1);// evaluate the result
       assert(v != PositionValue::PValueType::Undefined);
       assert(v == p->GetValue(w)); // or not???
@@ -110,51 +108,20 @@ namespace BoardGamesCore
 
   void AI::Purge(const Moves& sequence_) noexcept
   {
-    static int dummy{};
-    dummy++;
-
-    auto l = [&sequence_] (const Board* p) -> bool
-    {
-      if (p->sequence_.size() < sequence_.size()) return true;
-      else
+    memory_.Purge(
+      [&sequence_](const Board* p) -> bool
       {
-        for (size_t i = 0; i < sequence_.size(); i++)
+        if (p->sequence_.size() < sequence_.size()) return true; // position has less moves, no longer of interest
+        else
         {
-          if (*(p->sequence_[i]) != *sequence_[i]) return true;
-        }
-      }
-    };
-
-    for (auto it = map_.begin(); it != map_.end();)
-    {
-      bool trash{ false };
-      if ((*it)->sequence_.size() < sequence_.size()) trash = true;
-      else
-      {
-        for (size_t i = 0; i < sequence_.size(); i++)
-        {
-          if (*(*it)->sequence_[i] != *sequence_[i])
+          for (size_t i = 0; i < sequence_.size(); i++)
           {
-            trash = true;
-            break;
+            if (*(p->sequence_[i]) != *sequence_[i]) return true;  // position has different first N moves, no longer of interest
           }
         }
+        return false; // still of interest
       }
-
-      if (trash)
-      {
-        const Board* p{ *it };
-        it = map_.erase(it);
-        delete p;
-      }
-      else it++;
-
-    }
-
-//    std::unordered_set< Board*, AIContextHelper::Hash, AIContextHelper::Equality> pp{};
-//    std::swap(*this, pp);
-
-    dummy++;
+    );
   }
 
 //    // Evaluate by chosen method

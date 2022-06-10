@@ -31,8 +31,6 @@ namespace BoardGamesCore
   {
     if (list.empty()) board_->SetStartingBoard();  // no list means use the standard starting board for this game
     else board_->SetupBoard(list);                 // set board up from deserialization
-
-    board_->EvaluateStatically();
     board_ = ai_.Remember(board_);
   }
   
