@@ -7,8 +7,11 @@ using namespace BoardGamesMFC;
 namespace BoardGamesCore
 {
 
-  Game::Game(const VariantChosen& v, Board* b) noexcept : v_{ v }, board_{ ai_.Remember(b) }
+  Game::Game(const VariantChosen& v, const std::vector<PieceIndex>& list, Board* b) noexcept : v_{ v }, board_{ b }
   {
+    if (list.empty()) board_->SetStartingBoard();  // no list means use the standard starting board for this game
+    else board_->SetupBoard(list);                 // set board up from deserialization
+    ai_.Insert(board_);
     AddPlayer(PlayerType::Human, PieceColor::White);
     AddPlayer(PlayerType::Computer, PieceColor::Black);
   }
@@ -25,13 +28,6 @@ namespace BoardGamesCore
     //if (ar.IsLoading()) ar.Serialize(v_);   // when loading, game type was already read to create this object
     v_.Serialize(s);
     board_->Serialize(s);
-  }
-
-  void Game::SetupBoard(const std::vector<PieceIndex>& list) noexcept      
-  {
-    if (list.empty()) board_->SetStartingBoard();  // no list means use the standard starting board for this game
-    else board_->SetupBoard(list);                 // set board up from deserialization
-    board_ = ai_.Remember(board_);
   }
   
   void Game::Draw(DC* dc) const
@@ -62,11 +58,11 @@ namespace BoardGamesCore
       wchar_t s[1000];
       int h = 10;
       const wchar_t* v = static_cast<const wchar_t*>(board_->GetValue(board_->WhiteOnTurn()));
-      wcscpy_s(s, L"Depth");                dc->Text(800, h += 20, s);  swprintf_s(s, L"%u", board_->GetDepth());        dc->Text(1000, h, s);
-      wcscpy_s(s, L"Value");                dc->Text(800, h += 20, s);  swprintf_s(s, L"%s", v);                       dc->Text(1000, h, s);
-      wcscpy_s(s, L"PList size");           dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", ai_.GetSize());          dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(BoardPart)");    dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(BoardPart));      dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(Board)");        dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Board));  dc->Text(1000, h, s);
+      wcscpy_s(s, L"Depth");                dc->Text(800, h += 20, s);  swprintf_s(s, L"%u", board_->GetDepth());     dc->Text(1000, h, s);
+      wcscpy_s(s, L"Value");                dc->Text(800, h += 20, s);  swprintf_s(s, L"%s", v);                      dc->Text(1000, h, s);
+      wcscpy_s(s, L"PList size");           dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", ai_.GetSize());         dc->Text(1000, h, s);
+      wcscpy_s(s, L"sizeof(BoardPart)");    dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(BoardPart));     dc->Text(1000, h, s);
+      wcscpy_s(s, L"sizeof(Board)");        dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Board));         dc->Text(1000, h, s);
       wcscpy_s(s, L"sizeof(vector<Move>)"); dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Moves));         dc->Text(1000, h, s);
       wcscpy_s(s, L"sizeof(Move)");         dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Move));          dc->Text(1000, h, s);
       wcscpy_s(s, L"sizeof(Action)");       dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Action));        dc->Text(1000, h, s);

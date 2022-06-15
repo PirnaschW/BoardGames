@@ -56,23 +56,23 @@ namespace BoardGamesCore
   }
 
   // Creating the right game
-  Game* CreateGame(const VariantChosen& v)
+  Game* CreateGame(const VariantChosen& v, const std::vector<PieceIndex>& list)
   {
     switch (v.id)
     {
-    case IDR_GAMETYPE_ATAXX:      return new Ataxx        ::AtaxxGame     (v, Ataxx        ::Registration<class Ataxx        ::AtaxxGame    >::GetDimensions(v));
-    case IDR_GAMETYPE_CAMELOT:    return new Cam          ::CamGame       (v, Cam          ::Registration<class Cam          ::CamGame      >::GetDimensions(v));
-  //case IDR_GAMETYPE_CFOUR:      return new CFour        ::CFourGame     (v, CFour        ::Registration<class CFour        ::CFourGame    >::GetDimensions(v));
-    case IDR_GAMETYPE_CHECKERS:   return new Checkers     ::CheckersGame  (v, Checkers     ::Registration<class Checkers     ::CheckersGame >::GetDimensions(v));
-  //case IDR_GAMETYPE_CHESS:      return new Chess        ::ChessGame     (v, Chess        ::Registration<class Chess        ::ChessGame    >::GetDimensions(v));
-  //case IDR_GAMETYPE_ESPIONAGE:  return new Espionage    ::EspionageGame (v, Espionage    ::Registration<class Espionage    ::EspionageGame>::GetDimensions(v));
-  //case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (v, Hasami       ::Registration<class Hasami       ::HasamiGame   >::GetDimensions(v));
-  //case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (v, KnightF      ::Registration<class KnightF      ::KnightFGame  >::GetDimensions(v));
-  //case IDR_GAMETYPE_LOA:        return new LoA          ::LoAGame       (v, LoA          ::Registration<class LoA          ::LoAGame      >::GetDimensions(v));
-  //case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (v, Logik        ::Registration<class Logik        ::LogikGame    >::GetDimensions(v));
-  //case IDR_GAMETYPE_SHOGI:      return new Shogi        ::ShogiGame     (v, Shogi        ::Registration<class Shogi        ::ShogiGame    >::GetDimensions(v));
-  //case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe    ::TicTacToeGame (v, TicTacToe    ::Registration<class TicTacToe    ::TicTacToeGame>::GetDimensions(v));
-  //case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (v, TankB        ::Registration<class TankB        ::TankBGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_ATAXX:      return new Ataxx        ::AtaxxGame     (v, list, Ataxx        ::Registration<class Ataxx        ::AtaxxGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_CAMELOT:    return new Cam          ::CamGame       (v, list, Cam          ::Registration<class Cam          ::CamGame      >::GetDimensions(v));
+  //case IDR_GAMETYPE_CFOUR:      return new CFour        ::CFourGame     (v, list, CFour        ::Registration<class CFour        ::CFourGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_CHECKERS:   return new Checkers     ::CheckersGame  (v, list, Checkers     ::Registration<class Checkers     ::CheckersGame >::GetDimensions(v));
+  //case IDR_GAMETYPE_CHESS:      return new Chess        ::ChessGame     (v, list, Chess        ::Registration<class Chess        ::ChessGame    >::GetDimensions(v));
+  //case IDR_GAMETYPE_ESPIONAGE:  return new Espionage    ::EspionageGame (v, list, Espionage    ::Registration<class Espionage    ::EspionageGame>::GetDimensions(v));
+  //case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (v, list, Hasami       ::Registration<class Hasami       ::HasamiGame   >::GetDimensions(v));
+  //case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (v, list, KnightF      ::Registration<class KnightF      ::KnightFGame  >::GetDimensions(v));
+  //case IDR_GAMETYPE_LOA:        return new LoA          ::LoAGame       (v, list, LoA          ::Registration<class LoA          ::LoAGame      >::GetDimensions(v));
+  //case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (v, list, Logik        ::Registration<class Logik        ::LogikGame    >::GetDimensions(v));
+  //case IDR_GAMETYPE_SHOGI:      return new Shogi        ::ShogiGame     (v, list, Shogi        ::Registration<class Shogi        ::ShogiGame    >::GetDimensions(v));
+  //case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe    ::TicTacToeGame (v, list, TicTacToe    ::Registration<class TicTacToe    ::TicTacToeGame>::GetDimensions(v));
+  //case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (v, list, TankB        ::Registration<class TankB        ::TankBGame    >::GetDimensions(v));
     default:                      return nullptr;
     }
   }

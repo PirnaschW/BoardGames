@@ -77,7 +77,7 @@ namespace Cam
   private:
     CamGame() = delete;
   public:
-    CamGame(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Game(v,new CamBoard(v, d)) {}
+    CamGame(const VariantChosen& v, const std::vector<PieceIndex>& list, const BoardPartDimensions& d) noexcept : Game(v,list,new CamBoard(v, d)) {}
     static void Register() noexcept;
     static const VariantList& GetVariants() noexcept;
     static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;

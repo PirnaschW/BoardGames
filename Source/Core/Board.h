@@ -99,3 +99,5 @@ namespace BoardGamesCore
 //  static_assert(sizeof(Board) == 360, "size of Board has changed");
 
 }
+
+template <> struct std::hash<BoardGamesCore::Board> { std::size_t operator()(const BoardGamesCore::Board& b) const noexcept { return b.GetHash(); } };

@@ -51,7 +51,7 @@ namespace Checkers
 //    static Board* GetNewBoard(const VariantChosen& v, const PieceMapP& m, const Dimensions& d) noexcept;
 
   public:
-    inline TurkCheckersGame(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersGame(v, d) {}
+    inline TurkCheckersGame(const VariantChosen& v, const std::vector<PieceIndex>& list, const BoardPartDimensions& d) noexcept : CheckersGame(v, list, d) {}
   };
 
 

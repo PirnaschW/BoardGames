@@ -8,7 +8,7 @@ namespace BoardGamesCore
   class GameDispatch
   {
   public:
-    GameDispatch(const VariantChosen& v) : p_{ CreateGame(v) } {}
+    GameDispatch(const VariantChosen& v, const std::vector<PieceIndex>& list = std::vector<PieceIndex>{}) : p_{ CreateGame(v, list) } {}
     ~GameDispatch();  // needed to allow unique_ptr to delete the object; default destructor is fine but must be in cpp
     Game* operator->() const noexcept;
 
@@ -19,7 +19,6 @@ namespace BoardGamesCore
     void React(CmdUI* pUI);
     void SetUpdateCallBack(std::function<void()> cb);
     void Serialize(Archive& ar);
-    void SetupBoard(const std::vector<PieceIndex>& list);
 
   private:
     Game* p_;

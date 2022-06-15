@@ -15,6 +15,5 @@ namespace BoardGamesCore
   void GameDispatch::SetUpdateCallBack(std::function<void()> cb) { p_->SetUpdateCallBack(cb); }
   void GameDispatch::Serialize(Archive& ar) { p_->Serialize(ar); }
   void GameDispatch::Draw(DC* dc) { p_->Draw(dc); }
-  void GameDispatch::SetupBoard(const std::vector<PieceIndex>& list) { p_->SetupBoard(list); };
 
 }

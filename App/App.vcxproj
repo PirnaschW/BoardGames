@@ -256,6 +256,7 @@
     <ClInclude Include="..\Source\Core\BoardPart.h" />
     <ClInclude Include="..\Source\Core\PieceMap.h" />
     <ClInclude Include="..\Source\Core\PlayerType.h" />
+    <ClInclude Include="..\Source\Core\PositionMemory.h" />
     <ClInclude Include="..\Source\Core\TileColor.h" />
     <ClInclude Include="..\Source\Core\Core.h" />
     <ClInclude Include="..\Source\Core\CorePieces.h" />

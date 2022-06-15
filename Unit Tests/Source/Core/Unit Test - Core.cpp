@@ -2183,26 +2183,27 @@ namespace UnitTestCore
     class TestGame : public Game
     {
     public:
-      inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
+      inline TestGame(const VariantChosen& v, const std::vector<PieceIndex>& list, Board* b) noexcept : Game(v, list, b) {}
       virtual ~TestGame() noexcept {};
       Board*& TestGetBoard() noexcept { return board_; }
       AI& TestGetAI() noexcept { return ai_; }
       void TestCallBack() const {}
     };
+    const std::vector<PieceIndex> empty{};
 
     TEST_METHOD(_constructor)
     {
       CheckForMemoryLeaks check;
 
       static_assert(!std::is_trivially_constructible<class Game>::value, "Game should not be trivially constructible");
-      TestGame g(v, b.Clone());
+      TestGame g(v, empty, b.Clone());
     }
 
     TEST_METHOD(_Serialize)
     {
       CheckForMemoryLeaks check;
 
-      TestGame g(v, b.Clone());
+      TestGame g(v, empty, b.Clone());
       std::string s = TestSerialize([this, &g](std::stringstream& s) { g.Serialize(s); });
 
       Assert::IsTrue(TestSerialize([this, &g](std::stringstream& s) { g.Serialize(s); }) ==
@@ -2217,46 +2218,47 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      TestGame g(v, b.Clone());
-      for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
-        for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
-          Assert::IsTrue(b.GetPieceIndex(x, y) == pNP);
-
-      g.SetupBoard(std::vector<PieceIndex>{});  // run with empty vector
-      for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
-        for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
-          Assert::IsTrue(b.GetPieceIndex(x, y) == pNP);  // nothing should have changed
-
-      std::vector<PieceIndex> list(b.stage_.GetSizeX() * b.stage_.GetSizeY());
-      std::size_t z = 0;
-      for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
+      {
+        TestGame g(v, empty, b.Clone());
         for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
-        {
-          switch ((y * (b.stage_.GetSizeX() + 2) + x) % (b.stage_.GetSizeX()))
+          for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
+            Assert::IsTrue(b.GetPieceIndex(x, y) == pNP);
+
+        for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
+          for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
+            Assert::IsTrue(b.GetPieceIndex(x, y) == pNP);  // nothing should have changed
+      }
+
+      {
+        std::vector<PieceIndex> list(b.stage_.GetSizeX() * b.stage_.GetSizeY());
+        std::size_t z = 0;
+        for (Coordinate y = 0; y < b.stage_.GetSizeY(); ++y)
+          for (Coordinate x = 0; x < b.stage_.GetSizeX(); ++x)
           {
-            case 0: list[z++] = pWC; break;
-            case 1: list[z++] = pNT; break;
-            case 2: list[z++] = pNP; break;
-            case 3: list[z++] = pBC; break;
-            default: Assert::Fail(); break;
+            switch ((y * (b.stage_.GetSizeX() + 2) + x) % (b.stage_.GetSizeX()))
+            {
+              case 0: list[z++] = pWC; break;
+              case 1: list[z++] = pNT; break;
+              case 2: list[z++] = pNP; break;
+              case 3: list[z++] = pBC; break;
+              default: Assert::Fail(); break;
+            }
           }
-        }
+        TestGame g(v, list, b.Clone());
 
-      g.SetupBoard(list);
-
-      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(0, 0) == list[0]);
-      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(1, 0) == list[1]);
-      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(2, 0) == list[2]);
-      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(3, 0) == list[3]);
-      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(0, 1) == list[4]);
-      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(2, 6) == list[26]);
-      Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(3, 6) == list[27]);
-
-      const Board& bb = *g.TestGetBoard();
-      std::string s = TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); });
-      Assert::IsTrue(TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); }) ==
-                     "\x4\x7\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0"s                                      // BoardPart stage size
-                     "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B"s);   // BoardPart stage 28 Pieces
+        Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(0, 0) == list[0]);
+        Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(1, 0) == list[1]);
+        Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(2, 0) == list[2]);
+        Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(3, 0) == list[3]);
+        Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(0, 1) == list[4]);
+        Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(2, 6) == list[26]);
+        Assert::IsTrue(g.TestGetBoard()->GetPieceIndex(3, 6) == list[27]);
+        const Board& bb = *g.TestGetBoard();
+        std::string s = TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); });
+        Assert::IsTrue(TestSerialize([this, &bb](std::stringstream& s) { bb.stage_.Serialize(s); }) ==
+                       "\x4\x7\x3\0\xa\0\xa\0\x32\0\x32\0\0\0\0\0"s                                      // BoardPart stage size
+                       "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B" "X 0B0WXX" "0WXXX 0B"s);   // BoardPart stage 28 Pieces
+      }
     }
 
     TEST_METHOD(_AddPlayer)
@@ -2266,7 +2268,7 @@ namespace UnitTestCore
       class TestGame : public Game
       {
       public:
-        inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, b) {}
+        inline TestGame(const VariantChosen& v, Board* b) noexcept : Game(v, std::vector<PieceIndex>{}, b) {}
         virtual ~TestGame() noexcept {};
         virtual void AddPlayer(const PlayerType& t, const PieceColor& c) noexcept override { Game::AddPlayer(t, c); }
       };
@@ -2282,7 +2284,7 @@ namespace UnitTestCore
     {
       CheckForMemoryLeaks check;
 
-      TestGame g(v, b.Clone());
+      TestGame g(v, empty, b.Clone());
       g.SetUpdateCallBack(std::bind(&TestGame::TestCallBack,&g));
 
       PositionValue v = g.TestGetAI().MakeMove(g.TestGetBoard());
@@ -2292,14 +2294,115 @@ namespace UnitTestCore
 
   };
 
-  TEST_CLASS(_AI)
+  TEST_CLASS(_PositionMemory)
   {
-    TEST_METHOD(_TODO)
+    const int n{ 7 };
+    inline static const auto f = [](int*) -> void {};
+
+    TEST_METHOD(_constructor)
     {
       CheckForMemoryLeaks check;
 
-      Assert::IsTrue(true);
+      for (int i = 0; i < n; ++i)
+      {
+        PositionMemory<int> m(f);
+      }
+    }
 
+    TEST_METHOD(_Insert)
+    {
+      CheckForMemoryLeaks check;
+
+      PositionMemory<int> m{ f };
+      for (int i = 0; i < n; ++i)
+      {
+        int* z = new int{ i };
+        m.Insert(z);
+      }
+    }
+
+    TEST_METHOD(_Preinsert)
+    {
+      CheckForMemoryLeaks check;
+
+      int i;
+      const auto f = [&i](int* j) -> void { Assert::IsTrue(*j == i * i); };
+
+      PositionMemory<int> m{ f };
+      for (i = 0; i < n; ++i)
+      {
+        int* z = new int{ i * i };
+        m.Insert(z);  // preinsert will run above lamdba, verifying the current i's value
+      }
+    }
+
+    TEST_METHOD(_GetSize)
+    {
+      CheckForMemoryLeaks check;
+
+      PositionMemory<int> m{ f };
+      for (int i = 0; i < n; ++i)
+      {
+        int* z = new int{ i };
+        m.Insert(z);
+      }
+      Assert::IsTrue(m.GetSize() == n);
+    }
+
+    TEST_METHOD(_InsertOrUpdate)
+    {
+      CheckForMemoryLeaks check;
+
+      int ii = 0;
+      const auto f = [&ii](int* j) -> void { Assert::IsTrue(*j == ii); };
+
+      PositionMemory<int> m{ f };
+      for (int i = 0; i < n; ++i)
+      {
+        ii = i;
+        int* z1 = new int{ ii };
+        int* z2 = m.InsertOrUpdate(z1);
+        Assert::IsTrue(z2 == z1);
+
+        int* z3 = new int{ ii };
+        int* z4 = m.InsertOrUpdate(z3);
+        Assert::IsTrue(z4 != z3);
+        Assert::IsTrue(z4 == z1);
+
+        ii = n + i;
+        int* z5 = new int{ ii };
+        int* z6 = m.InsertOrUpdate(z5);
+        Assert::IsTrue(z6 == z5);
+        Assert::IsTrue(z6 != z4);
+        Assert::IsTrue(z6 != z2);
+      }
+    }
+
+    TEST_METHOD(_Purge)
+    {
+      CheckForMemoryLeaks check;
+
+      PositionMemory<int> m{ f };
+      for (int i = 0; i < n; ++i)
+      {
+        int* z = new int{ i };
+        m.Insert(z);
+      }
+      m.Purge([](const int* p) -> bool { return *p % 2; }); // remove all odd entries
+      Assert::IsTrue(m.GetSize() == (n + 1) / 2);
+      m.Purge([](const int* p) -> bool { return !(*p % 2); }); // remove all even entries
+      Assert::IsTrue(m.GetSize() == 0);
+    }
+
+  };
+
+  TEST_CLASS(_AI)
+  {
+    TEST_METHOD(_constructor)
+    {
+      CheckForMemoryLeaks check;
+
+      AI ai;
     }
 
   };

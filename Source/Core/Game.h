@@ -13,11 +13,10 @@ namespace BoardGamesCore
     Game& operator=(Game&&) = delete;       // move assignment
 
   public:
-    Game(const VariantChosen& v, Board* b) noexcept;
+    Game(const VariantChosen& v, const std::vector<PieceIndex>& list, Board* b) noexcept;
     virtual ~Game() noexcept;
 
     virtual void Serialize(std::stringstream& s) const noexcept;
-    void SetupBoard(const std::vector<PieceIndex>& list) noexcept;
 
     // UI functionality
     virtual void Draw(DC* dc) const override;

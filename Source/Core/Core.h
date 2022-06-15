@@ -37,6 +37,7 @@
 #include "Variant.h"
 #include "Board.h"
 #include "UI.h"
+#include "PositionMemory.h"
 #include "AI.h"
 #include "Game.h"
 

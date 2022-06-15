@@ -7,16 +7,31 @@ namespace BoardGamesCore
 
   PositionValue AI::MakeMove(Board*& b)
   {
-    // cleanup position buffer
-    Purge(b->sequence_);  // Positions with less than the current amount of moves can be discarded, they will not be needed any more
+    // purge position buffer
+    memory_.Purge([&b](const Board* p) -> bool {
+      if (p->sequence_.size() < b->sequence_.size()) return true; // position has less moves, no longer of interest
+      else
+      {
+        for (size_t i = 0; i < b->sequence_.size(); i++)
+        {
+          if (*(p->sequence_[i]) != *(b->sequence_[i])) return true;  // position has different first N moves, no longer of interest
+        }
+      }
+      return false; // still of interest
+      }
+    );
 
     // evaluate position
     PositionValue v = Evaluate(b, AIMethod::BruteForce, 9, 4.0);
 
     // now execute best move:
     const Moves& m = b->GetMoveList(b->WhiteOnTurn());
-    if (m.size() > 0) b->Execute(*m[0]);
-    b = Remember(b);
+    if (m.size() > 0)
+    {
+      b->Execute(*m[0]);
+      b = memory_.FindPos(std::hash<const Board*>()(b));
+      assert(b);
+    }
     return v;
   }
 
@@ -54,6 +69,8 @@ namespace BoardGamesCore
     if (plies == 0) return v0;
     if (v0.IsDecided()) return v0;   // don't analyze won or lost position any further
 
+    if (plies > 2) callback_(); // update screen
+
     auto& movelist = board->GetMoveList(w);
     if (movelist.empty()) return v0;
 
@@ -67,8 +84,10 @@ namespace BoardGamesCore
     for (i = 0; i < movelist.size(); ++i)                          // for all possible opponent's moves
     {
       auto& m = movelist[i];
-      Board* p = MoveAndRemember(board,*m);                                      // move and find the resulting board in the list
-      PositionValue v = -EvaluateDeeper(p, method, !w, -beta, -alpha, plies - 1);// evaluate the result
+      Board* p = board->Clone();
+      p->Execute(*m);
+      p = memory_.InsertOrUpdate(p);
+      PositionValue v = -EvaluateDeeper(p, method, !w, -beta, -alpha, plies - 1);
       assert(v != PositionValue::PValueType::Undefined);
       assert(v == p->GetValue(w)); // or not???
       m->SetValue(v);                                                    // save position value into move for sorting
@@ -104,24 +123,6 @@ namespace BoardGamesCore
     board->SetValue(w, tobesavedvalue);                                   // save top value in current position
     board->SetDepth(plies);                                               // save evaluation depth
     return returnvalue;                                                   // return best value
-  }
-
-  void AI::Purge(const Moves& sequence_) noexcept
-  {
-    memory_.Purge(
-      [&sequence_](const Board* p) -> bool
-      {
-        if (p->sequence_.size() < sequence_.size()) return true; // position has less moves, no longer of interest
-        else
-        {
-          for (size_t i = 0; i < sequence_.size(); i++)
-          {
-            if (*(p->sequence_[i]) != *sequence_[i]) return true;  // position has different first N moves, no longer of interest
-          }
-        }
-        return false; // still of interest
-      }
-    );
   }
 
 //    // Evaluate by chosen method

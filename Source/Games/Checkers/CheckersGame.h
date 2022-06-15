@@ -39,7 +39,7 @@ namespace Checkers
     static Board* GetNewBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept;
 
   public:
-    inline CheckersGame(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Game(v, GetNewBoard(v, d)) {}
+    inline CheckersGame(const VariantChosen& v, const std::vector<PieceIndex>& list, const BoardPartDimensions& d) noexcept : Game(v, list, GetNewBoard(v, d)) {}
     static void Register() noexcept;
     static const VariantList& GetVariants() noexcept;
     static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;

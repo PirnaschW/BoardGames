@@ -483,6 +483,9 @@
     <ClInclude Include="..\Source\Core\PlayerType.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Core\PositionMemory.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\App\BG.cpp">

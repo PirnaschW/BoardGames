@@ -62,7 +62,7 @@ namespace Ataxx
     AtaxxGame() = delete;
 
   public:
-    AtaxxGame(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Game(v,new AtaxxBoard(v, d)) {}
+    AtaxxGame(const VariantChosen& v, const std::vector<PieceIndex>& list, const BoardPartDimensions& d) noexcept : Game(v,list,new AtaxxBoard(v, d)) {}
     static void Register() noexcept;
     static const VariantList& GetVariants() noexcept;
     static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
