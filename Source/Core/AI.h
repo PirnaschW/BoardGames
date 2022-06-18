@@ -16,12 +16,12 @@ namespace BoardGamesCore
     AI() = default;
     ~AI() = default;
 
-    PositionValue MakeMove(Board*& b);
-    PositionValue Evaluate(Board* board, AIMethod method, Depth maxdepth, double timeLimit);
-    void SetCallback(std::function<void()> cb) { assert(cb != nullptr); callback_ = cb; }
-
     void Insert(Board* board) noexcept { memory_.Insert(board); /*return board; */ }
     size_t GetSize() const noexcept { return memory_.GetSize(); }
+    void SetCallback(std::function<void()> cb) { if (cb) callback_ = cb; else throw std::exception("cannot callback nullptr"); }
+
+    PositionValue MakeMove(Board*& b);
+    PositionValue Evaluate(Board* board, AIMethod method, Depth maxdepth, double timeLimit);
 
   private:
     PositionValue EvaluateDeeper(Board* board, AIMethod method, bool whiteonplay, PositionValue alpha, PositionValue beta, unsigned int plies) noexcept;

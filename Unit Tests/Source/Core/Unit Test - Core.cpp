@@ -2398,11 +2398,64 @@ namespace UnitTestCore
 
   TEST_CLASS(_AI)
   {
+    const Coordinate n{ 7 };
+    class TestBoard : public Board
+    {
+    public:
+      TestBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
+      virtual Board* Clone() const noexcept override { return new TestBoard(*this); }
+    };
+    VariantChosen v{ 1, 3, '\0', 4, n };
+    BoardPartDimensions d{
+      {4, n, LayoutType::Alternating,  10,  10, 50, 50,  0,  0 },
+      {2, 2, LayoutType::Light,       260, 140, 50, 50,  0,  0 },
+      {2, 2, LayoutType::Small,       260,  60, 50, 50,  0, 50 },
+    };
+
     TEST_METHOD(_constructor)
     {
       CheckForMemoryLeaks check;
 
       AI ai;
+    }
+
+    TEST_METHOD(_Insert)
+    {
+      CheckForMemoryLeaks check;
+
+      AI ai;
+      for (int i = 0; i < n; ++i)
+      {
+        Board* b = new TestBoard(v, d);
+        b->SetPieceIndex(PMap[CorePiece::WC], 0, i);
+        ai.Insert(b);
+      }
+    }
+
+    TEST_METHOD(_GetSize)
+    {
+      CheckForMemoryLeaks check;
+
+      AI ai;
+      for (int i = 0; i < n; ++i)
+      {
+        Board* b = new TestBoard(v, d);
+        b->SetPieceIndex(PMap[CorePiece::WC], 1, i);
+        ai.Insert(b);
+      }
+      Assert::IsTrue(ai.GetSize() == n);
+    }
+
+    TEST_METHOD(_SetCallback)
+    {
+      CheckForMemoryLeaks check;
+
+      AI ai;
+      auto s = [&ai]() -> void {ai.SetCallback(nullptr); };
+      Assert::ExpectException<std::exception>(s);
+
+      auto f = []() -> void {};
+      ai.SetCallback(f);
     }
 
   };

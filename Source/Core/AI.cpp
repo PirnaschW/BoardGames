@@ -29,8 +29,9 @@ namespace BoardGamesCore
     if (m.size() > 0)
     {
       b->Execute(*m[0]);
-      b = memory_.FindPos(std::hash<const Board*>()(b));
-      assert(b);
+      auto b0 = memory_.FindPos(std::hash<Board>()(*b));
+      assert(b0);
+      b = b0;
     }
     return v;
   }
@@ -72,7 +73,7 @@ namespace BoardGamesCore
     if (plies > 2) callback_(); // update screen
 
     auto& movelist = board->GetMoveList(w);
-    if (movelist.empty()) return v0;
+    assert(!movelist.empty()); // otherwise, v0 must be Decided!
 
     PositionValue best = PositionValue::PValueType::Lost;
 
