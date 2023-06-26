@@ -5,6 +5,62 @@
 namespace Checkers
 {
 
+  CheckersBoard::CheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d)
+  {
+    // fill Stock
+    int i = 0;
+
+    auto append = [this, &i](const Piece& p) { stock_.SetPieceIndex(PMap[p], i / 2U, i % 2U); ++i; };
+
+    switch (v.c)
+    {
+      case Checkers::Hawaiian:
+        append(CheckersPiece::CheckersPieceW);
+        append(CheckersPiece::CheckersPieceB);
+        break;
+      case Checkers::Standard:
+      case Checkers::Italian:
+      case Checkers::Anti:
+      case Checkers::Gothic:
+        append(CheckersPiece::CheckersPieceW);
+        append(CheckersPiece::CheckersPieceB);
+        append(CheckersPiece::CheckersKingW);
+        append(CheckersPiece::CheckersKingB);
+        break;
+      case Checkers::Czech:
+      case Checkers::Corner:
+      case Checkers::OneWay:
+      case Checkers::International:
+      case Checkers::Russian:
+      case Checkers::Canadian:
+      case Checkers::Thai:
+      case Checkers::Brazilian:
+      case Checkers::Portuguese:
+      case Checkers::Dameo:
+        append(CheckersPiece::CheckersPieceW);
+        append(CheckersPiece::CheckersPieceB);
+        append(CheckersPiece::CheckersQueenW);
+        append(CheckersPiece::CheckersQueenB);
+        break;
+      case Checkers::Turkish:
+        append(TurkCheckersPiece::TurkCheckersPieceW);
+        append(TurkCheckersPiece::TurkCheckersPieceB);
+        append(CheckersPiece::CheckersQueenW);
+        append(CheckersPiece::CheckersQueenB);
+        break;
+      case Checkers::Parachute:
+        append(CheckersPiece::CheckersParaW);
+        append(CheckersPiece::CheckersParaB);
+        append(CheckersPiece::CheckersQueenW);
+        append(CheckersPiece::CheckersQueenB);
+        break;
+      default: assert(false);
+    }
+
+
+
+  }
+
   void CheckersBoard::SetStartingBoard() noexcept
   {
     PieceIndex pWC = PMap[CheckersPiece::CheckersPieceW];
@@ -171,16 +227,16 @@ namespace Checkers
 
   void CheckersGame::Register() noexcept
   {
-    const auto pIWC = PMap.Register(CheckersPiece::CheckersPieceW);
-    const auto pIBC = PMap.Register(CheckersPiece::CheckersPieceB);
-    const auto pIWT = PMap.Register(TurkCheckersPiece::TurkCheckersPieceW);
-    const auto pIBT = PMap.Register(TurkCheckersPiece::TurkCheckersPieceB);
-    const auto pIWK = PMap.Register(CheckersPiece::CheckersKingW);    
-    const auto pIBK = PMap.Register(CheckersPiece::CheckersKingB);
-    const auto pIWQ = PMap.Register(CheckersPiece::CheckersQueenW);    
-    const auto pIBQ = PMap.Register(CheckersPiece::CheckersQueenB);
-    const auto pIWP = PMap.Register(CheckersPiece::CheckersParaW);     
-    const auto pIBP = PMap.Register(CheckersPiece::CheckersParaB);
+    PMap.Register(CheckersPiece::CheckersPieceW);
+    PMap.Register(CheckersPiece::CheckersPieceB);
+    PMap.Register(TurkCheckersPiece::TurkCheckersPieceW);
+    PMap.Register(TurkCheckersPiece::TurkCheckersPieceB);
+    PMap.Register(CheckersPiece::CheckersKingW);    
+    PMap.Register(CheckersPiece::CheckersKingB);
+    PMap.Register(CheckersPiece::CheckersQueenW);    
+    PMap.Register(CheckersPiece::CheckersQueenB);
+    PMap.Register(CheckersPiece::CheckersParaW);     
+    PMap.Register(CheckersPiece::CheckersParaB);
 
     Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Checkers",               Checkers::Standard     ,   8,  8,  2, 20 ));
     Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "International Checkers", Checkers::International,  10, 10         ));
@@ -206,7 +262,7 @@ namespace Checkers
   {
     BoardPartDimensions d{
        BoardPartDimension(v.x, v.y, LayoutType::Alternating, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       BoardPartDimension(20, 2, LayoutType::Light, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
+       BoardPartDimension(3, 2, LayoutType::Light, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
        BoardPartDimension(2 * v.x, 2, LayoutType::Small, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),
     };
     return d;

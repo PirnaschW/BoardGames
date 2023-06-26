@@ -50,7 +50,7 @@ namespace Ataxx
   class AtaxxBoard : public Board
   {
   public:
-    AtaxxBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {};
+    AtaxxBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept;
     virtual Board* Clone() const noexcept override { return new AtaxxBoard(*this); }
     virtual void SetStartingBoard() noexcept override;
   };

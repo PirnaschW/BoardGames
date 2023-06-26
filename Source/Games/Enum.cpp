@@ -9,7 +9,7 @@
 //#include "Games\Hasami\HasamiGame.h"
 //#include "Games\Knight Fight\KnightFGame.h"
 //#include "Games\LoA\LoAGame.h"
-//#include "Games\Logik\LogikGame.h"
+#include "Games\Logik\LogikGame.h"
 //#include "Games\Shogi\ShogiGame.h"
 //#include "Games\Tank Battle\TankBGame.h"
 //#include "Games\TicTacToe\TicTacToeGame.h"
@@ -33,7 +33,7 @@ namespace BoardGamesCore
   //Registration<Hasami       ::HasamiGame   >::Register();
   //Registration<KnightF      ::KnightFGame  >::Register();
   //Registration<LoA          ::LoAGame      >::Register();
-  //Registration<Logik        ::LogikGame    >::Register();
+    Registration<Logik        ::LogikGame    >::Register();
   //Registration<Shogi        ::ShogiGame    >::Register();
   //Registration<TicTacToe    ::TicTacToeGame>::Register();
   //Registration<TankB        ::TankBGame    >::Register();
@@ -53,6 +53,7 @@ namespace BoardGamesCore
   //v.push_back(IDR_GAMETYPE_TICTACTOE);
 
     v = Variants.GetGameIDList();
+    std::sort(v.begin(), v.end());
   }
 
   // Creating the right game
@@ -69,7 +70,7 @@ namespace BoardGamesCore
   //case IDR_GAMETYPE_HASAMI:     return new Hasami       ::HasamiGame    (v, list, Hasami       ::Registration<class Hasami       ::HasamiGame   >::GetDimensions(v));
   //case IDR_GAMETYPE_KNIGHTF:    return new KnightF      ::KnightFGame   (v, list, KnightF      ::Registration<class KnightF      ::KnightFGame  >::GetDimensions(v));
   //case IDR_GAMETYPE_LOA:        return new LoA          ::LoAGame       (v, list, LoA          ::Registration<class LoA          ::LoAGame      >::GetDimensions(v));
-  //case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (v, list, Logik        ::Registration<class Logik        ::LogikGame    >::GetDimensions(v));
+    case IDR_GAMETYPE_LOGIK:      return new Logik        ::LogikGame     (v, list, Logik        ::Registration<class Logik        ::LogikGame    >::GetDimensions(v));
   //case IDR_GAMETYPE_SHOGI:      return new Shogi        ::ShogiGame     (v, list, Shogi        ::Registration<class Shogi        ::ShogiGame    >::GetDimensions(v));
   //case IDR_GAMETYPE_TICTACTOE:  return new TicTacToe    ::TicTacToeGame (v, list, TicTacToe    ::Registration<class TicTacToe    ::TicTacToeGame>::GetDimensions(v));
   //case IDR_GAMETYPE_TANKB:      return new TankB        ::TankBGame     (v, list, TankB        ::Registration<class TankB        ::TankBGame    >::GetDimensions(v));

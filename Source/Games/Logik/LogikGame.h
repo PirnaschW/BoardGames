@@ -38,6 +38,12 @@ namespace Logik
 
   using namespace BoardGamesCore;
 
+  enum LogikVariant : VariantCode   // recognized variants of Logik
+  {
+    Logik8 = 0x08,  // 8 colors
+    Logik6 = 0x06,  // 6 colors
+    Logik4 = 0x04,  // 4 colors
+  };
 
   template <char k>
   class Peg final : public Kind
@@ -46,7 +52,7 @@ namespace Logik
     constexpr inline Peg<k>() noexcept : Kind(k) {}
 
   public:
-    constexpr virtual inline unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 1; }
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 1; }
 
   public:
     static const Peg<k> ThePeg;
@@ -64,19 +70,19 @@ namespace Logik
     LogikPiece& operator=(const LogikPiece&) = delete;
 
   public:
-    static const LogikPiece& GetPieceIndex(unsigned int z) noexcept
+    static const PieceIndex GetPieceIndex(unsigned int z) noexcept
     {
       switch (z)
       {
-        case 0: return LogikPiece::LPiece1;
-        case 1: return LogikPiece::LPiece2;
-        case 2: return LogikPiece::LPiece3;
-        case 3: return LogikPiece::LPiece4;
-        case 4: return LogikPiece::LPiece5;
-        case 5: return LogikPiece::LPiece6;
-        case 6: return LogikPiece::LPiece7;
-        case 7: return LogikPiece::LPiece8;
-        default:assert(1 == 0); return LogikPiece::LPiece1;
+        case 0: return PMap[LogikPiece::LPiece1];
+        case 1: return PMap[LogikPiece::LPiece2];
+        case 2: return PMap[LogikPiece::LPiece3];
+        case 3: return PMap[LogikPiece::LPiece4];
+        case 4: return PMap[LogikPiece::LPiece5];
+        case 5: return PMap[LogikPiece::LPiece6];
+        case 6: return PMap[LogikPiece::LPiece7];
+        case 7: return PMap[LogikPiece::LPiece8];
+        default:assert(1 == 0); return PMap[LogikPiece::LPiece1];
       }
     }
 
@@ -189,29 +195,26 @@ namespace Logik
   };
 
 
-  class LogikLayout final : public MainLayout
-  {
-  public:
-    LogikLayout(const BoardPartDimensions& d) noexcept;
-    virtual void Draw(DC* pDC, const Board* board_, Mode mode_) const override;
-
-  private:
-    inline const TileColor& FC(Coordinate i, Coordinate j) const noexcept;
-  };
-
-
   class LogikBoard final : public Board
   {
   public:
-    inline LogikBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {}
-    virtual inline Board* Clone() const noexcept override { return new LogikBoard(*this); }
+    enum class LogikBoardPartID : unsigned char {
+      ResultL = 0x04,  // left result area
+      ResultR = 0x05,  // rightresult area
+    };
+
+  public:
+    LogikBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept;
+    virtual Board* Clone() const noexcept override { return new LogikBoard(*this); }
     virtual void SetStartingBoard() noexcept override {};
 
-    bool SetFirstFreePeg(const Piece& p) noexcept;                        // returns if it could successfully set the Peg
-    bool SetFirstFreeMarker(const Piece& p) noexcept;                     // returns if it could successfully set the Marker
+    bool SetFirstFreePeg(PieceIndex pI) noexcept;                        // returns true if it could successfully set the Peg
+    bool SetFirstFreeMarker(PieceIndex pI) noexcept;                     // returns true if it could successfully set the Marker
     void ReadBoard() noexcept;
     PlayCode GetBestMove(unsigned int nThreads = std::thread::hardware_concurrency()) const;
     void Execute(const PlayCode& p);
+
+    void Draw(DC* dc, bool showstock) const override;                    // draw the complete board
 
   private:
     unsigned int EvaluatePlay(const PlayCode& c) const noexcept;
@@ -225,6 +228,10 @@ namespace Logik
     mutable unsigned int gmin{ Plays::Max };                              // best found count
     mutable std::vector<PlayCode> bestI{};                                // moves that produce the best count found
                                                                           
+  private:
+    BoardPart resultL_;                                                   // left result display
+    BoardPart resultR_;                                                   // right result display
+
     static inline const Plays plays_;                                     // all possible plays
   };
 
@@ -234,13 +241,15 @@ namespace Logik
   private:
     LogikGame() = delete;
   public:
-    inline LogikGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new LogikBoard(v, m, d), new LogikLayout(d)) {}
+    LogikGame(const VariantChosen& v, const std::vector<PieceIndex>& list, const BoardPartDimensions& d) noexcept : Game(v, list, new LogikBoard(v, d)) {}
+    static void Register() noexcept;
 
     virtual bool React(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags) override;  // react to keyboard input (not menu shortcuts, but typing)
-    virtual bool AIMove() override;
+    virtual bool React(unsigned int command) override;                                           // react to button/menu command
+    virtual bool AIMove();
 
     static const VariantList& GetVariants() noexcept;
-    static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
+    //static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
     static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 

@@ -20,7 +20,7 @@ namespace BoardGamesCore
   {
     for (auto& p : players_) delete p;
     // do not delete board_ - it is not owned
-    Bitmap::Cleanup();
+    Bitmap::Cleanup();  // clean up windows bitmap graphics
   }
   
   void Game::Serialize(std::stringstream& s) const noexcept
@@ -58,17 +58,17 @@ namespace BoardGamesCore
       wchar_t s[1000];
       int h = 10;
       const wchar_t* v = static_cast<const wchar_t*>(board_->GetValue(board_->WhiteOnTurn()));
-      wcscpy_s(s, L"Depth");                dc->Text(800, h += 20, s);  swprintf_s(s, L"%u", board_->GetDepth());     dc->Text(1000, h, s);
-      wcscpy_s(s, L"Value");                dc->Text(800, h += 20, s);  swprintf_s(s, L"%s", v);                      dc->Text(1000, h, s);
-      wcscpy_s(s, L"PList size");           dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", ai_.GetSize());         dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(BoardPart)");    dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(BoardPart));     dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(Board)");        dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Board));         dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(vector<Move>)"); dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Moves));         dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(Move)");         dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Move));          dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(Action)");       dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Action));        dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(ActionLift)");   dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(ActionLift));    dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(ActionJump)");   dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(ActionJump));    dc->Text(1000, h, s);
-      wcscpy_s(s, L"sizeof(ActionDrop)");   dc->Text(800, h += 20, s);  swprintf_s(s, L"%zu", sizeof(ActionDrop));    dc->Text(1000, h, s);
+      wcscpy_s(s, L"Depth");                dc->Text(1000, h += 20, s);  swprintf_s(s, L"%u", board_->GetDepth());     dc->Text(1200, h, s);
+      wcscpy_s(s, L"Value");                dc->Text(1000, h += 20, s);  swprintf_s(s, L"%s", v);                      dc->Text(1200, h, s);
+      wcscpy_s(s, L"PList size");           dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", ai_.GetSize());         dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(BoardPart)");    dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(BoardPart));     dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(Board)");        dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Board));         dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(vector<Move>)"); dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Moves));         dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(Move)");         dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Move));          dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(Action)");       dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(Action));        dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(ActionLift)");   dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(ActionLift));    dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(ActionJump)");   dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(ActionJump));    dc->Text(1200, h, s);
+      wcscpy_s(s, L"sizeof(ActionDrop)");   dc->Text(1000, h += 20, s);  swprintf_s(s, L"%zu", sizeof(ActionDrop));    dc->Text(1200, h, s);
     }
   }
 
@@ -99,6 +99,16 @@ namespace BoardGamesCore
       { {State::UIAvailable,   ID_EDIT_BOARD                     }, [](Game* g) -> bool { return g->React_CanEdit(); } },
       { {State::UIChecked,     ID_EDIT_BOARD                     }, [](Game* g) -> bool { return g->React_Editing(); } },
     };
+
+    // for debugging:
+    if (state != State::UIAvailable &&
+        state != State::UIChecked &&
+        event == ID_EDIT_MOVE)
+    {
+      static int count = 0;
+      count++; // set break point here!
+    }
+
     const auto validStateChange = reactMap_.find({ state, event });
     return validStateChange != reactMap_.end() && validStateChange->second(this);
   }

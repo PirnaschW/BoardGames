@@ -16,7 +16,7 @@ namespace Checkers
   class CheckersBoard : public Board
   {
   public:
-    CheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {}
+    CheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept;
     virtual inline Board* Clone() const noexcept override { return new CheckersBoard(*this); }
     virtual void SetStartingBoard() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;

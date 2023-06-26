@@ -1,8 +1,6 @@
 
 namespace BoardGamesCore
 {
-  class Board;
-
   using Depth = unsigned char;         // evaluation depth, never going to go beyond 127...
   class Board
   {
@@ -53,7 +51,7 @@ namespace BoardGamesCore
 
     constexpr bool WhiteOnTurn() const noexcept { return whiteOnTurn_; }
 
-    void Draw(DC* dc, bool showstock) const;                          // draw the complete board
+    virtual void Draw(DC* dc, bool showstock) const;                          // draw the complete board
     virtual void DrawSelected(DC* dc, const Location& l) const;   // highlight field (for selected / from / to)
     virtual bool GetLocationFromPoint(const Point& p, Location& l) const noexcept;
 

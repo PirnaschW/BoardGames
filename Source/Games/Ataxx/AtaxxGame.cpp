@@ -101,6 +101,16 @@ namespace Ataxx
   }
 
 
+  AtaxxBoard::AtaxxBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d)
+  {
+    // fill Stock
+    int i = 0;
+
+    auto append = [this, &i](const Piece& p) { stock_.SetPieceIndex(PMap[p], i / 2U, i % 2U); ++i; };
+    append(AtaxxPiece::AtaxxPieceW);
+    append(AtaxxPiece::AtaxxPieceB);
+  }
+
   void AtaxxBoard::SetStartingBoard() noexcept
   {
     // put one piece in each corner:
@@ -124,7 +134,7 @@ namespace Ataxx
     BoardPartDimensions d{
        BoardPartDimension(v.x, v.y, LayoutType::Alternating, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
        BoardPartDimension(2, 2, LayoutType::Light, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + v.y * FieldSizeY + FieldSizeY / 2, FieldSizeX, FieldSizeY),
-       BoardPartDimension(0, 0, LayoutType::Small, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
+       BoardPartDimension(1, 1, LayoutType::Small, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.x - FieldSizeSY * 4),
     };
     return d;
   }

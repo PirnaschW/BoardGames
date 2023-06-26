@@ -11,12 +11,7 @@ namespace BoardGamesCore
     v_(v),
     stage_(d[0], BoardPartID::Stage, PMap[Piece::NoPiece]),
     stock_(d[1], BoardPartID::Stock, PMap[Piece::NoPiece]),
-    taken_(d[2], BoardPartID::Taken, PMap[Piece::NoTile])   // Taken starts with no tiles
-  {
-    // automatically put the content of the PieceMap in the Stock
-    //for (PieceIndex i = 0; i < PMap.GetCount() - 1; i++) // skip the last piece, it is NoTile, and cannot be drawn
-    //  SetPieceIndex(i, i / 2U, i % 2U, BoardPartID::Stock);  // expects respective Pieces with alternating colors
-  }
+    taken_(d[2], BoardPartID::Taken, PMap[Piece::NoTile]) {}  // Taken starts with no tiles
 
   std::size_t Board::GetHash() const noexcept { return stage_.GetHash() + taken_.GetHash() + std::hash<bool>()(whiteOnTurn_); }
 

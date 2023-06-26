@@ -16,6 +16,8 @@ namespace BoardGamesCore
                       Coordinate xmin = 0, Coordinate xmax = 0, Coordinate ymin = 0, Coordinate ymax = 0) noexcept :
       group_(group), ID_(ID), vName_(std::move(n)), vCode_(c), xDef_(xd), yDef_(yd ? yd : xd),
       xMin_(xmin), xMax_(xmax), yMin_(ymin ? ymin : xmin), yMax_(ymax ? ymax : xmax) {}
+    [[TODO::Unittest]] constexpr bool operator==(const Variant& v) const noexcept { return v.group_ == group_ && v.ID_ == ID_ && v.vCode_ == vCode_; }
+
   public:
     const GameGroup group_;        // Game group code
     const GameID ID_;              // Resource ID of Game
@@ -42,7 +44,8 @@ namespace BoardGamesCore
     constexpr Vars() noexcept = default;
     constexpr ~Vars() noexcept = default;
 
-    void Register(const Variant&& v) noexcept { variants_.emplace_back(v); }   // register a variant
+    void Register(const Variant&& v) noexcept { if (!Exists_(v)) variants_.emplace_back(v); }   // register a variant
+
     std::vector<GameID> GetGameIDList()                                // create a unique GameID list
     {  
       std::unordered_set<GameID> set{};
@@ -58,6 +61,9 @@ namespace BoardGamesCore
     }
 
     constexpr size_t size() const noexcept { return variants_.size(); }
+
+  private:
+    constexpr bool Exists_(const Variant& var) { for (const auto& v : variants_) { if (v == var) return true; } return false; }
 
   private:
     VariantList variants_{};             // the variant collection
