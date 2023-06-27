@@ -145,59 +145,17 @@ namespace Checkers
   //  JumpsOnly(movesB_);          // if there are any jumps, remove all non-jumps - jumping is mandatory
   //}
 
-  bool CheckersBoard::CanPromote(const Location& l, const Piece& p) const noexcept
-  {
-    return (p.IsColor(PieceColor::White) && l.y_ == 0) || (p.IsColor(PieceColor::Black) && l.y_ == stage_.GetSizeY() - 1);
-  }
-
-  bool CheckersBoard::CanPromote(const Location& l, PieceIndex p) const noexcept
+  bool CheckersBoard::CanPromote(const Location& l, const PieceIndex p) const noexcept
   {
     return (PMap.IsColor(p,PieceColor::White) && l.y_ == 0) || (PMap.IsColor(p,PieceColor::Black) && l.y_ == stage_.GetSizeY() -1);
   }
 
-  Rule CheckersBoard::GetRule() const noexcept
-  {
-    return PromotedJump;
-  }
-
-  void CheckersGame::Register() noexcept
-  {
-    PMap.Register(CheckersPiece::CheckersPieceW);
-    PMap.Register(CheckersPiece::CheckersPieceB);
-    PMap.Register(CheckersPiece::TurkCheckersPieceW);
-    PMap.Register(CheckersPiece::TurkCheckersPieceB);
-    PMap.Register(CheckersPiece::CheckersKingW);    
-    PMap.Register(CheckersPiece::CheckersKingB);
-    PMap.Register(CheckersPiece::CheckersQueenW);    
-    PMap.Register(CheckersPiece::CheckersQueenB);
-    PMap.Register(CheckersPiece::CheckersParaW);     
-    PMap.Register(CheckersPiece::CheckersParaB);
-
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Checkers",               Checkers::Standard     ,   8,  8,  2, 20 ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "International Checkers", Checkers::International,  10, 10         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Brazilian Checkers",     Checkers::Brazilian    ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Canadian Checkers",      Checkers::Canadian     ,  12, 12         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Czech Checkers",         Checkers::Czech        ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Italian Checkers",       Checkers::Italian      ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Portuguese Checkers",    Checkers::Portuguese   ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Russian Checkers",       Checkers::Russian      ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Thai Checkers",          Checkers::Thai         ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Turkish Checkers",       Checkers::Turkish      ,   8,  8         ));
- 
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Anti Checkers",          Checkers::Anti         ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Dameo",                  Checkers::Dameo        ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Corner Checkers",        Checkers::Corner       ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Gothic Checkers",        Checkers::Gothic       ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Hawaiian Checkers",      Checkers::Hawaiian     ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "One Way Checkers",       Checkers::OneWay       ,   8,  8         ));
-    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Parachute Checkers",     Checkers::Parachute    ,   8,  8         ));
-  }
-
   const BoardPartDimensions CheckersGame::GetDimensions(const VariantChosen& v) noexcept
   {
-    BoardPartDimensions d{
+    const Coordinate stackX = (v.c == Parachute ? 4 : 3);
+    const BoardPartDimensions d{
        BoardPartDimension(v.x, v.y, LayoutType::Alternating, BoardStartX, BoardStartY, FieldSizeX, FieldSizeY, 1, 1),
-       BoardPartDimension(3, 2, LayoutType::Light, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
+       BoardPartDimension(stackX, 2, LayoutType::Light, BoardStartX + FieldSizeX * (v.x + 1), BoardStartY + FieldSizeY / 2 + FieldSizeY * (v.y - 2), FieldSizeX, FieldSizeY),
        BoardPartDimension(2 * v.x, 2, LayoutType::Small, FieldSizeX * (v.x + 1), BoardStartY + FieldSizeSY, FieldSizeSX, FieldSizeSY, 0, FieldSizeY * v.y - FieldSizeSY * 4),
     };
     return d;

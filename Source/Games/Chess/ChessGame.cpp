@@ -124,18 +124,18 @@ namespace Chess
     }
   }
 
-  void ChessBoard::SetPiecesPSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept
+  void ChessBoard::SetPiecesPSymmetrical(Coordinate x, Coordinate y, const PieceIndex b, const PieceIndex w) noexcept
   {
     const Coordinate sx = stage_.GetSizeX();
     const Coordinate sy = stage_.GetSizeY();
-    stage_.SetPieceIndex(PMap[b],           x,           y );
-    stage_.SetPieceIndex(PMap[w], sx - 1U - x, sy - 1U - y );
+    stage_.SetPieceIndex(b,           x,           y );
+    stage_.SetPieceIndex(w, sx - 1U - x, sy - 1U - y );
   }
-  void ChessBoard::SetPiecesHSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept
+  void ChessBoard::SetPiecesHSymmetrical(Coordinate x, Coordinate y, const PieceIndex b, const PieceIndex w) noexcept
   {
     const Coordinate sy = stage_.GetSizeY();
-    stage_.SetPieceIndex(PMap[b],x,           y);
-    stage_.SetPieceIndex(PMap[w],x, sy - 1U - y);
+    stage_.SetPieceIndex(b,x,           y);
+    stage_.SetPieceIndex(w,x, sy - 1U - y);
   }
 
   Side ChessBoard::PickRandomPiece() const noexcept

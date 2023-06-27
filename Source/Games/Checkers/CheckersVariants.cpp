@@ -15,16 +15,18 @@ namespace Checkers
     CheckersVariantBoard<V>(const CheckersVariantBoard<V>& m) noexcept : CheckersBoard(m), CheckersVariantData<V>(m) {}
   public:
     CheckersVariantBoard<V>(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetDefaultStock(); }
-    virtual Board* Clone() const noexcept override { return new CheckersVariantBoard<V>(*this); }
-    virtual void SetStartingBoard() noexcept override { CheckersBoard::SetStartingBoard(); }
-    virtual void GetAllMoves() const noexcept { CheckersBoard::GetAllMoves(); }
-    virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override { return CheckersBoard::AddIfLegal(m, fr, to); }
-    constexpr virtual int GetMoveCountFactor() const noexcept override { return CheckersBoard::GetMoveCountFactor(); }
-    virtual void EvaluateStatically() const noexcept override { return CheckersBoard::EvaluateStatically(); }
+    virtual inline Board* Clone() const noexcept override { return new CheckersVariantBoard<V>(*this); }
+    virtual inline void SetStartingBoard() noexcept override { CheckersBoard::SetStartingBoard(); }
+    virtual inline void GetAllMoves() const noexcept { CheckersBoard::GetAllMoves(); }
+    virtual inline bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override { return CheckersBoard::AddIfLegal(m, fr, to); }
+    virtual inline bool CanPromote(const Location& l, const PieceIndex p) const noexcept { return CheckersBoard::CanPromote(l, p); }
+    constexpr virtual inline int GetMoveCountFactor() const noexcept override { return CheckersBoard::GetMoveCountFactor(); }
+    virtual inline void EvaluateStatically() const noexcept override { return CheckersBoard::EvaluateStatically(); }
 
+  protected:
+    virtual inline Rule GetRule() const noexcept override { return None; }
   private:
-    Rule GetRule() const noexcept { return BackJump | MaxCapture | MaxPromotedCapture | PromotedJump | ContinueJumping | NoPromotedCapture | CapturePromotedFirst | PromoteToQueen; }
-    static bool ValidBoard(const std::vector<Coordinate>& c) noexcept { return true; }
+    static inline bool ValidBoard(const std::vector<Coordinate>& c) noexcept { return true; }
   };
 
 
@@ -34,12 +36,14 @@ namespace Checkers
 
   //#######################################################
   // specializations for CheckersVariant::Czech
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Czech>::GetRule() const noexcept { return CapturePromotedFirst | PromoteToQueen; }
   template <> inline CheckersVariantBoard<CheckersVariant::Czech>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetQueensStock(); }
 
 
   //#######################################################
   // specializations for CheckersVariant::Corner
   template <> inline CheckersVariantBoard<CheckersVariant::Corner>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetQueensStock(); }
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Corner>::GetRule() const noexcept { return CapturePromotedFirst | PromoteToQueen | JumpFurther | PromotedJump; }
   template <> inline void CheckersVariantBoard<CheckersVariant::Corner>::SetStartingBoard() noexcept
   {
     //for (Coordinate j = 0; j < sizeY_; j++)
@@ -56,11 +60,22 @@ namespace Checkers
     //  }
     //}
   }
+  template <> inline bool CheckersVariantBoard<CheckersVariant::Corner>::CanPromote(const Location& l, const PieceIndex pI) const noexcept override
+  {
+    const Coordinate sx = stage_.GetSizeX();
+    const Coordinate sy = stage_.GetSizeY();
+    return
+      (PMap[pI].IsColor(PieceColor::White) && l.y_ == 0 && l.x_ == 1) ||
+      (PMap[pI].IsColor(PieceColor::White) && l.y_ == 1 && l.x_ == 0) ||
+      (PMap[pI].IsColor(PieceColor::Black) && l.y_ == sy - 1 && l.x_ == sx - 2) ||
+      (PMap[pI].IsColor(PieceColor::Black) && l.y_ == sy - 2 && l.x_ == sx - 1);
+  }
 
 
   //#######################################################
   // specializations for CheckersVariant::OneWay
   template <> inline CheckersVariantBoard<CheckersVariant::OneWay>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetQueensStock(); }
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::OneWay>::GetRule() const noexcept { return CapturePromotedFirst | PromoteToQueen | MaxCapture; }
   template <> inline void CheckersVariantBoard<CheckersVariant::OneWay>::SetStartingBoard() noexcept
   {
     //for (Coordinate j = 2; j < sizeY_; j++)
@@ -81,6 +96,7 @@ namespace Checkers
 
   //#######################################################
   // specializations for CheckersVariant::Parachute
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Parachute>::GetRule() const noexcept { return PromoteToQueen | BackJump; }
   template <> inline CheckersVariantBoard<CheckersVariant::Parachute>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d)
   { 
     SetQueensStock(); 
@@ -112,10 +128,16 @@ namespace Checkers
     //  }
     //}
   }
+  template <> inline bool CheckersVariantBoard<CheckersVariant::Parachute>::CanPromote(const Location& l, const PieceIndex p) const noexcept override
+  {
+    if (PMap[p].IsKind(Checkers::Para::ThePara)) return true; // Para can always promotes (to normal piece) when jumping
+    return CheckersBoard::CanPromote(l, p);
+  }
 
 
   //#######################################################
   // specializations for CheckersVariant::Gothic
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Gothic>::GetRule() const noexcept { return PromoteToQueen | PromotedJump; }
   template <> inline void CheckersVariantBoard<CheckersVariant::Gothic>::SetStartingBoard() noexcept
   {
     //for (Coordinate j = 0; j < sizeY_ / 4; j++)
@@ -212,6 +234,7 @@ namespace Checkers
 
   //#######################################################
   // specializations for CheckersVariant::Hawaiian
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Hawaiian>::GetRule() const noexcept { return BackJump; }
   template <> inline void CheckersVariantBoard<CheckersVariant::Hawaiian>::SetStartingBoard() noexcept
   {
     //for (Coordinate j = 0; j < sizeY_; j++)
@@ -235,6 +258,7 @@ namespace Checkers
   //#######################################################
   // specializations for CheckersVariant::Russian
   template <> inline CheckersVariantBoard<CheckersVariant::Russian>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetQueensStock(); }
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Russian>::GetRule() const noexcept { return PromoteToQueen | JumpFurther | MaxCapture | MaxPromotedCapture; }
 
 
   //#######################################################
@@ -245,6 +269,7 @@ namespace Checkers
   //#######################################################
   // specializations for CheckersVariant::Thai
   template <> inline CheckersVariantBoard<CheckersVariant::Thai>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetQueensStock(); }
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Thai>::GetRule() const noexcept { return PromoteToQueen; }
   template <> inline void CheckersVariantBoard<CheckersVariant::Thai>::SetStartingBoard() noexcept
   {
     //for (Coordinate j = 0; j < sizeY_ / 4; j++)
@@ -268,6 +293,7 @@ namespace Checkers
   //#######################################################
   // specializations for CheckersVariant::Portuguese
   template <> inline CheckersVariantBoard<CheckersVariant::Portuguese>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetQueensStock(); }
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Portuguese>::GetRule() const noexcept { return PromoteToQueen | JumpFurther | MaxCapture | MaxPromotedCapture; }
   template <> inline void CheckersVariantBoard<CheckersVariant::Portuguese>::SetStartingBoard() noexcept
   {
     //for (Coordinate j = 0; j < sizeY_ / 2 - 1; j++)
@@ -302,6 +328,7 @@ namespace Checkers
 
   //#######################################################
   // specializations for CheckersVariant::Dameo
+  template <> inline Rule CheckersVariantBoard<CheckersVariant::Dameo>::GetRule() const noexcept { return PromoteToQueen | JumpFurther | MaxCapture | ContinueJumping; }
   template <> inline CheckersVariantBoard<CheckersVariant::Dameo>::CheckersVariantBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : CheckersBoard(v, d) { SetQueensStock(); }
   template <> inline void CheckersVariantBoard<CheckersVariant::Dameo>::SetStartingBoard() noexcept
   {
@@ -320,7 +347,7 @@ namespace Checkers
   Board* CheckersGame::GetNewBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept
   {
     // this switch looks silly, but cannot be avoided - the compiler has no idea which variants would be possible, 
-    // but needs to generate the code for each one. An explicit list is needed in some form!
+    // but needs to call the generated the code for each one. An explicit list is needed in some form!
     switch (static_cast<CheckersVariant>(v.c))
     {
       case CheckersVariant::Standard:      return new CheckersVariantBoard<CheckersVariant::Standard     >(v, d);     // Checkers
@@ -338,12 +365,43 @@ namespace Checkers
       case CheckersVariant::Hawaiian:      return new CheckersVariantBoard<CheckersVariant::Hawaiian     >(v, d);     // Hawaiian Checkers
       case CheckersVariant::OneWay:        return new CheckersVariantBoard<CheckersVariant::OneWay       >(v, d);     // One Way Checkers
       case CheckersVariant::Parachute:     return new CheckersVariantBoard<CheckersVariant::Parachute    >(v, d);     // Parachute Checkers
-      case CheckersVariant::Gothic:        return new CheckersVariantBoard<CheckersVariant::Gothic       >(v, d);     // Gothis Checkers
+      case CheckersVariant::Gothic:        return new CheckersVariantBoard<CheckersVariant::Gothic       >(v, d);     // Gothic Checkers
       case CheckersVariant::Dameo:         return new CheckersVariantBoard<CheckersVariant::Dameo        >(v, d);     // Dameo
       default: return nullptr; // must not happen
     }
   }
 
+  void CheckersGame::Register() noexcept
+  {
+    PMap.Register(CheckersPiece::CheckersPieceW);
+    PMap.Register(CheckersPiece::CheckersPieceB);
+    PMap.Register(CheckersPiece::TurkCheckersPieceW);
+    PMap.Register(CheckersPiece::TurkCheckersPieceB);
+    PMap.Register(CheckersPiece::CheckersKingW);    
+    PMap.Register(CheckersPiece::CheckersKingB);
+    PMap.Register(CheckersPiece::CheckersQueenW);    
+    PMap.Register(CheckersPiece::CheckersQueenB);
+    PMap.Register(CheckersPiece::CheckersParaW);     
+    PMap.Register(CheckersPiece::CheckersParaB);
+
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Checkers",               Checkers::Standard     ,   8,  8,  2, 20 ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "International Checkers", Checkers::International,  10, 10         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Brazilian Checkers",     Checkers::Brazilian    ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Canadian Checkers",      Checkers::Canadian     ,  12, 12         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Czech Checkers",         Checkers::Czech        ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Italian Checkers",       Checkers::Italian      ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Portuguese Checkers",    Checkers::Portuguese   ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Russian Checkers",       Checkers::Russian      ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Thai Checkers",          Checkers::Thai         ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Turkish Checkers",       Checkers::Turkish      ,   8,  8         ));
+ 
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Anti Checkers",          Checkers::Anti         ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Dameo",                  Checkers::Dameo        ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Corner Checkers",        Checkers::Corner       ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Gothic Checkers",        Checkers::Gothic       ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Hawaiian Checkers",      Checkers::Hawaiian     ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "One Way Checkers",       Checkers::OneWay       ,   8,  8         ));
+    Variants.Register(Variant(0, IDR_GAMETYPE_CHECKERS, "Parachute Checkers",     Checkers::Parachute    ,   8,  8         ));
+  }
+
 }
-
-

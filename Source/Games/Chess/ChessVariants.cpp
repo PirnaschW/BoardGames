@@ -30,15 +30,6 @@ namespace Chess
   };
 
 
-  //template <ChessVariant V>
-  //class ChessVariantLayout : public ChessLayout
-  //{
-  //public:
-  //  ChessVariantLayout(const BoardPartDimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : ChessLayout(d, lt) {}
-  //  virtual ~ChessVariantLayout() noexcept {}
-  //  virtual void Draw(DC* pDC, const Board* board_, Mode mode_) const { ChessLayout::Draw(pDC, board_, mode_); }
-  //};
-
   //#########################################
   // Specializations - those contain the variant specific code
   // note that sequence DOES matter in defining method specializations!
@@ -54,20 +45,20 @@ namespace Chess
     SetPawns(1U, PieceColor::Black);
     SetPawns(stage_.GetSizeY() - 2U, PieceColor::White);
 
-    SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
+    SetPiecesPSymmetrical(0U, 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
 
     std::vector<Coordinate> c;
     for (Coordinate i = 1; i < stage_.GetSizeX(); i++) c.push_back(i);
     do Math::Shuffle(c);
     while (!ValidBoard(c));  // keep shuffling until the position is valid
 
-    SetPiecesPSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesPSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesPSymmetrical(c[2], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesPSymmetrical(c[3], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesPSymmetrical(c[4], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesPSymmetrical(c[5], 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesPSymmetrical(c[6], 0U, ChessPiece::BN, ChessPiece::WN);
+    SetPiecesPSymmetrical(c[0], 0U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesPSymmetrical(c[1], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesPSymmetrical(c[2], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesPSymmetrical(c[3], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesPSymmetrical(c[4], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesPSymmetrical(c[5], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesPSymmetrical(c[6], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
   }
 
 
@@ -80,23 +71,23 @@ namespace Chess
     SetPawns(1U, PieceColor::Black);
     SetPawns(stage_.GetSizeY() - 2U, PieceColor::White);
 
-    SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
+    SetPiecesPSymmetrical(0U, 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
 
     std::vector<Coordinate> c;
     for (Coordinate i = 1; i < stage_.GetSizeX(); i++) c.push_back(i);
     do Math::Shuffle(c);
     while (!ValidBoard(c));  // keep shuffling until the position is valid
 
-    SetPiecesPSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesPSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesPSymmetrical(c[2], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesPSymmetrical(c[3], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesPSymmetrical(c[4], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesPSymmetrical(c[5], 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesPSymmetrical(c[6], 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesPSymmetrical(  0U, 2U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(  1U, 2U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(  2U, 2U, ChessPiece::BP, ChessPiece::WP);
+    SetPiecesPSymmetrical(c[0], 0U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesPSymmetrical(c[1], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesPSymmetrical(c[2], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesPSymmetrical(c[3], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesPSymmetrical(c[4], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesPSymmetrical(c[5], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesPSymmetrical(c[6], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesPSymmetrical(  0U, 2U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(  1U, 2U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(  2U, 2U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
   };
 
 
@@ -212,12 +203,12 @@ namespace Chess
   template <> inline void ChessVariantBoard<ChessVariant::Janus>::SetStartingBoard() noexcept
   {
     ChessBoard::SetStartingBoard();
-    SetPiecesHSymmetrical(1U, 0U, ChessPiece::BC, ChessPiece::WC);
-    SetPiecesHSymmetrical(2U, 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(3U, 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(6U, 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(7U, 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(8U, 0U, ChessPiece::BC, ChessPiece::WC);
+    SetPiecesHSymmetrical(1U, 0U, PMap[ChessPiece::BC], PMap[ChessPiece::WC]);
+    SetPiecesHSymmetrical(2U, 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(3U, 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(6U, 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(7U, 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(8U, 0U, PMap[ChessPiece::BC], PMap[ChessPiece::WC]);
   }
   
 
@@ -240,10 +231,10 @@ namespace Chess
   template <> inline void ChessVariantBoard<ChessVariant::Embassy>::SetStartingBoard() noexcept
   {
     ChessBoard::SetStartingBoard();
-    SetPiecesHSymmetrical(3U, 0U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesHSymmetrical(4U, 0U, ChessPiece::BK, ChessPiece::WK);
-    SetPiecesHSymmetrical(5U, 0U, ChessPiece::BM, ChessPiece::WM);
-    SetPiecesHSymmetrical(6U, 0U, ChessPiece::BC, ChessPiece::WC);
+    SetPiecesHSymmetrical(3U, 0U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesHSymmetrical(4U, 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
+    SetPiecesHSymmetrical(5U, 0U, PMap[ChessPiece::BM], PMap[ChessPiece::WM]);
+    SetPiecesHSymmetrical(6U, 0U, PMap[ChessPiece::BC], PMap[ChessPiece::WC]);
   }
   
 
@@ -281,7 +272,7 @@ namespace Chess
   template <> inline void ChessVariantBoard<ChessVariant::Amazons>::SetStartingBoard() noexcept
   {
     ChessBoard::SetStartingBoard();
-    SetPiecesHSymmetrical(3U, 0U, ChessPiece::BA, ChessPiece::WA);
+    SetPiecesHSymmetrical(3U, 0U, PMap[ChessPiece::BA], PMap[ChessPiece::WA]);
   }
 
 
@@ -312,14 +303,14 @@ namespace Chess
       
     do Math::Shuffle(c); while (!ValidBoard(c));   // keep shuffling until position is valid
 
-    SetPiecesHSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesHSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesHSymmetrical(c[2], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesHSymmetrical(c[3], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(c[4], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(c[5], 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(c[6], 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(c[7], 0U, ChessPiece::BK, ChessPiece::WK);
+    SetPiecesHSymmetrical(c[0], 0U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesHSymmetrical(c[1], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesHSymmetrical(c[2], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesHSymmetrical(c[3], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(c[4], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(c[5], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(c[6], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(c[7], 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
   }
   
 
@@ -328,23 +319,23 @@ namespace Chess
   template <> inline Rule ChessVariantBoard<ChessVariant::Legan>::GetRule() const noexcept { return AllowMoves | AllowTakes | PawnsPromote | LeganPawns; }
   template <> inline void ChessVariantBoard<ChessVariant::Legan>::SetStartingBoard() noexcept
   {
-    SetPiecesPSymmetrical(0U, 0U, ChessPiece::BK, ChessPiece::WK);
-    SetPiecesPSymmetrical(1U, 1U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesPSymmetrical(0U, 3U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesPSymmetrical(3U, 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesPSymmetrical(0U, 1U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesPSymmetrical(2U, 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesPSymmetrical(0U, 2U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesPSymmetrical(1U, 0U, ChessPiece::BN, ChessPiece::WN);
+    SetPiecesPSymmetrical(0U, 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
+    SetPiecesPSymmetrical(1U, 1U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesPSymmetrical(0U, 3U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesPSymmetrical(3U, 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesPSymmetrical(0U, 1U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesPSymmetrical(2U, 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesPSymmetrical(0U, 2U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesPSymmetrical(1U, 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
 
-    SetPiecesPSymmetrical(1U, 2U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(2U, 1U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(4U, 0U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(3U, 1U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(2U, 2U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(1U, 3U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(0U, 4U, ChessPiece::BP, ChessPiece::WP);
-    SetPiecesPSymmetrical(3U, 3U, ChessPiece::BP, ChessPiece::WP);
+    SetPiecesPSymmetrical(1U, 2U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(2U, 1U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(4U, 0U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(3U, 1U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(2U, 2U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(1U, 3U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(0U, 4U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
+    SetPiecesPSymmetrical(3U, 3U, PMap[ChessPiece::BP], PMap[ChessPiece::WP]);
   }
 
 
@@ -377,16 +368,16 @@ namespace Chess
     SetPawns(2U, PieceColor::Black);
     SetPawns(sy - 3U, PieceColor::White);
 
-    SetPiecesHSymmetrical(0U, 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesHSymmetrical(1U, 1U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(2U, 1U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(3U, 1U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesHSymmetrical(4U, 1U, ChessPiece::BK, ChessPiece::WK);
-    SetPiecesHSymmetrical(5U, 1U, ChessPiece::BM, ChessPiece::WM);
-    SetPiecesHSymmetrical(6U, 1U, ChessPiece::BC, ChessPiece::WC);
-    SetPiecesHSymmetrical(7U, 1U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(8U, 1U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(9U, 0U, ChessPiece::BR, ChessPiece::WR);
+    SetPiecesHSymmetrical(0U, 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesHSymmetrical(1U, 1U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(2U, 1U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(3U, 1U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesHSymmetrical(4U, 1U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
+    SetPiecesHSymmetrical(5U, 1U, PMap[ChessPiece::BM], PMap[ChessPiece::WM]);
+    SetPiecesHSymmetrical(6U, 1U, PMap[ChessPiece::BC], PMap[ChessPiece::WC]);
+    SetPiecesHSymmetrical(7U, 1U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(8U, 1U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(9U, 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
   }
 
 
@@ -425,16 +416,16 @@ namespace Chess
 
     do Math::Shuffle(c); while (!ValidBoard(c));   // keep shuffling until position is valid
 
-    SetPiecesHSymmetrical(c[0], 0U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesHSymmetrical(c[1], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesHSymmetrical(c[2], 0U, ChessPiece::BR, ChessPiece::WR);
-    SetPiecesHSymmetrical(c[3], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(c[4], 0U, ChessPiece::BB, ChessPiece::WB);
-    SetPiecesHSymmetrical(c[5], 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(c[6], 0U, ChessPiece::BN, ChessPiece::WN);
-    SetPiecesHSymmetrical(c[7], 0U, ChessPiece::BK, ChessPiece::WK);
-    SetPiecesHSymmetrical(c[8], 0U, ChessPiece::BC, ChessPiece::WC);
-    SetPiecesHSymmetrical(c[9], 0U, ChessPiece::BM, ChessPiece::WM);
+    SetPiecesHSymmetrical(c[0], 0U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesHSymmetrical(c[1], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesHSymmetrical(c[2], 0U, PMap[ChessPiece::BR], PMap[ChessPiece::WR]);
+    SetPiecesHSymmetrical(c[3], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(c[4], 0U, PMap[ChessPiece::BB], PMap[ChessPiece::WB]);
+    SetPiecesHSymmetrical(c[5], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(c[6], 0U, PMap[ChessPiece::BN], PMap[ChessPiece::WN]);
+    SetPiecesHSymmetrical(c[7], 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
+    SetPiecesHSymmetrical(c[8], 0U, PMap[ChessPiece::BC], PMap[ChessPiece::WC]);
+    SetPiecesHSymmetrical(c[9], 0U, PMap[ChessPiece::BM], PMap[ChessPiece::WM]);
   }
 
 
@@ -529,7 +520,7 @@ namespace Chess
     {
       for (Coordinate j = 2U; j < sy/2; j++)
       {
-        SetPiecesHSymmetrical(i, j, ChessPiece::GI, ChessPiece::GI);
+        SetPiecesHSymmetrical(i, j, PMap[ChessPiece::GI], PMap[ChessPiece::GI]);
       }
     }
   }
@@ -646,10 +637,10 @@ namespace Chess
   {
     const Coordinate sx = stage_.GetSizeX();
     ChessBoard::SetStartingBoard();
-    SetPiecesHSymmetrical(          3U, 0U, ChessPiece::BQ, ChessPiece::WQ);
-    SetPiecesHSymmetrical(          4U, 0U, ChessPiece::BK, ChessPiece::WK);
-    SetPiecesHSymmetrical(sx - 1U - 3U, 0U, ChessPiece::BK, ChessPiece::WK);
-    SetPiecesHSymmetrical(sx - 1U - 4U, 0U, ChessPiece::BK, ChessPiece::WK);
+    SetPiecesHSymmetrical(          3U, 0U, PMap[ChessPiece::BQ], PMap[ChessPiece::WQ]);
+    SetPiecesHSymmetrical(          4U, 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
+    SetPiecesHSymmetrical(sx - 1U - 3U, 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
+    SetPiecesHSymmetrical(sx - 1U - 4U, 0U, PMap[ChessPiece::BK], PMap[ChessPiece::WK]);
   }
   template <> inline void ChessVariantBoard<ChessVariant::Dice10x10>::GetAllMoves() const noexcept // collect all moves for all pieces
   {
@@ -824,51 +815,5 @@ namespace Chess
     Variants.Register(Variant(0, IDR_GAMETYPE_CHESS, "Dice Chess 10x10",        ChessVariant::Dice10x10,        10, 10         ));
     Variants.Register(Variant(0, IDR_GAMETYPE_CHESS, "Massacre Chess",          ChessVariant::Massacre,          8,  8,  2, 20 ));
   }
-
-
-  //MainLayout* ChessGame::GetNewLayout(const VariantChosen& v, const BoardPartDimensions& d) noexcept
-  //{
-  //  // this switch looks silly, but cannot be avoided - the compiler has no idea which variants would be possible, 
-  //  // but needs to generate the code for each one. An explicit list is needed in some form!
-  //  switch (static_cast<ChessVariant>(v.c))
-  //  {
-  //    case ChessVariant::Standard:          return new ChessVariantLayout<ChessVariant::Standard        >(d);     // Standard Chess          
-  //    case ChessVariant::Corner:            return new ChessVariantLayout<ChessVariant::Corner          >(d);     // Corner Chess            
-  //    case ChessVariant::Fortress:          return new ChessVariantLayout<ChessVariant::Fortress        >(d);     // Fortress Chess          
-  //    case ChessVariant::Horde:             return new ChessVariantLayout<ChessVariant::Horde           >(d);     // Horde Chess             
-  //    case ChessVariant::Loop:              return new ChessVariantLayout<ChessVariant::Loop            >(d);     // Loop Chess              
-  //    case ChessVariant::Anti:              return new ChessVariantLayout<ChessVariant::Anti            >(d);     // Anti Chess              
-  //    case ChessVariant::Extinction:        return new ChessVariantLayout<ChessVariant::Extinction      >(d);     // Extinction Chess        
-  //    case ChessVariant::Maharajah:         return new ChessVariantLayout<ChessVariant::Maharajah       >(d);     // Maharajah Chess         
-  //    case ChessVariant::ThreeChecks:       return new ChessVariantLayout<ChessVariant::ThreeChecks     >(d);     // Three Checks Chess      
-  //    case ChessVariant::Dark:              return new ChessVariantLayout<ChessVariant::Dark            >(d);     // Dark Chess              
-  //    case ChessVariant::Atomic:            return new ChessVariantLayout<ChessVariant::Atomic          >(d);     // Atomic Chess            
-  //    case ChessVariant::Janus:             return new ChessVariantLayout<ChessVariant::Janus           >(d);     // Janus Chess             
-  //    case ChessVariant::Embassy:           return new ChessVariantLayout<ChessVariant::Embassy         >(d);     // Embassy Chess           
-  //    case ChessVariant::Screen:            return new ChessVariantLayout<ChessVariant::Screen          >(d);     // Screen Chess            
-  //    case ChessVariant::CrazyScreen:       return new ChessVariantLayout<ChessVariant::CrazyScreen     >(d);     // Crazy Screen Chess      
-  //    case ChessVariant::Cylinder:          return new ChessVariantLayout<ChessVariant::Cylinder        >(d);     // Cylinder Chess          
-  //    case ChessVariant::Amazons:           return new ChessVariantLayout<ChessVariant::Amazons         >(d);     // Amazon Chess            
-  //    case ChessVariant::Berolina:          return new ChessVariantLayout<ChessVariant::Berolina        >(d);     // Berolina Chess          
-  //    case ChessVariant::FischerRandom:     return new ChessVariantLayout<ChessVariant::FischerRandom   >(d);     // Fischer Random Chess    
-  //    case ChessVariant::Legan:             return new ChessVariantLayout<ChessVariant::Legan           >(d);     // Legan Chess             
-  //    case ChessVariant::KnightRelay:       return new ChessVariantLayout<ChessVariant::KnightRelay     >(d);     // Knight Relay Chess      
-  //    case ChessVariant::Grand:             return new ChessVariantLayout<ChessVariant::Grand           >(d);     // Grand Chess             
-  //    case ChessVariant::CapablancaRandom:  return new ChessVariantLayout<ChessVariant::CapablancaRandom>(d);     // Capablanca Random Chess 
-  //    case ChessVariant::LosAlamos:         return new ChessVariantLayout<ChessVariant::LosAlamos       >(d);     // Los Alamos Chess        
-  //    case ChessVariant::Ambiguous:         return new ChessVariantLayout<ChessVariant::Ambiguous       >(d);     // Ambiguous Chess         
-  //    case ChessVariant::Cheversi:          return new ChessVariantLayout<ChessVariant::Cheversi        >(d);     // Cheversi
-  //    case ChessVariant::Dice:              return new ChessVariantLayout<ChessVariant::Dice            >(d);     // Dice Chess              
-  //    case ChessVariant::Recycle:           return new ChessVariantLayout<ChessVariant::Recycle         >(d);     // Recycle Chess           
-  //    case ChessVariant::IceAge:            return new ChessVariantLayout<ChessVariant::IceAge          >(d);     // Ice Age Chess           
-  //    case ChessVariant::Behemoth:          return new ChessVariantLayout<ChessVariant::Behemoth        >(d);     // Behemoth Chess          
-  //    case ChessVariant::CheshireCat:       return new ChessVariantLayout<ChessVariant::CheshireCat     >(d);     // Cheshire Cat Chess      
-  //    case ChessVariant::Knightmate:        return new ChessVariantLayout<ChessVariant::Knightmate      >(d);     // Knightmate Chess        
-  //    case ChessVariant::RacingKings:       return new ChessVariantLayout<ChessVariant::RacingKings     >(d);     // Racing Kings            
-  //    case ChessVariant::Dice10x10:         return new ChessVariantLayout<ChessVariant::Dice10x10       >(d);     // Dice Chess 10x10        
-  //    case ChessVariant::Massacre:          return new ChessVariantLayout<ChessVariant::Massacre        >(d);     // Massacre Chess
-  //    default: return nullptr; // must not happen
-  //  }
-  //}
 
 }

@@ -50,6 +50,18 @@ namespace Checkers
     static const Para ThePara;
   };
 
+  class OneWayChecker final : public Kind
+  {
+  private:
+    constexpr inline OneWayChecker() noexcept : Kind('O') {}
+  public:
+    virtual inline PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const Board& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+
+  public:
+    static const OneWayChecker TheOneWayChecker;
+  };
+
   class TurkChecker final : public Kind
   {
   private:
@@ -84,19 +96,21 @@ namespace Checkers
     static const CheckersPiece CheckersQueenB;
     static const CheckersPiece CheckersParaW;
     static const CheckersPiece CheckersParaB;
+    static const CheckersPiece OneWayCheckersPieceB;
     static const CheckersPiece TurkCheckersPieceW;
     static const CheckersPiece TurkCheckersPieceB;
   };
-
-  constexpr inline const CheckersPiece CheckersPiece::CheckersPieceW    { Checker    ::TheChecker,     PieceColor::White, &CheckersQueenW, IDB_WPL };
-  constexpr inline const CheckersPiece CheckersPiece::CheckersPieceB    { Checker    ::TheChecker,     PieceColor::Black, &CheckersQueenB, IDB_BPL };
-  constexpr inline const CheckersPiece CheckersPiece::CheckersKingW     { King       ::TheKing,        PieceColor::White, &CheckersKingW,  IDB_WKL };
-  constexpr inline const CheckersPiece CheckersPiece::CheckersKingB     { King       ::TheKing,        PieceColor::Black, &CheckersKingB,  IDB_BKL };
-  constexpr inline const CheckersPiece CheckersPiece::CheckersQueenW    { Queen      ::TheQueen,       PieceColor::White, &CheckersQueenW, IDB_WQL };
-  constexpr inline const CheckersPiece CheckersPiece::CheckersQueenB    { Queen      ::TheQueen,       PieceColor::Black, &CheckersQueenB, IDB_BQL };
-  constexpr inline const CheckersPiece CheckersPiece::CheckersParaW     { Para       ::ThePara,        PieceColor::White, &CheckersPieceW, IDB_CHECKERSWPARA };
-  constexpr inline const CheckersPiece CheckersPiece::CheckersParaB     { Para       ::ThePara,        PieceColor::Black, &CheckersPieceB, IDB_CHECKERSBPARA };
-  constexpr inline const CheckersPiece CheckersPiece::TurkCheckersPieceW{ TurkChecker::TheTurkChecker, PieceColor::White, &CheckersQueenW, IDB_WPL };
-  constexpr inline const CheckersPiece CheckersPiece::TurkCheckersPieceB{ TurkChecker::TheTurkChecker, PieceColor::Black, &CheckersQueenB, IDB_BPL };
+                                                                          
+  constexpr inline const CheckersPiece CheckersPiece::CheckersPieceW      { Checker      ::TheChecker,       PieceColor::White, &CheckersQueenW,       IDB_WPL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersPieceB      { Checker      ::TheChecker,       PieceColor::Black, &CheckersQueenB,       IDB_BPL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersKingW       { King         ::TheKing,          PieceColor::White, &CheckersKingW,        IDB_WKL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersKingB       { King         ::TheKing,          PieceColor::Black, &CheckersKingB,        IDB_BKL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersQueenW      { Queen        ::TheQueen,         PieceColor::White, &CheckersQueenW,       IDB_WQL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersQueenB      { Queen        ::TheQueen,         PieceColor::Black, &CheckersQueenB,       IDB_BQL };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersParaW       { Para         ::ThePara,          PieceColor::White, &CheckersPieceW,       IDB_CHECKERSWPARA };
+  constexpr inline const CheckersPiece CheckersPiece::CheckersParaB       { Para         ::ThePara,          PieceColor::Black, &CheckersPieceB,       IDB_CHECKERSBPARA };
+  constexpr inline const CheckersPiece CheckersPiece::OneWayCheckersPieceB{ OneWayChecker::TheOneWayChecker, PieceColor::Black, &OneWayCheckersPieceB, IDB_BPL };
+  constexpr inline const CheckersPiece CheckersPiece::TurkCheckersPieceW  { TurkChecker  ::TheTurkChecker,   PieceColor::White, &TurkCheckersPieceW,   IDB_WPL };
+  constexpr inline const CheckersPiece CheckersPiece::TurkCheckersPieceB  { TurkChecker  ::TheTurkChecker,   PieceColor::Black, &TurkCheckersPieceB,   IDB_BPL };
 
 }

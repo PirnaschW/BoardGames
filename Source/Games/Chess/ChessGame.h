@@ -1,6 +1,3 @@
-#include "ChessVariants.h"
-#include "ChessPieces.h"
-
 namespace Chess
 {
 
@@ -26,28 +23,16 @@ namespace Chess
     constexpr virtual int GetMoveCountFactor() const noexcept override { return 20; }
     virtual void EvaluateStatically() const noexcept override;
 
-    [[TODO::Unittest]] bool HasRule(const Rule r) const noexcept { return GetRule() & r; }
-    [[TODO::Unittest]] virtual Rule GetRule() const noexcept = 0;
-
-
     // extensions
   protected:
+    bool HasRule(const Rule r) const noexcept { return GetRule() & r; }
+    virtual Rule GetRule() const noexcept = 0;
     void SetDefaultStock() noexcept;
     void SetPawns(Coordinate row, const PieceColor& c) noexcept;
-    void SetPiecesPSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use point symmetry
-    void SetPiecesHSymmetrical(Coordinate x, Coordinate y, const ChessPiece& b, const ChessPiece& w) noexcept;  // use horizontal mirror symmetry
+    void SetPiecesPSymmetrical(Coordinate x, Coordinate y, const PieceIndex b, const PieceIndex w) noexcept;  // use point symmetry
+    void SetPiecesHSymmetrical(Coordinate x, Coordinate y, const PieceIndex b, const PieceIndex w) noexcept;  // use horizontal mirror symmetry
     Side PickRandomPiece() const noexcept;
   };
-
-  //// this class has no function, but is needed as base for the variant templates
-  //class ChessLayout : public MainLayout
-  //{
-  //public:
-  //  ChessLayout(const BoardPartDimensions& d, LayoutType lt = LayoutType::Alternating) noexcept : MainLayout(d,lt) {}
-  //  virtual ~ChessLayout() noexcept {}
-  //  virtual void Draw(DC* pDC, const Board* board_, Mode mode_) const { MainLayout::Draw(pDC, board_, mode_); }
-  //};
-
 
   class ChessGame : public Game
   {
@@ -63,3 +48,6 @@ namespace Chess
   };
 
 }
+
+#include "ChessPieces.h"
+#include "ChessVariants.h"

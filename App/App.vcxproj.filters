@@ -321,9 +321,6 @@
     <ClInclude Include="..\Source\Games\Checkers\CheckersVariants.h">
       <Filter>Games\Game Checkers\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Games\Checkers\Turkish.h">
-      <Filter>Games\Game Checkers\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Games\Checkers\CheckersGame.h">
       <Filter>Games\Game Checkers\Header Files</Filter>
     </ClInclude>
@@ -543,9 +540,6 @@
       <Filter>Games\Game Checkers\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Games\Checkers\CheckersVariants.cpp">
-      <Filter>Games\Game Checkers\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Games\Checkers\Turkish.cpp">
       <Filter>Games\Game Checkers\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Games\Checkers\CheckersGame.cpp">
