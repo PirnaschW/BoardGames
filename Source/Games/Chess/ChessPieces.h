@@ -10,8 +10,8 @@ namespace Chess
     Pawn() noexcept : Kind('P') {}
   public:
     void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
 
   public:
     static const Pawn ThePawn;
@@ -23,8 +23,8 @@ namespace Chess
     Knight() noexcept : Kind('N') {}
   public:
     void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 300; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 300; }
 
   public:
     static const Knight TheKnight;
@@ -36,8 +36,8 @@ namespace Chess
     Bishop() noexcept : Kind('B') {}
   public:
     void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 300; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 300; }
 
   public:
     static const Bishop TheBishop;
@@ -49,8 +49,8 @@ namespace Chess
     Rook() noexcept : Kind('R') {}
   public:
     void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 500; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 500; }
 
   public:
     static const Rook TheRook;
@@ -62,8 +62,8 @@ namespace Chess
     Cardinal() noexcept : Kind('C') {}
   public:
     virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
 
   public:
     static const Cardinal TheCardinal;
@@ -75,8 +75,8 @@ namespace Chess
     Marshall() noexcept : Kind('M') {}
   public:
     virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
 
   public:
     static const Marshall TheMarshall;
@@ -88,8 +88,8 @@ namespace Chess
     Queen() noexcept : Kind('Q') {}
   public:
     virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
 
   public:
     static const Queen TheQueen;
@@ -101,8 +101,8 @@ namespace Chess
     Amazon() noexcept : Kind('A') {}
   public:
     virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 900; }
 
   public:
     static const Amazon TheAmazon;
@@ -114,23 +114,23 @@ namespace Chess
     King() noexcept : Kind('K') {}
   public:
     virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override;
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 500; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 500; }
 
   public:
     static const King TheKing;
   };
 
-  class Behemoth : public Kind
+  class Behem : public Kind // Behemoth - has to be named different than its variant code
   {
   private:
-    Behemoth() noexcept : Kind('b') {}
+    Behem() noexcept : Kind('b') {}
   public:
     virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override {};
-    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
-    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
+//    void GetMotions(Motions& m, const PieceColor& c) const noexcept override;
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
   public:
-    static const Behemoth TheBehemoth;
+    static const Behem TheBehemoth;
   };
 
   class Ice : public Kind
@@ -139,7 +139,7 @@ namespace Chess
     Ice() noexcept : Kind('i') {}
   public:
     virtual void CollectMoves(const Board&, const Location&, Moves&) const noexcept override {};
-    virtual unsigned int GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
+    virtual PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 0; }
 
   public:
     static const Ice TheIce;

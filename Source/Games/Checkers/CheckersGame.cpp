@@ -5,62 +5,6 @@
 namespace Checkers
 {
 
-  CheckersBoard::CheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d)
-  {
-    // fill Stock
-    int i = 0;
-
-    auto append = [this, &i](const Piece& p) { stock_.SetPieceIndex(PMap[p], i / 2U, i % 2U); ++i; };
-
-    switch (v.c)
-    {
-      case Checkers::Hawaiian:
-        append(CheckersPiece::CheckersPieceW);
-        append(CheckersPiece::CheckersPieceB);
-        break;
-      case Checkers::Standard:
-      case Checkers::Italian:
-      case Checkers::Anti:
-      case Checkers::Gothic:
-        append(CheckersPiece::CheckersPieceW);
-        append(CheckersPiece::CheckersPieceB);
-        append(CheckersPiece::CheckersKingW);
-        append(CheckersPiece::CheckersKingB);
-        break;
-      case Checkers::Czech:
-      case Checkers::Corner:
-      case Checkers::OneWay:
-      case Checkers::International:
-      case Checkers::Russian:
-      case Checkers::Canadian:
-      case Checkers::Thai:
-      case Checkers::Brazilian:
-      case Checkers::Portuguese:
-      case Checkers::Dameo:
-        append(CheckersPiece::CheckersPieceW);
-        append(CheckersPiece::CheckersPieceB);
-        append(CheckersPiece::CheckersQueenW);
-        append(CheckersPiece::CheckersQueenB);
-        break;
-      case Checkers::Turkish:
-        append(TurkCheckersPiece::TurkCheckersPieceW);
-        append(TurkCheckersPiece::TurkCheckersPieceB);
-        append(CheckersPiece::CheckersQueenW);
-        append(CheckersPiece::CheckersQueenB);
-        break;
-      case Checkers::Parachute:
-        append(CheckersPiece::CheckersParaW);
-        append(CheckersPiece::CheckersParaB);
-        append(CheckersPiece::CheckersQueenW);
-        append(CheckersPiece::CheckersQueenB);
-        break;
-      default: assert(false);
-    }
-
-
-
-  }
-
   void CheckersBoard::SetStartingBoard() noexcept
   {
     PieceIndex pWC = PMap[CheckersPiece::CheckersPieceW];
@@ -76,6 +20,25 @@ namespace Checkers
           SetPieceIndex(pWC, x, - 1 - y);
       }
     }
+  }
+
+  void CheckersBoard::SetDefaultStock() noexcept   // default: fill stock with standard checkers pieces
+  {
+    int i = 0;
+    auto append = [this, &i](const Piece& p) { stock_.SetPieceIndex(PMap[p], i / 2U, i % 2U); ++i; };
+    append(CheckersPiece::CheckersPieceW);
+    append(CheckersPiece::CheckersPieceB);
+    append(CheckersPiece::CheckersKingW);
+    append(CheckersPiece::CheckersKingB);
+  }
+  void CheckersBoard::SetQueensStock() noexcept
+  {
+    int i = 0;
+    auto append = [this, &i](const Piece& p) { stock_.SetPieceIndex(PMap[p], i / 2U, i % 2U); ++i; };
+    append(CheckersPiece::CheckersPieceW);
+    append(CheckersPiece::CheckersPieceB);
+    append(CheckersPiece::CheckersQueenW);
+    append(CheckersPiece::CheckersQueenB);
   }
 
   bool CheckersBoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
@@ -197,40 +160,12 @@ namespace Checkers
     return PromotedJump;
   }
 
-
-  Board* CheckersGame::GetNewBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept
-  {
-    switch (static_cast<CheckerVariant>(v.c))
-    {
-      case CheckerVariant::Standard:      return new CheckersBoard(v, d);     // Checkers
-      case CheckerVariant::International: return new InternationalCheckersBoard(v, d);     // International Checkers
-      case CheckerVariant::Brazilian:     return new BrazilianCheckersBoard(v, d);     // Brazilian Checkers
-      case CheckerVariant::Canadian:      return new CanadianCheckersBoard(v, d);     // Canadian Checkers
-      case CheckerVariant::Czech:         return new CzechCheckersBoard(v, d);     // Czech Checkers
-      case CheckerVariant::Italian:       return new ItalianCheckersBoard(v, d);     // Italian Checkers
-      case CheckerVariant::Portuguese:    return new PortugueseCheckersBoard(v, d);     // Portuguese Checkers
-      case CheckerVariant::Russian:       return new RussianCheckersBoard(v, d);     // Russian Checkers
-      case CheckerVariant::Thai:          return new ThaiCheckersBoard(v, d);     // Thai Checkers
-      case CheckerVariant::Turkish:       return new TurkCheckersBoard(v, d);     // Turkish Checkers
-      case CheckerVariant::Anti:          return new AntiCheckersBoard(v, d);     // Anti Checkers
-      case CheckerVariant::Corner:        return new CornerCheckersBoard(v, d);     // Corner Checkers
-      case CheckerVariant::Hawaiian:      return new HawaiianCheckersBoard(v, d);     // Hawaiian Checkers
-      case CheckerVariant::OneWay:        return new OneWayCheckersBoard(v, d);     // One Way Checkers
-      case CheckerVariant::Parachute:     return new ParachuteCheckersBoard(v, d);     // Parachute Checkers
-      case CheckerVariant::Gothic:        return new GothicCheckersBoard(v, d);     // Gothis Checkers
-      case CheckerVariant::Dameo:         return new DameoCheckersBoard(v, d);     // Dameo
-      default: return nullptr; // must not happen
-    }
-  }
-
-
-
   void CheckersGame::Register() noexcept
   {
     PMap.Register(CheckersPiece::CheckersPieceW);
     PMap.Register(CheckersPiece::CheckersPieceB);
-    PMap.Register(TurkCheckersPiece::TurkCheckersPieceW);
-    PMap.Register(TurkCheckersPiece::TurkCheckersPieceB);
+    PMap.Register(CheckersPiece::TurkCheckersPieceW);
+    PMap.Register(CheckersPiece::TurkCheckersPieceB);
     PMap.Register(CheckersPiece::CheckersKingW);    
     PMap.Register(CheckersPiece::CheckersKingB);
     PMap.Register(CheckersPiece::CheckersQueenW);    

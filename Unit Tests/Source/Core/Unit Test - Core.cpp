@@ -2073,6 +2073,22 @@ namespace UnitTestCore
       Assert::IsTrue(v2.vName_ == std::string("SomeGame"));
       Assert::IsTrue(g == std::string("SomeGame"));
     }
+
+    TEST_METHOD(_equal)
+    {
+      CheckForMemoryLeaks check;
+
+      Variant v1(0, 1, "SomeGame1", '\0', 8, 8, 2, 20);
+      Variant v2(0, 1, "SomeGame2", '\0', 7, 7, 4, 10);
+      Assert::IsTrue(v1 == v2);
+
+      Variant v3(1, 1, "SomeGame3", '\0', 8, 8, 2, 20);
+      Variant v4(0, 2, "SomeGame3", '\0', 8, 8, 2, 20);
+      Variant v5(0, 1, "SomeGame3", '\1', 8, 8, 2, 20);
+      Assert::IsFalse(v1 == v3);
+      Assert::IsFalse(v1 == v4);
+      Assert::IsFalse(v1 == v5);
+    }
   };
 
   TEST_CLASS(_Vars)
@@ -2086,9 +2102,9 @@ namespace UnitTestCore
       v.Register(Variant(0, 2, "SomeGame2", '\0', 8, 8, 2, 20));
       v.Register(Variant(0, 1, "SomeGame1", '\0', 8, 8, 2, 20));
       v.Register(Variant(0, 2, "SomeGame2", '\0', 8, 8, 2, 20));
-      v.Register(Variant(0, 2, "SomeGame2", '\0', 8, 8, 2, 20));
+      v.Register(Variant(0, 2, "SomeGame2", '\1', 8, 8, 2, 20));
       v.Register(Variant(0, 1, "SomeGame1", '\0', 8, 8, 2, 20));
-      Assert::IsTrue(v.size() == 6);
+      Assert::IsTrue(v.size() == 3);
     }
 
     TEST_METHOD(_GetGameIDList)

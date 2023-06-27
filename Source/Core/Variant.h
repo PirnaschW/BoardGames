@@ -16,7 +16,7 @@ namespace BoardGamesCore
                       Coordinate xmin = 0, Coordinate xmax = 0, Coordinate ymin = 0, Coordinate ymax = 0) noexcept :
       group_(group), ID_(ID), vName_(std::move(n)), vCode_(c), xDef_(xd), yDef_(yd ? yd : xd),
       xMin_(xmin), xMax_(xmax), yMin_(ymin ? ymin : xmin), yMax_(ymax ? ymax : xmax) {}
-    [[TODO::Unittest]] constexpr bool operator==(const Variant& v) const noexcept { return v.group_ == group_ && v.ID_ == ID_ && v.vCode_ == vCode_; }
+    constexpr bool operator==(const Variant& v) const noexcept { return v.group_ == group_ && v.ID_ == ID_ && v.vCode_ == vCode_; }
 
   public:
     const GameGroup group_;        // Game group code
@@ -74,7 +74,7 @@ namespace BoardGamesCore
 
   inline Vars Variants{};
 
-  static_assert(Vars().size() == 0, "Variantlists can't be constexpr");
+  static_assert(Vars().size() == 0, "Variantlists should be constexpr");
 
   class VariantChosen
   {

@@ -26,11 +26,11 @@ namespace CFour
   class CFourBoard : public Board
   {
   public:
-    inline CFourBoard(const VariantChosen& v, const PieceMapP& p, const BoardPartDimensions& d) noexcept : Board(v, p, d) {}
+    CFourBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept;
     virtual inline Board* Clone() const noexcept override { return new CFourBoard(*this); }
     virtual void SetStartingBoard() noexcept override {};
     virtual void GetAllMoves() const noexcept override;
-    virtual PositionValue EvaluateStatically() const noexcept override;
+    //virtual PositionValue EvaluateStatically() const noexcept override;
   };
 
 
@@ -40,9 +40,9 @@ namespace CFour
     CFourGame() = delete;
 
   public:
-    inline CFourGame(const VariantChosen& v, const PieceMapP& m, const BoardPartDimensions& d) noexcept : Game(v, m, new CFourBoard(v, m, d)) {}
-    static const VariantList& GetVariants() noexcept;
-    static const PieceMapP& GetPieces(const VariantChosen& v) noexcept;
+    inline CFourGame(const VariantChosen& v, const std::vector<PieceIndex>& list, const BoardPartDimensions& d) noexcept : Game(v, list, new CFourBoard(v, d)) {}
+    static void Register() noexcept;
+    //static const VariantList& GetVariants() noexcept;
     static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 

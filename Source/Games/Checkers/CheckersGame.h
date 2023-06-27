@@ -16,7 +16,7 @@ namespace Checkers
   class CheckersBoard : public Board
   {
   public:
-    CheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept;
+    CheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept : Board(v, d) {}
     virtual inline Board* Clone() const noexcept override { return new CheckersBoard(*this); }
     virtual void SetStartingBoard() noexcept override;
     virtual bool AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept override;
@@ -26,6 +26,8 @@ namespace Checkers
   public:
     virtual bool AddIfLegalJump(Moves& m, bool longjumps, const Actions& a, PieceIndex p, const Location& fr) const noexcept;
   protected:
+    void SetDefaultStock() noexcept;
+    void SetQueensStock() noexcept;
     /*[[deprecated]] */virtual bool CanPromote(const Location& l, const Piece& p) const noexcept;
     virtual bool CanPromote(const Location& l, PieceIndex p) const noexcept;
     virtual Rule GetRule() const noexcept;
@@ -41,7 +43,7 @@ namespace Checkers
   public:
     inline CheckersGame(const VariantChosen& v, const std::vector<PieceIndex>& list, const BoardPartDimensions& d) noexcept : Game(v, list, GetNewBoard(v, d)) {}
     static void Register() noexcept;
-    static const VariantList& GetVariants() noexcept;
+    //static const VariantList& GetVariants() noexcept;
     static const BoardPartDimensions GetDimensions(const VariantChosen& v) noexcept;
   };
 

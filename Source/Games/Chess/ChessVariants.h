@@ -4,7 +4,7 @@ namespace Chess
 {
   using namespace BoardGamesCore;
 
-  enum class ChessVariant : VariantCode   // recognized variants of Chess
+  enum ChessVariant : VariantCode   // recognized variants of Chess
   {
     Standard,                               // Standard Chess            
     Corner,                                 // Corner Chess            

@@ -50,6 +50,19 @@ namespace Checkers
     static const Para ThePara;
   };
 
+  class TurkChecker final : public Kind
+  {
+  private:
+    constexpr inline TurkChecker() noexcept : Kind('T') {}
+  public:
+    virtual inline PositionValue GetValue(const Board& /*p*/, const Location& /*l*/) const noexcept override { return 100; }
+    virtual void CollectMoves(const Board& /*p*/, const Location& /*l*/, Moves& /*m*/) const noexcept override;
+
+  public:
+    static const TurkChecker TheTurkChecker;
+  };
+
+
   class CheckersPiece final : public Piece
   {
   private:
@@ -71,6 +84,8 @@ namespace Checkers
     static const CheckersPiece CheckersQueenB;
     static const CheckersPiece CheckersParaW;
     static const CheckersPiece CheckersParaB;
+    static const CheckersPiece TurkCheckersPieceW;
+    static const CheckersPiece TurkCheckersPieceB;
   };
 
   constexpr inline const CheckersPiece CheckersPiece::CheckersPieceW    { Checker    ::TheChecker,     PieceColor::White, &CheckersQueenW, IDB_WPL };
@@ -81,5 +96,7 @@ namespace Checkers
   constexpr inline const CheckersPiece CheckersPiece::CheckersQueenB    { Queen      ::TheQueen,       PieceColor::Black, &CheckersQueenB, IDB_BQL };
   constexpr inline const CheckersPiece CheckersPiece::CheckersParaW     { Para       ::ThePara,        PieceColor::White, &CheckersPieceW, IDB_CHECKERSWPARA };
   constexpr inline const CheckersPiece CheckersPiece::CheckersParaB     { Para       ::ThePara,        PieceColor::Black, &CheckersPieceB, IDB_CHECKERSBPARA };
+  constexpr inline const CheckersPiece CheckersPiece::TurkCheckersPieceW{ TurkChecker::TheTurkChecker, PieceColor::White, &CheckersQueenW, IDB_WPL };
+  constexpr inline const CheckersPiece CheckersPiece::TurkCheckersPieceB{ TurkChecker::TheTurkChecker, PieceColor::Black, &CheckersQueenB, IDB_BPL };
 
 }

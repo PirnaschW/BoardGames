@@ -7,7 +7,7 @@
 #include "BrainKing.h"
 
 // needed for the game-specific Pieces / Variants:
-#include "Ataxx/AtaxxGame.h"        
+#include "Ataxx/AtaxxGame.h"
 #include "CFour/CFourGame.h"
 #include "Checkers/CheckersGame.h"
 #include "Chess/ChessGame.h"

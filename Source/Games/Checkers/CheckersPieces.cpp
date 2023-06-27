@@ -8,7 +8,7 @@ namespace Checkers
   const King        King       ::TheKing       {};
   const Queen       Queen      ::TheQueen      {};
   const Para        Para       ::ThePara       {};
-
+  const TurkChecker TurkChecker::TheTurkChecker{};
 
   void Checker::CollectMoves(const Board& p, const Location& l, Moves& moves) const noexcept
   {
@@ -47,6 +47,16 @@ namespace Checkers
     const CheckersBoard& board_ = down_cast<const CheckersBoard&>(p);
     //const int dy = board_.GetPieceIndex(l.x_, l.y_).IsColor(PieceColor::White) ? -1 : 1;
     //board_.AddIfLegalJump(moves, false, Actions{}, board_.GetPieceIndex(l.x_, l.y_), l);        // check only for (back-)jump moves
+  }
+
+  void TurkChecker::CollectMoves(const Board& p, const Location& l, Moves& moves) const noexcept
+  {
+    const CheckersBoard& board_ = static_cast<const CheckersBoard&>(p);
+    //const int dy = board_.GetPiece(l).IsColor(PieceColor::White) ? -1 : 1;
+    //board_.AddIfLegal(moves, l, l + Offset(1, dy));                          // check for slide moves
+    //board_.AddIfLegal(moves, l, l + Offset(0, dy));
+    //board_.AddIfLegal(moves, l, l + Offset(-1, dy));
+    //board_.AddIfLegalJump(moves, false, Actions{}, board_.GetPiece(l), l);        // check for jump moves
   }
 
 }

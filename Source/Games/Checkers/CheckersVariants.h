@@ -3,7 +3,7 @@ namespace Checkers
 {
   using namespace BoardGamesCore;
 
-  enum CheckerVariant : VariantCode   // recognized variants of Checkers
+  enum CheckersVariant : VariantCode   // recognized variants of Checkers
   {
     Standard      = '\0',          // Checkers
     International = '*',           // International Checkers
@@ -26,7 +26,7 @@ namespace Checkers
     Dameo         = 'd',           // Dameo
   };
 
-  enum CheckerRule : Rule // multi-use rule variants
+  enum CheckersRule : Rule // multi-use rule variants
   {
     None                  = 0x0000,                // none of these rules
     JumpFurther           = 0x0001,                // promoted pieces can jump further than behind opponent's piece
@@ -41,134 +41,134 @@ namespace Checkers
   };
 
 
-  class InternationalCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline InternationalCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-  };
+  //class InternationalCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline InternationalCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //};
 
-  class BrazilianCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline BrazilianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-  };
+  //class BrazilianCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline BrazilianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //};
 
-  class CanadianCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline CanadianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-  };
+  //class CanadianCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline CanadianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //};
 
-  class CzechCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline CzechCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-  };
+  //class CzechCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline CzechCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //};
 
-  class ItalianCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline ItalianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  };
+  //class ItalianCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline ItalianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //};
 
-  class PortugueseCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline PortugueseCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | MaxPromotedCapture; }
-  };
+  //class PortugueseCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline PortugueseCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | MaxPromotedCapture; }
+  //};
 
-  class RussianCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline RussianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-  protected:
-    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | MaxPromotedCapture; }
-  };
+  //class RussianCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline RussianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //protected:
+  //  Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | MaxPromotedCapture; }
+  //};
 
-  class ThaiCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline ThaiCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return PromoteToQueen; }
-  };
+  //class ThaiCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline ThaiCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return PromoteToQueen; }
+  //};
 
-  class AntiCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline AntiCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-  };
+  //class AntiCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline AntiCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //};
 
-  class CornerCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline CornerCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | PromotedJump; }
-    bool CanPromote(const Location& l, const Piece& p) const noexcept override
-    {
-      return
-        (p.IsColor(PieceColor::White) && l.y_ == 0 && l.x_ == 1) ||
-        (p.IsColor(PieceColor::White) && l.y_ == 1 && l.x_ == 0) /*||
-        (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 1 && l.x_ == sizeX_ - 2) ||
-        (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 2 && l.x_ == sizeX_ - 1)*/;
-    }
-  };
+  //class CornerCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline CornerCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | PromotedJump; }
+  //  bool CanPromote(const Location& l, const Piece& p) const noexcept override
+  //  {
+  //    return
+  //      (p.IsColor(PieceColor::White) && l.y_ == 0 && l.x_ == 1) ||
+  //      (p.IsColor(PieceColor::White) && l.y_ == 1 && l.x_ == 0) /*||
+  //      (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 1 && l.x_ == sizeX_ - 2) ||
+  //      (p.IsColor(PieceColor::Black) && l.y_ == sizeY_ - 2 && l.x_ == sizeX_ - 1)*/;
+  //  }
+  //};
 
-  class HawaiianCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline HawaiianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return BackJump; }
-  };
+  //class HawaiianCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline HawaiianCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return BackJump; }
+  //};
 
-  class OneWayCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline OneWayCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return MaxCapture; }
-  };
+  //class OneWayCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline OneWayCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return MaxCapture; }
+  //};
 
-  class ParachuteCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline ParachuteCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return BackJump; }
-    bool CanPromote(const Location& l, const Piece& p) const noexcept override
-    {
-      if (p.IsKind(Checkers::Para::ThePara)) return true; // Para can always promotes (to normal piece) when jumping
-      return CheckersBoard::CanPromote(l, p);
-    }
-  };
+  //class ParachuteCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline ParachuteCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return BackJump; }
+  //  bool CanPromote(const Location& l, const Piece& p) const noexcept override
+  //  {
+  //    if (p.IsKind(Checkers::Para::ThePara)) return true; // Para can always promotes (to normal piece) when jumping
+  //    return CheckersBoard::CanPromote(l, p);
+  //  }
+  //};
 
-  class GothicCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline GothicCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return PromotedJump; }
-  };
+  //class GothicCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline GothicCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return PromotedJump; }
+  //};
 
-  class DameoCheckersBoard: public CheckersBoard
-  {
-  public:
-    inline DameoCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
-    void SetStartingBoard() noexcept override;
-  protected:
-    Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | ContinueJumping; }
-  };
+  //class DameoCheckersBoard: public CheckersBoard
+  //{
+  //public:
+  //  inline DameoCheckersBoard(const VariantChosen& v, const BoardPartDimensions& d) noexcept: CheckersBoard(v, d) {}
+  //  void SetStartingBoard() noexcept override;
+  //protected:
+  //  Rule GetRule() const noexcept override { return PromoteToQueen | JumpFurther | MaxCapture | ContinueJumping; }
+  //};
 
 }
