@@ -93,11 +93,12 @@ namespace BoardGamesCore
     f(taken_);   // collect all potential moves from the taken board - some games allow re-insertion of pieces
   }
 
-  void Board::Execute(const Move& m) noexcept
+  void Board::Execute(const MoveP& p) noexcept
   {
-    sequence_.push_back(std::make_shared<Move>(m));                       // save the move in the sequence_
-    m.GetActions().Log();
-    for (const auto& aa : m.GetActions()) aa->Execute(this);              // execute all Actions
+    //sequence_.push_back(std::make_shared<Move>(m));                     // save the move in the sequence_
+    sequence_.push_back(p);                                               // save the move in the sequence_
+    p->GetActions().Log();
+    for (const auto& aa : p->GetActions()) aa->Execute(this);             // execute all Actions
     whiteOnTurn_ = !whiteOnTurn_;                                         // after the move, it's the next player's turn
 
     movesW_.clear();                                                      // after the move is executed, the movelists will be outdated

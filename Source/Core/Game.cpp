@@ -45,6 +45,20 @@ namespace BoardGamesCore
       }
     }
 
+    if (state_ == State::ReadyToSubmit)
+    {
+      assert(moves_.size() < 2);
+      for (const auto& m : moves_)
+      {
+        Board* b = board_->Clone();
+        b->Execute(m);
+        b->stage_.Draw(dc);
+        delete b;
+        board_->DrawSelected(dc, m->GetFrL());
+        board_->DrawSelected(dc, m->GetToL());
+      }
+    }
+
     if (state_ == State::Dragging)
     {
       if (dragPiece_ != PMap[Piece::NoPiece])
@@ -103,7 +117,8 @@ namespace BoardGamesCore
     // for debugging:
     if (state != State::UIAvailable &&
         state != State::UIChecked &&
-        event == ID_EDIT_MOVE)
+        event != BoardGamesMFC::Mouse_Move &&
+        event != BoardGamesMFC::Mouse_LButton_Down)
     {
       static int count = 0;
       count++; // set break point here!
@@ -132,10 +147,14 @@ namespace BoardGamesCore
   {
     Location l{ BoardPartID::Stage, 0U,0U };
     if (!board_->GetLocationFromPoint(point_, l)) return false;        // user clicked somewhere outside
-    for (const auto& m : board_->GetMoveList(board_->WhiteOnTurn()))   // filter moves of the selected piece into 'moves'
+    for (const auto m : board_->GetMoveList(board_->WhiteOnTurn()))    // filter moves of the selected piece into 'moves'
     {
       const Location& lf = m->GetFrL();
-      if (lf == l || (lf.b_ == BoardPartID::Stock && m->GetToL() == l)) moves_.push_back(m);
+      if (lf == l || (lf.b_ == BoardPartID::Stock && m->GetToL() == l))
+      {
+        moves_.push_back(m);
+        //moves_.push_back(std::make_shared<Move>(m->GetActions())); // note: save a COPY of the move
+      }
     }
     if (moves_.empty()) return false;
     state_ = State::SelectTarget;
@@ -153,22 +172,29 @@ namespace BoardGamesCore
   {
     Location l{ BoardPartID::Stage, 0U,0U };
     if (!board_->GetLocationFromPoint(point_, l)) return false;        // user clicked somewhere outside
-    for (const auto& m : moves_)   // check through allowed moves
+    for (const auto m : moves_)   // check through allowed moves
     {
       if (m->GetToL() == l)
       {
-        MoveP mm = m;
         moves_.clear();
-        moves_.push_back(mm);
+        moves_.push_back(m);
         state_ = State::ReadyToSubmit;
         return true;
       }
     }
-    return false;
+    return false; // no move found that goes there
   }
 
   bool Game::React_AIMove() noexcept
   {
+    assert(moves_.size() < 2);     // depending on game, there might be a move to execute on the board or not
+    board_ = board_->Clone();      // after the move, this will be a different board, so it needs to have a different address (pointer). otherwise, the AI memory wouldn't know the difference
+    for (const auto& m : moves_)   // execute move
+    {
+      board_->Execute(m);
+    }
+    moves_.clear(); // moves have been executed, so throw them out now. This also allows a 'Draw' to redraw the board correctly.
+
     PositionValue v = ai_.MakeMove(board_);  // execute computer move
 
         // inform player

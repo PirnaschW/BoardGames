@@ -7,17 +7,17 @@ namespace Checkers
 
   void CheckersBoard::SetStartingBoard() noexcept
   {
-    PieceIndex pWC = PMap[CheckersPiece::CheckersPieceW];
-    PieceIndex pBC = PMap[CheckersPiece::CheckersPieceB];
+    const PieceIndex pWC = PMap[CheckersPiece::CheckersPieceW];
+    const PieceIndex pBC = PMap[CheckersPiece::CheckersPieceB];
 
     for (Coordinate y = 0; y < stage_.GetSizeY() / 2 - 1; ++y)
     {
       for (Coordinate x = 0; x < stage_.GetSizeX(); ++x)
       {
         if ((x + y) % 2)
-          SetPieceIndex(pBC, x, y);
+          stage_.SetPieceIndex(pBC, x, y);
         else
-          SetPieceIndex(pWC, x, - 1 - y);
+          stage_.SetPieceIndex(pWC, x, stage_.AbsoluteY(- 1 - y));
       }
     }
   }
@@ -43,26 +43,22 @@ namespace Checkers
 
   bool CheckersBoard::AddIfLegal(Moves& m, const Location& fr, const Location& to) const noexcept
   {
-    assert(fr.b_ == BoardPartID::Stage); // otherwise, should never come here
-    assert(to.b_ == BoardPartID::Stage); // otherwise, should never come here
+    if (fr.b_ != BoardPartID::Stage || to.b_ != BoardPartID::Stage) return false;  // only moves from and to the main board are legal
 
     if (!stage_.IsValid(to.x_, to.y_)) return false;
 
-    PieceIndex pfI = GetPieceIndex(fr.x_, fr.y_);
+    PieceIndex pfI = GetPieceIndex(fr.x_, fr.y_, fr.b_);
     assert(pfI != PMap[Piece::NoPiece]);
     assert(pfI != PMap[Piece::NoTile]);
 
-    PieceIndex ptI = GetPieceIndex(to.x_, to.y_);
-    if (ptI != PMap[Piece::NoPiece]) return false;
+    PieceIndex ptI = GetPieceIndex(to.x_, to.y_, to.b_);
+    if (ptI != PMap[Piece::NoPiece]) return false;  // can only move onto empty fields
 
-    const Piece& pf = PMap[pfI];
-    const Piece& pf2 = CanPromote(to, pfI) ? pf.Promote(true) : pf;
-    PieceIndex ptI2 = PMap[pf2];
-
+    const PieceIndex ptI2 = CanPromote(to, pfI) ? PMap[PMap[pfI].Promote(true)] : pfI;
 
     Actions a{};
     a.push_back(std::make_shared<ActionLift>(fr, pfI));     // pick piece up
-    a.push_back(std::make_shared<ActionDrop>(to, ptI2));    // and place it on target
+    a.push_back(std::make_shared<ActionDrop>(to, ptI2));    // place it on target
     m.push_back(std::make_shared<Move>(a));                 // add move to move list
     return true;
   }

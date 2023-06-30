@@ -1953,8 +1953,8 @@ namespace UnitTestCore
       b.SetPieceIndex(pWC, 1, 1);
       b.GetAllMoves();
       b.EvaluateStatically();
-      const Move& m = *b.GetMoveList(true)[0];
-      b.Execute(m);
+      const MoveP& p = b.GetMoveList(true)[0];
+      b.Execute(p);
       Assert::IsTrue(b.GetPieceIndex(1, 1) == pNP);  // Piece is gone from original field;
       Assert::IsTrue(b.GetPieceIndex(0, 0) == pNP);  // didn't move diagonally left;
       Assert::IsTrue(b.GetPieceIndex(2, 0) == pWC);  // did move diagonally right
@@ -1968,8 +1968,8 @@ namespace UnitTestCore
       Assert::IsTrue(b.WhiteOnTurn());
 
       Actions a{};
-      Move m{a};
-      b.Execute(m);
+      MoveP p = std::make_shared<Move>(a);
+      b.Execute(p);
       Assert::IsFalse(b.WhiteOnTurn());
     }
 

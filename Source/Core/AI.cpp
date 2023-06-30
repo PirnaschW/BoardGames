@@ -22,13 +22,14 @@ namespace BoardGamesCore
     );
 
     // evaluate position
+    b = memory_.InsertOrUpdate(b);
     PositionValue v = Evaluate(b, AIMethod::BruteForce, 9, 4.0);
 
     // now execute best move:
     const Moves& m = b->GetMoveList(b->WhiteOnTurn());
     if (m.size() > 0)
     {
-      b->Execute(*m[0]);
+      b->Execute(m[0]);
       auto b0 = memory_.FindPos(std::hash<Board>()(*b));
       assert(b0);
       b = b0;
@@ -85,12 +86,12 @@ namespace BoardGamesCore
     for (i = 0; i < movelist.size(); ++i)                          // for all possible opponent's moves
     {
       auto& m = movelist[i];
-      Board* p = board->Clone();
-      p->Execute(*m);
-      p = memory_.InsertOrUpdate(p);
-      PositionValue v = -EvaluateDeeper(p, method, !w, -beta, -alpha, plies - 1);
+      Board* b = board->Clone();
+      b->Execute(m);
+      b = memory_.InsertOrUpdate(b);
+      PositionValue v = -EvaluateDeeper(b, method, !w, -beta, -alpha, plies - 1);
       assert(v != PositionValue::PValueType::Undefined);
-      assert(v == p->GetValue(w)); // or not???
+      assert(v == b->GetValue(w)); // or not???
       m->SetValue(v);                                                    // save position value into move for sorting
 #ifdef LOG
       m->Log();

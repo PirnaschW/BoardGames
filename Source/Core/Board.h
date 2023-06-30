@@ -23,6 +23,7 @@ namespace BoardGamesCore
     virtual void SetStartingBoard() noexcept {};  // default is empty board; each game can define its specific starting setup
     void SetupBoard(const std::vector<PieceIndex>& list) noexcept;  // set up a board from a given Piece List
 
+    [[TODO::Unittest]] constexpr PieceIndex GetPieceIndex(const Location& l) const noexcept { return GetPieceIndex(l.x_,l.y_,l.b_); }
     constexpr PieceIndex GetPieceIndex(Coordinate x, Coordinate y, BoardPartID b = BoardPartID::Stage) const noexcept
     {
       switch (b)
@@ -33,7 +34,8 @@ namespace BoardGamesCore
       }
     }
 
-    void SetPieceIndex(PieceIndex, Coordinate x, Coordinate y, BoardPartID b = BoardPartID::Stage) noexcept;
+    [[TODO::Unittest]] void SetPieceIndex (PieceIndex pI, const Location& l) noexcept { SetPieceIndex(pI, l.x_, l.y_, l.b_); }
+    void SetPieceIndex(PieceIndex pI, Coordinate x, Coordinate y, BoardPartID b = BoardPartID::Stage) noexcept;
 
     constexpr PositionValue GetValue(bool whiteonplay) const noexcept { return value_.Relative(whiteonplay); }
     constexpr void SetValue(bool whiteonplay, PositionValue v) const noexcept { value_ = v.Relative(whiteonplay); }
@@ -46,7 +48,7 @@ namespace BoardGamesCore
     virtual void GetAllMoves() const noexcept;              // generate all moves and save list
     virtual void EvaluateStatically() const noexcept;       // calculate static position value
     
-    void Execute(const Move& m) noexcept;
+    [[TODO::Unittest]] void Execute(const MoveP& p) noexcept;
     [[deprecated]] void Undo(const Move& m) noexcept { assert(false); }  // TODO: Let Board Undo Moves
 
     constexpr bool WhiteOnTurn() const noexcept { return whiteOnTurn_; }

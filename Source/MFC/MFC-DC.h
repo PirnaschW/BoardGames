@@ -19,8 +19,7 @@ namespace BoardGamesMFC
     static const Pen PenBlack;
     static const Pen PenSelected;
   };
-  constexpr inline const Pen Pen::PenBlack   { PenStyle_Solid, 1,   0,   0,   0 };
-  constexpr inline const Pen Pen::PenSelected{ PenStyle_Solid, 3,  64,  64, 255 };
+
 
   class Brush
   {
