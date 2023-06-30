@@ -23,7 +23,7 @@ namespace BoardGamesCore
     virtual void SetStartingBoard() noexcept {};  // default is empty board; each game can define its specific starting setup
     void SetupBoard(const std::vector<PieceIndex>& list) noexcept;  // set up a board from a given Piece List
 
-    [[TODO::Unittest]] constexpr PieceIndex GetPieceIndex(const Location& l) const noexcept { return GetPieceIndex(l.x_,l.y_,l.b_); }
+    constexpr PieceIndex GetPieceIndex(const Location& l) const noexcept { return GetPieceIndex(l.x_,l.y_,l.b_); }
     constexpr PieceIndex GetPieceIndex(Coordinate x, Coordinate y, BoardPartID b = BoardPartID::Stage) const noexcept
     {
       switch (b)

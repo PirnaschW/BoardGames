@@ -1376,16 +1376,62 @@ namespace UnitTestCore
       constexpr Coordinate xSize{ 4 };
       constexpr Coordinate ySize{ 2 };
 
-      BoardPart b(BoardPartDimension(xSize, ySize, LayoutType::Dark, 10, 10, 50, 50, 4, 4), BoardPartID::Stage, pWC);
-      for (Coordinate x = -6; x < 6; ++x)
-        for (Coordinate y = -6; x < 6; ++x)
+      BoardPart b(BoardPartDimension(xSize, ySize, LayoutType::Dark, xSize, ySize, 50, 50, 4, 4), BoardPartID::Stage, pWC);
+      for (Coordinate x = -xSize - 2; x <= xSize + 2; ++x)
+      {
+        for (Coordinate y = -ySize - 2; y <= ySize + 2; ++y)
         {
-          if      (x <  -xSize)  Assert::IsFalse(b.IsValid(x, y));
-          else if (x >=  xSize)  Assert::IsFalse(b.IsValid(x, y));
-          else if (y <  -ySize)  Assert::IsFalse(b.IsValid(x, y));
-          else if (y >=  ySize)  Assert::IsFalse(b.IsValid(x, y));
-          else                   Assert::IsTrue (b.IsValid(x, y));
+          if (x <  -xSize)  Assert::IsFalse(b.IsValid(x, y));
+          if (x >=  xSize)  Assert::IsFalse(b.IsValid(x, y));
+          if (y <  -ySize)  Assert::IsFalse(b.IsValid(x, y));
+          if (y >=  ySize)  Assert::IsFalse(b.IsValid(x, y));
+
+          if (x <       0)  Assert::IsFalse(b.IsValid(x, y));
+          if (x >=  xSize)  Assert::IsFalse(b.IsValid(x, y));
+          if (y <       0)  Assert::IsFalse(b.IsValid(x, y));
+          if (y >=  ySize)  Assert::IsFalse(b.IsValid(x, y));
+
+          if (x >= 0 && x < xSize && y >= 0 && y < ySize)  Assert::IsTrue(b.IsValid(x, y));
+          else                                             Assert::IsFalse(b.IsValid(x, y));
         }
+      }
+    }
+
+    TEST_METHOD(_Absolute)
+    {
+      CheckForMemoryLeaks check;
+      constexpr Coordinate xSize{ 4 };
+      constexpr Coordinate ySize{ 2 };
+
+      BoardPart b(BoardPartDimension(xSize, ySize, LayoutType::Dark, xSize, ySize, 50, 50, 4, 4), BoardPartID::Stage, pWC);
+      for (Coordinate x = -xSize - 2; x <= xSize + 2; ++x)
+      {
+        for (Coordinate y = -ySize - 2; y <= ySize + 2; ++y)
+        {
+          Coordinate x0 = b.AbsoluteX(x);
+          Coordinate y0 = b.AbsoluteY(y);
+
+          if (x >= 0) Assert::IsTrue(x0 - x == 0);
+          if (y >= 0) Assert::IsTrue(y0 - y == 0);
+          if (x <  0) Assert::IsTrue(x0 - x == xSize);
+          if (y <  0) Assert::IsTrue(y0 - y == ySize);
+        }
+      }
+      for (Coordinate x = -xSize - 2; x <= xSize + 2; ++x)
+      {
+        for (Coordinate y = -ySize - 2; y <= ySize + 2; ++y)
+        {
+          Coordinate x0 = b.AbsoluteX(x);
+          Coordinate y0 = b.AbsoluteY(y);
+          if (x <  -xSize)  Assert::IsFalse(b.IsValid(x0, y0));
+          if (x >=  xSize)  Assert::IsFalse(b.IsValid(x0, y0));
+          if (y <  -ySize)  Assert::IsFalse(b.IsValid(x0, y0));
+          if (y >=  ySize)  Assert::IsFalse(b.IsValid(x0, y0));
+
+          if (x >= -xSize && x < xSize && y >= -ySize && y < ySize)  Assert::IsTrue(b.IsValid(x0, y0));
+          else                                                       Assert::IsFalse(b.IsValid(x0, y0));
+        }
+      }
     }
 
     TEST_METHOD(_HasPiece)

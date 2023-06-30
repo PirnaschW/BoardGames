@@ -110,8 +110,8 @@ namespace BoardGamesCore
     constexpr Coordinate GetSizeX() const noexcept { return dim_.xCount_; }  // needed for loops
     constexpr Coordinate GetSizeY() const noexcept { return dim_.yCount_; }  // needed for loops
     constexpr bool IsValid(Coordinate x, Coordinate y) const noexcept { return x >= 0 && x < dim_.xCount_ && y >= 0 && y < dim_.yCount_; }  // check if this is a field of the BoardPart
-    [[TODO::Unittest]] constexpr Coordinate AbsoluteX(Coordinate x) const noexcept { return x >= 0 ? x : GetSizeX() + x; } // convert a relative X to an absolute X
-    [[TODO::Unittest]] constexpr Coordinate AbsoluteY(Coordinate y) const noexcept { return y >= 0 ? y : GetSizeY() + y; } // convert a relative Y to an absolute Y
+    constexpr Coordinate AbsoluteX(Coordinate x) const noexcept { return x >= 0 ? x : GetSizeX() + x; } // convert a relative X to an absolute X
+    constexpr Coordinate AbsoluteY(Coordinate y) const noexcept { return y >= 0 ? y : GetSizeY() + y; } // convert a relative Y to an absolute Y
 
     constexpr bool HasPiece(PieceIndex pI) const noexcept { for (const auto& f : fields_) if (f.GetPieceIndex() == pI) return true; return false; }
     constexpr PieceIndex GetPieceIndex(Coordinate x, Coordinate y) const noexcept { assert(IsValid(x, y)); return fields_[Index(x, y)].GetPieceIndex(); }

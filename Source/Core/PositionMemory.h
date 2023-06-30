@@ -11,7 +11,7 @@ namespace BoardGamesCore
 
   public:
     size_t GetSize() const noexcept { return objList_.size(); }
-    T* FindPos(size_t h)
+    T* FindPos(size_t h)  // find object from its hash
     {
       const auto it = posList_.find(h);
       return it == posList_.end() ? nullptr : it->second;   // return the version found in the map
@@ -29,9 +29,12 @@ namespace BoardGamesCore
 
     T* InsertOrUpdate(T* t)  // transfers ownership of t to us!
     {
+      assert(t != nullptr); // never search for nullptr
+
       // check if position exists
       T* pos = FindPos(std::hash<T>()(*t));
-      if (pos)       // it's an existing position, reuse
+      if (pos == t) return pos;  // exists and is identical instance
+      if (pos)       // exists but is different instance, reuse
       {
         delete t;    // we own t, so clean up
         return pos;  // return the buffered position found in the map
